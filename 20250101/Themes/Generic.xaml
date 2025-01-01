@@ -9,6 +9,7 @@
   <Style x:Key="kiso" TargetType="{x:Type local:KisoThumb}">
     <Setter Property="Canvas.Left" Value="{Binding MyLeft}"/>
     <Setter Property="Canvas.Top" Value="{Binding MyTop}"/>
+    <Setter Property="Panel.ZIndex" Value="{Binding MyZIndex, Mode=TwoWay}"/>
   </Style>
 
 

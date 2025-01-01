@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -66,6 +67,16 @@ namespace _20250101
         public static readonly DependencyProperty MyTopProperty =
             DependencyProperty.Register(nameof(MyTop), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
 
+
+        public int MyZIndex
+        {
+            get { return (int)GetValue(MyZIndexProperty); }
+            set { SetValue(MyZIndexProperty, value); }
+        }
+        public static readonly DependencyProperty MyZIndexProperty =
+            DependencyProperty.Register(nameof(MyZIndex), typeof(int), typeof(KisoThumb), new PropertyMetadata(0));
+
+
         public string MyText
         {
             get { return (string)GetValue(MyTextProperty); }
@@ -99,6 +110,8 @@ namespace _20250101
             KeyUp += KisoThumb_KeyUp;
 
         }
+
+        #region イベントハンドラ
 
         /// <summary>
         /// KeyUp時
@@ -158,7 +171,7 @@ namespace _20250101
             var ori = e.OriginalSource;
             if (e.Source == e.OriginalSource)
             {
-                if(sender is KisoThumb kiso)
+                if (sender is KisoThumb kiso)
                 {
                     kiso.Focusable = true;
                     kiso.Focus();
@@ -262,6 +275,7 @@ namespace _20250101
             }
         }
 
+        #endregion イベントハンドラ
 
     }
 
@@ -398,13 +412,34 @@ namespace _20250101
         /// </summary>
         private void MyThumbs_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems?[0] is KisoThumb nnt)
+            if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems?[0] is KisoThumb ni)
             {
-                nnt.MyParentThumb = this;
+                ni.MyParentThumb = this;
+                ni.MyZIndex = MyThumbs.Count - 1;
+                //ni.MyZIndex = MyThumbs.IndexOf(ni);//こっちでも同じ
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems?[0] is KisoThumb ot)
             {
                 ot.MyParentThumb = null;
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Move)
+            {
+                var nic = e.NewItems.Count;
+                var oic = e.OldItems.Count;
+                var os = e.OldItems;
+                var ns = e.NewItems;
+                var nsi = e.NewStartingIndex;
+                var osi = e.OldStartingIndex;
+                if (e.NewItems[0] is KisoThumb moveNew && e.OldItems[0] is KisoThumb moveOld)
+                {
+                    //moveNew.MyZIndex = nsi;
+                    MyThumbs[nsi].MyZIndex = nsi;
+                    MyThumbs[osi].MyZIndex = osi;
+                }
+                //foreach (var item in MyThumbs)
+                //{
+                //    item.MyZIndex = MyThumbs.IndexOf(item);
+                //}
             }
         }
         #endregion 初期化
@@ -569,37 +604,61 @@ namespace _20250101
 
         #endregion イベントでの処理
 
-        public KisoThumb MyFocusThumb
-        {
-            get { return (KisoThumb)GetValue(MyFocusThumbProperty); }
-            set { SetValue(MyFocusThumbProperty, value); }
-        }
-        public static readonly DependencyProperty MyFocusThumbProperty =
-            DependencyProperty.Register(nameof(MyFocusThumb), typeof(KisoThumb), typeof(RootThumb), new PropertyMetadata(null));
+        #region 依存関係プロパティ
 
+
+        public GroupThumb MyActiveGroupThumb
+        {
+            get { return (GroupThumb)GetValue(MyActiveGroupThumbProperty); }
+            set { SetValue(MyActiveGroupThumbProperty, value); }
+        }
+        public static readonly DependencyProperty MyActiveGroupThumbProperty =
+            DependencyProperty.Register(nameof(MyActiveGroupThumb), typeof(GroupThumb), typeof(RootThumb), new PropertyMetadata(null));
+
+
+
+        /// <summary>
+        /// フォーカスされたThumb
+        /// </summary>
         //public KisoThumb MyFocusThumb
         //{
         //    get { return (KisoThumb)GetValue(MyFocusThumbProperty); }
         //    set { SetValue(MyFocusThumbProperty, value); }
         //}
         //public static readonly DependencyProperty MyFocusThumbProperty =
-        //    DependencyProperty.Register(nameof(MyFocusThumb), typeof(KisoThumb), typeof(RootThumb), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnMyFocusThumbChanged)));
+        //    DependencyProperty.Register(nameof(MyFocusThumb), typeof(KisoThumb), typeof(RootThumb), new PropertyMetadata(null));
+
+        public KisoThumb MyFocusThumb
+        {
+            get { return (KisoThumb)GetValue(MyFocusThumbProperty); }
+            set { SetValue(MyFocusThumbProperty, value); }
+        }
+        public static readonly DependencyProperty MyFocusThumbProperty =
+            DependencyProperty.Register(nameof(MyFocusThumb), typeof(KisoThumb), typeof(RootThumb), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnMyFocusThumbChanged)));
 
 
+        /// <summary>
+        /// フォーカスされたThumbが変更されたとき、そのThumbの親要素を取得してMyActiveGroupThumbに設定
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
+        private static void OnMyFocusThumbChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is RootThumb rt)
+            {
+                if (e.NewValue is KisoThumb n)
+                {
+                    rt.MyActiveGroupThumb = n.MyParentThumb ?? rt;
+                    //n.Focusable = true;
+                    //FocusManager.SetFocusedElement(rt, n);
+                    //Keyboard.Focus(n);
+                    //n.Focus();
+                }
+            }
+        }
 
-        //private static void OnMyFocusThumbChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    if (d is RootThumb rt)
-        //    {
-        //        if (e.NewValue is KisoThumb n)
-        //        {
-        //            n.Focusable = true;
-        //            FocusManager.SetFocusedElement(rt, n);
-        //            Keyboard.Focus(n);
-        //            n.Focus();
-        //        }
-        //    }
-        //}
+        #endregion 依存関係プロパティ
+
     }
 
     //public class ExItemsControl : ItemsControl

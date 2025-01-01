@@ -33,6 +33,14 @@
                                 MyText="Item 2-1" Background="Beige"/>
             <local:EllipseTextThumb MyLeft="0" MyTop="150" MySize="60"
                                   MyText="Item 2-2" Background="Gold"/>
+            <local:EllipseTextThumb MyLeft="20" MyTop="0" MySize="60"
+                                  MyText="Item 2-3" Background="Gold"/>
+            <local:EllipseTextThumb MyLeft="40" MyTop="40" MySize="60"
+                                  MyText="Item 2-4" Background="Gold"/>
+            <local:EllipseTextThumb MyLeft="60" MyTop="80" MySize="60"
+                                  MyText="Item 2-5" Background="Gold"/>
+            <local:EllipseTextThumb MyLeft="80" MyTop="120" MySize="60"
+                                  MyText="Item 2-6" Background="Gold"/>
           </local:GroupThumb>
 
           <local:GroupThumb x:Name="MyGroup2" MyText="Group2" MyLeft="150" MyTop="140" Background="DeepSkyBlue">
@@ -53,8 +61,9 @@
 
 
     <TabControl Grid.Column="1">
-      <TabItem Header="Tab1">
+      <TabItem Header="Tab1" DataContext="{Binding ElementName=MyRootGroup}">
         <StackPanel>
+          <TextBlock Text="{Binding MyActiveGroupThumb}"/>
           <ComboBox x:Name="MyComboBoxThumbType"/>
           <TextBox x:Name="MyTextBoxMyText"/>
           <ComboBox x:Name="MyComboBoxBackgroundBrush">
@@ -64,16 +73,7 @@
               </DataTemplate>
             </ComboBox.ItemTemplate>
           </ComboBox>
-          <ComboBox x:Name="MyComboBoxBackgroundBrush2">
-            <ComboBox.ItemTemplate>
-              <DataTemplate>
-                <StackPanel Orientation="Horizontal">
-                  <Border Width="40" Background="{Binding Value}" Margin="0,0,10,0"/>
-                  <TextBlock Text="{Binding Key}"/>
-                </StackPanel>
-              </DataTemplate>              
-            </ComboBox.ItemTemplate>
-          </ComboBox>
+          <Button x:Name="MyButtonTest" Content="test" Click="MyButtonTest_Click"/>
           <Button x:Name="MyButtonAdd" Content="add" Click="MyButtonAdd_Click"/>
           <TextBlock x:Name="GotKey"/>
           <GroupBox Header="Root" Background="{Binding Background}" DataContext="{Binding ElementName=MyRootGroup}">
@@ -137,7 +137,7 @@
               <HierarchicalDataTemplate DataType="local:RootThumb" ItemsSource="{Binding MyThumbs}">
                 <StackPanel Orientation="Horizontal">
                   <TextBlock Text="{Binding MyType}" VerticalAlignment="Center" Margin="10"/>
-                  <TextBlock Text="{Binding Focusable}"/>
+                  <TextBlock Text="{Binding MyZIndex, StringFormat=z {0:0}}"/>
                   <Rectangle Width="50" Height="50">
                     <Rectangle.Fill>
                       <VisualBrush Visual="{Binding}" Stretch="Uniform"/>

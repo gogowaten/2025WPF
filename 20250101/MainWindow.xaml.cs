@@ -74,11 +74,24 @@ namespace _20250101
                     kiso.MyText = MyTextBoxMyText.Text;
                     kiso.Background = MyComboBoxBackgroundBrush.SelectedItem as Brush;
                 }
-                if(kiso != null)
+                if (kiso != null)
                 {
                     group.MyThumbs.Add(kiso);
                 }
             }
+        }
+
+        private void MyButtonTest_Click(object sender, RoutedEventArgs e)
+        {
+            if(MyRootGroup.MyFocusThumb is KisoThumb kiso)
+            {
+                kiso.MyParentThumb?.MyThumbs.Move(kiso.MyZIndex, kiso.MyZIndex + 1);
+            }
+            //MyRootGroup.MyFocusThumb?.MyThumbs.Move(0, 1);
+            //var z = Panel.GetZIndex(MyRootGroup.MyFocusThumb);
+            //MyRootGroup.MyFocusThumb.MyZIndex += 1;
+            //MyGroup3.MyThumbs.Move(0, 1);
+            //MyGroup3.MyThumbs[2];
         }
     }
 }
