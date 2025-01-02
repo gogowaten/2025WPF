@@ -68,6 +68,41 @@ namespace _20250101
             DependencyProperty.Register(nameof(MyTop), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
 
 
+        //public int MyZIndex
+        //{
+        //    get { return (int)GetValue(MyZIndexProperty); }
+        //    set { SetValue(MyZIndexProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyZIndexProperty =
+        //    DependencyProperty.Register(nameof(MyZIndex), typeof(int), typeof(KisoThumb), new FrameworkPropertyMetadata(0, new PropertyChangedCallback(OnMyIndexChanged)));
+
+        //private static void OnMyIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    if (d is KisoThumb kiso)
+        //    {
+        //        if (kiso.MyParentThumb is GroupThumb gt)
+        //        {
+        //            int oldIndex = (int)e.OldValue;
+        //            int newIndex = (int)e.NewValue;
+        //            if (oldIndex < newIndex)
+        //            {
+        //                for (int i = oldIndex; i < newIndex; i++)
+        //                {
+        //                    gt.MyThumbs[i].MyZIndex--;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                for (int i = newIndex; i < oldIndex; i++)
+        //                {
+        //                    gt.MyThumbs[i].MyZIndex++;
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
+
         public int MyZIndex
         {
             get { return (int)GetValue(MyZIndexProperty); }
@@ -224,6 +259,14 @@ namespace _20250101
         {
             if (sender is KisoThumb t)
             {
+                var neko = t.MyParentThumb.Name;
+                if (neko == "MyGroup3")
+                {
+                    t.MyParentThumb.MyLeft += e.HorizontalChange;
+                    t.MyParentThumb.MyTop += e.VerticalChange;  
+                    e.Handled = true;
+                    return;
+                }
                 t.MyLeft += (int)(e.HorizontalChange + 0.5);
                 t.MyTop += (int)(e.VerticalChange + 0.5);
                 e.Handled = true;
@@ -261,6 +304,7 @@ namespace _20250101
         {
             if (e.Source is KisoThumb t)
             {
+              
                 if (t.MyParentThumb is GroupThumb gt)
                 {
                     //アンカーThumbを作成追加
@@ -276,6 +320,69 @@ namespace _20250101
         }
 
         #endregion イベントハンドラ
+
+        #region メソッド
+        private void FixZIndex(int start, int end)
+        {
+            if (MyParentThumb is GroupThumb gt)
+            {
+                for (int i = start; i <= end; i++)
+                {
+                    gt.MyThumbs[i].MyZIndex = i;
+                }
+            }
+        }
+
+        public void ZIndexUp()
+        {
+            if (MyParentThumb is GroupThumb gt)
+            {
+                int moto = gt.MyThumbs.IndexOf(this);
+                int limit = gt.MyThumbs.Count - 1;
+                if (moto >= limit) { return; }
+                int saki = moto + 1;
+                gt.MyThumbs.Move(moto, saki);
+                FixZIndex(moto, saki);
+            }
+        }
+
+        public void ZIndexTop()
+        {
+            if (MyParentThumb is GroupThumb gt)
+            {
+                int moto = gt.MyThumbs.IndexOf(this);
+                int limit = gt.MyThumbs.Count - 1;
+                if (moto >= limit) { return; }
+                gt.MyThumbs.Move(moto, limit);
+                FixZIndex(moto, limit);
+            }
+        }
+
+        public void ZIndexDown()
+        {
+            if (MyParentThumb is GroupThumb gt)
+            {
+                int moto = gt.MyThumbs.IndexOf(this);
+                if (moto == 0) { return; }
+                int saki = moto - 1;
+                gt.MyThumbs.Move(moto, saki);
+                FixZIndex(saki, moto);
+            }
+        }
+
+        public void ZIndexBottom()
+        {
+            if (MyParentThumb is GroupThumb gt)
+            {
+                int moto = gt.MyThumbs.IndexOf(this);
+                if (moto == 0) { return; }
+                int saki = 0;
+                gt.MyThumbs.Move(moto, 0);
+                FixZIndex(saki, moto);
+            }
+        }
+
+        #endregion メソッド
 
     }
 
@@ -432,9 +539,9 @@ namespace _20250101
                 var osi = e.OldStartingIndex;
                 if (e.NewItems[0] is KisoThumb moveNew && e.OldItems[0] is KisoThumb moveOld)
                 {
-                    //moveNew.MyZIndex = nsi;
-                    MyThumbs[nsi].MyZIndex = nsi;
-                    MyThumbs[osi].MyZIndex = osi;
+                    ////moveNew.MyZIndex = nsi;
+                    //MyThumbs[nsi].MyZIndex = nsi;
+                    //MyThumbs[osi].MyZIndex = osi;
                 }
                 //foreach (var item in MyThumbs)
                 //{
@@ -528,6 +635,10 @@ namespace _20250101
     /// </summary>
     public class RootThumb : GroupThumb
     {
+        /// <summary>
+        /// 選択されたThumb
+        /// </summary>
+        public ObservableCollection<KisoThumb> MySelectThumbs { get; set; }
 
         static RootThumb()
         {
@@ -536,6 +647,7 @@ namespace _20250101
         public RootThumb()
         {
             MyType = ThumbType.Root;
+            MySelectThumbs = [];
             DragDelta -= Thumb_DragDelta2;
             DragStarted -= KisoThumb_DragStarted2;
             DragCompleted -= KisoThumb_DragCompleted2;
@@ -605,6 +717,7 @@ namespace _20250101
         #endregion イベントでの処理
 
         #region 依存関係プロパティ
+
 
 
         public GroupThumb MyActiveGroupThumb

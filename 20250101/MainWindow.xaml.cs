@@ -85,8 +85,13 @@ namespace _20250101
         {
             if(MyRootGroup.MyFocusThumb is KisoThumb kiso)
             {
-                kiso.MyParentThumb?.MyThumbs.Move(kiso.MyZIndex, kiso.MyZIndex + 1);
+                kiso.ZIndexBottom();
             }
+
+            //if(MyRootGroup.MyFocusThumb is KisoThumb kiso)
+            //{
+            //    kiso.MyParentThumb?.MyThumbs.Move(kiso.MyZIndex, kiso.MyZIndex + 1);
+            //}
             //MyRootGroup.MyFocusThumb?.MyThumbs.Move(0, 1);
             //var z = Panel.GetZIndex(MyRootGroup.MyFocusThumb);
             //MyRootGroup.MyFocusThumb.MyZIndex += 1;
