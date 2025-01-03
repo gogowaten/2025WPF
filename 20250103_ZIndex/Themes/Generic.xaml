@@ -1,0 +1,103 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:_20250103_ZIndex">
+
+
+
+
+
+  <Style x:Key="kiso" TargetType="{x:Type local:KisoThumb}">
+    <Setter Property="Canvas.Left" Value="{Binding MyLeft}"/>
+    <Setter Property="Canvas.Top" Value="{Binding MyTop}"/>
+    <Setter Property="Panel.ZIndex" Value="{Binding MyZIndex}"/>
+  </Style>
+
+
+  <Style TargetType="{x:Type local:AnchorThumb}"
+       BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <Rectangle/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+  <Style TargetType="{x:Type local:TextBlockThumb}"
+         BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <TextBlock Text="{Binding MyText}"
+                     Background="{TemplateBinding Background}"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+  <Style TargetType="{x:Type local:EllipseTextThumb}"
+         BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <Grid>
+            <Ellipse Width="{Binding MySize}"
+                     Height="{Binding MySize}"
+                     Fill="{TemplateBinding Background}"/>
+            <TextBlock Text="{Binding MyText}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+
+  <Style TargetType="{x:Type local:GroupThumb}"
+         BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <ItemsControl x:Name="PART_ItemsControl"
+                        ItemsSource="{Binding MyThumbs}"
+                        Background="{TemplateBinding Background}"
+                        Focusable="False">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <local:ExCanvas/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="{x:Type local:RootThumb}"
+         BasedOn="{StaticResource kiso}">
+    <Setter Property="KeyboardNavigation.TabNavigation" Value="Cycle"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <ItemsControl x:Name="PART_ItemsControl"
+                        ItemsSource="{Binding MyThumbs}"
+                        Background="{TemplateBinding Background}"
+                        Focusable="False">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <local:ExCanvas/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+</ResourceDictionary>
