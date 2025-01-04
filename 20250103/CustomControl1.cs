@@ -35,6 +35,7 @@ namespace _20250103
     public abstract class KisoThumb : Thumb
     {
 
+
         #region 依存関係プロパティ
 
 
@@ -88,7 +89,7 @@ namespace _20250103
 
         #region 読み取り専用依存関係プロパティ
 
-
+        
         public bool IsSelectable
         {
             get { return (bool)GetValue(IsSelectableProperty); }
