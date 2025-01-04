@@ -40,6 +40,11 @@
     </ScrollViewer>
 
     <StackPanel Grid.Column="1">
+      <Rectangle Width="100" Height="100">
+        <Rectangle.Fill>
+          <VisualBrush Visual="{Binding ElementName=MyRootGroup, Path=MyFocusThumb}" Stretch="Uniform"/>
+        </Rectangle.Fill>
+      </Rectangle>
       <Button x:Name="MyButtonZTop" Content="ZTop" Click="MyButtonZTop_Click"/>
       <Button x:Name="MyButtonZUp" Content="ZUp" Click="MyButtonZUp_Click"/>
       <Button x:Name="MyButtonZDown" Content="ZDown" Click="MyButtonZDown_Click"/>

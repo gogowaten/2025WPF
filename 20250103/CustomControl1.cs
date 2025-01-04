@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -20,15 +21,6 @@ using System.Windows.Shapes;
 
 namespace _20250103
 {
-    
-    public class CustomControl1 : Control
-    {
-        static CustomControl1()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(CustomControl1), new FrameworkPropertyMetadata(typeof(CustomControl1)));
-        }
-    }
-
 
 
 
@@ -42,6 +34,7 @@ namespace _20250103
     [DebuggerDisplay("{MyType} {MyText}")]
     public abstract class KisoThumb : Thumb
     {
+
         #region 依存関係プロパティ
 
 
@@ -71,40 +64,6 @@ namespace _20250103
             DependencyProperty.Register(nameof(MyTop), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
 
 
-        //public int MyZIndex
-        //{
-        //    get { return (int)GetValue(MyZIndexProperty); }
-        //    set { SetValue(MyZIndexProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyZIndexProperty =
-        //    DependencyProperty.Register(nameof(MyZIndex), typeof(int), typeof(KisoThumb), new FrameworkPropertyMetadata(0, new PropertyChangedCallback(OnMyIndexChanged)));
-
-        //private static void OnMyIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    if (d is KisoThumb kiso)
-        //    {
-        //        if (kiso.MyParentThumb is GroupThumb gt)
-        //        {
-        //            int oldIndex = (int)e.OldValue;
-        //            int newIndex = (int)e.NewValue;
-        //            if (oldIndex < newIndex)
-        //            {
-        //                for (int i = oldIndex; i < newIndex; i++)
-        //                {
-        //                    gt.MyThumbs[i].MyZIndex--;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                for (int i = newIndex; i < oldIndex; i++)
-        //                {
-        //                    gt.MyThumbs[i].MyZIndex++;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
 
         public int MyZIndex
         {
@@ -123,7 +82,42 @@ namespace _20250103
         public static readonly DependencyProperty MyTextProperty =
             DependencyProperty.Register(nameof(MyText), typeof(string), typeof(KisoThumb), new PropertyMetadata(string.Empty));
 
+
+
         #endregion 依存関係プロパティ
+
+        #region 読み取り専用依存関係プロパティ
+
+
+        public bool IsSelectable
+        {
+            get { return (bool)GetValue(IsSelectableProperty); }
+            set { SetValue(IsSelectableProperty, value); }
+        }
+        public static readonly DependencyProperty IsSelectableProperty =
+            DependencyProperty.Register(nameof(IsSelectable), typeof(bool), typeof(KisoThumb), new PropertyMetadata(false));
+
+        private bool _isSelect;
+        public bool IsSelect { get => _isSelect; set { if (_isSelect == value) { return; } _isSelect = value; } }
+
+        //private bool _isSelectable;
+        //public bool IsSelectable { get => _isSelectable; set { if (_isSelectable == value) { return; } _isSelectable = value; } }
+
+        private bool _isFocus;
+        public bool IsFocus { get => _isFocus; set { if (_isFocus == value) { return; } } }
+
+
+        //public event PropertyChangedEventHandler? PropertyChanged;
+
+        //protected void SetProperty<T>(ref T field, T value, [System.Runtime.CompilerServices.CallerMemberName] string? name = null)
+        //{
+        //    if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        //    field = value;
+        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        //}
+
+        #endregion 読み取り専用依存関係プロパティ
+
 
         public ThumbType MyType { get; internal set; }
 
@@ -136,17 +130,46 @@ namespace _20250103
         public KisoThumb()
         {
             DataContext = this;
-            Focusable = true;
+            //Focusable = true;
+            Focusable = false;
             MyType = ThumbType.None;
-            PreviewMouseDown += KisoThumb_PreviewMouseDown;
-            PreviewMouseUp += KisoThumb_PreviewMouseUp;
+            PreviewMouseDown += KisoThumb_PreviewMouseDownTest;
+            PreviewMouseUp += KisoThumb_PreviewMouseUpTest;
             DragStarted += KisoThumb_DragStarted2;
             DragCompleted += KisoThumb_DragCompleted2;
             //DragDelta += Thumb_DragDelta;
             DragDelta += Thumb_DragDelta2;
             KeyDown += KisoThumb_KeyDown;
             KeyUp += KisoThumb_KeyUp;
+            PreviewKeyDown += KisoThumb_PreviewKeyDown;
+        }
 
+        private void KisoThumb_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (sender is RootThumb rt)
+            {
+                if (e.Key == Key.Left)
+                {
+                    rt.MyClickedThumb.MyLeft -= 10;
+                    e.Handled = true;
+                }
+                else if (e.Key == Key.Right)
+                {
+                    rt.MyClickedThumb.MyLeft += 10;
+                    e.Handled = true;
+                }
+                else if (e.Key == Key.Up)
+                {
+                    rt.MyClickedThumb.MyTop -= 10;
+                    e.Handled = true;
+                }
+                else if (e.Key == Key.Down)
+                {
+                    rt.MyClickedThumb.MyTop += 10;
+                    e.Handled = true;
+                }
+
+            }
         }
 
         #region イベントハンドラ
@@ -203,54 +226,73 @@ namespace _20250103
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        internal void KisoThumb_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        //internal void KisoThumb_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    var sou = e.Source;
+        //    var ori = e.OriginalSource;
+        //    if (e.Source == e.OriginalSource)
+        //    {
+        //        if (sender is KisoThumb kiso)
+        //        {
+        //            kiso.Focusable = true;
+        //            kiso.Focus();
+        //        }
+        //    }
+        //    //if (sender is KisoThumb t)
+        //    //{
+        //    //    //t.Focusable = true;
+        //    //    t.Focus();
+        //    //}
+
+        //    //if (e.OriginalSource is KisoThumb t)
+        //    //{
+        //    //    t.Focusable = true;
+        //    //    t.Focus();
+        //    //}
+        //}
+
+        internal void KisoThumb_PreviewMouseUpTest(object sender, MouseButtonEventArgs e)
         {
             var sou = e.Source;
             var ori = e.OriginalSource;
-            if (e.Source == e.OriginalSource)
-            {
-                if (sender is KisoThumb kiso)
-                {
-                    kiso.Focusable = true;
-                    kiso.Focus();
-                }
-            }
-            //if (sender is KisoThumb t)
-            //{
-            //    //t.Focusable = true;
-            //    t.Focus();
-            //}
 
-            //if (e.OriginalSource is KisoThumb t)
-            //{
-            //    t.Focusable = true;
-            //    t.Focus();
-            //}
         }
 
         /// <summary>
         /// クリックダウン時、フォーカス無効化する。
         /// フォーカスでスクロール位置がガクッと変更されて不自然なのを防ぐ
         /// </summary>
-        internal void KisoThumb_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        //internal void KisoThumb_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    //イベント発生順序、Root、Group、その他Item
+        //    var sou = e.Source;
+        //    var ori = e.OriginalSource;
+        //    if (e.Source == e.OriginalSource)
+        //    {
+        //        if (sender is KisoThumb kiso)
+        //        {
+        //            kiso.Focusable = false;
+        //            //e.Handled = true;//これだとドラッグ移動イベントに到達しない
+        //        }
+        //    }
+
+        //    //if (sender is KisoThumb t)
+        //    //{
+        //    //    t.Focusable = false;
+        //    //    //e.Handled = true;//これだとドラッグ移動イベントに到達しない
+        //    //}
+        //}
+
+        internal void KisoThumb_PreviewMouseDownTest(object sender, MouseButtonEventArgs e)
         {
             //イベント発生順序、Root、Group、その他Item
             var sou = e.Source;
             var ori = e.OriginalSource;
             if (e.Source == e.OriginalSource)
             {
-                if (sender is KisoThumb kiso)
-                {
-                    kiso.Focusable = false;
-                    //e.Handled = true;//これだとドラッグ移動イベントに到達しない
-                }
+                RegistClickedThumb(this);
             }
 
-            //if (sender is KisoThumb t)
-            //{
-            //    t.Focusable = false;
-            //    //e.Handled = true;//これだとドラッグ移動イベントに到達しない
-            //}
         }
 
         /// <summary>
@@ -262,7 +304,7 @@ namespace _20250103
         {
             if (sender is KisoThumb t)
             {
-            
+
                 t.MyLeft += (int)(e.HorizontalChange + 0.5);
                 t.MyTop += (int)(e.VerticalChange + 0.5);
                 e.Handled = true;
@@ -316,6 +358,27 @@ namespace _20250103
         }
 
         #endregion イベントハンドラ
+
+
+        #region internalメソッド
+
+        /// <summary>
+        /// クリックされたThumbを親要素に登録
+        /// </summary>
+        /// <param name="kisoThumb"></param>
+        internal void RegistClickedThumb(KisoThumb kisoThumb)
+        {
+            if (this.MyParentThumb is RootThumb rt)
+            {
+                rt.MyClickedThumb = kisoThumb;
+            }
+            else if (this.MyParentThumb is GroupThumb gt)
+            {
+                gt.RegistClickedThumb(kisoThumb);
+            }
+        }
+
+        #endregion internalメソッド
 
         #region メソッド
         private void FixZIndex(int start, int end)
@@ -527,7 +590,7 @@ namespace _20250103
             }
             else if (e.Action == NotifyCollectionChangedAction.Move)
             {
-                            }
+            }
         }
         #endregion 初期化
 
@@ -626,8 +689,10 @@ namespace _20250103
         }
         public RootThumb()
         {
+            Focusable = true;
             MyType = ThumbType.Root;
             MySelectThumbs = [];
+            MySelectionThumbs = [];
             DragDelta -= Thumb_DragDelta2;
             DragStarted -= KisoThumb_DragStarted2;
             DragCompleted -= KisoThumb_DragCompleted2;
@@ -635,6 +700,17 @@ namespace _20250103
             KeyUp -= KisoThumb_KeyUp;
             //PreviewMouseDown += RootThumb_PreviewMouseDown;
             GotKeyboardFocus += RootThumb_GotKeyboardFocus;
+            Loaded += RootThumb_Loaded;
+        }
+
+        private void RootThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            //ActiveGroupThumbの指定
+            MyActiveGroupThumb = this;
+            foreach (var item in MyThumbs)
+            {
+                item.IsSelectable = true;
+            }
         }
 
         #region パブリックなメソッド
@@ -656,6 +732,33 @@ namespace _20250103
         #region 依存関係プロパティ
 
 
+        public KisoThumb MyClickedThumb
+        {
+            get { return (KisoThumb)GetValue(MyClickedThumbProperty); }
+            set { SetValue(MyClickedThumbProperty, value); }
+        }
+        public static readonly DependencyProperty MyClickedThumbProperty =
+            DependencyProperty.Register(nameof(MyClickedThumb), typeof(KisoThumb), typeof(RootThumb), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnMyClickedThumbChanged)));
+
+        private static void OnMyClickedThumbChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is RootThumb rt)
+            {
+                if (e.NewValue is KisoThumb n && n.MyParentThumb is GroupThumb gt)
+                {
+                    rt.MyActiveGroupThumb = gt;
+                }
+            }
+        }
+
+        public ObservableCollection<KisoThumb> MySelectionThumbs
+        {
+            get { return (ObservableCollection<KisoThumb>)GetValue(MySelectionThumbsProperty); }
+            set { SetValue(MySelectionThumbsProperty, value); }
+        }
+        public static readonly DependencyProperty MySelectionThumbsProperty =
+            DependencyProperty.Register(nameof(MySelectionThumbs), typeof(ObservableCollection<KisoThumb>), typeof(RootThumb), new PropertyMetadata(null));
+
 
         public GroupThumb MyActiveGroupThumb
         {
@@ -663,8 +766,32 @@ namespace _20250103
             set { SetValue(MyActiveGroupThumbProperty, value); }
         }
         public static readonly DependencyProperty MyActiveGroupThumbProperty =
-            DependencyProperty.Register(nameof(MyActiveGroupThumb), typeof(GroupThumb), typeof(RootThumb), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(MyActiveGroupThumb), typeof(GroupThumb), typeof(RootThumb), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnMyActiveGroupThumbChanged)));
 
+        private static void OnMyActiveGroupThumbChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is RootThumb rt)
+            {
+                if (e.OldValue is GroupThumb o)
+                {
+                    foreach (var item in o.MyThumbs)
+                    {
+                        item.IsSelectable = false;
+                    }
+                }
+                if (e.NewValue is GroupThumb n)
+                {
+                    foreach (var item in n.MyThumbs)
+                    {
+                        item.IsSelectable = true;
+                    }
+                }
+                if (e.NewValue != e.OldValue)
+                {
+                    var neko = 0;
+                }
+            }
+        }
 
 
         /// <summary>
