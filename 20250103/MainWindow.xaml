@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250103"
         mc:Ignorable="d"
-          Title="MainWindow" Height="450" Width="500">
+          Title="MainWindow" Height="450" Width="600">
   <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
-      <ColumnDefinition Width="250"/>
+      <ColumnDefinition Width="200"/>
+      <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
 
     <ScrollViewer x:Name="MyScrollV"
@@ -61,33 +62,29 @@
 
 
     <TabControl Grid.Column="1" DataContext="{Binding ElementName=MyRootGroup}">
+      <TabItem Header="Tab5">
+        <ScrollViewer>
+          <TreeView ItemsSource="{Binding ElementName=MyRootGroup, Path=MySelectedThumbs}">
+            <TreeView.ItemTemplate>
+              <HierarchicalDataTemplate DataType="local:RootThumb" ItemsSource="{Binding MySelectedThumbs}">
+                <StackPanel Orientation="Vertical">
+                  <TextBlock Text="{Binding MyType}" VerticalAlignment="Center"/>
+                  <TextBlock Text="{Binding MyZIndex, StringFormat=z {0:0}}"/>
+                  <TextBlock Text="{Binding IsSelectable, StringFormat=選択可能 {0:0}}"/>
+                  <TextBlock Text="{Binding IsSelected, StringFormat=選択 {0:0}}"/>
+                  <Rectangle Width="50" Height="50">
+                    <Rectangle.Fill>
+                      <VisualBrush Visual="{Binding}" Stretch="Uniform"/>
+                    </Rectangle.Fill>
+                  </Rectangle>
+                </StackPanel>
+              </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+          </TreeView>
+        </ScrollViewer>
+      </TabItem>
+      
       <TabItem Header="tab4">
-        <StackPanel>
-          <TextBlock Text="{Binding MyActiveGroupThumb}"/>
-          <ComboBox x:Name="MyComboBoxThumbType"/>
-          <TextBox x:Name="MyTextBoxMyText"/>
-          <ComboBox x:Name="MyComboBoxBackgroundBrush">
-            <ComboBox.ItemTemplate>
-              <DataTemplate>
-                <Ellipse Fill="{Binding}" Width="20" Height="20"/>
-              </DataTemplate>
-            </ComboBox.ItemTemplate>
-          </ComboBox>
-          <Button x:Name="MyButtonTest" Content="test" Click="MyButtonTest_Click"/>
-          <Button x:Name="MyButtonAdd" Content="add" Click="MyButtonAdd_Click"/>
-          <TextBlock x:Name="GotKey"/>
-          <Rectangle Width="50" Height="50">
-            <Rectangle.Fill>
-              <VisualBrush Visual="{Binding MyClickedThumb}" Stretch="Uniform"/>
-            </Rectangle.Fill>
-          </Rectangle>
-          <Rectangle Width="50" Height="50">
-            <Rectangle.Fill>
-              <VisualBrush Visual="{Binding MyActiveGroupThumb}" Stretch="Uniform"/>
-            </Rectangle.Fill>
-          </Rectangle>
-
-        </StackPanel>
       </TabItem>
 
       <TabItem Header="Tab3">
@@ -173,5 +170,48 @@
         </ScrollViewer>
       </TabItem>
     </TabControl>
+
+  <TabControl Grid.Column="2" DataContext="{Binding ElementName=MyRootGroup}">
+    <TabItem Header="TabA">
+        <StackPanel>
+          <TextBlock Text="{Binding MyActiveGroupThumb}"/>
+          <ComboBox x:Name="MyComboBoxThumbType"/>
+          <TextBox x:Name="MyTextBoxMyText"/>
+          <ComboBox x:Name="MyComboBoxBackgroundBrush">
+            <ComboBox.ItemTemplate>
+              <DataTemplate>
+                <Ellipse Fill="{Binding}" Width="20" Height="20"/>
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <Button x:Name="MyButtonTest" Content="test" Click="MyButtonTest_Click"/>
+          <Button x:Name="MyButtonAdd" Content="add" Click="MyButtonAdd_Click"/>
+          <TextBlock x:Name="GotKey"/>
+          <TextBlock Text="ClickedThumb"/>
+          <Rectangle Width="50" Height="50">
+            <Rectangle.Fill>
+              <VisualBrush Visual="{Binding MyClickedThumb}" Stretch="Uniform"/>
+            </Rectangle.Fill>
+          </Rectangle>
+          <Separator/>
+          <TextBlock Text="FocusThumb"/>
+          <Rectangle Width="50" Height="50">
+            <Rectangle.Fill>
+              <VisualBrush Visual="{Binding MyFocusThumb}" Stretch="Uniform"/>
+            </Rectangle.Fill>
+          </Rectangle>
+          <Separator/>
+
+          <TextBlock Text="ActiveGroupThumb"/>
+          <Rectangle Width="50" Height="50">
+            <Rectangle.Fill>
+              <VisualBrush Visual="{Binding MyActiveGroupThumb}" Stretch="Uniform"/>
+            </Rectangle.Fill>
+          </Rectangle>
+
+        </StackPanel>
+
+      </TabItem>
+  </TabControl>
   </Grid>
 </Window>
