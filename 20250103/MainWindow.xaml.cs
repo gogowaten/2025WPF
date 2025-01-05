@@ -33,8 +33,6 @@ namespace _20250103
                 }
             }
             MyComboBoxBackgroundBrush.ItemsSource = brushes;
-            MyScrollV.FocusableChanged += MyScrollV_FocusableChanged1;
-            MyScrollV.ScrollChanged += MyScrollV_ScrollChanged;
             //var ika = typeof(Brushes).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).ToDictionary(x => x.Name, x => x.GetValue(null) as Brush);
             //MyComboBoxBackgroundBrush2.ItemsSource = ika;
 
@@ -50,21 +48,6 @@ namespace _20250103
 
         }
 
-        private void MyScrollV_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            var chsbv = MyScrollV.ComputedHorizontalScrollBarVisibility;
-            //throw new NotImplementedException();
-        }
-
-        private void MyScrollV_FocusableChanged1(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void MyScrollV_FocusableChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         private void MyRootGroup_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
@@ -100,20 +83,7 @@ namespace _20250103
 
         private void MyButtonTest_Click(object sender, RoutedEventArgs e)
         {
-            if (MyRootGroup.MyFocusThumb is KisoThumb kiso)
-            {
-                kiso.ZIndexBottom();
-            }
-
-            //if(MyRootGroup.MyFocusThumb is KisoThumb kiso)
-            //{
-            //    kiso.MyParentThumb?.MyThumbs.Move(kiso.MyZIndex, kiso.MyZIndex + 1);
-            //}
-            //MyRootGroup.MyFocusThumb?.MyThumbs.Move(0, 1);
-            //var z = Panel.GetZIndex(MyRootGroup.MyFocusThumb);
-            //MyRootGroup.MyFocusThumb.MyZIndex += 1;
-            //MyGroup3.MyThumbs.Move(0, 1);
-            //MyGroup3.MyThumbs[2];
+           
         }
     }
 }

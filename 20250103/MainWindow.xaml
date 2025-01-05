@@ -63,7 +63,7 @@
 
     <TabControl Grid.Column="1" DataContext="{Binding ElementName=MyRootGroup}">
       <TabItem Header="Tab5">
-        <ScrollViewer>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
           <TreeView ItemsSource="{Binding ElementName=MyRootGroup, Path=MySelectedThumbs}">
             <TreeView.ItemTemplate>
               <HierarchicalDataTemplate DataType="local:RootThumb" ItemsSource="{Binding MySelectedThumbs}">

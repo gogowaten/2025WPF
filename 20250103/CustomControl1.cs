@@ -767,6 +767,58 @@ namespace _20250103
             MySelectedThumbs.CollectionChanged += MySelectedThumbs_CollectionChanged;
         }
 
+        #region internalメソッド
+
+        /// <summary>
+        /// MySelectedThumbsの更新、クリックしたときに使う
+        /// FocusThumbの更新も行っているけど、SelectionThumbのイベントで行ったほうがいいかも？
+        /// ctrl＋クリックで対象Thumbがリストになければ追加、あれば削除
+        /// 通常クリックならリストをクリアして追加
+        /// </summary>
+        /// <param name="thumb">対象Thumb</param>
+        internal void UpdateSelectedThumbs(KisoThumb thumb)
+        {
+            if (thumb.IsSelectable == false) { return; }
+
+            //通常クリック、または要素数が0のとき
+            if (Keyboard.Modifiers == ModifierKeys.None || MySelectedThumbs.Count == 0)
+            {
+                //リストクリア後に追加してFocusThumbにする
+                MySelectedThumbs.Clear();
+                MySelectedThumbs.Add(thumb);
+                MyFocusThumb = thumb;
+            }
+
+            //ctrlクリックの場合
+            else if (Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                if (MySelectedThumbs.Count >= 1 && MySelectedThumbs.Contains(thumb) == false)
+                {
+                    //選択数が1個以上＋対象が含まれていない場合、追加してFocusThumb
+                    MySelectedThumbs.Add(thumb);
+                    MyFocusThumb = thumb;
+                }
+                else if (MySelectedThumbs.Count > 1 && MySelectedThumbs.Contains(thumb))
+                {
+                    //選択数が2個以上＋対象が含まれれている場合、削除
+                    //さらにFocusThumbだった場合は、リストの最後の要素をFocusThumbにする
+                    MySelectedThumbs.Remove(thumb);
+                    if (thumb == MyFocusThumb)
+                    {
+                        MyFocusThumb = MySelectedThumbs[^1];
+                    }
+                }
+            }
+        }
+
+        #endregion internalメソッド
+
+        #region パブリックなメソッド
+
+        #endregion パブリックなメソッド
+
+        #region イベントでの処理
+
         private void MySelectedThumbs_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -795,48 +847,6 @@ namespace _20250103
             }
         }
 
-        #region internalメソッド
-
-        /// <summary>
-        /// MySelectedThumbsの更新
-        /// ctrl＋クリックで対象Thumbがリストになければ追加、あれば削除
-        /// 通常クリックならリストをクリアして追加
-        /// </summary>
-        /// <param name="thumb">対象Thumb</param>
-        internal void UpdateSelectedThumbs(KisoThumb thumb)
-        {
-            if (thumb.IsSelectable == false) { return; }
-            if (MySelectedThumbs.Count == 1 && thumb == MySelectedThumbs[0]) { return; }
-
-            if (MySelectedThumbs.Count == 0)
-            {
-                MySelectedThumbs.Add(thumb);
-            }
-
-            //ctrlキー押しながらの選択時、
-            //要素数2個以上＋クリック対象がリストに存在しているなら削除、ないなら追加
-            else if (MySelectedThumbs.Count >= 1 && Keyboard.Modifiers == ModifierKeys.Control)
-            {
-                if (!MySelectedThumbs.Remove(thumb))
-                {
-                    MySelectedThumbs.Add(thumb);
-                }
-            }
-            else
-            {
-                MySelectedThumbs.Clear();
-                MySelectedThumbs.Add(thumb);
-            }
-        }
-
-        #endregion internalメソッド
-
-        #region パブリックなメソッド
-
-        #endregion パブリックなメソッド
-
-        #region イベントでの処理
-
         private void RootThumb_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             if (e.NewFocus is KisoThumb kiso)
@@ -860,20 +870,12 @@ namespace _20250103
 
         private static void OnMyClickedThumbChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            //var neko = Keyboard.Modifiers == ModifierKeys.Control;
-            //FocusThumbの更新
-            if (d is RootThumb rt)
-            {
-                if (e.NewValue is KisoThumb n && n.IsSelectable)
-                {
-                    rt.MyFocusThumb = n;
-                }
-            }
+            ////FocusThumbの更新
             //if (d is RootThumb rt)
             //{
-            //    if (e.NewValue is KisoThumb n && n.MyParentThumb is GroupThumb gt)
+            //    if (e.NewValue is KisoThumb n && n.IsSelectable)
             //    {
-            //        rt.MyActiveGroupThumb = gt;
+            //        rt.MyFocusThumb = n;
             //    }
             //}
         }
