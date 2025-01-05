@@ -154,10 +154,11 @@
           <TreeView ItemsSource="{Binding ElementName=MyRootGroup, Path=MyThumbs}">
             <TreeView.ItemTemplate>
               <HierarchicalDataTemplate DataType="local:RootThumb" ItemsSource="{Binding MyThumbs}">
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
                   <TextBlock Text="{Binding MyType}" VerticalAlignment="Center" Margin="10"/>
                   <TextBlock Text="{Binding MyZIndex, StringFormat=z {0:0}}"/>
                   <TextBlock Text="{Binding IsSelectable, StringFormat=selectable {0:0}}"/>
+                  <TextBlock Text="{Binding IsSelected, StringFormat=selected {0:0}}"/>
                   <Rectangle Width="50" Height="50">
                     <Rectangle.Fill>
                       <VisualBrush Visual="{Binding}" Stretch="Uniform"/>

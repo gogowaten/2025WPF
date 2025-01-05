@@ -83,7 +83,9 @@ namespace _20250103
 
         private void MyButtonTest_Click(object sender, RoutedEventArgs e)
         {
-           
+            //MyRootGroup.FocusThumbToActiveGroupThumb();
+            //MyRootGroup.ClickedThumbToActiveGroupThumb();
+            MyRootGroup.ClickedThumbsParentToActiveGroupThumb();
         }
     }
 }

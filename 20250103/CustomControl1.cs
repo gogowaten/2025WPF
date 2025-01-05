@@ -295,6 +295,8 @@ namespace _20250103
             //イベント発生順序、Root、Group、その他Item
             var sou = e.Source;
             var ori = e.OriginalSource;
+
+            //e.Sourceとe.OriginalSourceが一致したときのthisがクリックされたThumbと一致する
             if (e.Source == e.OriginalSource)
             {
                 if (GetRootThumb() is RootThumb root)
@@ -406,6 +408,11 @@ namespace _20250103
 
         #region internalメソッド
 
+        /// <summary>
+        /// SelectableなThumbをParentを辿って取得する
+        /// </summary>
+        /// <param name="thumb"></param>
+        /// <returns></returns>
         internal KisoThumb? GetSelectableParentThumb(KisoThumb thumb)
         {
             if (thumb.IsSelectable) { return thumb; }
@@ -423,25 +430,21 @@ namespace _20250103
             return null;
         }
 
-        ///// <summary>
-        ///// クリックされたThumbを親要素に登録
-        ///// </summary>
-        ///// <param name="kisoThumb"></param>
-        //internal void RegistClickedThumb(KisoThumb kisoThumb)
-        //{
-        //    if (this.MyParentThumb is RootThumb rt)
-        //    {
-        //        rt.MyClickedThumb = kisoThumb;
-        //    }
-        //    else if (this.MyParentThumb is GroupThumb gt)
-        //    {
-        //        gt.RegistClickedThumb(kisoThumb);
-        //    }
-        //}
 
         #endregion internalメソッド
 
         #region メソッド
+        //ActiveGroupThumbの変更
+        public void ChangeActiveGroupThumb()
+        {
+
+        }
+
+        /// <summary>
+        /// ZIndexの修正、MyThumbsのIndexに合わせる
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
         private void FixZIndex(int start, int end)
         {
             if (MyParentThumb is GroupThumb gt)
@@ -764,7 +767,6 @@ namespace _20250103
             //PreviewMouseDown += RootThumb_PreviewMouseDown;
             GotKeyboardFocus += RootThumb_GotKeyboardFocus;
             Loaded += RootThumb_Loaded;
-            MySelectedThumbs.CollectionChanged += MySelectedThumbs_CollectionChanged;
         }
 
         #region internalメソッド
@@ -785,6 +787,7 @@ namespace _20250103
             {
                 //リストクリア後に追加してFocusThumbにする
                 MySelectedThumbs.Clear();
+
                 MySelectedThumbs.Add(thumb);
                 MyFocusThumb = thumb;
             }
@@ -815,27 +818,46 @@ namespace _20250103
 
         #region パブリックなメソッド
 
+        public void FocusThumbToActiveGroupThumb()
+        {
+            if (MyFocusThumb is GroupThumb gt)
+            {
+                ChangeActiveGroupThumb(gt);
+            }
+        }
+        public void ClickedThumbToActiveGroupThumb()
+        {
+            if (MyClickedThumb is GroupThumb gt)
+            {
+                ChangeActiveGroupThumb(gt);
+            }
+        }
+        public void ClickedThumbsParentToActiveGroupThumb()
+        {
+            if (MyClickedThumb.MyParentThumb is GroupThumb gt)
+            {
+                ChangeActiveGroupThumb(gt);
+            }
+        }
+        
+
+        private void ChangeActiveGroupThumb(GroupThumb group)
+        {
+            if (MyActiveGroupThumb != group)
+            {
+                MySelectedThumbs.Clear();
+                if (group.MyThumbs.Contains(MyFocusThumb) == false)
+                {
+                    MySelectedThumbs.Add(group.MyThumbs[0]);
+                }
+                MyActiveGroupThumb = group;
+            }
+        }
+
         #endregion パブリックなメソッド
 
         #region イベントでの処理
 
-        private void MySelectedThumbs_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                if (e.NewItems?[0] is KisoThumb n)
-                {
-                    n.IsSelected = true;
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                if (e.OldItems?[0] is KisoThumb o)
-                {
-                    o.IsSelected = false;
-                }
-            }
-        }
 
         private void RootThumb_Loaded(object sender, RoutedEventArgs e)
         {
@@ -942,13 +964,13 @@ namespace _20250103
             //}
         }
 
-        public ObservableCollection<KisoThumb> MySelectedThumbs
+        public ObservableCollectionKisoThumb MySelectedThumbs
         {
-            get { return (ObservableCollection<KisoThumb>)GetValue(MySelectedThumbsProperty); }
+            get { return (ObservableCollectionKisoThumb)GetValue(MySelectedThumbsProperty); }
             set { SetValue(MySelectedThumbsProperty, value); }
         }
         public static readonly DependencyProperty MySelectedThumbsProperty =
-            DependencyProperty.Register(nameof(MySelectedThumbs), typeof(ObservableCollection<KisoThumb>), typeof(RootThumb), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(MySelectedThumbs), typeof(ObservableCollectionKisoThumb), typeof(RootThumb), new PropertyMetadata(null));
 
 
         #endregion 依存関係プロパティ
