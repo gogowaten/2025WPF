@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250103"
         mc:Ignorable="d"
-          Title="MainWindow" Height="450" Width="600">
+          Title="MainWindow" Height="450" Width="800">
   <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -185,7 +185,10 @@
               </DataTemplate>
             </ComboBox.ItemTemplate>
           </ComboBox>
-          <Button x:Name="MyButtonTest" Content="test" Click="MyButtonTest_Click"/>
+          <Button x:Name="MyButtonTest" Content="up" Click="MyButtonTest_Click"/>
+          <Button x:Name="MyButtonTest2" Content="down" Click="MyButtonTest2_Click"/>
+          <!--<Button x:Name="MyButtonTest3" Content="click" Click="MyButtonTest3_Click"/>-->
+          <Button x:Name="MyButtonTest4" Content="clickParent" Click="MyButtonTest4_Click"/>
           <Button x:Name="MyButtonAdd" Content="add" Click="MyButtonAdd_Click"/>
           <TextBlock x:Name="GotKey"/>
           <TextBlock Text="ClickedThumb"/>

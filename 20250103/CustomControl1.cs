@@ -818,40 +818,68 @@ namespace _20250103
 
         #region パブリックなメソッド
 
+        /// <summary>
+        /// 一段上げる
+        /// </summary>
+        public void ActiveThumbParentToActiveGroupThumb()
+        {
+            if (MyActiveGroupThumb?.MyParentThumb is GroupThumb gt)
+            {
+                GroupThumb motoGroup = MyActiveGroupThumb;
+                if (ChangeActiveGroupThumb(gt))
+                {
+                    MyFocusThumb = motoGroup;
+                    MySelectedThumbs.Add(motoGroup);
+                };
+            }
+        }
+
+        /// <summary>
+        /// 1段下げる
+        /// </summary>
         public void FocusThumbToActiveGroupThumb()
         {
             if (MyFocusThumb is GroupThumb gt)
             {
-                ChangeActiveGroupThumb(gt);
+                GroupThumb motoGroup = MyActiveGroupThumb;
+                if (ChangeActiveGroupThumb(gt))
+                {
+                    if (gt.MyThumbs.Contains(MyClickedThumb))
+                    {
+                        MyFocusThumb = MyClickedThumb;
+                        MySelectedThumbs.Add(MyClickedThumb);
+                    }                    
+                };
             }
         }
-        public void ClickedThumbToActiveGroupThumb()
-        {
-            if (MyClickedThumb is GroupThumb gt)
-            {
-                ChangeActiveGroupThumb(gt);
-            }
-        }
+
+        /// <summary>
+        /// ClickedをSelectableになるように
+        /// </summary>
         public void ClickedThumbsParentToActiveGroupThumb()
         {
-            if (MyClickedThumb.MyParentThumb is GroupThumb gt)
+            if (MyClickedThumb?.MyParentThumb is GroupThumb gt)
             {
-                ChangeActiveGroupThumb(gt);
+                if (ChangeActiveGroupThumb(gt))
+                {
+                    MySelectedThumbs.Add(MyClickedThumb);
+                    MyFocusThumb = MyClickedThumb;
+                };
             }
         }
-        
 
-        private void ChangeActiveGroupThumb(GroupThumb group)
+        /// <summary>
+        /// ActiveGroupThumbの変更
+        /// </summary>
+        /// <param name="group">指定GroupThumb</param>
+        private bool ChangeActiveGroupThumb(GroupThumb group)
         {
             if (MyActiveGroupThumb != group)
             {
-                MySelectedThumbs.Clear();
-                if (group.MyThumbs.Contains(MyFocusThumb) == false)
-                {
-                    MySelectedThumbs.Add(group.MyThumbs[0]);
-                }
                 MyActiveGroupThumb = group;
+                return true;
             }
+            return false;
         }
 
         #endregion パブリックなメソッド
@@ -914,6 +942,7 @@ namespace _20250103
         {
             if (d is RootThumb rt)
             {
+                rt.MySelectedThumbs.Clear();
                 if (e.OldValue is GroupThumb o)
                 {
                     foreach (var item in o.MyThumbs)
