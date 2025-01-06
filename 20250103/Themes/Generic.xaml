@@ -7,6 +7,26 @@
 
 
 
+  <Style x:Key="waku4" TargetType="Border">
+    <Style.Resources>
+      <local:MyComv x:Key="wakuConvert2"/>
+    </Style.Resources>
+    <Setter Property="Visibility" Value="{Binding IsWakuVisible}"/>
+    <Setter Property="BorderThickness" Value="1.0"/>
+    <Setter Property="BorderBrush">
+      <Setter.Value>
+        <MultiBinding Converter="{StaticResource wakuConvert2}">
+          <Binding Path="MyBrushList"/>
+          <Binding Path="IsFocus"/>
+          <Binding Path="IsSelected"/>
+          <Binding Path="IsSelectable"/>
+          <Binding Path="IsActiveGroup"/>
+        </MultiBinding>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
   <Style x:Key="kiso" TargetType="{x:Type local:KisoThumb}">
     <Setter Property="Canvas.Left" Value="{Binding MyLeft}"/>
     <Setter Property="Canvas.Top" Value="{Binding MyTop}"/>
@@ -31,12 +51,18 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate>
-          <TextBlock Text="{Binding MyText}"
+          <Grid>
+            <TextBlock Text="{Binding MyText}"
                      Background="{TemplateBinding Background}"/>
+            <Border Style="{StaticResource waku4}"/>
+          </Grid>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
   </Style>
+
+
+
 
 
   <Style TargetType="{x:Type local:EllipseTextThumb}"
@@ -51,6 +77,7 @@
             <TextBlock Text="{Binding MyText}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"/>
+            <Border Style="{StaticResource waku4}"/>
           </Grid>
         </ControlTemplate>
       </Setter.Value>
@@ -64,16 +91,19 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate>
-          <ItemsControl x:Name="PART_ItemsControl"
+          <Grid>
+            <ItemsControl x:Name="PART_ItemsControl"
                         ItemsSource="{Binding MyThumbs}"
                         Background="{TemplateBinding Background}"
                         Focusable="False">
-            <ItemsControl.ItemsPanel>
-              <ItemsPanelTemplate>
-                <local:ExCanvas/>
-              </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-          </ItemsControl>
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <local:ExCanvas/>
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <Border Style="{StaticResource waku4}"/>
+          </Grid>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
@@ -99,5 +129,5 @@
       </Setter.Value>
     </Setter>
   </Style>
-  
+
 </ResourceDictionary>

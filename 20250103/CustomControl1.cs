@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +39,31 @@ namespace _20250103
 
         #region 依存関係プロパティ
 
+
+        public Visibility IsWakuVisible
+        {
+            get { return (Visibility)GetValue(IsWakuVisibleProperty); }
+            set { SetValue(IsWakuVisibleProperty, value); }
+        }
+        public static readonly DependencyProperty IsWakuVisibleProperty =
+            DependencyProperty.Register(nameof(IsWakuVisible), typeof(Visibility), typeof(KisoThumb), new PropertyMetadata(Visibility.Visible));
+
+        public List<Brush> MyBrushList
+        {
+            get { return (List<Brush>)GetValue(MyBrushListProperty); }
+            set { SetValue(MyBrushListProperty, value); }
+        }
+        public static readonly DependencyProperty MyBrushListProperty =
+            DependencyProperty.Register(nameof(MyBrushList), typeof(List<Brush>), typeof(KisoThumb), new PropertyMetadata(null));
+
+
+        public ObservableCollectionKisoThumb MySelectedThumbs
+        {
+            get { return (ObservableCollectionKisoThumb)GetValue(MySelectedThumbsProperty); }
+            set { SetValue(MySelectedThumbsProperty, value); }
+        }
+        public static readonly DependencyProperty MySelectedThumbsProperty =
+            DependencyProperty.Register(nameof(MySelectedThumbs), typeof(ObservableCollectionKisoThumb), typeof(RootThumb), new PropertyMetadata(null));
 
         public ObservableCollection<KisoThumb> MyThumbs
         {
@@ -90,6 +116,19 @@ namespace _20250103
         #region 読み取り専用依存関係プロパティ
 
 
+
+        private static readonly DependencyPropertyKey IsActiveGroupPropertyKey =
+            DependencyProperty.RegisterReadOnly(nameof(IsActiveGroup), typeof(bool), typeof(KisoThumb), new PropertyMetadata(false));
+        public static readonly DependencyProperty IsActiveGroupProperty = IsActiveGroupPropertyKey.DependencyProperty;
+        public bool IsActiveGroup
+        {
+            get { return (bool)GetValue(IsActiveGroupPropertyKey.DependencyProperty); }
+            internal set { SetValue(IsActiveGroupPropertyKey, value); }
+        }
+
+
+
+
         private static readonly DependencyPropertyKey IsSelectablePropertyKey =
             DependencyProperty.RegisterReadOnly(nameof(IsSelectable), typeof(bool), typeof(KisoThumb), new PropertyMetadata(false));
         public static readonly DependencyProperty IsSelectableProperty = IsSelectablePropertyKey.DependencyProperty;
@@ -135,6 +174,18 @@ namespace _20250103
         }
         public KisoThumb()
         {
+            MyBrushList = [];
+            //透明
+            MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(1, Color.FromArgb(0, 0, 0, 0), Color.FromArgb(0, 0, 0, 0)));
+            //青DodgerBlue:IsFocus
+            MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(8, Color.FromArgb(255, 30, 144, 255), Color.FromArgb(255, 255, 255, 255)));
+            //青:IsSelected
+            MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(8, Color.FromArgb(255, 135, 206, 250), Color.FromArgb(255, 255, 255, 255)));
+            //半透明灰色:IsSelectable
+            MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(8, Color.FromArgb(64, 0,0,0), Color.FromArgb(64, 255, 255, 255)));
+            //黄色:
+            MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(8, Color.FromArgb(255, 186, 85, 211), Color.FromArgb(255, 255, 255, 255)));
+
             DataContext = this;
             //Focusable = true;
             Focusable = false;
@@ -756,15 +807,12 @@ namespace _20250103
         {
             Focusable = true;
             MyType = ThumbType.Root;
-            //MySelectThumbs = [];
             MySelectedThumbs = [];
             DragDelta -= Thumb_DragDelta3;
-            //DragDelta -= Thumb_DragDelta2;
             DragStarted -= KisoThumb_DragStarted2;
             DragCompleted -= KisoThumb_DragCompleted2;
             KeyDown -= KisoThumb_KeyDown;
             KeyUp -= KisoThumb_KeyUp;
-            //PreviewMouseDown += RootThumb_PreviewMouseDown;
             GotKeyboardFocus += RootThumb_GotKeyboardFocus;
             Loaded += RootThumb_Loaded;
         }
@@ -848,7 +896,7 @@ namespace _20250103
                     {
                         MyFocusThumb = MyClickedThumb;
                         MySelectedThumbs.Add(MyClickedThumb);
-                    }                    
+                    }
                 };
             }
         }
@@ -945,6 +993,7 @@ namespace _20250103
                 rt.MySelectedThumbs.Clear();
                 if (e.OldValue is GroupThumb o)
                 {
+                    o.IsActiveGroup = false;
                     foreach (var item in o.MyThumbs)
                     {
                         item.IsSelectable = false;
@@ -952,6 +1001,7 @@ namespace _20250103
                 }
                 if (e.NewValue is GroupThumb n)
                 {
+                    n.IsActiveGroup = true;
                     foreach (var item in n.MyThumbs)
                     {
                         item.IsSelectable = true;
@@ -980,30 +1030,106 @@ namespace _20250103
         /// <param name="e"></param>
         private static void OnMyFocusThumbChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            //if (d is RootThumb rt)
-            //{
-            //    if (e.NewValue is KisoThumb n)
-            //    {
-            //        rt.MyActiveGroupThumb = n.MyParentThumb ?? rt;
-            //        //n.Focusable = true;
-            //        //FocusManager.SetFocusedElement(rt, n);
-            //        //Keyboard.Focus(n);
-            //        //n.Focus();
-            //    }
-            //}
+            if (d is RootThumb rt)
+            {
+                if (e.NewValue is KisoThumb n)
+                {
+                    n.IsFocus = true;
+                    //rt.MyActiveGroupThumb = n.MyParentThumb ?? rt;
+                    //n.Focusable = true;
+                    //FocusManager.SetFocusedElement(rt, n);
+                    //Keyboard.Focus(n);
+                    //n.Focus();
+                }
+                if (e.OldValue is KisoThumb o) { o.IsFocus = false; }
+            }
         }
 
-        public ObservableCollectionKisoThumb MySelectedThumbs
-        {
-            get { return (ObservableCollectionKisoThumb)GetValue(MySelectedThumbsProperty); }
-            set { SetValue(MySelectedThumbsProperty, value); }
-        }
-        public static readonly DependencyProperty MySelectedThumbsProperty =
-            DependencyProperty.Register(nameof(MySelectedThumbs), typeof(ObservableCollectionKisoThumb), typeof(RootThumb), new PropertyMetadata(null));
 
 
         #endregion 依存関係プロパティ
 
     }
 
+    //public class WakuBorder : Border
+    //{
+
+    //    static WakuBorder()
+    //    {
+    //        DefaultStyleKeyProperty.OverrideMetadata(typeof(WakuBorder), new FrameworkPropertyMetadata(typeof(WakuBorder)));
+    //    }
+    //    public WakuBorder()
+    //    {
+    //        MyBrushList = [];
+    //        //BorderBrush = Brushes.Magenta;
+    //        BorderThickness = new Thickness(1.0);
+
+    //        MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(1, Color.FromArgb(0, 0, 0, 0), Color.FromArgb(0, 0, 0, 0)));
+    //        MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(1, Color.FromArgb(255, 255, 0, 0), Color.FromArgb(255, 255, 255, 255)));
+    //        MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(1, Color.FromArgb(255, 0, 0, 255), Color.FromArgb(255, 255, 255, 255)));
+    //        MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(1, Color.FromArgb(255, 255, 255, 0), Color.FromArgb(255, 255, 255, 255)));
+    //    }
+    //    #region 依存関係プロパティ
+
+
+    //    public List<ImageBrush> MyBrushList
+    //    {
+    //        get { return (List<ImageBrush>)GetValue(MyBrushListProperty); }
+    //        set { SetValue(MyBrushListProperty, value); }
+    //    }
+    //    public static readonly DependencyProperty MyBrushListProperty =
+    //        DependencyProperty.Register(nameof(MyBrushList), typeof(List<ImageBrush>), typeof(WakuBorder), new PropertyMetadata(null));
+
+
+    //    //public bool IsSelected
+    //    //{
+    //    //    get { return (bool)GetValue(IsSelectedProperty); }
+    //    //    set { SetValue(IsSelectedProperty, value); }
+    //    //}
+    //    //public static readonly DependencyProperty IsSelectedProperty =
+    //    //    DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(WakuBorder), new PropertyMetadata(false));
+
+    //    //public bool IsSelectable
+    //    //{
+    //    //    get { return (bool)GetValue(IsSelectableProperty); }
+    //    //    set { SetValue(IsSelectableProperty, value); }
+    //    //}
+    //    //public static readonly DependencyProperty IsSelectableProperty =
+    //    //    DependencyProperty.Register(nameof(IsSelectable), typeof(bool), typeof(WakuBorder), new PropertyMetadata(false));
+
+
+    //    //public bool IsFocus
+    //    //{
+    //    //    get { return (bool)GetValue(IsFocusProperty); }
+    //    //    set { SetValue(IsFocusProperty, value); }
+    //    //}
+    //    //public static readonly DependencyProperty IsFocusProperty =
+    //    //    DependencyProperty.Register(nameof(IsFocus), typeof(bool), typeof(WakuBorder), new PropertyMetadata(false));
+    //    #endregion 依存関係プロパティ
+    //}
+
+
+    public class MyComv : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+
+            List<Brush> brushes = (List<Brush>)values[0];
+            bool b1 = (bool)values[1];
+            bool b2 = (bool)values[2];
+            bool b3 = (bool)values[3];
+            bool b4 = (bool)values[4];
+
+            if (b1) { return brushes[1]; }//IsFocus
+            else if (b2) { return brushes[2]; }//IsSelected
+            else if (b3) { return brushes[3]; }//IsEelectable
+            else if (b4) { return brushes[4]; }//IsActiveGroup
+            else { return brushes[0]; }//それ以外
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
