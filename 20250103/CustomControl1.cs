@@ -1024,7 +1024,7 @@ namespace _20250103
 
 
         /// <summary>
-        /// フォーカスされたThumbが変更されたとき、そのThumbの親要素を取得してMyActiveGroupThumbに設定
+        /// フォーカスされたThumbが変更されたとき、IsFocusの変更
         /// </summary>
         /// <param name="d"></param>
         /// <param name="e"></param>
