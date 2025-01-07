@@ -51,7 +51,7 @@ namespace _20250103
 
         private void MyRootGroup_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            GotKey.Text = e.NewFocus.ToString();
+        GotKey.Text = e.NewFocus.ToString();
         }
 
         private void MyButtonAdd_Click(object sender, RoutedEventArgs e)

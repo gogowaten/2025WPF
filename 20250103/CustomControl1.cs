@@ -484,11 +484,13 @@ namespace _20250103
             }
             var sou = e.Source;
             var ori = e.OriginalSource;
+
+
             if (e.Source == e.OriginalSource)
             {
-                if(e.Source is KisoThumb kiso)
+                if (e.Source is KisoThumb kiso)
                 {
-                    if(GetSelectableParentThumb(kiso) is KisoThumb current)
+                    if (GetSelectableParentThumb(kiso) is KisoThumb current)
                     {
                         current.MyParentThumb?.RemoveAnchorThumb();
                     }
@@ -496,6 +498,7 @@ namespace _20250103
                     e.Handled = true;
                 }
             }
+
             //if (sender is KisoThumb t && t.MyParentThumb is not null)
             //{
             //    if (t.MyParentThumb is GroupThumb gt)
@@ -517,20 +520,37 @@ namespace _20250103
             var sou = e.Source;
             var ori = e.OriginalSource;
 
-            if (sender is KisoThumb t && t.IsSelectable)
-            {
-                if (t.MyParentThumb is GroupThumb gt)
-                {
-                    //アンカーThumbを作成追加
-                    gt.AddAnchorThumb(t.MyLeft, t.MyTop, t.ActualWidth, t.ActualHeight);
 
-                    //座標を四捨五入で整数にしてぼやけ回避
-                    t.MyLeft = (int)(t.MyLeft + 0.5);
-                    t.MyTop = (int)(t.MyTop + 0.5);
-                    //t.Focusable = false;
-                    e.Handled = true;
+
+            if (sender is KisoThumb kiso)
+            {
+                if (GetSelectableParentThumb(kiso) is KisoThumb current)
+                {
+                    if (current.MyParentThumb is GroupThumb parent)
+                    {
+                        parent.AddAnchorThumb(current);
+                        current.MyLeft = (int)(current.MyLeft + 0.5);
+                        current.MyTop = (int)(current.MyTop + 0.5);
+                        e.Handled = true;
+                    }
                 }
             }
+
+
+            //if (sender is KisoThumb t && t.IsSelectable)
+            //{
+            //    if (t.MyParentThumb is GroupThumb gt)
+            //    {
+            //        //アンカーThumbを作成追加
+            //        gt.AddAnchorThumb(t.MyLeft, t.MyTop, t.ActualWidth, t.ActualHeight);
+
+            //        //座標を四捨五入で整数にしてぼやけ回避
+            //        t.MyLeft = (int)(t.MyLeft + 0.5);
+            //        t.MyTop = (int)(t.MyTop + 0.5);
+            //        //t.Focusable = false;
+            //        e.Handled = true;
+            //    }
+            //}
 
             //if (e.Source is KisoThumb t)
             //{
@@ -816,18 +836,31 @@ namespace _20250103
         /// <summary>
         /// アンカーThumbをHiddenで追加
         /// </summary>
-        public void AddAnchorThumb(double left, double top, double width, double height)
+        //public void AddAnchorThumb(double left, double top, double width, double height)
+        //{
+        //    MyAnchorThumb = new AnchorThumb
+        //    {
+        //        Visibility = Visibility.Hidden,
+        //        Width = width,
+        //        Height = height,
+        //        MyLeft = left,
+        //        MyTop = top
+        //    };
+        //    MyThumbs.Add(MyAnchorThumb);
+        //}
+        public void AddAnchorThumb(KisoThumb thumb)
         {
             MyAnchorThumb = new AnchorThumb
             {
                 Visibility = Visibility.Hidden,
-                Width = width,
-                Height = height,
-                MyLeft = left,
-                MyTop = top
+                Width = thumb.Width,
+                Height = thumb.Height,
+                MyLeft = thumb.MyLeft + 1,
+                MyTop = thumb.MyTop + 1
             };
             MyThumbs.Add(MyAnchorThumb);
         }
+
 
         /// <summary>
         /// アンカーThumbを削除

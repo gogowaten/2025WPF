@@ -29,7 +29,8 @@
         <local:RootThumb x:Name="MyRootGroup" Background="Transparent">
           <local:TextBlockThumb MyText="Item1" Background="Beige"/>
 
-          <local:GroupThumb x:Name="MyGroup1" MyText="Group1" MyLeft="20" MyTop="20"><!--DodgerBlue-->
+          <local:GroupThumb x:Name="MyGroup1" MyText="Group1" MyLeft="20" MyTop="20">
+            <!--DodgerBlue-->
             <local:TextBlockThumb x:Name="MyItem1_1" MyLeft="100" MyTop="0"
                                 MyText="Item 2-1" Background="Beige"/>
             <local:EllipseTextThumb MyLeft="0" MyTop="150" MySize="60"
@@ -44,12 +45,14 @@
                                   MyText="Item 2-6" Background="Olive"/>
           </local:GroupThumb>
 
-          <local:GroupThumb x:Name="MyGroup2" MyText="Group2" MyLeft="150" MyTop="50"><!--DeepSkyBlue-->
+          <local:GroupThumb x:Name="MyGroup2" MyText="Group2" MyLeft="150" MyTop="50">
+            <!--DeepSkyBlue-->
             <local:TextBlockThumb x:Name="MyItem3_1" MyLeft="0" MyTop="0"
                                 MyText="Item 3-1" Background="Beige"/>
             <local:EllipseTextThumb MyLeft="150" MyTop="100" MySize="60"
                                   MyText="Item 3-2" Background="Gold"/>
-            <local:GroupThumb MyText="Group3" MyLeft="10" MyTop="30" x:Name="MyGroup3"><!--SkyBlue-->
+            <local:GroupThumb MyText="Group3" MyLeft="10" MyTop="30" x:Name="MyGroup3">
+              <!--SkyBlue-->
               <local:TextBlockThumb MyText="Item 3-3-1" Background="Beige"/>
               <local:TextBlockThumb MyLeft="50" MyTop="20" MyText="Item 3-3-2" Background="Beige"/>
               <local:TextBlockThumb MyLeft="100" MyTop="40" MyText="Item 3-3-3" Background="Beige"/>
@@ -87,6 +90,14 @@
       </TabItem>
 
       <TabItem Header="tab4">
+        <StackPanel>
+          <TextBlock Text="{Binding ElementName=MyScrollV, Path=HorizontalOffset, StringFormat=HOffset {0:0}}"/>
+          <TextBlock Text="{Binding ElementName=MyScrollV, Path=ContentHorizontalOffset, StringFormat=ContentHOffset {0:0}}"/>
+          <TextBlock Text="{Binding ElementName=MyScrollV, Path=ActualWidth, StringFormat=Width {0:0}}"/>
+          <TextBlock Text="{Binding ElementName=MyScrollV, Path=ScrollableWidth, StringFormat=ScrollableWidth {0:0}}"/>
+          <TextBlock Text="{Binding ElementName=MyScrollV, Path=ExtentWidth, StringFormat=ExtentWidth {0:0}}"/>
+          <TextBlock Text="{Binding ElementName=MyScrollV, Path=ViewportWidth, StringFormat=ViewportWidth {0:0}}"/>
+        </StackPanel>
       </TabItem>
 
       <TabItem Header="Tab3">
