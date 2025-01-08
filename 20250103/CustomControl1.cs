@@ -93,7 +93,6 @@ namespace _20250103
             DependencyProperty.Register(nameof(MyTop), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
 
 
-
         public int MyZIndex
         {
             get { return (int)GetValue(MyZIndexProperty); }
@@ -101,6 +100,24 @@ namespace _20250103
         }
         public static readonly DependencyProperty MyZIndexProperty =
             DependencyProperty.Register(nameof(MyZIndex), typeof(int), typeof(KisoThumb), new PropertyMetadata(0));
+
+
+        public double MyWidth
+        {
+            get { return (double)GetValue(MyWidthProperty); }
+            set { SetValue(MyWidthProperty, value); }
+        }
+        public static readonly DependencyProperty MyWidthProperty =
+            DependencyProperty.Register(nameof(MyWidth), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
+
+
+        public double MyHeight
+        {
+            get { return (double)GetValue(MyHeightProperty); }
+            set { SetValue(MyHeightProperty, value); }
+        }
+        public static readonly DependencyProperty MyHeightProperty =
+            DependencyProperty.Register(nameof(MyHeight), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
 
 
         public string MyText
@@ -189,8 +206,8 @@ namespace _20250103
             MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(8, Color.FromArgb(255, 186, 85, 211), Color.FromArgb(255, 255, 255, 255)));
 
             DataContext = this;
-            //Focusable = true;
-            Focusable = false;
+            Focusable = true;
+            //Focusable = false;
             MyType = ThumbType.None;
             PreviewMouseDown += KisoThumb_PreviewMouseDownTest;
             PreviewMouseUp += KisoThumb_PreviewMouseUpTest;
@@ -202,8 +219,19 @@ namespace _20250103
             KeyDown += KisoThumb_KeyDown;
             KeyUp += KisoThumb_KeyUp;
             PreviewKeyDown += KisoThumb_PreviewKeyDown;
+            RequestBringIntoView += KisoThumb_RequestBringIntoView;
         }
 
+        private void KisoThumb_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
+        {
+            //e.Handled = true;
+        }
+
+        protected override void OnGotFocus(RoutedEventArgs e)
+        {
+            //e.Handled = true;
+            //base.OnGotFocus(e);
+        }
         private void KisoThumb_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (sender is RootThumb rt)
@@ -281,45 +309,7 @@ namespace _20250103
             }
         }
 
-        /// <summary>
-        /// マウスアップ時、フォーカスを有効化してフォーカスする
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //internal void KisoThumb_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        //{
-        //    var sou = e.Source;
-        //    var ori = e.OriginalSource;
-        //    if (e.Source == e.OriginalSource)
-        //    {
-        //        if (sender is KisoThumb kiso)
-        //        {
-        //            kiso.Focusable = true;
-        //            kiso.Focus();
-        //        }
-        //    }
-        //    //if (sender is KisoThumb t)
-        //    //{
-        //    //    //t.Focusable = true;
-        //    //    t.Focus();
-        //    //}
-
-        //    //if (e.OriginalSource is KisoThumb t)
-        //    //{
-        //    //    t.Focusable = true;
-        //    //    t.Focus();
-        //    //}
-        //}
-
-        internal void KisoThumb_PreviewMouseUpTest(object sender, MouseButtonEventArgs e)
-        {
-            var sou = e.Source;
-            var ori = e.OriginalSource;
-
-        }
-
-
-
+       
         /// <summary>
         /// クリックダウン時、
         /// ClickedThumb更新後、SelectedThumbsを更新
@@ -332,6 +322,7 @@ namespace _20250103
             var sou = e.Source;
             var ori = e.OriginalSource;
 
+
             //e.Sourceとe.OriginalSourceが一致したときのthisがクリックされたThumbと一致する
             if (e.Source == e.OriginalSource)
             {
@@ -339,34 +330,6 @@ namespace _20250103
                 {
                     //クリックされたThumbをRootのClickedThumbプロパティに登録
                     root.MyClickedThumb = this;
-                    //RootThumbのSelectedThumbsプロパティを更新
-                    //if (GetSelectableParentThumb(this) is KisoThumb thumb)
-                    //{
-                    //    root.UpdateSelectedThumbs(thumb);
-                    //}
-
-                    ////RootThumbのSelectedThumbsプロパティを更新2
-                    //int selectedCount = root.MySelectedThumbs.Count;
-                    //bool contained = root.MySelectedThumbs.Contains(this);                    
-                    //if (Keyboard.Modifiers == ModifierKeys.Control)
-                    //{
-                    //    if (selectedCount == 1 && !contained)
-                    //    {
-                    //        //D
-                    //        root.MySelectedThumbs.Add(this);
-                    //    }
-                    //    if (selectedCount > 1 && contained)
-                    //    {
-                    //        return;
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    //ABCE
-                    //    root.MySelectedThumbs.Clear();
-                    //    root.MySelectedThumbs.Add(this);
-                    //    root.MyFocusThumb = this;
-                    //}
 
                     //RootThumbのSelectedThumbsプロパティを更新3
                     if (GetSelectableParentThumb(this) is KisoThumb current)
@@ -384,6 +347,7 @@ namespace _20250103
                             //追加
                             root.MySelectedThumbs.Add(current);
                             root.MyFocusThumb = current;
+                            //直前追加のフラグ
                             current.IsPreviewSelcted = true;
                         }
                         else if (!isContained && Keyboard.Modifiers == ModifierKeys.None)
@@ -395,29 +359,68 @@ namespace _20250103
                         }
                         else if (selectedCount > 1)
                         {
+                            //直前追加ではない、のフラグ
                             current.IsPreviewSelcted = false;
                         }
-
                     }
                 }
-
             }
         }
 
-        internal RootThumb? GetRootThumb()
+        /// <summary>
+        /// マウスアップ時、BringIntoViewを実行する
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        internal void KisoThumb_PreviewMouseUpTest(object sender, MouseButtonEventArgs e)
         {
-            if (this is RootThumb rt)
+            var sou = e.Source;
+            var ori = e.OriginalSource;
+
+            if (e.Source == e.OriginalSource)
             {
-                return rt;
+                if (sender is KisoThumb t)
+                {
+                    //重要、BringIntoViewこれがないとすっ飛んでいく
+
+                    //直接クリックしたThumbが対象になる、GroupThumbの中のThumbとか
+                    t.BringIntoView();
+
+                    //直接クリックしたものを含むSelectableなThumbが対象になる
+                    //if (GetSelectableParentThumb(t) is KisoThumb current)
+                    //{
+                    //    current.BringIntoView();
+                    //}
+                }
             }
-            else if (MyParentThumb is not null)
+        }
+
+
+        /// <summary>
+        /// ドラッグ移動開始時
+        /// アンカーThumbを作成追加、
+        /// ぼやけ回避のため、座標を四捨五入してドットに合わせる
+        /// </summary>
+        internal void KisoThumb_DragStarted2(object sender, DragStartedEventArgs e)
+        {
+            var sou = e.Source;
+            var ori = e.OriginalSource;
+
+            if (sender is KisoThumb kiso)
             {
-                return MyParentThumb.GetRootThumb();
+                if (GetSelectableParentThumb(kiso) is KisoThumb current)
+                {
+                    if (current.MyParentThumb is GroupThumb parent)
+                    {
+                        parent.AddAnchorThumb(current);
+                        //座標を四捨五入で整数にしてぼやけ回避
+                        current.MyLeft = (int)(current.MyLeft + 0.5);
+                        current.MyTop = (int)(current.MyTop + 0.5);
+                        e.Handled = true;
+                    }
+                }
             }
-            else
-            {
-                return null;
-            }
+
         }
 
         /// <summary>
@@ -427,11 +430,25 @@ namespace _20250103
         /// <param name="e"></param>
         internal void Thumb_DragDelta3(object sender, DragDeltaEventArgs e)
         {
+            var sou = e.Source;
+            var ori = e.OriginalSource;
+
             if (sender is KisoThumb t && t.IsSelectable)
             {
-                t.MyLeft += (int)(e.HorizontalChange + 0.5);
-                t.MyTop += (int)(e.VerticalChange + 0.5);
-                e.Handled = true;
+                if(GetRootThumb() is RootThumb root)
+                {
+                    var fo = root.MyFocusThumb;
+                    var se = root.MySelectedThumbs;
+                    foreach (var item in root.MySelectedThumbs)
+                    {
+                        item.MyLeft += (int)(e.HorizontalChange + 0.5);
+                        item.MyTop += (int)(e.VerticalChange + 0.5);
+                    }
+                    e.Handled = true;
+                }
+                //t.MyLeft += (int)(e.HorizontalChange + 0.5);
+                //t.MyTop += (int)(e.VerticalChange + 0.5);
+                //e.Handled = true;
             }
         }
 
@@ -485,7 +502,6 @@ namespace _20250103
             var sou = e.Source;
             var ori = e.OriginalSource;
 
-
             if (e.Source == e.OriginalSource)
             {
                 if (e.Source is KisoThumb kiso)
@@ -494,84 +510,38 @@ namespace _20250103
                     {
                         current.MyParentThumb?.RemoveAnchorThumb();
                     }
+                    //再レイアウト配置
                     kiso.MyParentThumb?.ReLayout3();
                     e.Handled = true;
                 }
             }
 
-            //if (sender is KisoThumb t && t.MyParentThumb is not null)
-            //{
-            //    if (t.MyParentThumb is GroupThumb gt)
-            //    {
-            //        gt.RemoveAnchorThumb();
-            //    }
-            //    t.MyParentThumb.ReLayout3();
-            //    e.Handled = true;
-            //}
-        }
-
-
-        /// <summary>
-        /// ドラッグ移動開始時
-        /// アンカーThumbを作成追加、
-        /// </summary>
-        internal void KisoThumb_DragStarted2(object sender, DragStartedEventArgs e)
-        {
-            var sou = e.Source;
-            var ori = e.OriginalSource;
-
-
-
-            if (sender is KisoThumb kiso)
-            {
-                if (GetSelectableParentThumb(kiso) is KisoThumb current)
-                {
-                    if (current.MyParentThumb is GroupThumb parent)
-                    {
-                        parent.AddAnchorThumb(current);
-                        current.MyLeft = (int)(current.MyLeft + 0.5);
-                        current.MyTop = (int)(current.MyTop + 0.5);
-                        e.Handled = true;
-                    }
-                }
-            }
-
-
-            //if (sender is KisoThumb t && t.IsSelectable)
-            //{
-            //    if (t.MyParentThumb is GroupThumb gt)
-            //    {
-            //        //アンカーThumbを作成追加
-            //        gt.AddAnchorThumb(t.MyLeft, t.MyTop, t.ActualWidth, t.ActualHeight);
-
-            //        //座標を四捨五入で整数にしてぼやけ回避
-            //        t.MyLeft = (int)(t.MyLeft + 0.5);
-            //        t.MyTop = (int)(t.MyTop + 0.5);
-            //        //t.Focusable = false;
-            //        e.Handled = true;
-            //    }
-            //}
-
-            //if (e.Source is KisoThumb t)
-            //{
-            //    if (t.MyParentThumb is GroupThumb gt)
-            //    {
-            //        //アンカーThumbを作成追加
-            //        gt.AddAnchorThumb(t.MyLeft, t.MyTop, t.ActualWidth, t.ActualHeight);
-
-            //        //座標を四捨五入で整数にしてぼやけ回避
-            //        t.MyLeft = (int)(t.MyLeft + 0.5);
-            //        t.MyTop = (int)(t.MyTop + 0.5);
-            //        //t.Focusable = false;
-            //        e.Handled = true;
-            //    }
-            //}
         }
 
         #endregion イベントハンドラ
 
 
         #region internalメソッド
+
+        /// <summary>
+        /// RootThumbを取得
+        /// </summary>
+        /// <returns></returns>
+        internal RootThumb? GetRootThumb()
+        {
+            if (this is RootThumb rt)
+            {
+                return rt;
+            }
+            else if (MyParentThumb is not null)
+            {
+                return MyParentThumb.GetRootThumb();
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         /// <summary>
         /// SelectableなThumbをParentを辿って取得する
@@ -689,7 +659,6 @@ namespace _20250103
         {
             MyType = ThumbType.Anchor;
             Focusable = false;
-            //DragDelta -= Thumb_DragDelta2;
             DragDelta -= Thumb_DragDelta3;
             DragStarted -= KisoThumb_DragStarted2;
             DragCompleted -= KisoThumb_DragCompleted2;
@@ -714,13 +683,13 @@ namespace _20250103
     {
         #region 依存関係プロパティ
 
-        public double MySize
-        {
-            get { return (double)GetValue(MySizeProperty); }
-            set { SetValue(MySizeProperty, value); }
-        }
-        public static readonly DependencyProperty MySizeProperty =
-            DependencyProperty.Register(nameof(MySize), typeof(double), typeof(EllipseTextThumb), new PropertyMetadata(30.0));
+        //public double MySize
+        //{
+        //    get { return (double)GetValue(MySizeProperty); }
+        //    set { SetValue(MySizeProperty, value); }
+        //}
+        //public static readonly DependencyProperty MySizeProperty =
+        //    DependencyProperty.Register(nameof(MySize), typeof(double), typeof(EllipseTextThumb), new PropertyMetadata(30.0));
         #endregion 依存関係プロパティ
 
         static EllipseTextThumb()
@@ -841,8 +810,8 @@ namespace _20250103
             MyAnchorThumb = new AnchorThumb
             {
                 Visibility = Visibility.Hidden,
-                Width = thumb.Width,
-                Height = thumb.Height,
+                Width = thumb.ActualWidth,
+                Height = thumb.ActualHeight,
                 MyLeft = thumb.MyLeft,
                 MyTop = thumb.MyTop
             };
@@ -1172,62 +1141,6 @@ namespace _20250103
 
     }
 
-    //public class WakuBorder : Border
-    //{
-
-    //    static WakuBorder()
-    //    {
-    //        DefaultStyleKeyProperty.OverrideMetadata(typeof(WakuBorder), new FrameworkPropertyMetadata(typeof(WakuBorder)));
-    //    }
-    //    public WakuBorder()
-    //    {
-    //        MyBrushList = [];
-    //        //BorderBrush = Brushes.Magenta;
-    //        BorderThickness = new Thickness(1.0);
-
-    //        MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(1, Color.FromArgb(0, 0, 0, 0), Color.FromArgb(0, 0, 0, 0)));
-    //        MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(1, Color.FromArgb(255, 255, 0, 0), Color.FromArgb(255, 255, 255, 255)));
-    //        MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(1, Color.FromArgb(255, 0, 0, 255), Color.FromArgb(255, 255, 255, 255)));
-    //        MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(1, Color.FromArgb(255, 255, 255, 0), Color.FromArgb(255, 255, 255, 255)));
-    //    }
-    //    #region 依存関係プロパティ
-
-
-    //    public List<ImageBrush> MyBrushList
-    //    {
-    //        get { return (List<ImageBrush>)GetValue(MyBrushListProperty); }
-    //        set { SetValue(MyBrushListProperty, value); }
-    //    }
-    //    public static readonly DependencyProperty MyBrushListProperty =
-    //        DependencyProperty.Register(nameof(MyBrushList), typeof(List<ImageBrush>), typeof(WakuBorder), new PropertyMetadata(null));
-
-
-    //    //public bool IsSelected
-    //    //{
-    //    //    get { return (bool)GetValue(IsSelectedProperty); }
-    //    //    set { SetValue(IsSelectedProperty, value); }
-    //    //}
-    //    //public static readonly DependencyProperty IsSelectedProperty =
-    //    //    DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(WakuBorder), new PropertyMetadata(false));
-
-    //    //public bool IsSelectable
-    //    //{
-    //    //    get { return (bool)GetValue(IsSelectableProperty); }
-    //    //    set { SetValue(IsSelectableProperty, value); }
-    //    //}
-    //    //public static readonly DependencyProperty IsSelectableProperty =
-    //    //    DependencyProperty.Register(nameof(IsSelectable), typeof(bool), typeof(WakuBorder), new PropertyMetadata(false));
-
-
-    //    //public bool IsFocus
-    //    //{
-    //    //    get { return (bool)GetValue(IsFocusProperty); }
-    //    //    set { SetValue(IsFocusProperty, value); }
-    //    //}
-    //    //public static readonly DependencyProperty IsFocusProperty =
-    //    //    DependencyProperty.Register(nameof(IsFocus), typeof(bool), typeof(WakuBorder), new PropertyMetadata(false));
-    //    #endregion 依存関係プロパティ
-    //}
 
 
     public class MyComv : IMultiValueConverter

@@ -17,7 +17,7 @@
                   HorizontalAlignment="Left"
                   VerticalAlignment="Top"
                   HorizontalScrollBarVisibility="Auto"
-                  VerticalScrollBarVisibility="Auto">
+                  VerticalScrollBarVisibility="Auto" ScrollChanged="MyScrollV_ScrollChanged">
       <Canvas Width="{Binding ElementName=MyRootGroup, Path=ActualWidth}"
               Height="{Binding ElementName=MyRootGroup, Path=ActualHeight}">
         <!--拡大はRenderTransformじゃなくて、LayoutTransformを使う-->
@@ -27,35 +27,35 @@
         </Canvas.LayoutTransform>
 
         <local:RootThumb x:Name="MyRootGroup" Background="Transparent">
-          <local:TextBlockThumb MyText="Item1" Background="Beige"/>
+          <local:EllipseTextThumb MyText="Item1" MyWidth="60" MyHeight="60" Background="Beige"/>
 
           <local:GroupThumb x:Name="MyGroup1" MyText="Group1" MyLeft="20" MyTop="20">
             <!--DodgerBlue-->
             <local:TextBlockThumb x:Name="MyItem1_1" MyLeft="100" MyTop="0"
-                                MyText="Item 2-1" Background="Beige"/>
-            <local:EllipseTextThumb MyLeft="0" MyTop="150" MySize="60"
-                                  MyText="Item 2-2" Background="Yellow"/>
-            <local:EllipseTextThumb MyLeft="20" MyTop="0" MySize="60"
+                                MyText="Item 2-1" Background="GreenYellow"/>
+            <local:EllipseTextThumb MyLeft="0" MyTop="150" MyWidth="60" MyHeight="60"
+                                  MyText="Item 2-2" Background="MediumAquamarine"/>
+            <local:EllipseTextThumb MyLeft="20" MyTop="0" MyWidth="60" MyHeight="60"
                                   MyText="Item 2-3" Background="YellowGreen"/>
-            <local:EllipseTextThumb MyLeft="40" MyTop="40" MySize="60"
+            <local:EllipseTextThumb MyLeft="40" MyTop="40" MyWidth="60" MyHeight="60"
                                   MyText="Item 2-4" Background="DarkSeaGreen"/>
-            <local:EllipseTextThumb MyLeft="60" MyTop="80" MySize="60"
+            <local:EllipseTextThumb MyLeft="60" MyTop="80" MyWidth="60" MyHeight="60"
                                   MyText="Item 2-5" Background="DarkOliveGreen"/>
-            <local:EllipseTextThumb MyLeft="80" MyTop="120" MySize="60"
+            <local:EllipseTextThumb MyLeft="80" MyTop="120" MyWidth="60" MyHeight="60"
                                   MyText="Item 2-6" Background="Olive"/>
           </local:GroupThumb>
 
           <local:GroupThumb x:Name="MyGroup2" MyText="Group2" MyLeft="150" MyTop="50">
             <!--DeepSkyBlue-->
             <local:TextBlockThumb x:Name="MyItem3_1" MyLeft="0" MyTop="0"
-                                MyText="Item 3-1" Background="Beige"/>
-            <local:EllipseTextThumb MyLeft="150" MyTop="100" MySize="60"
+                                MyText="Item 3-1" Background="Gold"/>
+            <local:EllipseTextThumb MyLeft="150" MyTop="100" MyWidth="60" MyHeight="60"
                                   MyText="Item 3-2" Background="Gold"/>
             <local:GroupThumb MyText="Group3" MyLeft="10" MyTop="30" x:Name="MyGroup3">
               <!--SkyBlue-->
-              <local:TextBlockThumb MyText="Item 3-3-1" Background="Beige"/>
-              <local:TextBlockThumb MyLeft="50" MyTop="20" MyText="Item 3-3-2" Background="Beige"/>
-              <local:TextBlockThumb MyLeft="100" MyTop="40" MyText="Item 3-3-3" Background="Beige"/>
+              <local:EllipseTextThumb MyText="Item 3-3-1" MyWidth="60" MyHeight="60" Background="Khaki"/>
+              <local:TextBlockThumb MyLeft="70" MyTop="20" MyText="Item 3-3-2" Background="Khaki"/>
+              <local:EllipseTextThumb MyLeft="80" MyTop="40" MyText="Item 3-3-3" MyWidth="60" MyHeight="60" Background="Khaki"/>
             </local:GroupThumb>
           </local:GroupThumb>
 
@@ -67,6 +67,7 @@
     <TabControl Grid.Column="1" DataContext="{Binding ElementName=MyRootGroup}">
       <TabItem Header="Tab5">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <GroupBox Header="選択Item">
           <TreeView ItemsSource="{Binding ElementName=MyRootGroup, Path=MySelectedThumbs}">
             <TreeView.ItemTemplate>
               <HierarchicalDataTemplate DataType="local:RootThumb" ItemsSource="{Binding MySelectedThumbs}">
@@ -86,6 +87,7 @@
               </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
           </TreeView>
+        </GroupBox>
         </ScrollViewer>
       </TabItem>
 
@@ -204,6 +206,7 @@
           <Button x:Name="MyButtonTest4" Content="clickParent" Click="MyButtonTest4_Click"/>
           <Button x:Name="MyButtonAdd" Content="add" Click="MyButtonAdd_Click"/>
           <TextBlock x:Name="GotKey"/>
+          <TextBlock x:Name="GotPreKey"/>
           <TextBlock Text="ClickedThumb"/>
           <Rectangle Width="50" Height="50">
             <Rectangle.Fill>

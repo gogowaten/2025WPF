@@ -75,6 +75,19 @@ namespace _20250108
             PreviewMouseUp += KisoThumb_PreviewMouseUp;
         }
 
+
+        /// <summary>
+        /// クリックダウン時、フォーカス無効化する。
+        /// フォーカスでスクロール位置がガクッと変更されて不自然なのを防ぐ
+        /// </summary>
+        private void KisoThumb_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is KisoThumb t)
+            {
+                t.Focusable = false;
+            }
+        }
+
         /// <summary>
         /// マウスアップ時、フォーカスを有効化してフォーカスする
         /// </summary>
@@ -86,18 +99,6 @@ namespace _20250108
             {
                 t.Focusable = true;
                 t.Focus();
-            }
-        }
-
-        /// <summary>
-        /// クリックダウン時、フォーカス無効化する。
-        /// フォーカスでスクロール位置がガクッと変更されて不自然なのを防ぐ
-        /// </summary>
-        private void KisoThumb_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is KisoThumb t)
-            {
-                t.Focusable = false;
             }
         }
 

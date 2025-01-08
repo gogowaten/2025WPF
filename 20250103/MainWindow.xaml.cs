@@ -20,6 +20,9 @@ namespace _20250103
         {
             InitializeComponent();
             MyRootGroup.GotKeyboardFocus += MyRootGroup_GotKeyboardFocus;
+            MyRootGroup.GotFocus += MyRootGroup_GotFocus;
+            MyRootGroup.PreviewGotKeyboardFocus += MyRootGroup_PreviewGotKeyboardFocus;
+            //MyScrollV.CanContentScroll = false;
 
             MyComboBoxThumbType.ItemsSource = Enum.GetValues(typeof(ThumbType));
 
@@ -45,13 +48,22 @@ namespace _20250103
             //        keyValuePairs.Add(item.Key, item.Value);
             //    }
             //}
-
+            
         }
 
+        private void MyRootGroup_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            GotPreKey.Text = e.Source.GetType().ToString();
+        }
+
+        private void MyRootGroup_GotFocus(object sender, RoutedEventArgs e)
+        {
+            
+        }
 
         private void MyRootGroup_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-        GotKey.Text = e.NewFocus.ToString();
+            GotKey.Text = e.NewFocus.ToString();
         }
 
         private void MyButtonAdd_Click(object sender, RoutedEventArgs e)
@@ -83,9 +95,9 @@ namespace _20250103
 
         private void MyButtonTest_Click(object sender, RoutedEventArgs e)
         {
-            
-            
-            
+
+
+
             MyRootGroup.ActiveThumbParentToActiveGroupThumb();
         }
 
@@ -102,6 +114,29 @@ namespace _20250103
         private void MyButtonTest4_Click(object sender, RoutedEventArgs e)
         {
             MyRootGroup.ClickedThumbsParentToActiveGroupThumb();
+        }
+
+        private void MyScrollV_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
+        {
+
+            //e.Handled = true;
+        }
+
+        private void MyScrollV_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+
+        }
+
+
+    }
+
+
+    public class EXFV : ScrollViewer
+    {
+        
+        protected override Size ArrangeOverride(Size arrangeSize)
+        {
+            return base.ArrangeOverride(arrangeSize);
         }
     }
 }

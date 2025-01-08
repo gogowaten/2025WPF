@@ -23,6 +23,30 @@ namespace _20250108
         }
 
 
+        /// <summary>
+        /// ドラッグ移動開始時
+        /// アンカーThumbをHidden化、サイズと位置を移動要素に合わせる
+        /// </summary>
+        private void KisoThumb_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            var sou = e.Source;
+            var ori = e.OriginalSource;
+            if (e.Source is KisoThumb t)
+            {
+                //アンカーThumbをHidden、在るけど見えないだけ
+                if (t.MyParentThumb is GroupThumb gt)
+                {
+                    AnchorThumb anchor = gt.MyAnchorThumb;
+                    anchor.Visibility = Visibility.Hidden;
+                    anchor.Width = t.ActualWidth;
+                    anchor.Height = t.ActualHeight;
+                    anchor.MyLeft = t.MyLeft;
+                    anchor.MyTop = t.MyTop;
+
+                }
+            }
+        }
+
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             var sou = e.Source;
@@ -85,30 +109,6 @@ namespace _20250108
 
             //イベントをここで停止
             e.Handled = true;
-        }
-
-        /// <summary>
-        /// ドラッグ移動開始時
-        /// アンカーThumbをHidden化、サイズと位置を移動要素に合わせる
-        /// </summary>
-        private void KisoThumb_DragStarted(object sender, DragStartedEventArgs e)
-        {
-            var sou = e.Source;
-            var ori = e.OriginalSource;
-            if (e.Source is KisoThumb t)
-            {
-                //アンカーThumbをHidden、在るけど見えないだけ
-                if (t.MyParentThumb is GroupThumb gt)
-                {
-                    AnchorThumb anchor = gt.MyAnchorThumb;
-                    anchor.Visibility = Visibility.Hidden;
-                    anchor.Width = t.ActualWidth;
-                    anchor.Height = t.ActualHeight;
-                    anchor.MyLeft = t.MyLeft;
-                    anchor.MyTop = t.MyTop;
-
-                }
-            }
         }
 
 

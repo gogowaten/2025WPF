@@ -71,8 +71,8 @@
       <Setter.Value>
         <ControlTemplate>
           <Grid>
-            <Ellipse Width="{Binding MySize}"
-                     Height="{Binding MySize}"
+            <Ellipse Width="{Binding MyWidth}"
+                     Height="{Binding MyHeight}"
                      Fill="{TemplateBinding Background}"/>
             <TextBlock Text="{Binding MyText}"
                        HorizontalAlignment="Center"
