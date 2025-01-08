@@ -836,18 +836,6 @@ namespace _20250103
         /// <summary>
         /// アンカーThumbをHiddenで追加
         /// </summary>
-        //public void AddAnchorThumb(double left, double top, double width, double height)
-        //{
-        //    MyAnchorThumb = new AnchorThumb
-        //    {
-        //        Visibility = Visibility.Hidden,
-        //        Width = width,
-        //        Height = height,
-        //        MyLeft = left,
-        //        MyTop = top
-        //    };
-        //    MyThumbs.Add(MyAnchorThumb);
-        //}
         public void AddAnchorThumb(KisoThumb thumb)
         {
             MyAnchorThumb = new AnchorThumb
@@ -855,8 +843,8 @@ namespace _20250103
                 Visibility = Visibility.Hidden,
                 Width = thumb.Width,
                 Height = thumb.Height,
-                MyLeft = thumb.MyLeft + 1,
-                MyTop = thumb.MyTop + 1
+                MyLeft = thumb.MyLeft,
+                MyTop = thumb.MyTop
             };
             MyThumbs.Add(MyAnchorThumb);
         }
