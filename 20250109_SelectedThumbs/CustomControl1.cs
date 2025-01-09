@@ -197,9 +197,9 @@ namespace _20250109_SelectedThumbs
             MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(8, Color.FromArgb(255, 30, 144, 255), Color.FromArgb(255, 255, 255, 255)));
             //青:IsSelected
             MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(8, Color.FromArgb(255, 135, 206, 250), Color.FromArgb(255, 255, 255, 255)));
-            //半透明灰色:IsSelectable
+            //灰色:IsSelectable
             MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(8, Color.FromArgb(64, 0, 0, 0), Color.FromArgb(64, 255, 255, 255)));
-            //黄色:
+            //紫色:
             MyBrushList.Add(MakeDushImageBrush.MakeBrush2ColorsDash(8, Color.FromArgb(255, 186, 85, 211), Color.FromArgb(255, 255, 255, 255)));
 
             DataContext = this;
@@ -380,15 +380,10 @@ namespace _20250109_SelectedThumbs
                                     }
                                 }
                             }
-
                         }
                     }
                 }
-
-
             }
-            var sou = e.Source;
-            var ori = e.OriginalSource;
 
             if (e.Source == e.OriginalSource)
             {
@@ -456,80 +451,6 @@ namespace _20250109_SelectedThumbs
 
         #endregion internalメソッド
 
-        #region メソッド
-
-        /// <summary>
-        /// ZIndexの修正、MyThumbsのIndexに合わせる
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        private void FixZIndex(int start, int end)
-        {
-            if (MyParentThumb is GroupThumb gt)
-            {
-                for (int i = start; i <= end; i++)
-                {
-                    gt.MyThumbs[i].MyZIndex = i;
-                }
-            }
-        }
-
-        public void ZIndexUp()
-        {
-            if (MyParentThumb is GroupThumb gt)
-            {
-                int moto = gt.MyThumbs.IndexOf(this);
-                int limit = gt.MyThumbs.Count - 1;
-                if (moto >= limit) { return; }
-                int saki = moto + 1;
-                gt.MyThumbs.Move(moto, saki);
-                FixZIndex(moto, saki);
-            }
-        }
-
-        /// <summary>
-        /// 最前面へ移動
-        /// </summary>
-        public void ZIndexTop()
-        {
-            if (MyParentThumb is GroupThumb gt)
-            {
-                int moto = gt.MyThumbs.IndexOf(this);
-                int limit = gt.MyThumbs.Count - 1;
-                if (moto >= limit) { return; }
-                gt.MyThumbs.Move(moto, limit);
-                FixZIndex(moto, limit);
-            }
-        }
-
-        public void ZIndexDown()
-        {
-            if (MyParentThumb is GroupThumb gt)
-            {
-                int moto = gt.MyThumbs.IndexOf(this);
-                if (moto == 0) { return; }
-                int saki = moto - 1;
-                gt.MyThumbs.Move(moto, saki);
-                FixZIndex(saki, moto);
-            }
-        }
-
-        /// <summary>
-        /// 最背面へ移動
-        /// </summary>
-        public void ZIndexBottom()
-        {
-            if (MyParentThumb is GroupThumb gt)
-            {
-                int moto = gt.MyThumbs.IndexOf(this);
-                if (moto == 0) { return; }
-                int saki = 0;
-                gt.MyThumbs.Move(moto, 0);
-                FixZIndex(saki, moto);
-            }
-        }
-
-        #endregion メソッド
 
     }
 
@@ -814,7 +735,7 @@ namespace _20250109_SelectedThumbs
         #region パブリックなメソッド
 
         /// <summary>
-        /// 一段上げる
+        /// ActiveGroupThumbを外(Root)側のGroupThumbへ変更
         /// </summary>
         public void ActiveGroupToOutside()
         {
@@ -830,13 +751,12 @@ namespace _20250109_SelectedThumbs
         }
 
         /// <summary>
-        /// 1段下げる
+        /// ActiveGroupThumbを内側のGroupThumbへ変更
         /// </summary>
         public void ActiveGroupToInside()
         {
             if (MyFocusThumb is GroupThumb gt)
             {
-                GroupThumb motoGroup = MyActiveGroupThumb;
                 if (ChangeActiveGroupThumb(gt))
                 {
                     if (gt.MyThumbs.Contains(MyClickedThumb))
