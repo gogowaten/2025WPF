@@ -98,12 +98,12 @@ namespace _20250103
 
 
 
-            MyRootGroup.ActiveThumbParentToActiveGroupThumb();
+            MyRootGroup.ActiveGroupToOutside();
         }
 
         private void MyButtonTest2_Click(object sender, RoutedEventArgs e)
         {
-            MyRootGroup.FocusThumbToActiveGroupThumb();
+            MyRootGroup.ActiveGroupToInside();
         }
 
         private void MyButtonTest3_Click(object sender, RoutedEventArgs e)
@@ -113,7 +113,7 @@ namespace _20250103
 
         private void MyButtonTest4_Click(object sender, RoutedEventArgs e)
         {
-            MyRootGroup.ClickedThumbsParentToActiveGroupThumb();
+            MyRootGroup.ActiveGroupFromClickedThumbsParent();
         }
 
         private void MyScrollV_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
