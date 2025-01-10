@@ -37,7 +37,7 @@ namespace _20250103
     public abstract class KisoThumb : Thumb
     {
         //クリックダウンとドラッグ移動完了時に使う、直前に選択されたものかの判断用
-        internal bool IsPreviewSelcted { get; set; }
+        bool IsPreviewSelected { get; set; }
 
         #region 依存関係プロパティ
 
