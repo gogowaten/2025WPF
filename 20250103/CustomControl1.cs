@@ -348,7 +348,7 @@ namespace _20250103
                             root.MySelectedThumbs.Add(current);
                             root.MyFocusThumb = current;
                             //直前追加のフラグ
-                            current.IsPreviewSelcted = true;
+                            current.IsPreviewSelected = true;
                         }
                         else if (!isContained && Keyboard.Modifiers == ModifierKeys.None)
                         {
@@ -360,7 +360,7 @@ namespace _20250103
                         else if (selectedCount > 1)
                         {
                             //直前追加ではない、のフラグ
-                            current.IsPreviewSelcted = false;
+                            current.IsPreviewSelected = false;
                         }
                     }
                 }
@@ -467,7 +467,7 @@ namespace _20250103
                     {
                         if (root.MySelectedThumbs.Count > 1)
                         {
-                            if (!current.IsPreviewSelcted && e.HorizontalChange == 0 && e.VerticalChange == 0)
+                            if (!current.IsPreviewSelected && e.HorizontalChange == 0 && e.VerticalChange == 0)
                             {
                                 //直前に選択されたものじゃなければ削除
                                 if (Keyboard.Modifiers == ModifierKeys.None)
