@@ -48,9 +48,13 @@ namespace _20250103
             //        keyValuePairs.Add(item.Key, item.Value);
             //    }
             //}
-            
         }
 
+        private void AddEllipseText(string text, Brush fill, double width, double height)
+        {
+            EllipseTextThumb thumb = new() { MyText = text, MyFill = fill, MyWidth = width, MyHeight = height };
+            MyRootGroup.AddThumbToActiveGroup(thumb);
+        }
         private void MyRootGroup_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             GotPreKey.Text = e.Source.GetType().ToString();
@@ -58,7 +62,7 @@ namespace _20250103
 
         private void MyRootGroup_GotFocus(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void MyRootGroup_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -68,29 +72,7 @@ namespace _20250103
 
         private void MyButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-            GroupThumb? group = null;
-            if (MyRootGroup.MyFocusThumb is GroupThumb gt)
-            {
-                group = gt;
-            }
-            else if (MyRootGroup.MyFocusThumb.MyParentThumb is GroupThumb kiso)
-            {
-                group = kiso;
-            }
-            if (group != null)
-            {
-                KisoThumb? kiso = null;
-                if (MyComboBoxThumbType.SelectedItem is ThumbType.Text)
-                {
-                    kiso = new TextBlockThumb();
-                    kiso.MyText = MyTextBoxMyText.Text;
-                    kiso.Background = MyComboBoxBackgroundBrush.SelectedItem as Brush;
-                }
-                if (kiso != null)
-                {
-                    group.MyThumbs.Add(kiso);
-                }
-            }
+            AddEllipseText($"{DateTime.Now:HH-mm-ss}", Brushes.YellowGreen, 50, 50);
         }
 
         private void MyButtonTest_Click(object sender, RoutedEventArgs e)
@@ -133,7 +115,7 @@ namespace _20250103
 
     public class EXFV : ScrollViewer
     {
-        
+
         protected override Size ArrangeOverride(Size arrangeSize)
         {
             return base.ArrangeOverride(arrangeSize);

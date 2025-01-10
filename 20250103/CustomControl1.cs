@@ -67,13 +67,13 @@ namespace _20250103
         public static readonly DependencyProperty MySelectedThumbsProperty =
             DependencyProperty.Register(nameof(MySelectedThumbs), typeof(ObservableCollectionKisoThumb), typeof(RootThumb), new PropertyMetadata(null));
 
-        public ObservableCollection<KisoThumb> MyThumbs
-        {
-            get { return (ObservableCollection<KisoThumb>)GetValue(MyThumbsProperty); }
-            set { SetValue(MyThumbsProperty, value); }
-        }
-        public static readonly DependencyProperty MyThumbsProperty =
-            DependencyProperty.Register(nameof(MyThumbs), typeof(ObservableCollection<KisoThumb>), typeof(GroupThumb), new PropertyMetadata(null));
+        //public ObservableCollection<KisoThumb> MyThumbs
+        //{
+        //    get { return (ObservableCollection<KisoThumb>)GetValue(MyThumbsProperty); }
+        //    set { SetValue(MyThumbsProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyThumbsProperty =
+        //    DependencyProperty.Register(nameof(MyThumbs), typeof(ObservableCollection<KisoThumb>), typeof(GroupThumb), new PropertyMetadata(null));
 
 
         public double MyLeft
@@ -128,6 +128,23 @@ namespace _20250103
         public static readonly DependencyProperty MyTextProperty =
             DependencyProperty.Register(nameof(MyText), typeof(string), typeof(KisoThumb), new PropertyMetadata(string.Empty));
 
+
+        public Brush MyBackground
+        {
+            get { return (Brush)GetValue(MyBackgroundProperty); }
+            set { SetValue(MyBackgroundProperty, value); }
+        }
+        public static readonly DependencyProperty MyBackgroundProperty =
+            DependencyProperty.Register(nameof(MyBackground), typeof(Brush), typeof(KisoThumb), new PropertyMetadata(Brushes.Transparent));
+
+
+        public Brush MyFill
+        {
+            get { return (Brush)GetValue(MyFillProperty); }
+            set { SetValue(MyFillProperty, value); }
+        }
+        public static readonly DependencyProperty MyFillProperty =
+            DependencyProperty.Register(nameof(MyFill), typeof(Brush), typeof(KisoThumb), new PropertyMetadata(Brushes.Transparent));
 
 
         #endregion 依存関係プロパティ
@@ -209,6 +226,8 @@ namespace _20250103
             Focusable = true;
             //Focusable = false;
             MyType = ThumbType.None;
+
+            Loaded += KisoThumb_Loaded;
             PreviewMouseDown += KisoThumb_PreviewMouseDownTest;
             PreviewMouseUp += KisoThumb_PreviewMouseUpTest;
             DragStarted += KisoThumb_DragStarted2;
@@ -220,6 +239,26 @@ namespace _20250103
             KeyUp += KisoThumb_KeyUp;
             PreviewKeyDown += KisoThumb_PreviewKeyDown;
             RequestBringIntoView += KisoThumb_RequestBringIntoView;
+        }
+
+        internal void SetMyBinding()
+        {
+            Binding b;
+            //b = new Binding() { Source = this, Path = new PropertyPath(MyBackgroundProperty) ,Mode=BindingMode.TwoWay};
+            //SetBinding(BackgroundProperty, b);
+
+            //b = new() { Source = this, Path = new PropertyPath(BackgroundProperty), Mode = BindingMode.TwoWay };
+            //SetBinding(MyBackgroundProperty, b);
+
+            //b = new() { Source = this, Path = new PropertyPath(MyWidthProperty), Mode = BindingMode.TwoWay };
+            //SetBinding(WidthProperty, b);
+            //b = new() { Source = this, Path = new PropertyPath(MyHeightProperty), Mode = BindingMode.TwoWay };
+            //SetBinding(HeightProperty, b);
+
+        }
+        private void KisoThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            //SetMyBinding();
         }
 
         private void KisoThumb_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
@@ -669,17 +708,6 @@ namespace _20250103
 
     public class EllipseTextThumb : TextBlockThumb
     {
-        #region 依存関係プロパティ
-
-        //public double MySize
-        //{
-        //    get { return (double)GetValue(MySizeProperty); }
-        //    set { SetValue(MySizeProperty, value); }
-        //}
-        //public static readonly DependencyProperty MySizeProperty =
-        //    DependencyProperty.Register(nameof(MySize), typeof(double), typeof(EllipseTextThumb), new PropertyMetadata(30.0));
-        #endregion 依存関係プロパティ
-
         static EllipseTextThumb()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(EllipseTextThumb), new FrameworkPropertyMetadata(typeof(EllipseTextThumb)));
@@ -688,6 +716,7 @@ namespace _20250103
         {
             MyType = ThumbType.Ellipse;
         }
+
     }
 
 
@@ -703,6 +732,14 @@ namespace _20250103
         //}
         //public static readonly DependencyProperty MyThumbsProperty =
         //    DependencyProperty.Register(nameof(MyThumbs), typeof(ObservableCollection<KisoThumb>), typeof(GroupThumb), new PropertyMetadata(null));
+
+        public ObservableCollection<KisoThumb> MyThumbs
+        {
+            get { return (ObservableCollection<KisoThumb>)GetValue(MyThumbsProperty); }
+            set { SetValue(MyThumbsProperty, value); }
+        }
+        public static readonly DependencyProperty MyThumbsProperty =
+            DependencyProperty.Register(nameof(MyThumbs), typeof(ObservableCollection<KisoThumb>), typeof(GroupThumb), new PropertyMetadata(null));
 
         #endregion 依存関係プロパティ
 
@@ -769,7 +806,13 @@ namespace _20250103
             if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems?[0] is KisoThumb ni)
             {
                 ni.MyParentThumb = this;
-                ni.MyZIndex = MyThumbs.Count - 1;
+                int index = e.NewStartingIndex;
+                //ni.MyZIndex = index;
+                for (int i = index; i < MyThumbs.Count; i++)
+                {
+                    MyThumbs[i].MyZIndex = i;
+                }
+
                 //ni.MyZIndex = MyThumbs.IndexOf(ni);//こっちでも同じ
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems?[0] is KisoThumb ot)
@@ -784,10 +827,6 @@ namespace _20250103
 
         #region publicメソッド
 
-        public void AddThumb(KisoThumb thumb)
-        {
-            MyThumbs.Add(thumb);
-        }
 
 
         /// <summary>
@@ -1047,6 +1086,21 @@ namespace _20250103
                 return true;
             }
             return false;
+        }
+
+        public void AddThumbToActiveGroup(KisoThumb thumb)
+        {
+            thumb.IsSelectable = true;
+            int index = MyThumbs.Count;
+            if (MyFocusThumb != null)
+            {
+                thumb.MyLeft = MyFocusThumb.MyLeft + 32;
+                thumb.MyTop = MyFocusThumb.MyTop + 32;
+                index = MyActiveGroupThumb.MyThumbs.IndexOf(MyFocusThumb) + 1;
+            }
+            MyActiveGroupThumb.MyThumbs.Insert(index, thumb);
+            //MyActiveGroupThumb.MyThumbs.Add(thumb);
+            ReplaceSelectedThumbs(thumb);
         }
 
         #endregion パブリックなメソッド

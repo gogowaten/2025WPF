@@ -53,7 +53,7 @@
         <ControlTemplate>
           <Grid>
             <TextBlock Text="{Binding MyText}"
-                     Background="{TemplateBinding Background}"/>
+                     Background="{Binding MyBackground}"/>
             <Border Style="{StaticResource waku4}"/>
           </Grid>
         </ControlTemplate>
@@ -73,8 +73,9 @@
           <Grid>
             <Ellipse Width="{Binding MyWidth}"
                      Height="{Binding MyHeight}"
-                     Fill="{TemplateBinding Background}"/>
+                     Fill="{Binding MyFill}"/>
             <TextBlock Text="{Binding MyText}"
+                       Background="{Binding MyBackground}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"/>
             <Border Style="{StaticResource waku4}"/>
