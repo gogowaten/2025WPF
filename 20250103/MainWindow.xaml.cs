@@ -76,10 +76,7 @@ namespace _20250103
         }
 
         private void MyButtonTest_Click(object sender, RoutedEventArgs e)
-        {
-
-
-
+       {
             MyRootGroup.ActiveGroupToOutside();
         }
 
@@ -109,7 +106,10 @@ namespace _20250103
 
         }
 
-
+        private void MyButtonRemove_Click(object sender, RoutedEventArgs e)
+        {
+            MyRootGroup.RemoveThumbFromActiveGroup(MyRootGroup.MyFocusThumb);
+        }
     }
 
 

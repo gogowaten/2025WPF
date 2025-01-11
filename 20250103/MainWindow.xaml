@@ -203,11 +203,12 @@
               </DataTemplate>
             </ComboBox.ItemTemplate>
           </ComboBox>
-          <Button x:Name="MyButtonTest" Content="up" Click="MyButtonTest_Click"/>
-          <Button x:Name="MyButtonTest2" Content="down" Click="MyButtonTest2_Click"/>
+          <Button x:Name="MyButtonTest" Content="Out" Click="MyButtonTest_Click"/>
+          <Button x:Name="MyButtonTest2" Content="In" Click="MyButtonTest2_Click"/>
           <!--<Button x:Name="MyButtonTest3" Content="click" Click="MyButtonTest3_Click"/>-->
-          <Button x:Name="MyButtonTest4" Content="clickParent" Click="MyButtonTest4_Click"/>
+          <Button x:Name="MyButtonTest4" Content="ClickParent" Click="MyButtonTest4_Click"/>
           <Button x:Name="MyButtonAdd" Content="add" Click="MyButtonAdd_Click"/>
+          <Button x:Name="MyButtonRemove" Content="Remove(FocusThumb)" Click="MyButtonRemove_Click"/>
           <TextBlock x:Name="GotKey"/>
           <TextBlock x:Name="GotPreKey"/>
           <TextBlock Text="ClickedThumb"/>

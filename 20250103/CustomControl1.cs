@@ -227,7 +227,6 @@ namespace _20250103
             //Focusable = false;
             MyType = ThumbType.None;
 
-            Loaded += KisoThumb_Loaded;
             PreviewMouseDown += KisoThumb_PreviewMouseDownTest;
             PreviewMouseUp += KisoThumb_PreviewMouseUpTest;
             DragStarted += KisoThumb_DragStarted2;
@@ -241,36 +240,12 @@ namespace _20250103
             RequestBringIntoView += KisoThumb_RequestBringIntoView;
         }
 
-        internal void SetMyBinding()
-        {
-            Binding b;
-            //b = new Binding() { Source = this, Path = new PropertyPath(MyBackgroundProperty) ,Mode=BindingMode.TwoWay};
-            //SetBinding(BackgroundProperty, b);
-
-            //b = new() { Source = this, Path = new PropertyPath(BackgroundProperty), Mode = BindingMode.TwoWay };
-            //SetBinding(MyBackgroundProperty, b);
-
-            //b = new() { Source = this, Path = new PropertyPath(MyWidthProperty), Mode = BindingMode.TwoWay };
-            //SetBinding(WidthProperty, b);
-            //b = new() { Source = this, Path = new PropertyPath(MyHeightProperty), Mode = BindingMode.TwoWay };
-            //SetBinding(HeightProperty, b);
-
-        }
-        private void KisoThumb_Loaded(object sender, RoutedEventArgs e)
-        {
-            //SetMyBinding();
-        }
 
         private void KisoThumb_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
         {
             //e.Handled = true;
         }
 
-        protected override void OnGotFocus(RoutedEventArgs e)
-        {
-            //e.Handled = true;
-            //base.OnGotFocus(e);
-        }
         private void KisoThumb_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (sender is RootThumb rt)
@@ -725,14 +700,6 @@ namespace _20250103
     {
         #region 依存関係プロパティ
 
-        //public ObservableCollection<KisoThumb> MyThumbs
-        //{
-        //    get { return (ObservableCollection<KisoThumb>)GetValue(MyThumbsProperty); }
-        //    set { SetValue(MyThumbsProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyThumbsProperty =
-        //    DependencyProperty.Register(nameof(MyThumbs), typeof(ObservableCollection<KisoThumb>), typeof(GroupThumb), new PropertyMetadata(null));
-
         public ObservableCollection<KisoThumb> MyThumbs
         {
             get { return (ObservableCollection<KisoThumb>)GetValue(MyThumbsProperty); }
@@ -796,7 +763,10 @@ namespace _20250103
             }
             return null;
         }
+        #endregion 初期化
 
+        #region イベントハンドラ
+        
         /// <summary>
         /// 子要素の追加時
         /// 子要素に親要素(自身)を登録
@@ -806,24 +776,32 @@ namespace _20250103
             if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems?[0] is KisoThumb ni)
             {
                 ni.MyParentThumb = this;
+                //ZIndexをCollectionのIndexに合わせる、
+                //挿入箇所より後ろの要素はすべて変更
                 int index = e.NewStartingIndex;
-                //ni.MyZIndex = index;
                 for (int i = index; i < MyThumbs.Count; i++)
                 {
                     MyThumbs[i].MyZIndex = i;
                 }
 
-                //ni.MyZIndex = MyThumbs.IndexOf(ni);//こっちでも同じ
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems?[0] is KisoThumb ot)
             {
                 ot.MyParentThumb = null;
+                //ZIndexをCollectionのIndexに合わせる、
+                //削除箇所より後ろの要素はすべて変更
+                int index = e.OldStartingIndex;
+                for (int i = index; i < MyThumbs.Count; i++)
+                {
+                    MyThumbs[i].MyZIndex = i;
+                }
             }
             else if (e.Action == NotifyCollectionChangedAction.Move)
             {
             }
         }
-        #endregion 初期化
+
+        #endregion イベントハンドラ
 
         #region publicメソッド
 
@@ -1088,6 +1066,12 @@ namespace _20250103
             return false;
         }
 
+        /// <summary>
+        /// ActiveGroupThumbにThumbを追加、
+        /// 追加場所はFocusThumbのZ座標では+1、XYでは+32、
+        /// FocusThumbが無存在ならXYZすべて0で追加
+        /// </summary>
+        /// <param name="thumb"></param>
         public void AddThumbToActiveGroup(KisoThumb thumb)
         {
             thumb.IsSelectable = true;
@@ -1099,10 +1083,30 @@ namespace _20250103
                 index = MyActiveGroupThumb.MyThumbs.IndexOf(MyFocusThumb) + 1;
             }
             MyActiveGroupThumb.MyThumbs.Insert(index, thumb);
-            //MyActiveGroupThumb.MyThumbs.Add(thumb);
             ReplaceSelectedThumbs(thumb);
         }
 
+        public void RemoveThumbFromActiveGroup(KisoThumb thumb)
+        {
+            if (!thumb.IsSelectable || !MyActiveGroupThumb.MyThumbs.Contains(thumb)) { return; }
+
+            thumb.IsSelectable = false;
+            int index = MyActiveGroupThumb.MyThumbs.IndexOf(thumb);
+            MyActiveGroupThumb?.MyThumbs.RemoveAt(index);
+
+
+        }
+
+        public void RemoveSelectedThumbs()
+        {
+            if(MySelectedThumbs.Count == 0) { return; }
+
+            foreach (var item in MySelectedThumbs)
+            {
+                MyActiveGroupThumb.MyThumbs.Remove(item);
+            }
+            MySelectedThumbs.Clear();
+        }
         #endregion パブリックなメソッド
 
         #region イベントでの処理
@@ -1226,7 +1230,7 @@ namespace _20250103
 
 
 
-    public class MyComv : IMultiValueConverter
+    public class MyWakuBrushConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {

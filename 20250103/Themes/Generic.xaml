@@ -9,7 +9,7 @@
 
   <Style x:Key="waku4" TargetType="Border">
     <Style.Resources>
-      <local:MyComv x:Key="wakuConvert2"/>
+      <local:MyWakuBrushConverter x:Key="wakuConvert2"/>
     </Style.Resources>
     <Setter Property="Visibility" Value="{Binding IsWakuVisible}"/>
     <Setter Property="BorderThickness" Value="1.0"/>
