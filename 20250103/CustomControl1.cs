@@ -799,7 +799,8 @@ namespace _20250103
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems?[0] is KisoThumb ot)
             {
-                ot.MyParentThumb = null;
+                //ot.MyParentThumb = null;
+
                 //ZIndexをCollectionのIndexに合わせる、
                 //削除箇所より後ろの要素はすべて変更
                 int index = e.OldStartingIndex;
@@ -1106,7 +1107,8 @@ namespace _20250103
         /// <summary>
         /// SelectedThumbsを削除
         /// </summary>
-        public void RemoveSelectedThumbsFromActiveGroup()
+        /// <param name="withReLayout">削除後に再配置処理をするならtrue</param>
+        public void RemoveSelectedThumbsFromActiveGroup(bool withReLayout = true)
         {
             if (MySelectedThumbs.Count == 0) { return; }
 
@@ -1120,7 +1122,7 @@ namespace _20250103
             }
             MySelectedThumbs.Clear();
 
-            ReLayout3();
+            if (withReLayout) { ReLayout3(); }
         }
 
         /// <summary>
@@ -1144,19 +1146,30 @@ namespace _20250103
             if (MyActiveGroupThumb.MyThumbs.Count == MySelectedThumbs.Count) { return; }
             if (MySelectedThumbs.Count < 2) { return; }
 
-            var list = GetSortedSelectedThumbs();
-            int minZIndex = list[0].MyZIndex;// MySelectedThumbs.Min(x => x.MyZIndex);
+            GroupThumb group = MakeGroupFromSelectedThumbs();
+
+            //選択ThumbをActiveGroupThumbから削除して、選択Thumbをクリア
+            RemoveSelectedThumbsFromActiveGroup(false);
+
+            MyActiveGroupThumb.MyThumbs.Insert(group.MyZIndex, group);            
+            ReplaceSelectedThumbs(group);
+
+            ReLayout3();
+
+        }
+
+        /// <summary>
+        /// SelectedThumbsからGroupThumbを作成
+        /// GroupThumbのZIndexは選択中の最大値-(選択個数 - 1)
+        /// </summary>
+        /// <returns></returns>
+        private GroupThumb MakeGroupFromSelectedThumbs()
+        {
+            List<KisoThumb> list = GetSortedSelectedThumbs();
+            int minZIndex = MySelectedThumbs.Max(x => x.MyZIndex);
+            minZIndex -= list.Count - 1;
             double minLeft = MySelectedThumbs.Min(x => x.MyLeft);
             double minTop = MySelectedThumbs.Min(x => x.MyTop);
-
-
-            foreach (KisoThumb item in MySelectedThumbs)
-            {
-                MyActiveGroupThumb.MyThumbs.Remove(item);
-            }
-
-            RemoveSelectedThumbsFromActiveGroup();
-
             GroupThumb group = new();
             foreach (var item in list)
             {
@@ -1167,11 +1180,8 @@ namespace _20250103
             group.IsSelectable = true;
             group.MyLeft = minLeft;
             group.MyTop = minTop;
-            MyActiveGroupThumb.MyThumbs.Insert(minZIndex, group);
-            ReplaceSelectedThumbs(group);
-
-            ReLayout3();
-
+            group.MyZIndex = minZIndex;
+            return group;
         }
 
         /// <summary>

@@ -96,7 +96,7 @@ namespace _20250103
 
         private void MyButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-            AddEllipseText($"{DateTime.Now:HH-mm-ss}", Brushes.YellowGreen, 50, 50);
+            AddEllipseText($"{DateTime.Now:ss秒FFF}", Brushes.YellowGreen, 50, 50);
         }
 
         private void MyButtonTest_Click(object sender, RoutedEventArgs e)
