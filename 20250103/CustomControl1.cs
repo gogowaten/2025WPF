@@ -42,6 +42,25 @@ namespace _20250103
         #region 依存関係プロパティ
 
 
+
+        #region GroupThumb用
+
+        /// <summary>
+        /// 
+        /// </summary>
+
+        public ObservableCollectionKisoThumb MySelectedThumbs
+        {
+            get { return (ObservableCollectionKisoThumb)GetValue(MySelectedThumbsProperty); }
+            set { SetValue(MySelectedThumbsProperty, value); }
+        }
+        public static readonly DependencyProperty MySelectedThumbsProperty =
+            DependencyProperty.Register(nameof(MySelectedThumbs), typeof(ObservableCollectionKisoThumb), typeof(RootThumb), new PropertyMetadata(null));
+
+        #endregion GroupThumb用
+
+        #region 共通
+
         public Visibility IsWakuVisible
         {
             get { return (Visibility)GetValue(IsWakuVisibleProperty); }
@@ -57,23 +76,6 @@ namespace _20250103
         }
         public static readonly DependencyProperty MyBrushListProperty =
             DependencyProperty.Register(nameof(MyBrushList), typeof(List<Brush>), typeof(KisoThumb), new PropertyMetadata(null));
-
-
-        public ObservableCollectionKisoThumb MySelectedThumbs
-        {
-            get { return (ObservableCollectionKisoThumb)GetValue(MySelectedThumbsProperty); }
-            set { SetValue(MySelectedThumbsProperty, value); }
-        }
-        public static readonly DependencyProperty MySelectedThumbsProperty =
-            DependencyProperty.Register(nameof(MySelectedThumbs), typeof(ObservableCollectionKisoThumb), typeof(RootThumb), new PropertyMetadata(null));
-
-        //public ObservableCollection<KisoThumb> MyThumbs
-        //{
-        //    get { return (ObservableCollection<KisoThumb>)GetValue(MyThumbsProperty); }
-        //    set { SetValue(MyThumbsProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyThumbsProperty =
-        //    DependencyProperty.Register(nameof(MyThumbs), typeof(ObservableCollection<KisoThumb>), typeof(GroupThumb), new PropertyMetadata(null));
 
 
         public double MyLeft
@@ -146,6 +148,7 @@ namespace _20250103
         public static readonly DependencyProperty MyFillProperty =
             DependencyProperty.Register(nameof(MyFill), typeof(Brush), typeof(KisoThumb), new PropertyMetadata(Brushes.Transparent));
 
+        #endregion 共通
 
         #endregion 依存関係プロパティ
 
@@ -161,7 +164,6 @@ namespace _20250103
             get { return (bool)GetValue(IsActiveGroupPropertyKey.DependencyProperty); }
             internal set { SetValue(IsActiveGroupPropertyKey, value); }
         }
-
 
 
 
@@ -248,7 +250,7 @@ namespace _20250103
 
         private void KisoThumb_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (sender is RootThumb rt)
+            if (sender is RootThumb rt && rt.MyClickedThumb != null)
             {
                 if (e.Key == Key.Left)
                 {
@@ -643,6 +645,16 @@ namespace _20250103
             }
         }
 
+        internal static bool IsSelectedWithParent(KisoThumb? kiso)
+        {
+            if (kiso == null) { return false; }
+            if (kiso.IsSelected) { return true; }
+            else
+            {
+                return IsSelectedWithParent(kiso.MyParentThumb);
+            }
+        }
+
         #endregion メソッド
 
     }
@@ -766,7 +778,7 @@ namespace _20250103
         #endregion 初期化
 
         #region イベントハンドラ
-        
+
         /// <summary>
         /// 子要素の追加時
         /// 子要素に親要素(自身)を登録
@@ -998,7 +1010,9 @@ namespace _20250103
         /// </summary>
         public void ActiveGroupToInside()
         {
-            if (MyFocusThumb is GroupThumb gt && ChangeActiveGroupThumb(gt))
+            if (MyClickedThumb != null &&
+                MyFocusThumb is GroupThumb gt &&
+                ChangeActiveGroupThumb(gt))
             {
                 if (gt.MyThumbs.Contains(MyClickedThumb))
                 {
@@ -1014,7 +1028,6 @@ namespace _20250103
                 }
             }
         }
-
 
         /// <summary>
         /// 対象Thumbの親を辿ってIsSelectableなThumbを返す
@@ -1072,40 +1085,110 @@ namespace _20250103
         /// FocusThumbが無存在ならXYZすべて0で追加
         /// </summary>
         /// <param name="thumb"></param>
-        public void AddThumbToActiveGroup(KisoThumb thumb)
+        public void AddThumbToActiveGroup(KisoThumb thumb, int slideHorizontal, int slideVertical)
         {
             thumb.IsSelectable = true;
             int index = MyThumbs.Count;
             if (MyFocusThumb != null)
             {
-                thumb.MyLeft = MyFocusThumb.MyLeft + 32;
-                thumb.MyTop = MyFocusThumb.MyTop + 32;
+                thumb.MyLeft = MyFocusThumb.MyLeft + slideHorizontal;
+                thumb.MyTop = MyFocusThumb.MyTop + slideVertical;
                 index = MyActiveGroupThumb.MyThumbs.IndexOf(MyFocusThumb) + 1;
+            }
+            else
+            {
+                thumb.MyLeft = 0; thumb.MyTop = 0;
             }
             MyActiveGroupThumb.MyThumbs.Insert(index, thumb);
             ReplaceSelectedThumbs(thumb);
         }
 
-        public void RemoveThumbFromActiveGroup(KisoThumb thumb)
+        /// <summary>
+        /// SelectedThumbsを削除
+        /// </summary>
+        public void RemoveSelectedThumbsFromActiveGroup()
         {
-            if (!thumb.IsSelectable || !MyActiveGroupThumb.MyThumbs.Contains(thumb)) { return; }
+            if (MySelectedThumbs.Count == 0) { return; }
 
-            thumb.IsSelectable = false;
-            int index = MyActiveGroupThumb.MyThumbs.IndexOf(thumb);
-            MyActiveGroupThumb?.MyThumbs.RemoveAt(index);
-
-
-        }
-
-        public void RemoveSelectedThumbs()
-        {
-            if(MySelectedThumbs.Count == 0) { return; }
+            if (IsSelectedWithParent(MyClickedThumb)) { MyClickedThumb = null; }
+            MyFocusThumb = null;
 
             foreach (var item in MySelectedThumbs)
             {
+                item.IsSelectable = false;
                 MyActiveGroupThumb.MyThumbs.Remove(item);
             }
             MySelectedThumbs.Clear();
+
+            ReLayout3();
+        }
+
+        /// <summary>
+        /// 全削除
+        /// </summary>
+        public void RemoveAll()
+        {
+            MyThumbs.Clear();
+            MyFocusThumb = null;
+            MyClickedThumb = null;
+            MyActiveGroupThumb = this;
+            MySelectedThumbs.Clear();
+            ReLayout3();
+        }
+
+        /// <summary>
+        /// SelectedThumbsからGroupThumbを生成、追加
+        /// </summary>
+        public void AddGroupFromSelected()
+        {
+            if (MyActiveGroupThumb.MyThumbs.Count == MySelectedThumbs.Count) { return; }
+            if (MySelectedThumbs.Count < 2) { return; }
+
+            var list = GetSortedSelectedThumbs();
+            int minZIndex = list[0].MyZIndex;// MySelectedThumbs.Min(x => x.MyZIndex);
+            double minLeft = MySelectedThumbs.Min(x => x.MyLeft);
+            double minTop = MySelectedThumbs.Min(x => x.MyTop);
+
+
+            foreach (KisoThumb item in MySelectedThumbs)
+            {
+                MyActiveGroupThumb.MyThumbs.Remove(item);
+            }
+
+            RemoveSelectedThumbsFromActiveGroup();
+
+            GroupThumb group = new();
+            foreach (var item in list)
+            {
+                item.MyLeft -= minLeft;
+                item.MyTop -= minTop;
+                group.MyThumbs.Add(item);
+            }
+            group.IsSelectable = true;
+            group.MyLeft = minLeft;
+            group.MyTop = minTop;
+            MyActiveGroupThumb.MyThumbs.Insert(minZIndex, group);
+            ReplaceSelectedThumbs(group);
+
+            ReLayout3();
+
+        }
+
+        /// <summary>
+        /// 選択ThumbをIndex順に並べたリストを返す
+        /// </summary>
+        /// <returns></returns>
+        public List<KisoThumb> GetSortedSelectedThumbs()
+        {
+            List<KisoThumb> result = new();
+            foreach (var item in MyActiveGroupThumb.MyThumbs)
+            {
+                if (item.IsSelected)
+                {
+                    result.Add(item);
+                }
+            }
+            return result;
         }
         #endregion パブリックなメソッド
 
@@ -1135,7 +1218,7 @@ namespace _20250103
         #region 依存関係プロパティ
 
 
-        public KisoThumb MyClickedThumb
+        public KisoThumb? MyClickedThumb
         {
             get { return (KisoThumb)GetValue(MyClickedThumbProperty); }
             set { SetValue(MyClickedThumbProperty, value); }
@@ -1191,7 +1274,7 @@ namespace _20250103
         /// <summary>
         /// フォーカスされたThumb
         /// </summary>
-        public KisoThumb MyFocusThumb
+        public KisoThumb? MyFocusThumb
         {
             get { return (KisoThumb)GetValue(MyFocusThumbProperty); }
             set { SetValue(MyFocusThumbProperty, value); }

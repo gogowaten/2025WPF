@@ -48,12 +48,36 @@ namespace _20250103
             //        keyValuePairs.Add(item.Key, item.Value);
             //    }
             //}
+
         }
+
+        #region 依存関係プロパティ
+
+        /// <summary>
+        /// Thumb追加時のスライド量
+        /// </summary>
+        public int MySlideHorizontal
+        {
+            get { return (int)GetValue(MySlideHorizontalProperty); }
+            set { SetValue(MySlideHorizontalProperty, value); }
+        }
+        public static readonly DependencyProperty MySlideHorizontalProperty =
+            DependencyProperty.Register(nameof(MySlideHorizontal), typeof(int), typeof(KisoThumb), new PropertyMetadata(32));
+
+        public int MySlideVertical
+        {
+            get { return (int)GetValue(MySlideVerticalProperty); }
+            set { SetValue(MySlideVerticalProperty, value); }
+        }
+        public static readonly DependencyProperty MySlideVerticalProperty =
+            DependencyProperty.Register(nameof(MySlideVertical), typeof(int), typeof(KisoThumb), new PropertyMetadata(32));
+
+        #endregion 依存関係プロパティ
 
         private void AddEllipseText(string text, Brush fill, double width, double height)
         {
             EllipseTextThumb thumb = new() { MyText = text, MyFill = fill, MyWidth = width, MyHeight = height };
-            MyRootGroup.AddThumbToActiveGroup(thumb);
+            MyRootGroup.AddThumbToActiveGroup(thumb, MySlideHorizontal, MySlideVertical);
         }
         private void MyRootGroup_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
@@ -76,7 +100,7 @@ namespace _20250103
         }
 
         private void MyButtonTest_Click(object sender, RoutedEventArgs e)
-       {
+        {
             MyRootGroup.ActiveGroupToOutside();
         }
 
@@ -108,17 +132,27 @@ namespace _20250103
 
         private void MyButtonRemove_Click(object sender, RoutedEventArgs e)
         {
-            MyRootGroup.RemoveThumbFromActiveGroup(MyRootGroup.MyFocusThumb);
+            MyRootGroup.RemoveSelectedThumbsFromActiveGroup();
         }
-    }
 
-
-    public class EXFV : ScrollViewer
-    {
-
-        protected override Size ArrangeOverride(Size arrangeSize)
+        private void MyButtonRemoveAll_Click(object sender, RoutedEventArgs e)
         {
-            return base.ArrangeOverride(arrangeSize);
+            MyRootGroup.RemoveAll();
+        }
+
+        private void MyButtonMakeGroup_Click(object sender, RoutedEventArgs e)
+        {
+            MyRootGroup.AddGroupFromSelected();
         }
     }
+
+
+    //public class EXFV : ScrollViewer
+    //{
+
+    //    protected override Size ArrangeOverride(Size arrangeSize)
+    //    {
+    //        return base.ArrangeOverride(arrangeSize);
+    //    }
+    //}
 }

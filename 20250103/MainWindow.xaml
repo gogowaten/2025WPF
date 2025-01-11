@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250103"
         mc:Ignorable="d"
-          Title="MainWindow" Height="450" Width="800">
+          Title="MainWindow" Height="650" Width="800">
   <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -207,8 +207,10 @@
           <Button x:Name="MyButtonTest2" Content="In" Click="MyButtonTest2_Click"/>
           <!--<Button x:Name="MyButtonTest3" Content="click" Click="MyButtonTest3_Click"/>-->
           <Button x:Name="MyButtonTest4" Content="ClickParent" Click="MyButtonTest4_Click"/>
-          <Button x:Name="MyButtonAdd" Content="add" Click="MyButtonAdd_Click"/>
-          <Button x:Name="MyButtonRemove" Content="Remove(FocusThumb)" Click="MyButtonRemove_Click"/>
+          <Button x:Name="MyButtonAdd" Content="Ellipse追加" Click="MyButtonAdd_Click"/>
+          <Button x:Name="MyButtonRemove" Content="除去(選択Thumb)" Click="MyButtonRemove_Click"/>
+          <Button x:Name="MyButtonRemoveAll" Content="全削除" Click="MyButtonRemoveAll_Click"/>
+          <Button x:Name="MyButtonMakeGroup" Content="グループ化" Click="MyButtonMakeGroup_Click"/>
           <TextBlock x:Name="GotKey"/>
           <TextBlock x:Name="GotPreKey"/>
           <TextBlock Text="ClickedThumb"/>
