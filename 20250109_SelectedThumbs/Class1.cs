@@ -97,7 +97,7 @@ namespace _20250109_SelectedThumbs
 
 
 
-    public class MyComv : IMultiValueConverter
+    public class MyWakuBrushConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
