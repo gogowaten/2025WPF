@@ -58,7 +58,20 @@
               <local:EllipseTextThumb MyLeft="80" MyTop="40" MyText="Item 3-3-3" MyWidth="60" MyHeight="60" MyFill="Khaki"/>
             </local:GroupThumb>
           </local:GroupThumb>
-
+          <local:GroupThumb MyLeft="50" MyTop="300">
+            <local:GroupThumb>
+              <local:EllipseTextThumb MyText="1-1" MyWidth="50" MyHeight="50" MyFill="MediumOrchid"/>
+              <local:EllipseTextThumb MyText="1-2" MyLeft="40" MyTop="50" MyWidth="50" MyHeight="50" MyFill="MediumOrchid"/>
+              <local:GroupThumb MyLeft="100" MyTop="0">
+                <local:EllipseTextThumb MyText="1-3-1" MyWidth="50" MyHeight="50" MyFill="MediumOrchid"/>
+                <local:EllipseTextThumb MyText="1-3-2" MyLeft="50" MyWidth="50" MyHeight="50" MyFill="MediumOrchid"/>
+              </local:GroupThumb>
+            </local:GroupThumb>
+            <local:GroupThumb MyLeft="20" MyTop="120">
+              <local:EllipseTextThumb MyText="2-1" MyWidth="50" MyHeight="50" MyFill="MediumOrchid"/>
+              <local:EllipseTextThumb MyText="2-2" MyLeft="100" MyWidth="50" MyHeight="50" MyFill="MediumOrchid"/>
+            </local:GroupThumb>
+          </local:GroupThumb>
         </local:RootThumb>
       </Canvas>
     </ScrollViewer>
@@ -211,6 +224,7 @@
           <Button x:Name="MyButtonRemove" Content="除去(選択Thumb)" Click="MyButtonRemove_Click"/>
           <Button x:Name="MyButtonRemoveAll" Content="全削除" Click="MyButtonRemoveAll_Click"/>
           <Button x:Name="MyButtonMakeGroup" Content="グループ化" Click="MyButtonMakeGroup_Click"/>
+          <Button x:Name="MyButonUngroup" Content="グループ解除" Click="MyButonUngroup_Click"/>
           <TextBlock x:Name="GotKey"/>
           <TextBlock x:Name="GotPreKey"/>
           <TextBlock Text="ClickedThumb"/>

@@ -49,13 +49,13 @@ namespace _20250103
         /// 
         /// </summary>
 
-        public ObservableCollectionKisoThumb MySelectedThumbs
-        {
-            get { return (ObservableCollectionKisoThumb)GetValue(MySelectedThumbsProperty); }
-            set { SetValue(MySelectedThumbsProperty, value); }
-        }
-        public static readonly DependencyProperty MySelectedThumbsProperty =
-            DependencyProperty.Register(nameof(MySelectedThumbs), typeof(ObservableCollectionKisoThumb), typeof(RootThumb), new PropertyMetadata(null));
+        //public ObservableCollectionKisoThumb MySelectedThumbs
+        //{
+        //    get { return (ObservableCollectionKisoThumb)GetValue(MySelectedThumbsProperty); }
+        //    set { SetValue(MySelectedThumbsProperty, value); }
+        //}
+        //public static readonly DependencyProperty MySelectedThumbsProperty =
+        //    DependencyProperty.Register(nameof(MySelectedThumbs), typeof(ObservableCollectionKisoThumb), typeof(RootThumb), new PropertyMetadata(null));
 
         #endregion GroupThumb用
 
@@ -347,31 +347,26 @@ namespace _20250103
                 root.MyClickedThumb = this;
 
                 //RootThumbのSelectedThumbsプロパティを更新3
-                if (GetSelectableParentThumb(this) is KisoThumb current)
+                if (GetSelectableThumb(this) is KisoThumb current)
                 {
-                    void AddToSelection(KisoThumb thumb)
-                    {
-                        root.AddToSelectedThumbs(thumb);
-                    }
-
                     int selectedCount = root.MySelectedThumbs.Count;
                     bool isContained = root.MySelectedThumbs.Contains(current);
                     if (selectedCount == 0)
                     {
                         //追加
-                        AddToSelection(current);
+                        root.AddToSelectedThumbs(current);
                     }
                     else if (!isContained && Keyboard.Modifiers == ModifierKeys.Control)
                     {
                         //追加
-                        AddToSelection(current);
+                        root.AddToSelectedThumbs(current);
                         //直前追加のフラグ
                         current.IsPreviewSelected = true;
                     }
                     else if (!isContained && Keyboard.Modifiers == ModifierKeys.None)
                     {
                         //入れ替え
-                        root.ReplaceSelectedThumbs(current);
+                        root.SelectedThumbsClearAndAddThumb(current);
                     }
                     else if (selectedCount > 1)
                     {
@@ -425,7 +420,7 @@ namespace _20250103
 
             if (sender is KisoThumb kiso)
             {
-                if (GetSelectableParentThumb(kiso) is KisoThumb current)
+                if (GetSelectableThumb(kiso) is KisoThumb current)
                 {
                     if (current.MyParentThumb is GroupThumb parent)
                     {
@@ -454,8 +449,6 @@ namespace _20250103
             {
                 if (GetRootThumb() is RootThumb root)
                 {
-                    var fo = root.MyFocusThumb;
-                    var se = root.MySelectedThumbs;
                     foreach (var item in root.MySelectedThumbs)
                     {
                         item.MyLeft += (int)(e.HorizontalChange + 0.5);
@@ -476,7 +469,7 @@ namespace _20250103
 
             //SelectedThumbsの更新
             if (GetRootThumb() is RootThumb root &&
-                GetSelectableParentThumb(this) is KisoThumb current &&
+                GetSelectableThumb(this) is KisoThumb current &&
                 root.MySelectedThumbs.Count > 1 &&
                 !current.IsPreviewSelected &&
                 e.HorizontalChange == 0 &&
@@ -486,7 +479,7 @@ namespace _20250103
                 if (Keyboard.Modifiers == ModifierKeys.None)
                 {
                     //入れ替え
-                    root.ReplaceSelectedThumbs(current);
+                    root.SelectedThumbsClearAndAddThumb(current);
                 }
                 else if (Keyboard.Modifiers == ModifierKeys.Control)
                 {
@@ -506,7 +499,7 @@ namespace _20250103
 
             if (e.Source is KisoThumb kiso)
             {
-                if (GetSelectableParentThumb(kiso) is KisoThumb ima)
+                if (GetSelectableThumb(kiso) is KisoThumb ima)
                 {
                     ima.MyParentThumb?.RemoveAnchorThumb();
                 }
@@ -552,8 +545,9 @@ namespace _20250103
         /// </summary>
         /// <param name="thumb"></param>
         /// <returns></returns>
-        internal KisoThumb? GetSelectableParentThumb(KisoThumb thumb)
+        internal KisoThumb? GetSelectableThumb(KisoThumb? thumb)
         {
+            if (thumb is null) { return null; }
             if (thumb.IsSelectable) { return thumb; }
             if (thumb.MyParentThumb is GroupThumb gt)
             {
@@ -563,7 +557,7 @@ namespace _20250103
                 }
                 else
                 {
-                    return GetSelectableParentThumb(gt);
+                    return GetSelectableThumb(gt);
                 }
             }
             return null;
@@ -645,6 +639,11 @@ namespace _20250103
             }
         }
 
+        /// <summary>
+        /// Selectableの判定をParentを遡って行う
+        /// </summary>
+        /// <param name="kiso"></param>
+        /// <returns></returns>
         internal static bool IsSelectedWithParent(KisoThumb? kiso)
         {
             if (kiso == null) { return false; }
@@ -922,49 +921,6 @@ namespace _20250103
 
         #region internalメソッド
 
-        /// <summary>
-        /// MySelectedThumbsの更新、クリックしたときに使う
-        /// FocusThumbの更新も行っているけど、SelectionThumbのイベントで行ったほうがいいかも？
-        /// ctrl＋クリックで対象Thumbがリストになければ追加、あれば削除
-        /// 通常クリックならリストをクリアして追加
-        /// </summary>
-        /// <param name="thumb">対象Thumb</param>
-        internal void UpdateSelectedThumbs(KisoThumb thumb)
-        {
-            if (thumb.IsSelectable == false) { return; }
-
-            //要素数が0のときは普通に追加
-            if (MySelectedThumbs.Count == 0)
-            {
-                AddToSelectedThumbs(thumb);
-            }
-            //通常クリックのとき
-            if (Keyboard.Modifiers == ModifierKeys.None)
-            {
-                //リストクリア後に追加してFocusThumbにする
-                ReplaceSelectedThumbs(thumb);
-            }
-
-            //ctrlクリックの場合
-            else if (Keyboard.Modifiers == ModifierKeys.Control)
-            {
-                if (MySelectedThumbs.Count >= 1 && MySelectedThumbs.Contains(thumb) == false)
-                {
-                    //選択数が1個以上＋対象が未選択の場合、追加してFocusThumb
-                    AddToSelectedThumbs(thumb);
-                }
-                else if (MySelectedThumbs.Count > 1 && MySelectedThumbs.Contains(thumb))
-                {
-                    //選択数が2個以上＋対象が選択状態の場合、マウスドラッグ移動を確認するので保留
-                    //さらにFocusThumbだった場合は、リストの最後の要素をFocusThumbにする
-                    MySelectedThumbs.Remove(thumb);
-                    if (thumb == MyFocusThumb)
-                    {
-                        MyFocusThumb = MySelectedThumbs[^1];
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// MySelectedThumbsへの追加
@@ -980,8 +936,10 @@ namespace _20250103
         /// MySelectedThumbsへの入れ替え、クリア後に対象を追加
         /// </summary>
         /// <param name="kiso">対象Thumb</param>
-        internal void ReplaceSelectedThumbs(KisoThumb kiso)
+        internal void SelectedThumbsClearAndAddThumb(KisoThumb? kiso)
         {
+            if (kiso is null) { return; }
+            kiso.IsSelectable = true;
             MySelectedThumbs.Clear();
             AddToSelectedThumbs(kiso);
         }
@@ -990,6 +948,9 @@ namespace _20250103
         #endregion internalメソッド
 
         #region パブリックなメソッド
+
+        #region ActiveGroupThumbの変更
+
 
         /// <summary>
         /// ActiveGroupThumbを外(Root)側のGroupThumbへ変更
@@ -1008,47 +969,21 @@ namespace _20250103
 
         /// <summary>
         /// ActiveGroupThumbを内側のGroupThumbへ変更
+        /// FocusThumbをActiveGroupThumbに変更して潜っていく感じ
         /// </summary>
         public void ActiveGroupToInside()
         {
-            if (MyClickedThumb != null &&
-                MyFocusThumb is GroupThumb gt &&
-                ChangeActiveGroupThumb(gt))
+            if (MyFocusThumb is null) { return; }
+            if (MyFocusThumb is GroupThumb nextGroup)
             {
-                if (gt.MyThumbs.Contains(MyClickedThumb))
+                if (ChangeActiveGroupThumb(nextGroup))
                 {
-                    AddToSelectedThumbs(MyClickedThumb);
-                }
-                else
-                {
-                    //クリックの系列＋選択可能をフォーカスにする
-                    if (GetIsSelectableParent(MyClickedThumb) is GroupThumb selectabelPrent)
-                    {
-                        ReplaceSelectedThumbs(selectabelPrent);
-                    }
+                    //次のFocusThumbの選定、ClickedThumbの親
+                    KisoThumb? nextFocus = GetSelectableThumb(MyClickedThumb);
+                    MyFocusThumb = nextFocus;
+                    SelectedThumbsClearAndAddThumb(nextFocus);
                 }
             }
-        }
-
-        /// <summary>
-        /// 対象Thumbの親を辿ってIsSelectableなThumbを返す
-        /// </summary>
-        /// <param name="thumb">対象Thumb</param>
-        /// <returns></returns>
-        private static KisoThumb? GetIsSelectableParent(KisoThumb thumb)
-        {
-            if (thumb.MyParentThumb is GroupThumb gt)
-            {
-                if (gt.IsSelectable)
-                {
-                    return gt;
-                }
-                else if (gt.MyParentThumb is GroupThumb mo)
-                {
-                    return GetIsSelectableParent(mo);
-                }
-            }
-            return null;
         }
 
 
@@ -1080,37 +1015,54 @@ namespace _20250103
             return false;
         }
 
+        #endregion ActiveGroupThumbの変更
+
+        #region Thumb追加と削除
+
         /// <summary>
         /// ActiveGroupThumbにThumbを追加、
-        /// 追加場所はFocusThumbのZ座標では+1、XYでは+32、
-        /// FocusThumbが無存在ならXYZすべて0で追加
+        /// 追加場所はFocusThumbがあればそれが基準になる、Z座標では+1
+        /// 最初の追加要素ならすべて0で配置
         /// </summary>
         /// <param name="thumb"></param>
-        public void AddThumbToActiveGroup(KisoThumb thumb, int slideHorizontal, int slideVertical)
+        /// <param name="insertIndex">挿入先指定</param>
+        public void AddThumbToActiveGroup(KisoThumb thumb, int insertIndex = -1)
         {
             thumb.IsSelectable = true;
-            int index = MyThumbs.Count;
+            int index = insertIndex == -1 ? MyThumbs.Count : insertIndex;
             if (MyFocusThumb != null)
             {
-                thumb.MyLeft = MyFocusThumb.MyLeft + slideHorizontal;
-                thumb.MyTop = MyFocusThumb.MyTop + slideVertical;
+                thumb.MyLeft += MyFocusThumb.MyLeft;
+                thumb.MyTop += MyFocusThumb.MyTop;
                 index = MyActiveGroupThumb.MyThumbs.IndexOf(MyFocusThumb) + 1;
             }
-            else
+            else if (MyActiveGroupThumb.MyThumbs.Count == 0)
             {
                 thumb.MyLeft = 0; thumb.MyTop = 0;
             }
             MyActiveGroupThumb.MyThumbs.Insert(index, thumb);
-            ReplaceSelectedThumbs(thumb);
+            SelectedThumbsClearAndAddThumb(thumb);
+            ReLayout3();
         }
 
         /// <summary>
-        /// SelectedThumbsを削除
+        /// SelectedThumbsの全要素をActiveGroupThumbから削除
         /// </summary>
         /// <param name="withReLayout">削除後に再配置処理をするならtrue</param>
         public void RemoveSelectedThumbsFromActiveGroup(bool withReLayout = true)
         {
-            if (MySelectedThumbs.Count == 0) { return; }
+            int selectedCount = MySelectedThumbs.Count;
+            if (selectedCount == 0) { return; }
+            int targetCount = MyActiveGroupThumb.MyThumbs.Count;
+            if (selectedCount == targetCount)
+            {
+                RemoveAll();
+            }
+            //else if(targetCount-selectedCount == 1)
+            //{
+            //    //グループ解除
+
+            //}
 
             if (IsSelectedWithParent(MyClickedThumb)) { MyClickedThumb = null; }
             MyFocusThumb = null;
@@ -1148,14 +1100,10 @@ namespace _20250103
 
             GroupThumb group = MakeGroupFromSelectedThumbs();
 
-            //選択ThumbをActiveGroupThumbから削除して、選択Thumbをクリア
+            //選択ThumbをActiveGroupThumbから一掃
             RemoveSelectedThumbsFromActiveGroup(false);
 
-            MyActiveGroupThumb.MyThumbs.Insert(group.MyZIndex, group);            
-            ReplaceSelectedThumbs(group);
-
-            ReLayout3();
-
+            AddThumbToActiveGroup(group, group.MyZIndex);
         }
 
         /// <summary>
@@ -1200,6 +1148,49 @@ namespace _20250103
             }
             return result;
         }
+
+        /// <summary>
+        /// グループ解除
+        /// </summary>
+        /// <param name="group"></param>
+        public void UngroupFocusThumb()
+        {
+            if (MyFocusThumb is GroupThumb group &&
+                group.MyParentThumb is GroupThumb parent)
+            {
+                MyFocusThumb = null;//優先処理
+                var list = MakeUngroupList(group);
+                group.MyThumbs.Clear();
+                parent.MyThumbs.Remove(group);
+                foreach (var item in list)
+                {
+                    item.IsSelectable = true;
+                    MyActiveGroupThumb.MyThumbs.Insert(item.MyZIndex, item);
+                }
+                if (GetSelectableThumb(MyClickedThumb) is KisoThumb nextFocus)
+                {
+                    MyFocusThumb = nextFocus;
+                    SelectedThumbsClearAndAddThumb(MyFocusThumb);
+                }
+                ReLayout3();
+            }
+
+            static List<KisoThumb> MakeUngroupList(GroupThumb group)
+            {
+                List<KisoThumb> result = [];
+                foreach (var item in group.MyThumbs)
+                {
+                    item.MyLeft += group.MyLeft;
+                    item.MyTop += group.MyTop;
+                    item.MyZIndex += group.MyZIndex;
+                    result.Add(item);
+                }
+                return result;
+            }
+        }
+
+        #endregion Thumb追加と削除
+
         #endregion パブリックなメソッド
 
         #region イベントでの処理
@@ -1227,6 +1218,14 @@ namespace _20250103
 
         #region 依存関係プロパティ
 
+
+        public ObservableCollectionKisoThumb MySelectedThumbs
+        {
+            get { return (ObservableCollectionKisoThumb)GetValue(MySelectedThumbsProperty); }
+            set { SetValue(MySelectedThumbsProperty, value); }
+        }
+        public static readonly DependencyProperty MySelectedThumbsProperty =
+            DependencyProperty.Register(nameof(MySelectedThumbs), typeof(ObservableCollectionKisoThumb), typeof(RootThumb), new PropertyMetadata(null));
 
         public KisoThumb? MyClickedThumb
         {
@@ -1305,6 +1304,7 @@ namespace _20250103
                 if (e.NewValue is KisoThumb n)
                 {
                     n.IsFocus = true;
+
                     //rt.MyActiveGroupThumb = n.MyParentThumb ?? rt;
                     //n.Focusable = true;
                     //FocusManager.SetFocusedElement(rt, n);

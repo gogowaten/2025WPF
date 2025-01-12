@@ -18,6 +18,10 @@ namespace _20250103
     {
         public MainWindow()
         {
+#if DEBUG
+            Left = 50;
+            Top = 300;
+#endif
             InitializeComponent();
             MyRootGroup.GotKeyboardFocus += MyRootGroup_GotKeyboardFocus;
             MyRootGroup.GotFocus += MyRootGroup_GotFocus;
@@ -76,8 +80,8 @@ namespace _20250103
 
         private void AddEllipseText(string text, Brush fill, double width, double height)
         {
-            EllipseTextThumb thumb = new() { MyText = text, MyFill = fill, MyWidth = width, MyHeight = height };
-            MyRootGroup.AddThumbToActiveGroup(thumb, MySlideHorizontal, MySlideVertical);
+            EllipseTextThumb thumb = new() { MyText = text, MyFill = fill, MyWidth = width, MyHeight = height, MyLeft = MySlideHorizontal, MyTop = MySlideVertical };
+            MyRootGroup.AddThumbToActiveGroup(thumb);
         }
         private void MyRootGroup_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
@@ -143,6 +147,11 @@ namespace _20250103
         private void MyButtonMakeGroup_Click(object sender, RoutedEventArgs e)
         {
             MyRootGroup.AddGroupFromSelected();
+        }
+
+        private void MyButonUngroup_Click(object sender, RoutedEventArgs e)
+        {
+            MyRootGroup.UngroupFocusThumb();
         }
     }
 
