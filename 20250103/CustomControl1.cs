@@ -801,11 +801,14 @@ namespace _20250103
                 //ot.MyParentThumb = null;
 
                 //ZIndexをCollectionのIndexに合わせる、
-                //削除箇所より後ろの要素はすべて変更
+                //変更対象条件は、IsSelectedではない＋削除箇所より後ろ
                 int index = e.OldStartingIndex;
                 for (int i = index; i < MyThumbs.Count; i++)
                 {
-                    MyThumbs[i].MyZIndex = i;
+                    if (!MyThumbs[i].IsSelected)
+                    {
+                        MyThumbs[i].MyZIndex = i;
+                    }
                 }
             }
             else if (e.Action == NotifyCollectionChangedAction.Move)
@@ -1150,9 +1153,9 @@ namespace _20250103
         }
 
         /// <summary>
-        /// グループ解除
+        /// グループ解除、
+        /// 解除後は元グループの要素全てを選択状態にする
         /// </summary>
-        /// <param name="group"></param>
         public void UngroupFocusThumb()
         {
             if (MyFocusThumb is GroupThumb group &&
@@ -1162,16 +1165,26 @@ namespace _20250103
                 var list = MakeUngroupList(group);
                 group.MyThumbs.Clear();
                 parent.MyThumbs.Remove(group);
+                MySelectedThumbs.Clear();
+
+                //ActiveGroupThumbとSelectedThumbsに要素を追加
                 foreach (var item in list)
                 {
                     item.IsSelectable = true;
                     MyActiveGroupThumb.MyThumbs.Insert(item.MyZIndex, item);
+                    MySelectedThumbs.Add(item);
                 }
+
+                //FocusThumbの選定、Clickedが含まれていたらそれ、なければ先頭要素
                 if (GetSelectableThumb(MyClickedThumb) is KisoThumb nextFocus)
                 {
                     MyFocusThumb = nextFocus;
-                    SelectedThumbsClearAndAddThumb(MyFocusThumb);
                 }
+                else
+                {
+                    MyFocusThumb = MySelectedThumbs[0];
+                }
+
                 ReLayout3();
             }
 
