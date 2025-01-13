@@ -1,4 +1,6 @@
 20250113<br>
+WPFでテストアプリ、グループ化とその解除に伴うZIndexの変更 - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/01/13/152408<br>
 ![Animation20250113_133319-ezgif com-optimize](https://github.com/user-attachments/assets/ed2529f7-834c-4dd7-89ee-edc2247dcd5c)
 <br><br>
 
