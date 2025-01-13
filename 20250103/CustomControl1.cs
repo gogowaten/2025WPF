@@ -228,6 +228,11 @@ namespace _20250103
             Focusable = true;
             //Focusable = false;
             MyType = ThumbType.None;
+            BitmapImage bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.EndInit();
+            bitmapImage.Freeze();
+            bitmapImage.UriSource = new Uri("");
 
             PreviewMouseDown += KisoThumb_PreviewMouseDownTest;
             PreviewMouseUp += KisoThumb_PreviewMouseUpTest;
