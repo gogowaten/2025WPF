@@ -1,6 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
+//WPFでテストアプリ、グループ化とその解除に伴うZIndexの変更 - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/01/13/152408
+
 namespace _20250113_GroupUngroup
 {
     /// <summary>
