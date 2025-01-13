@@ -8,9 +8,9 @@
         Title="MainWindow" Height="400" Width="500">
   <Window.Resources>
     <Style TargetType="{x:Type local:KisoThumb}" x:Key="kiso">
-      <EventSetter Event="DragCompleted" Handler="KisoThumb_DragCompleted"/>
+      <!--<EventSetter Event="DragCompleted" Handler="KisoThumb_DragCompleted"/>
       <EventSetter Event="DragDelta" Handler="Thumb_DragDelta"/>
-      <EventSetter Event="DragStarted" Handler="KisoThumb_DragStarted"/>
+      <EventSetter Event="DragStarted" Handler="KisoThumb_DragStarted"/>-->
     </Style>
     <Style TargetType="{x:Type local:TextBlockThumb}" BasedOn="{StaticResource kiso}"/>
     <Style TargetType="{x:Type local:EllipseTextThumb}" BasedOn="{StaticResource kiso}"/>
@@ -69,6 +69,14 @@
         </StackPanel>
       </GroupBox>
       <GroupBox Header="Group2" Background="{Binding Background}" DataContext="{Binding ElementName=MyGroup2}">
+        <StackPanel>
+          <TextBlock Text="{Binding Path=MyLeft, StringFormat={}{0:0.0} Left}"/>
+          <TextBlock Text="{Binding Path=MyTop, StringFormat={}{0:0.0} Top}"/>
+          <TextBlock Text="{Binding Path=ActualWidth, StringFormat={}{0:0.0} width}"/>
+          <TextBlock Text="{Binding Path=ActualHeight, StringFormat={}{0:0.0} height}"/>
+        </StackPanel>
+      </GroupBox>
+      <GroupBox Header="Range" Background="{Binding Background}" DataContext="{Binding ElementName=MyRootGroup, Path=MyRange}">
         <StackPanel>
           <TextBlock Text="{Binding Path=MyLeft, StringFormat={}{0:0.0} Left}"/>
           <TextBlock Text="{Binding Path=MyTop, StringFormat={}{0:0.0} Top}"/>

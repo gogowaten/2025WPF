@@ -21,7 +21,7 @@ using System.Windows.Shapes;
 namespace _20250108
 {
     //Thumbの種類の識別用
-    public enum Type { None = 0, Root, Group, Item, Anchor, Text, Ellipse }
+    public enum Type { None = 0, Root, Group, Item, Anchor, Range, Text, Ellipse }
 
 
     /// <summary>
@@ -73,7 +73,55 @@ namespace _20250108
             MyType = Type.None;
             PreviewMouseDown += KisoThumb_PreviewMouseDown;
             PreviewMouseUp += KisoThumb_PreviewMouseUp;
+            DragStarted += KisoThumb_DragStarted;
+            DragDelta += KisoThumb_DragDelta;
+            DragCompleted += KisoThumb_DragCompleted;
         }
+        private void KisoThumb_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            if (e.Source is KisoThumb t)
+            {
+                //アンカーThumbをHidden、在るけど見えないだけ
+                if (t.MyParentThumb is GroupThumb gt)
+                {
+                    AnchorThumb anchor = gt.MyAnchorThumb;
+                    anchor.Visibility = Visibility.Hidden;
+                    anchor.Width = t.ActualWidth;
+                    anchor.Height = t.ActualHeight;
+                    anchor.MyLeft = t.MyLeft;
+                    anchor.MyTop = t.MyTop;
+
+                }
+            }
+        }
+
+        private void KisoThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+
+            if (sender is KisoThumb t)
+            {
+                t.MyLeft += e.HorizontalChange;
+                t.MyTop += e.VerticalChange;
+                e.Handled = true;
+            }
+
+        }
+
+        private void KisoThumb_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            if (sender is KisoThumb t && t.MyParentThumb is not null)
+            {
+                if (t.MyParentThumb is GroupThumb gt)
+                {
+                    AnchorThumb anchor = gt.MyAnchorThumb;
+                    anchor.Visibility = Visibility.Collapsed;
+                    anchor.MyLeft = t.MyLeft;
+                    anchor.MyTop = t.MyTop;
+                }
+                t.MyParentThumb.ReLayout3();
+            }
+        }
+
 
 
         /// <summary>
@@ -103,6 +151,61 @@ namespace _20250108
         }
 
     }
+
+    public class RangeThumb : KisoThumb
+    {
+        private Thumb rightBottom;
+        static RangeThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(RangeThumb), new FrameworkPropertyMetadata(typeof(RangeThumb)));
+        }
+        public RangeThumb()
+        {
+            MyType = Type.Range;
+            Focusable = false;
+            Loaded += RangeThumb_Loaded;
+            Panel.SetZIndex(this, int.MaxValue);
+            rightBottom = new Thumb() { Width = 20, Height = 20 };
+            rightBottom.DragDelta += Thumb_DragDelta;
+        }
+
+        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is Thumb t)
+            {
+                Canvas.SetLeft(t, Canvas.GetLeft(t) + e.HorizontalChange);
+                Canvas.SetTop(t, Canvas.GetTop(t) + e.VerticalChange);
+                e.Handled = true;
+            }
+        }
+
+        private void RangeThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            DependencyObject d = GetTemplateChild("MyCanvas");
+            if (GetExCanvas(d) is ExCanvas canvas)
+            {                
+                Canvas.SetLeft(rightBottom, 150); Canvas.SetTop(rightBottom, 100);
+                canvas.Children.Add(rightBottom);
+            }
+        }
+
+        /// <summary>
+        /// Templateの中にあるExCanvasの取得
+        /// </summary>
+        private static ExCanvas? GetExCanvas(DependencyObject d)
+        {
+            if (d is ExCanvas canvas) { return canvas; }
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(d); i++)
+            {
+                ExCanvas? c = GetExCanvas(VisualTreeHelper.GetChild(d, i));
+                if (c is not null) return c;
+            }
+            return null;
+        }
+
+    }
+
 
 
     /// <summary>
@@ -338,6 +441,7 @@ namespace _20250108
     /// </summary>
     public class RootThumb : GroupThumb
     {
+        public RangeThumb MyRange { get; private set; }
         static RootThumb()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RootThumb), new FrameworkPropertyMetadata(typeof(RootThumb)));
@@ -345,6 +449,8 @@ namespace _20250108
         public RootThumb()
         {
             MyType = Type.Root;
+            MyRange = new();
+            MyThumbs.Add(MyRange);
         }
     }
 

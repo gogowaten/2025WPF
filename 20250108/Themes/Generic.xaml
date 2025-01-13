@@ -10,7 +10,20 @@
     <Setter Property="Canvas.Top" Value="{Binding MyTop}"/>
   </Style>
 
-
+  <Style TargetType="{x:Type local:RangeThumb}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Opacity" Value="0.3"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <local:ExCanvas x:Name="MyCanvas"  Background="Black">
+            
+          </local:ExCanvas>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  
   <Style TargetType="{x:Type local:AnchorThumb}"
        BasedOn="{StaticResource kiso}">
     <Setter Property="Template">
