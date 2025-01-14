@@ -50,7 +50,7 @@
       </local:RootThumb>
 
     </ScrollViewer>
-
+    
     <StackPanel Grid.Column="1">
       <GroupBox Header="Root" Background="{Binding Background}" DataContext="{Binding ElementName=MyRootGroup}">
         <StackPanel>
@@ -90,5 +90,8 @@
         </Canvas.Background>
       </Canvas>
     </StackPanel>
+    <!--<Canvas>
+      <local:RangeThumb3/>
+    </Canvas>-->
   </Grid>
 </Window>

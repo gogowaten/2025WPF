@@ -28,7 +28,7 @@
 
         <local:RootThumb x:Name="MyRootGroup" MyBackground="Transparent">
           <local:EllipseTextThumb MyText="Item1" MyWidth="60" MyHeight="60" MyFill="Beige"/>
-
+          <local:RangeThumb MyLeft="200" Background="LemonChiffon"/>
           <local:GroupThumb x:Name="MyGroup1" MyText="Group1" MyLeft="20" MyTop="20">
             <!--DodgerBlue-->
             <local:TextBlockThumb x:Name="MyItem1_1" MyLeft="100" MyTop="0"

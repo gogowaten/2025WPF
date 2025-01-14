@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -152,9 +153,12 @@ namespace _20250108
 
     }
 
-    public class RangeThumb : KisoThumb
+    public class RangeThumb : GroupThumb
     {
-        private Thumb rightBottom;
+        KnobThumb KULeft = new();
+        KnobThumb KURight = new();
+        KnobThumb KDLeft = new();
+        KnobThumb KDRight = new();
         static RangeThumb()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RangeThumb), new FrameworkPropertyMetadata(typeof(RangeThumb)));
@@ -163,10 +167,21 @@ namespace _20250108
         {
             MyType = Type.Range;
             Focusable = false;
-            Loaded += RangeThumb_Loaded;
+            //Loaded += RangeThumb_Loaded;
             Panel.SetZIndex(this, int.MaxValue);
-            rightBottom = new Thumb() { Width = 20, Height = 20 };
-            rightBottom.DragDelta += Thumb_DragDelta;
+
+            MyThumbs2.Add(KULeft);
+            MyThumbs2.Add(KURight);
+            MyThumbs2.Add(KDLeft);
+            MyThumbs2.Add(KDRight);
+            //KULeft.MyLeft = 0; KULeft.MyTop = 0;
+            //KDRight.MyLeft = 100; KDRight.MyTop = 100;
+            Canvas.SetLeft(KDRight, 100); Canvas.SetTop(KDRight, 100);
+
+            //KULeft.DragDelta += Thumb_DragDelta;
+            //KURight.DragDelta += Thumb_DragDelta;
+            //KDLeft.DragDelta += Thumb_DragDelta;
+            //KDRight.DragDelta += Thumb_DragDelta;
         }
 
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -181,32 +196,212 @@ namespace _20250108
 
         private void RangeThumb_Loaded(object sender, RoutedEventArgs e)
         {
-            DependencyObject d = GetTemplateChild("MyCanvas");
-            if (GetExCanvas(d) is ExCanvas canvas)
-            {                
-                Canvas.SetLeft(rightBottom, 150); Canvas.SetTop(rightBottom, 100);
-                canvas.Children.Add(rightBottom);
+            //DependencyObject d = GetTemplateChild("MyCanvas");
+            //if (GetExCanvas(d) is ExCanvas canvas)
+            //{
+            //    Canvas.SetLeft(rightBottom, 150); Canvas.SetTop(rightBottom, 100);
+            //    canvas.Children.Add(rightBottom);
+
+            //    _ = SetBinding(WidthProperty, new Binding() { Source = canvas, Path = new PropertyPath(ActualWidthProperty) });
+            //    _ = SetBinding(HeightProperty, new Binding() { Source = canvas, Path = new PropertyPath(ActualHeightProperty) });
+            //}
+        }
+
+        ///// <summary>
+        ///// Templateの中にあるExCanvasの取得
+        ///// </summary>
+        //private static ExCanvas? GetExCanvas(DependencyObject d)
+        //{
+        //    if (d is ExCanvas canvas) { return canvas; }
+
+        //    for (int i = 0; i < VisualTreeHelper.GetChildrenCount(d); i++)
+        //    {
+        //        ExCanvas? c = GetExCanvas(VisualTreeHelper.GetChild(d, i));
+        //        if (c is not null) return c;
+        //    }
+        //    return null;
+        //}
+
+    }
+
+    public class RangeThumb2 : ExCanvas
+    {
+        KnobThumb KULeft = new();
+        KnobThumb KURight = new();
+        KnobThumb KDLeft = new();
+        KnobThumb KDRight = new();
+
+        static RangeThumb2()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(RangeThumb2), new FrameworkPropertyMetadata(typeof(RangeThumb2)));
+        }
+        public RangeThumb2()
+        {
+            Children.Add(KULeft);
+            Children.Add(KURight);
+            Children.Add(KDLeft);
+            Children.Add(KDRight);
+            SetLeft(KULeft, 0); SetTop(KULeft, 0);
+            SetLeft(KDRight, 100); SetTop(KDRight, 100);
+            KDRight.DragDelta += Knob_DragDelta;
+        }
+
+        private void Knob_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is Thumb t)
+            {
+                if (t == KDRight)
+                {
+                    Canvas.SetLeft(t, Canvas.GetLeft(t) + e.HorizontalChange);
+                    Canvas.SetTop(t, Canvas.GetTop(t) + e.VerticalChange);
+
+                    //this.Width = this.ActualWidth+ e.HorizontalChange;
+                    //this.Height+= e.VerticalChange;
+                }
             }
         }
+    }
+
+    public class RangeThumb3 : Thumb
+    {
+
+        KnobThumb KULeft = new();
+        //KnobThumb KURight = new();
+        //KnobThumb KDLeft = new();
+        KnobThumb KDRight = new();
+        List<KnobThumb> MyKnobThumbs;
+        static RangeThumb3()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(RangeThumb3), new FrameworkPropertyMetadata(typeof(RangeThumb3)));
+        }
+        public RangeThumb3()
+        {
+            MyKnobThumbs = [];
+            MyKnobThumbs.Add(KULeft);
+            MyKnobThumbs.Add(KDRight);
+            Canvas.SetLeft(this, 0); Canvas.SetTop(this, 0);
+            Canvas.SetLeft(KULeft, 0); Canvas.SetTop(KULeft, 0);
+            Canvas.SetLeft(KDRight, 100); Canvas.SetTop(KDRight, 150);
+            Loaded += RangeThumb3_Loaded;
+            KDRight.DragDelta += Knob_DragDelta;
+            KULeft.DragDelta += Knob_DragDelta;
+            KDRight.DragCompleted += Knob_DragCompleted;
+            KULeft.DragCompleted += Knob_DragCompleted;
+        }
+
+        private void Knob_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            ReLayout3();
+        }
+
+        private void RangeThumb3_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (GetTemplateChild("MyCanvas") is Canvas panel)
+            {
+                panel.Background = new SolidColorBrush(Color.FromArgb(64, 0, 0, 0));
+
+                //SetBinding(WidthProperty, new Binding() { Source = KDRight, Path = new PropertyPath(Canvas.LeftProperty) });
+                //SetBinding(HeightProperty, new Binding() { Source = KDRight, Path = new PropertyPath(Canvas.TopProperty) });
+
+
+                panel.Children.Add(KULeft);
+                panel.Children.Add(KDRight);
+
+            }
+        }
+
+        private void Knob_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is Thumb t)
+            {
+                double Hori = Canvas.GetLeft(t) + e.HorizontalChange;
+                double Vert = Canvas.GetTop(t) + e.VerticalChange;
+                if (t == KDRight)
+                {
+                    if (Hori > 1)
+                    {
+                        Canvas.SetLeft(t, Hori);
+                    }
+                    if (Vert > 1)
+                    {
+                        Canvas.SetTop(t, Vert);
+                    }
+                }
+                else if (t == KULeft)
+                {
+                    //Canvas.SetLeft(t, Canvas.GetLeft(t) + e.HorizontalChange);
+                    //Canvas.SetTop(t, Canvas.GetTop(t) + e.VerticalChange);
+
+                    Canvas.SetLeft(this, Canvas.GetLeft(this) + e.HorizontalChange);
+                    Canvas.SetTop(this, Canvas.GetTop(this) + e.VerticalChange);
+                    this.Width -= e.HorizontalChange;
+                    this.Height -= e.VerticalChange;
+                }
+            }
+        }
+
 
         /// <summary>
-        /// Templateの中にあるExCanvasの取得
+        /// 再配置、ReLayoutからの改変、余計な処理をなくした。
+        /// 子要素全体での左上座標を元に子要素全部と自身の位置を修正する
+        /// ただし、自身がrootだった場合は子要素だけを修正する
         /// </summary>
-        private static ExCanvas? GetExCanvas(DependencyObject d)
+        public void ReLayout3()
         {
-            if (d is ExCanvas canvas) { return canvas; }
-
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(d); i++)
+            //全体での左上座標を取得
+            double left = double.MaxValue; double top = double.MaxValue;
+            foreach (var item in MyKnobThumbs)
             {
-                ExCanvas? c = GetExCanvas(VisualTreeHelper.GetChild(d, i));
-                if (c is not null) return c;
+                left = Math.Min(left, Canvas.GetLeft(item));
+                top = Math.Min(top, Canvas.GetTop(item));
             }
-            return null;
+
+            double MyLeft = Canvas.GetLeft(this);
+            double MyTop = Canvas.GetTop(this);
+            if (left != MyLeft)
+            {
+                //座標変化の場合は、自身と全ての子要素の座標を変更する
+                foreach (var item in MyKnobThumbs)
+                {
+                    Canvas.SetLeft(item, Canvas.GetLeft(item) - left);
+                }
+
+                //自身修正
+                Canvas.SetLeft(this, Canvas.GetLeft(this) + left);
+            }
+
+            if (top != MyTop)
+            {
+                foreach (var item in MyKnobThumbs)
+                {
+                    Canvas.SetTop(item, Canvas.GetTop(item) - top);
+                }
+                //foreach (var item in MyKnobThumbs) { item.MyTop -= top; }
+
+                Canvas.SetTop(this, Canvas.GetTop(this) + top);
+                //if (MyType != Type.Root) { MyTop += top; }
+            }
+
         }
+
+
 
     }
 
 
+
+    public class KnobThumb : Thumb
+    {
+        static KnobThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(KnobThumb), new FrameworkPropertyMetadata(typeof(KnobThumb)));
+        }
+        public KnobThumb()
+        {
+
+        }
+
+    }
 
     /// <summary>
     /// 子要素の移動時にスクロール一時固定に使うアンカーThumb
@@ -261,6 +456,27 @@ namespace _20250108
         }
     }
 
+    public class RangeRectThumb : Thumb
+    {
+        static RangeRectThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(RangeRectThumb), new FrameworkPropertyMetadata(typeof(RangeRectThumb)));
+        }
+        public RangeRectThumb()
+        {
+            DragDelta += RangeRectThumb_DragDelta;
+        }
+
+        private void RangeRectThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            double left = Canvas.GetLeft(this) + e.HorizontalChange;
+            double top = Canvas.GetTop(this) + e.VerticalChange;
+            left = left < 0 ? 0 : left;
+            top = top < 0 ? 0 : top;
+            Canvas.SetLeft(this, left);
+            Canvas.SetTop(this, top);
+        }
+    }
 
     [ContentProperty(nameof(MyThumbs))]
     public class GroupThumb : KisoThumb
@@ -274,6 +490,16 @@ namespace _20250108
         }
         public static readonly DependencyProperty MyThumbsProperty =
             DependencyProperty.Register(nameof(MyThumbs), typeof(ObservableCollection<KisoThumb>), typeof(GroupThumb), new PropertyMetadata(null));
+
+
+        public ObservableCollection<Thumb> MyThumbs2
+        {
+            get { return (ObservableCollection<Thumb>)GetValue(MyThumbs2Property); }
+            set { SetValue(MyThumbs2Property, value); }
+        }
+        public static readonly DependencyProperty MyThumbs2Property =
+            DependencyProperty.Register(nameof(MyThumbs2), typeof(ObservableCollection<Thumb>), typeof(GroupThumb), new PropertyMetadata(null));
+
 
         #endregion 依存関係プロパティ
 
@@ -290,6 +516,7 @@ namespace _20250108
         {
             MyType = Type.Group;
             MyThumbs = [];
+            MyThumbs2 = [];
             MyAnchorThumb = new AnchorThumb() { Visibility = Visibility.Collapsed };
             MyThumbs.Add(MyAnchorThumb);//ダミー設置
             Loaded += GroupThumb_Loaded;
@@ -321,9 +548,10 @@ namespace _20250108
         /// <summary>
         /// Templateの中にあるExCanvasの取得
         /// </summary>
-        private static ExCanvas? GetExCanvas(DependencyObject d)
+        internal static ExCanvas? GetExCanvas(DependencyObject d)
         {
             if (d is ExCanvas canvas) { return canvas; }
+            if (d == null) { return null; }
 
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(d); i++)
             {
@@ -441,7 +669,24 @@ namespace _20250108
     /// </summary>
     public class RootThumb : GroupThumb
     {
-        public RangeThumb MyRange { get; private set; }
+        //public RangeThumb2 MyRange { get; private set; }
+        //KnobThumb KULeft = new();
+        //KnobThumb KURight = new();
+        //KnobThumb KDLeft = new();
+        private KnobThumb MyThumb0 = new();
+        private KnobThumb MyThumb1 = new();
+        private KnobThumb MyThumb2 = new();
+        private KnobThumb MyThumb3 = new();
+        private KnobThumb MyThumb4 = new();
+        private KnobThumb MyThumb5 = new();
+        private KnobThumb MyThumb6 = new();
+        private KnobThumb MyThumb7 = new();
+        private RangeRectThumb MyRect = new() { Width = 100, Height = 100 };
+        //RangeRect MyRange = new() { Background = Brushes.DodgerBlue };
+        Canvas? MyCanvas { get; set; }
+
+        RangeThumb MyRange = new();
+
         static RootThumb()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RootThumb), new FrameworkPropertyMetadata(typeof(RootThumb)));
@@ -449,9 +694,243 @@ namespace _20250108
         public RootThumb()
         {
             MyType = Type.Root;
-            MyRange = new();
-            MyThumbs.Add(MyRange);
+            Canvas.SetLeft(MyRect, 0); Canvas.SetTop(MyRect, 0);
+            MyThumbs2.Add(MyRect);
+            MyThumbs2.Add(MyThumb0);
+            MyThumbs2.Add(MyThumb1);
+            MyThumbs2.Add(MyThumb2);
+            MyThumbs2.Add(MyThumb3);
+            MyThumbs2.Add(MyThumb4);
+            MyThumbs2.Add(MyThumb5);
+            MyThumbs2.Add(MyThumb6);
+            MyThumbs2.Add(MyThumb7);
+
+            Loaded += RootThumb_Loaded;
+            MyThumb0.DragDelta += MyThumb_DragDelta;
+            MyThumb2.DragDelta += MyThumb_DragDelta;
+            MyThumb5.DragDelta += MyThumb_DragDelta;
+            MyThumb7.DragDelta += MyThumb_DragDelta;
+            MyThumb1.DragDelta += MyThumb_DragDeltaOnlyVertical;
+            MyThumb6.DragDelta += MyThumb_DragDeltaOnlyVertical;
+            MyThumb3.DragDelta += MyThumb_DragDeltaOnlyHorizontal;
+            MyThumb4.DragDelta += MyThumb_DragDeltaOnlyHorizontal;
+
+            Test1(MyRect);
+
+        }
+
+
+        private void RootThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            //DependencyObject d = GetTemplateChild("MyCanvas");
+            if (GetCanvas(GetTemplateChild("PART_ItemsControl2")) is Canvas panel)
+            {
+                MyCanvas = panel;
+
+
+            }
+        }
+
+        internal static Canvas? GetCanvas(DependencyObject d)
+        {
+            if (d is Canvas canvas) { return canvas; }
+            if (d == null) { return null; }
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(d); i++)
+            {
+                Canvas? c = GetCanvas(VisualTreeHelper.GetChild(d, i));
+                if (c is not null) return c;
+            }
+            return null;
+        }
+
+        private Binding MakeBinding(FrameworkElement source, DependencyProperty dp)
+        {
+            Binding b = new()
+            {
+                Source = source,
+                Path = new PropertyPath(dp),
+                Mode = BindingMode.TwoWay
+            };
+            return b;
+        }
+        private MultiBinding MakeMultiBinding(
+            IMultiValueConverter converter, object? param = null, params Binding[] bindings)
+        {
+            MultiBinding m = new()
+            {
+                ConverterParameter = param,
+                Converter = converter,
+                Mode = BindingMode.TwoWay
+            };
+            foreach (var item in bindings)
+            {
+                m.Bindings.Add(item);
+            }
+            return m;
+        }
+
+        #region ドラッグ移動        
+        private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is not Thumb t) { return; }
+            Canvas.SetLeft(t, Canvas.GetLeft(t) + e.HorizontalChange);
+            Canvas.SetTop(t, Canvas.GetTop(t) + e.VerticalChange);
+        }
+        private void MyThumb_DragDeltaOnlyVertical(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is not Thumb t) { return; }
+            Canvas.SetTop(t, Canvas.GetTop(t) + e.VerticalChange);
+        }
+        private void MyThumb_DragDeltaOnlyHorizontal(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is not Thumb t) { return; }
+            Canvas.SetLeft(t, Canvas.GetLeft(t) + e.HorizontalChange);
+        }
+        #endregion ドラッグ移動
+
+
+        private void Test1(FrameworkElement element)
+        {
+            Binding b0 = MakeBinding(element, Canvas.LeftProperty);
+            Binding b1 = MakeBinding(element, WidthProperty);
+            Binding b2 = MakeBinding(element, Canvas.TopProperty);
+            Binding b3 = MakeBinding(element, HeightProperty);
+
+            MultiBinding m0 = MakeMultiBinding(new MMM0(), element, b0, b1);
+            MultiBinding m1 = MakeMultiBinding(new MMM1(), element, b2, b3);
+            MultiBinding m2 = MakeMultiBinding(new MMM2(), element, b0, b1);
+            MultiBinding m3 = MakeMultiBinding(new MMM3(), element, b0, b1);
+            MultiBinding m4 = MakeMultiBinding(new MMM2(), element, b2, b3);
+            MultiBinding m5 = MakeMultiBinding(new MMM4(), element, b2, b3);
+
+            MyThumb0.SetBinding(Canvas.LeftProperty, m0);
+            MyThumb0.SetBinding(Canvas.TopProperty, m1);
+
+            MyThumb1.SetBinding(Canvas.LeftProperty, m2);
+            MyThumb1.SetBinding(Canvas.TopProperty, m1);
+
+            MyThumb2.SetBinding(Canvas.LeftProperty, m3);
+            MyThumb2.SetBinding(Canvas.TopProperty, m1);
+
+            MyThumb3.SetBinding(Canvas.LeftProperty, m0);
+            MyThumb3.SetBinding(Canvas.TopProperty, m4);
+
+            MyThumb4.SetBinding(Canvas.LeftProperty, m3);
+            MyThumb4.SetBinding(Canvas.TopProperty, m4);
+
+            MyThumb5.SetBinding(Canvas.LeftProperty, m0);
+            MyThumb5.SetBinding(Canvas.TopProperty, m5);
+
+            MyThumb6.SetBinding(Canvas.LeftProperty, m2);
+            MyThumb6.SetBinding(Canvas.TopProperty, m5);
+
+            MyThumb7.SetBinding(Canvas.LeftProperty, m3);
+            MyThumb7.SetBinding(Canvas.TopProperty, m5);
         }
     }
 
+
+
+    #region コンバーター
+    public class MMM0 : IMultiValueConverter
+    {
+        public object Convert(object[] values, System.Type targetType, object parameter, CultureInfo culture)
+        {
+            return (double)values[0];
+        }
+
+        public object[] ConvertBack(object value, System.Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            FrameworkElement element = (FrameworkElement)parameter;
+            double total = element.Width + Canvas.GetLeft(element);
+            double left = (double)value;
+            double width = total - left;
+
+            object[] result = [left, width];
+            //サイズが1未満にならないように調整
+            if (width < 1.0)
+            {
+                result[0] = total - 1.0;
+                result[1] = 1.0;
+            }
+            return result;
+        }
+    }
+    public class MMM1 : IMultiValueConverter
+    {
+        public object Convert(object[] values, System.Type targetType, object parameter, CultureInfo culture)
+        {
+            return (double)values[0];
+        }
+
+        public object[] ConvertBack(object value, System.Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            FrameworkElement element = (FrameworkElement)parameter;
+            double total = element.Height + Canvas.GetTop(element);
+            double top = (double)value;
+            double height = total - top;
+
+            object[] result = [top, height];
+            if (height < 1.0)
+            {
+                result[0] = total - 1.0;
+                result[1] = 1.0;
+            }
+            return result;
+        }
+    }
+
+    public class MMM2 : IMultiValueConverter
+    {
+        public object Convert(object[] values, System.Type targetType, object parameter, CultureInfo culture)
+        {
+            return (double)values[0] + (double)values[1] / 2.0;
+        }
+
+        public object[] ConvertBack(object value, System.Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+
+    public class MMM3 : IMultiValueConverter
+    {
+        public object Convert(object[] values, System.Type targetType, object parameter, CultureInfo culture)
+        {
+            return (double)values[0] + (double)values[1];
+        }
+
+        public object[] ConvertBack(object value, System.Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            FrameworkElement element = (FrameworkElement)parameter;
+            double left = (double)Canvas.GetLeft(element);
+            double width = (double)value - left;
+
+            object[] result = [left, width];
+            if (width < 1.0) { result[1] = 1.0; }
+            return result;
+        }
+    }
+    public class MMM4 : IMultiValueConverter
+    {
+        public object Convert(object[] values, System.Type targetType, object parameter, CultureInfo culture)
+        {
+            return (double)values[0] + (double)values[1];
+        }
+
+        public object[] ConvertBack(object value, System.Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            FrameworkElement element = (FrameworkElement)parameter;
+            double top = (double)Canvas.GetTop(element);
+            double height = (double)value - top;
+
+            object[] result = [top, height];
+            if (height < 1.0) { result[1] = 1.0; }
+            return result;
+        }
+    }
+    #endregion コンバーター
 }

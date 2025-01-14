@@ -228,11 +228,6 @@ namespace _20250103
             Focusable = true;
             //Focusable = false;
             MyType = ThumbType.None;
-            BitmapImage bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.EndInit();
-            bitmapImage.Freeze();
-            bitmapImage.UriSource = new Uri("");
 
             PreviewMouseDown += KisoThumb_PreviewMouseDownTest;
             PreviewMouseUp += KisoThumb_PreviewMouseUpTest;
@@ -707,13 +702,26 @@ namespace _20250103
         {
             MyType = ThumbType.Ellipse;
         }
+    }
 
+    public class RectangleThumb : TextBlockThumb
+    {
+        static RectangleThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(RectangleThumb), new FrameworkPropertyMetadata(typeof(RectangleThumb)));
+        }
+        public RectangleThumb()
+        {
+            MyType = ThumbType.Rect;
+        }
     }
 
 
     [ContentProperty(nameof(MyThumbs))]
     public class GroupThumb : KisoThumb
     {
+        internal ExCanvas? MyCanvas { get; set; }
+
         #region 依存関係プロパティ
 
         public ObservableCollection<KisoThumb> MyThumbs
@@ -756,11 +764,11 @@ namespace _20250103
             var temp = GetTemplateChild("PART_ItemsControl");
             if (temp is ItemsControl ic)
             {
-                var canvas = GetExCanvas(ic);
-                if (canvas != null)
+                MyCanvas = GetExCanvas(ic);
+                if (MyCanvas != null)
                 {
-                    _ = SetBinding(WidthProperty, new Binding() { Source = canvas, Path = new PropertyPath(ActualWidthProperty) });
-                    _ = SetBinding(HeightProperty, new Binding() { Source = canvas, Path = new PropertyPath(ActualHeightProperty) });
+                    _ = SetBinding(WidthProperty, new Binding() { Source = MyCanvas, Path = new PropertyPath(ActualWidthProperty) });
+                    _ = SetBinding(HeightProperty, new Binding() { Source = MyCanvas, Path = new PropertyPath(ActualHeightProperty) });
                 }
             }
         }
@@ -1338,6 +1346,30 @@ namespace _20250103
         #endregion 依存関係プロパティ
 
     }
+
+
+    public class RangeThumb : GroupThumb
+    {
+        private RectangleThumb? TTRB;
+        private RectangleThumb? TTLU;
+        static RangeThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(RangeThumb), new FrameworkPropertyMetadata(typeof(RangeThumb)));
+        }
+        public RangeThumb()
+        {
+            Loaded += RangeThumb_Loaded;
+        }
+
+        private void RangeThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            TTRB = new() { MyWidth = 20, MyHeight = 20, MyLeft = 100, MyTop = 100 };
+            MyThumbs.Add(TTRB);
+            TTLU = new() { MyWidth = 20, MyHeight = 20, MyLeft = 0, MyTop = 0 };
+            MyThumbs.Add(TTLU);
+        }
+    }
+
 
 
 

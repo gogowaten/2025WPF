@@ -62,9 +62,6 @@
   </Style>
 
 
-
-
-
   <Style TargetType="{x:Type local:EllipseTextThumb}"
          BasedOn="{StaticResource kiso}">
     <Setter Property="Template">
@@ -85,6 +82,25 @@
     </Setter>
   </Style>
 
+  <Style TargetType="{x:Type local:RectangleThumb}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <Grid>
+            <Rectangle Width="{Binding MyWidth}"
+                       Height="{Binding MyHeight}"
+                       Fill="{Binding MyFill}"
+                       Stroke="Black" StrokeDashArray="4"/>
+            <TextBlock Text="{Binding MyText}"
+                       Background="{Binding MyBackground}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+            <Border Style="{StaticResource waku4}"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 
 
   <Style TargetType="{x:Type local:GroupThumb}"
@@ -131,4 +147,25 @@
     </Setter>
   </Style>
 
+  <Style TargetType="{x:Type local:RangeThumb}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <Grid>
+            <ItemsControl x:Name="PART_ItemsControl"
+                      ItemsSource="{Binding MyThumbs}"
+                      Background="{TemplateBinding Background}"
+                      Focusable="False">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <local:ExCanvas/>
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <Border Style="{StaticResource waku4}"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 </ResourceDictionary>
