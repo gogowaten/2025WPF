@@ -398,7 +398,7 @@ namespace _20250108
         }
         public KnobThumb()
         {
-
+            
         }
 
     }
@@ -465,6 +465,7 @@ namespace _20250108
         public RangeRectThumb()
         {
             DragDelta += RangeRectThumb_DragDelta;
+            Background = new SolidColorBrush(Color.FromArgb(100, 0, 0, 255));
         }
 
         private void RangeRectThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -744,33 +745,9 @@ namespace _20250108
             return null;
         }
 
-        private Binding MakeBinding(FrameworkElement source, DependencyProperty dp)
-        {
-            Binding b = new()
-            {
-                Source = source,
-                Path = new PropertyPath(dp),
-                Mode = BindingMode.TwoWay
-            };
-            return b;
-        }
-        private MultiBinding MakeMultiBinding(
-            IMultiValueConverter converter, object? param = null, params Binding[] bindings)
-        {
-            MultiBinding m = new()
-            {
-                ConverterParameter = param,
-                Converter = converter,
-                Mode = BindingMode.TwoWay
-            };
-            foreach (var item in bindings)
-            {
-                m.Bindings.Add(item);
-            }
-            return m;
-        }
 
         #region ドラッグ移動        
+        
         private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             if (sender is not Thumb t) { return; }
@@ -787,8 +764,50 @@ namespace _20250108
             if (sender is not Thumb t) { return; }
             Canvas.SetLeft(t, Canvas.GetLeft(t) + e.HorizontalChange);
         }
-        #endregion ドラッグ移動
+        
+        #endregion ドラッグ移動        
 
+
+        /// <summary>
+        /// TwoWayモードのBinding作成
+        /// </summary>
+        /// <param name="source">ソース要素</param>
+        /// <param name="dp">依存関係プロパティ</param>
+        /// <returns></returns>
+        private static Binding MakeBinding(FrameworkElement source, DependencyProperty dp)
+        {
+            Binding b = new()
+            {
+                Source = source,
+                Path = new PropertyPath(dp),
+                Mode = BindingMode.TwoWay
+            };
+            return b;
+        }
+
+
+        /// <summary>
+        /// マルチBindingを作成
+        /// </summary>
+        /// <param name="converter">コンバーター</param>
+        /// <param name="param">ConverterParameter</param>
+        /// <param name="bindings">Bindingリスト</param>
+        /// <returns></returns>
+        private static MultiBinding MakeMultiBinding(
+            IMultiValueConverter converter, object? param = null, params Binding[] bindings)
+        {
+            MultiBinding m = new()
+            {
+                ConverterParameter = param,
+                Converter = converter,
+                Mode = BindingMode.TwoWay
+            };
+            foreach (var item in bindings)
+            {
+                m.Bindings.Add(item);
+            }
+            return m;
+        }
 
         private void Test1(FrameworkElement element)
         {

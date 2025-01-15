@@ -49,12 +49,19 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate>
-          <Rectangle Width="20"
+          <Grid>
+            <Rectangle Width="20"
                      Height="20"
-                     Fill="Black"
-                     Stroke="Yellow"
+                     Fill="Transparent"
+                     Stroke="White"
+                     StrokeThickness="1"/>
+            <Rectangle Width="20"
+                     Height="20"
+                     Fill="Transparent"
+                     Stroke="Blue"
                      StrokeThickness="1"
-                     StrokeDashArray="4" Opacity="1.0"/>
+                     StrokeDashArray="4"/>
+          </Grid>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
@@ -64,7 +71,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate>
-          <Rectangle Fill="Blue"/>
+          <Rectangle Fill="{TemplateBinding Background}"/>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
