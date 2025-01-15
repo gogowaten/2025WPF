@@ -6,7 +6,7 @@
 
   <Style TargetType="{x:Type local:RangeThumb}">
     <Setter Property="Canvas.Left" Value="0"/>
-    <Setter Property="Canvas.Top" Value="0"/>    
+    <Setter Property="Canvas.Top" Value="0"/>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:RangeThumb}">
@@ -19,5 +19,5 @@
       </Setter.Value>
     </Setter>
   </Style>
-  
+
 </ResourceDictionary>
