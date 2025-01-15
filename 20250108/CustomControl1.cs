@@ -398,7 +398,7 @@ namespace _20250108
         }
         public KnobThumb()
         {
-            
+
         }
 
     }
@@ -466,6 +466,7 @@ namespace _20250108
         {
             DragDelta += RangeRectThumb_DragDelta;
             Background = new SolidColorBrush(Color.FromArgb(100, 0, 0, 255));
+            Width = 100; Height = 100;
         }
 
         private void RangeRectThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -682,7 +683,9 @@ namespace _20250108
         private KnobThumb MyThumb5 = new();
         private KnobThumb MyThumb6 = new();
         private KnobThumb MyThumb7 = new();
-        private RangeRectThumb MyRect = new() { Width = 100, Height = 100 };
+        private RangeRectThumb MyRect = new();
+        private RangeRectThumb MyRectWithAdorner = new();
+
         //RangeRect MyRange = new() { Background = Brushes.DodgerBlue };
         Canvas? MyCanvas { get; set; }
 
@@ -718,11 +721,21 @@ namespace _20250108
 
             Test1(MyRect);
 
+            
+            MyThumbs2.Add(MyRectWithAdorner);
+            Canvas.SetLeft(MyRectWithAdorner, 120);
+            Canvas.SetTop(MyRectWithAdorner, 120);
+
         }
 
 
         private void RootThumb_Loaded(object sender, RoutedEventArgs e)
         {
+            if(AdornerLayer.GetAdornerLayer(MyRectWithAdorner) is AdornerLayer adorner)
+            {
+                adorner.Add(new EzAdoner(MyRectWithAdorner));
+            }
+
             //DependencyObject d = GetTemplateChild("MyCanvas");
             if (GetCanvas(GetTemplateChild("PART_ItemsControl2")) is Canvas panel)
             {
@@ -747,7 +760,7 @@ namespace _20250108
 
 
         #region ドラッグ移動        
-        
+
         private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             if (sender is not Thumb t) { return; }
@@ -764,7 +777,7 @@ namespace _20250108
             if (sender is not Thumb t) { return; }
             Canvas.SetLeft(t, Canvas.GetLeft(t) + e.HorizontalChange);
         }
-        
+
         #endregion ドラッグ移動        
 
 

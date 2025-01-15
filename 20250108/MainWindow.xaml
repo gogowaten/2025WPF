@@ -19,7 +19,7 @@
   </Window.Resources>
 
 
-  <Grid>
+  <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
       <ColumnDefinition Width="150"/>
