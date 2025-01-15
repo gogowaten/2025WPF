@@ -18,43 +18,52 @@ namespace _20250115_RangeThumbSimple
 {
     public class RangeThumb : Thumb
     {
-        private Thumb MyThumb = new() { Width = 20, Height = 20 };
+        private readonly Thumb MyThumb;
         private const double MinimumSize = 1;
-        private const double ZeroLocate = 0;
+        private const double MinimumLocate = 0;
+        private const double ThumbSize = 20;
         static RangeThumb()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RangeThumb), new FrameworkPropertyMetadata(typeof(RangeThumb)));
         }
         public RangeThumb()
         {
-            MyThumb.DragDelta += MyThumb_DragDelta;
-            DragDelta += RangeThumb_DragDelta;
-            Canvas.SetLeft(MyThumb, 0);
-            Canvas.SetTop(MyThumb, 0);
-            Canvas.SetLeft(this, 0);
-            Canvas.SetTop(this, 0);
+            MyThumb = new()
+            {
+                Width = ThumbSize,
+                Height = ThumbSize,
+                Cursor = Cursors.SizeNWSE
+            };
+            MyThumb.DragDelta += Thumb_DragDelta;
+            DragDelta += Thumb_DragDelta;
+            SetInitialPosition();
+        }
+        private void SetInitialPosition()
+        {
+            Canvas.SetLeft(MyThumb, MinimumLocate);
+            Canvas.SetTop(MyThumb, MinimumLocate);
+            Canvas.SetLeft(this, MinimumLocate);
+            Canvas.SetTop(this, MinimumLocate);
         }
 
-
-        private void RangeThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             if (sender is Thumb t)
             {
-                //マイナス座標にならないように自身の移動
-                Canvas.SetLeft(t, Math.Max(ZeroLocate, Canvas.GetLeft(t) + e.HorizontalChange));
-                Canvas.SetTop(t, Math.Max(ZeroLocate, Canvas.GetTop(t) + e.VerticalChange));
-                e.Handled = true;
-            }
-        }
-
-        private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            if (sender is Thumb t)
-            {
-                //1未満にならないようにThumbの移動
-                Canvas.SetLeft(t, Math.Max(MinimumSize, Canvas.GetLeft(t) + e.HorizontalChange));
-                Canvas.SetTop(t, Math.Max(MinimumSize, Canvas.GetTop(t) + e.VerticalChange));
-                e.Handled = true;
+                if (t == MyThumb)
+                {
+                    //最小サイズ未満にならないようにThumbの移動
+                    Canvas.SetLeft(t, Math.Max(MinimumSize, Canvas.GetLeft(t) + e.HorizontalChange));
+                    Canvas.SetTop(t, Math.Max(MinimumSize, Canvas.GetTop(t) + e.VerticalChange));
+                    e.Handled = true;
+                }
+                else if (t == this)
+                {
+                    //最小座標未満にならないように自身の移動
+                    Canvas.SetLeft(t, Math.Max(MinimumLocate, Canvas.GetLeft(t) + e.HorizontalChange));
+                    Canvas.SetTop(t, Math.Max(MinimumLocate, Canvas.GetTop(t) + e.VerticalChange));
+                    e.Handled = true;
+                }
             }
         }
 
@@ -65,20 +74,14 @@ namespace _20250115_RangeThumbSimple
             if (GetTemplateChild("PART_Canvas") is Canvas panel)
             {
                 panel.Children.Add(MyThumb);
-                //Thumbの位置が自身の右下になるようにBinding
-                _ = MyThumb.SetBinding(Canvas.LeftProperty, new Binding()
-                {
-                    Source = this,
-                    Path = new PropertyPath(WidthProperty),
-                    Mode = BindingMode.TwoWay
-                });
 
-                _ = MyThumb.SetBinding(Canvas.TopProperty, new Binding()
-                {
-                    Source = this,
-                    Path = new PropertyPath(HeightProperty),
-                    Mode = BindingMode.TwoWay
-                });
+                //バインド
+                //自身のサイズをソースにMyThumbの座標をバインド
+                MyThumb.DataContext = this;
+                _ = MyThumb.SetBinding(Canvas.LeftProperty,
+                    new Binding(nameof(Width)) { Mode = BindingMode.TwoWay });
+                _ = MyThumb.SetBinding(Canvas.TopProperty,
+                    new Binding(nameof(Height)) { Mode = BindingMode.TwoWay });
             }
         }
 

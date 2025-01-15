@@ -14,11 +14,13 @@
     <Canvas>
       <local:RangeThumb x:Name="MyRange" Width="100" Height="100" Background="DodgerBlue"/>
     </Canvas>
-    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyRange}">
-      <TextBlock Text="{Binding Path=(Canvas.Left), StringFormat=left {0:0.0}}"/>
-      <TextBlock Text="{Binding Path=(Canvas.Top), StringFormat=top {0:0.0}}"/>
-      <TextBlock Text="{Binding Path=ActualWidth, StringFormat=width {0:0.0}}"/>
-      <TextBlock Text="{Binding Path=ActualHeight, StringFormat=height {0:0.0}}"/>
-    </StackPanel>
+    <GroupBox Grid.Column="1" Header="{Binding Name}" DataContext="{Binding ElementName=MyRange}">
+      <StackPanel Margin="5">
+        <TextBlock Text="{Binding Path=(Canvas.Left), StringFormat=left {0:0.0}}"/>
+        <TextBlock Text="{Binding Path=(Canvas.Top), StringFormat=top {0:0.0}}"/>
+        <TextBlock Text="{Binding Path=ActualWidth, StringFormat=width {0:0.0}}"/>
+        <TextBlock Text="{Binding Path=ActualHeight, StringFormat=height {0:0.0}}"/>
+      </StackPanel>
+    </GroupBox>
   </Grid>
 </Window>
