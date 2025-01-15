@@ -5,10 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250115_RangeThumbSimple"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="600">
-    <Grid>
+        Title="MainWindow" Height="450" Width="400">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="150"/>
+    </Grid.ColumnDefinitions>
     <Canvas>
-      <local:RangeThumb Width="100" Height="100" Background="Red"/>
+      <local:RangeThumb x:Name="MyRange" Width="100" Height="100" Background="DodgerBlue"/>
     </Canvas>
-    </Grid>
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyRange}">
+      <TextBlock Text="{Binding Path=(Canvas.Left), StringFormat=left {0:0.0}}"/>
+      <TextBlock Text="{Binding Path=(Canvas.Top), StringFormat=top {0:0.0}}"/>
+      <TextBlock Text="{Binding Path=ActualWidth, StringFormat=width {0:0.0}}"/>
+      <TextBlock Text="{Binding Path=ActualHeight, StringFormat=height {0:0.0}}"/>
+    </StackPanel>
+  </Grid>
 </Window>

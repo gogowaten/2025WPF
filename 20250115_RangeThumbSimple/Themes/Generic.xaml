@@ -6,13 +6,18 @@
 
   <Style TargetType="{x:Type local:RangeThumb}">
     <Setter Property="Canvas.Left" Value="0"/>
-    <Setter Property="Canvas.Top" Value="0"/>
+    <Setter Property="Canvas.Top" Value="0"/>    
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate>
-          <Canvas x:Name="PART_Canvas" Background="{TemplateBinding Background}"/>
+          <Canvas x:Name="PART_Canvas"
+                  Width="{TemplateBinding Width}"
+                  Height="{TemplateBinding Height}"
+                  Background="{TemplateBinding Background}">
+          </Canvas>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
   </Style>
+  
 </ResourceDictionary>
