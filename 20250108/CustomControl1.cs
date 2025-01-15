@@ -480,6 +480,186 @@ namespace _20250108
         }
     }
 
+    public class RangeRectThumbWithKnob : Thumb
+    {
+        private KnobThumb MyThumb0 = new();
+        private KnobThumb MyThumb1 = new();
+        private KnobThumb MyThumb2 = new();
+        private KnobThumb MyThumb3 = new();
+        private KnobThumb MyThumb4 = new();
+        private KnobThumb MyThumb5 = new();
+        private KnobThumb MyThumb6 = new();
+        private KnobThumb MyThumb7 = new();
+        Canvas? MyCanvas { get; set; }
+        Rectangle? MyRect { get; set; }
+
+        static RangeRectThumbWithKnob()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(RangeRectThumbWithKnob), new FrameworkPropertyMetadata(typeof(RangeRectThumbWithKnob)));
+        }
+        public RangeRectThumbWithKnob()
+        {
+            Loaded += My_Loaded;
+            MyThumb0.DragDelta += MyThumb_DragDelta;
+            MyThumb2.DragDelta += MyThumb_DragDelta;
+            MyThumb5.DragDelta += MyThumb_DragDelta;
+            MyThumb7.DragDelta += MyThumb_DragDelta;
+            MyThumb1.DragDelta += MyThumb_DragDeltaOnlyVertical;
+            MyThumb6.DragDelta += MyThumb_DragDeltaOnlyVertical;
+            MyThumb3.DragDelta += MyThumb_DragDeltaOnlyHorizontal;
+            MyThumb4.DragDelta += MyThumb_DragDeltaOnlyHorizontal;
+            DragDelta += My_DragDelta;
+        }
+
+        private void My_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is RangeRectThumbWithKnob me)
+            {
+                double left = Math.Max(0, Canvas.GetLeft(me) + e.HorizontalChange);
+                double top =Math.Max(0, Canvas.GetTop(me) + e.VerticalChange);
+                //Canvas.SetLeft(me, Math.Max(0, Canvas.GetLeft(me) + e.HorizontalChange));
+                //Canvas.SetTop(me, Math.Max(0, Canvas.GetTop(me) + e.VerticalChange));
+                Canvas.SetLeft(me, left);
+                Canvas.SetTop(me, top);
+            }
+
+        }
+
+        private void My_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (GetTemplateChild("MyCanvas") is Canvas canvas)
+            {
+                MyCanvas = canvas;
+                MyCanvas.Children.Add(MyThumb0);
+                MyCanvas.Children.Add(MyThumb1);
+                MyCanvas.Children.Add(MyThumb2);
+                MyCanvas.Children.Add(MyThumb3);
+                MyCanvas.Children.Add(MyThumb4);
+                MyCanvas.Children.Add(MyThumb5);
+                MyCanvas.Children.Add(MyThumb6);
+                MyCanvas.Children.Add(MyThumb7);
+
+                //MyCanvas.SetBinding(WidthProperty, new Binding() { Source = MyRect, Path = new PropertyPath(ActualWidthProperty) });
+                //MyCanvas.SetBinding(HeightProperty,new Binding() { Source=MyRect,Path=new PropertyPath(ActualHeightProperty) });
+
+            }
+
+            if (GetTemplateChild("MyRect") is Rectangle rect)
+            {
+                MyRect = rect;
+                Test1(MyRect);
+                MyRect.Fill = Brushes.MediumAquamarine;
+            }
+
+        }
+
+        #region ドラッグ移動        
+
+        private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is not Thumb t) { return; }
+            Canvas.SetLeft(t, Canvas.GetLeft(t) + e.HorizontalChange);
+            Canvas.SetTop(t, Canvas.GetTop(t) + e.VerticalChange);
+            e.Handled = true;
+        }
+        private void MyThumb_DragDeltaOnlyVertical(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is not Thumb t) { return; }
+            Canvas.SetTop(t, Canvas.GetTop(t) + e.VerticalChange);
+            e.Handled = true;
+        }
+        private void MyThumb_DragDeltaOnlyHorizontal(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is not Thumb t) { return; }
+            Canvas.SetLeft(t, Canvas.GetLeft(t) + e.HorizontalChange);
+            e.Handled = true;
+        }
+
+        #endregion ドラッグ移動        
+
+
+        /// <summary>
+        /// マルチBindingを作成
+        /// </summary>
+        /// <param name="converter">コンバーター</param>
+        /// <param name="param">ConverterParameter</param>
+        /// <param name="bindings">Bindingリスト</param>
+        /// <returns></returns>
+        private static MultiBinding MakeMultiBinding(
+            IMultiValueConverter converter, object? param = null, params Binding[] bindings)
+        {
+            MultiBinding m = new()
+            {
+                ConverterParameter = param,
+                Converter = converter,
+                Mode = BindingMode.TwoWay
+            };
+            foreach (var item in bindings)
+            {
+                m.Bindings.Add(item);
+            }
+            return m;
+        }
+
+        /// <summary>
+        /// TwoWayモードのBinding作成
+        /// </summary>
+        /// <param name="source">ソース要素</param>
+        /// <param name="dp">依存関係プロパティ</param>
+        /// <returns></returns>
+        private static Binding MakeBinding(FrameworkElement source, DependencyProperty dp)
+        {
+            Binding b = new()
+            {
+                Source = source,
+                Path = new PropertyPath(dp),
+                Mode = BindingMode.TwoWay
+            };
+            return b;
+        }
+
+        private void Test1(FrameworkElement element)
+        {
+            Binding canvasLeft = MakeBinding(element, Canvas.LeftProperty);
+            Binding targetWidth = MakeBinding(element, WidthProperty);
+            Binding canvasTop = MakeBinding(element, Canvas.TopProperty);
+            Binding targetHeight = MakeBinding(element, HeightProperty);
+
+            MultiBinding m0 = MakeMultiBinding(new MMM0(), element, canvasLeft, targetWidth);
+            MultiBinding m1 = MakeMultiBinding(new MMM1(), element, canvasTop, targetHeight);
+            MultiBinding m2 = MakeMultiBinding(new MMM2(), element, canvasLeft, targetWidth);
+            MultiBinding m3 = MakeMultiBinding(new MMM3(), element, canvasLeft, targetWidth);
+            MultiBinding m4 = MakeMultiBinding(new MMM2(), element, canvasTop, targetHeight);
+            MultiBinding m5 = MakeMultiBinding(new MMM4(), element, canvasTop, targetHeight);
+
+            MyThumb0.SetBinding(Canvas.LeftProperty, m0);
+            MyThumb0.SetBinding(Canvas.TopProperty, m1);
+
+            MyThumb1.SetBinding(Canvas.LeftProperty, m2);
+            MyThumb1.SetBinding(Canvas.TopProperty, m1);
+
+            MyThumb2.SetBinding(Canvas.LeftProperty, m3);
+            MyThumb2.SetBinding(Canvas.TopProperty, m1);
+
+            MyThumb3.SetBinding(Canvas.LeftProperty, m0);
+            MyThumb3.SetBinding(Canvas.TopProperty, m4);
+
+            MyThumb4.SetBinding(Canvas.LeftProperty, m3);
+            MyThumb4.SetBinding(Canvas.TopProperty, m4);
+
+            MyThumb5.SetBinding(Canvas.LeftProperty, m0);
+            MyThumb5.SetBinding(Canvas.TopProperty, m5);
+
+            MyThumb6.SetBinding(Canvas.LeftProperty, m2);
+            MyThumb6.SetBinding(Canvas.TopProperty, m5);
+
+            MyThumb7.SetBinding(Canvas.LeftProperty, m3);
+            MyThumb7.SetBinding(Canvas.TopProperty, m5);
+        }
+    }
+
+
+
     [ContentProperty(nameof(MyThumbs))]
     public class GroupThumb : KisoThumb
     {
@@ -721,17 +901,19 @@ namespace _20250108
 
             Test1(MyRect);
 
-            
+
             MyThumbs2.Add(MyRectWithAdorner);
             Canvas.SetLeft(MyRectWithAdorner, 120);
-            Canvas.SetTop(MyRectWithAdorner, 120);
+            Canvas.SetTop(MyRectWithAdorner, 20);
+
+            MyThumbs2.Add(new RangeRectThumbWithKnob());
 
         }
 
 
         private void RootThumb_Loaded(object sender, RoutedEventArgs e)
         {
-            if(AdornerLayer.GetAdornerLayer(MyRectWithAdorner) is AdornerLayer adorner)
+            if (AdornerLayer.GetAdornerLayer(MyRectWithAdorner) is AdornerLayer adorner)
             {
                 adorner.Add(new EzAdoner(MyRectWithAdorner));
             }
@@ -824,17 +1006,17 @@ namespace _20250108
 
         private void Test1(FrameworkElement element)
         {
-            Binding b0 = MakeBinding(element, Canvas.LeftProperty);
-            Binding b1 = MakeBinding(element, WidthProperty);
-            Binding b2 = MakeBinding(element, Canvas.TopProperty);
-            Binding b3 = MakeBinding(element, HeightProperty);
+            Binding canvasLeft = MakeBinding(element, Canvas.LeftProperty);
+            Binding targetWidth = MakeBinding(element, WidthProperty);
+            Binding canvasTop = MakeBinding(element, Canvas.TopProperty);
+            Binding targetHeight = MakeBinding(element, HeightProperty);
 
-            MultiBinding m0 = MakeMultiBinding(new MMM0(), element, b0, b1);
-            MultiBinding m1 = MakeMultiBinding(new MMM1(), element, b2, b3);
-            MultiBinding m2 = MakeMultiBinding(new MMM2(), element, b0, b1);
-            MultiBinding m3 = MakeMultiBinding(new MMM3(), element, b0, b1);
-            MultiBinding m4 = MakeMultiBinding(new MMM2(), element, b2, b3);
-            MultiBinding m5 = MakeMultiBinding(new MMM4(), element, b2, b3);
+            MultiBinding m0 = MakeMultiBinding(new MMM0(), element, canvasLeft, targetWidth);
+            MultiBinding m1 = MakeMultiBinding(new MMM1(), element, canvasTop, targetHeight);
+            MultiBinding m2 = MakeMultiBinding(new MMM2(), element, canvasLeft, targetWidth);
+            MultiBinding m3 = MakeMultiBinding(new MMM3(), element, canvasLeft, targetWidth);
+            MultiBinding m4 = MakeMultiBinding(new MMM2(), element, canvasTop, targetHeight);
+            MultiBinding m5 = MakeMultiBinding(new MMM4(), element, canvasTop, targetHeight);
 
             MyThumb0.SetBinding(Canvas.LeftProperty, m0);
             MyThumb0.SetBinding(Canvas.TopProperty, m1);

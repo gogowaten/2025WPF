@@ -76,14 +76,14 @@
           <TextBlock Text="{Binding Path=ActualHeight, StringFormat={}{0:0.0} height}"/>
         </StackPanel>
       </GroupBox>
-      <GroupBox Header="Range" Background="{Binding Background}" DataContext="{Binding ElementName=MyRootGroup, Path=MyRange}">
+      <!--<GroupBox Header="Range" Background="{Binding Background}" DataContext="{Binding ElementName=MyRootGroup, Path=MyRange}">
         <StackPanel>
           <TextBlock Text="{Binding Path=MyLeft, StringFormat={}{0:0.0} Left}"/>
           <TextBlock Text="{Binding Path=MyTop, StringFormat={}{0:0.0} Top}"/>
           <TextBlock Text="{Binding Path=ActualWidth, StringFormat={}{0:0.0} width}"/>
           <TextBlock Text="{Binding Path=ActualHeight, StringFormat={}{0:0.0} height}"/>
         </StackPanel>
-      </GroupBox>
+      </GroupBox>-->
       <Canvas Width="100" Height="100">
         <Canvas.Background>
           <VisualBrush Visual="{Binding ElementName=MyRootGroup}" Stretch="Uniform"/>

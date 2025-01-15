@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 
 namespace _20250108
 {
@@ -44,13 +45,19 @@ namespace _20250108
         private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             //対象要素のサイズ変更、Thumbより小さくならないようにする
-            double w = MyTarget.Width + e.HorizontalChange;
-            double h = MyTarget.Height + e.VerticalChange;
-            w = w < MyThumb.Width ? MyThumb.Width : w;
-            h = h < MyThumb.Height ? MyThumb.Height : h;
-            MyTarget.Width = w; MyTarget.Height = h;
-            //MyTarget.Width = Math.Max(MyTarget.Width + e.HorizontalChange, MyThumb.Width);
-            //MyTarget.Height = Math.Max(MyTarget.Height + e.VerticalChange, MyThumb.Height);
+            //int wTarget = (int)MyTarget.Width;
+            //int hTarget = (int)MyTarget.Height;
+            //int wThumb = (int)MyThumb.Width;
+            //int hThumb = (int)MyThumb.Height;
+            //int wNew = (int)(wTarget + e.HorizontalChange + 0.5);
+            //int hNew = (int)(hTarget + e.VerticalChange + 0.5);
+            //wNew = wNew < wThumb ? wThumb : wNew;
+            //hNew = hNew < hThumb ? hThumb : hNew;
+            //MyTarget.Width = wNew; MyTarget.Height = hNew;
+
+            MyTarget.Width = Math.Max(MyTarget.Width + e.HorizontalChange, MyThumb.Width);
+            MyTarget.Height = Math.Max(MyTarget.Height + e.VerticalChange, MyThumb.Height);
+            e.Handled = true;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -61,26 +68,12 @@ namespace _20250108
                 MyTarget.Height / 2,
                 MyTarget.Width,
                 MyTarget.Height));
+            //MyThumb.Arrange(new Rect(
+            //    (int)(MyTarget.Width / 2 + 0.5),
+            //    (int)(MyTarget.Height / 2 + 0.5),
+            //    MyTarget.Width,
+            //    MyTarget.Height));
 
-            //double x = double.MaxValue;
-            //double y = double.MaxValue;
-            //double xThumb = Canvas.GetLeft(MyThumb);
-            //double yThumb = Canvas.GetTop(MyThumb);
-            //double xTarget = Canvas.GetLeft(MyTarget);
-            //double yTarget = Canvas.GetTop(MyTarget);
-            //if (x > xThumb) x = xThumb;
-            //if (y > yThumb) y = yThumb;
-            //if (x > xTarget) x = xTarget;
-            //if (y > yTarget) y = yTarget;
-
-            //double w = double.MinValue;
-            //double h = double.MinValue;
-            //if(w< MyThumb.Width) w= MyThumb.Width;
-            //if (h< MyThumb.Height) h= MyThumb.Height;
-            //if(w<MyTarget.Width) w= MyTarget.Width;
-            //if (h< MyTarget.Height) h= MyTarget.Height;
-            //Rect rect = new(x, y, w, h);
-            //return (rect.Size);
 
             return base.ArrangeOverride(finalSize);
         }
