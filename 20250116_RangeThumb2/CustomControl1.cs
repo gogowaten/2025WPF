@@ -9,14 +9,7 @@ namespace _20250116_RangeThumb2
 
     public class CanvasThumb : Thumb
     {
-        private Thumb MyThumbTopLeft { get; set; }
-        private Thumb MyThumbTop { get; set; }
-        private Thumb MyThumbTopRight { get; set; }
-        private Thumb MyThumbLeft { get; set; }
-        private Thumb MyThumbRight { get; set; }
-        private Thumb MyThumbBottomLeft { get; set; }
-        private Thumb MyThumbBottom { get; set; }
-        private Thumb MyThumbBottomRight { get; set; }
+        private readonly List<Thumb> thumbs;
 
         static CanvasThumb()
         {
@@ -24,80 +17,73 @@ namespace _20250116_RangeThumb2
         }
         public CanvasThumb()
         {
-            MyThumbTopLeft = new() { Width = 20, Height = 20 };
-            MyThumbTop = new() { Width = 20, Height = 20 };
-            MyThumbTopRight = new() { Width = 20, Height = 20 };
-            MyThumbRight = new() { Width = 20, Height = 20 };
-            MyThumbLeft = new() { Width = 20, Height = 20 };
-            MyThumbBottomLeft = new() { Width = 20, Height = 20 };
-            MyThumbBottom = new() { Width = 20, Height = 20 };
-            MyThumbBottomRight = new() { Width = 20, Height = 20 };
+            thumbs = [];
+            for (int i = 0; i < 8; i++)
+            {
+                Thumb t = new() { Width = 20, Height = 20, DataContext = this };
+                t.DragDelta += T_DragDelta;
+                thumbs.Add(t);
+            }
+            DragDelta += T_DragDelta;
 
-            DragDelta += MyThumb_DragDelta;
-            MyThumbTopLeft.DragDelta += MyThumb_DragDelta;
-            MyThumbTop.DragDelta += MyThumb_DragDelta;
-            MyThumbTopRight.DragDelta += MyThumb_DragDelta;
-            MyThumbRight.DragDelta += MyThumb_DragDelta;
-            MyThumbLeft.DragDelta += MyThumb_DragDelta;
-            MyThumbBottomLeft.DragDelta += MyThumb_DragDelta;
-            MyThumbBottom.DragDelta += MyThumb_DragDelta;
-            MyThumbBottomRight.DragDelta += MyThumb_DragDelta;
         }
 
-
-        private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void T_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            double addWidth = Width + e.HorizontalChange;
-            double subWidth = Width - e.HorizontalChange;
-            double addHeight = Height + e.VerticalChange;
-            double subHeight = Height - e.VerticalChange;
+            //0 TopLeft        //1 Top           //2 TopRight
+            //3 Left           //4 Right
+            //5 BottomLeft     //6 Bottom        //7 BottomRight
+            double addHorWidth = Width + e.HorizontalChange;
+            double subHorWidth = Width - e.HorizontalChange;
+            double addVerHeight = Height + e.VerticalChange;
+            double subVerHeight = Height - e.VerticalChange;
             double left = Canvas.GetLeft(this) + e.HorizontalChange;
             double top = Canvas.GetTop(this) + e.VerticalChange;
 
-            if (sender == MyThumbBottom)
+            if (sender == thumbs[6])//Bottom
             {
-                Height = Math.Max(1, addHeight);
+                Height = Math.Max(1, addVerHeight);
             }
-            else if (sender == MyThumbRight)
+            else if (sender == thumbs[4])//Right
             {
-                Width = Math.Max(1, addWidth);
+                Width = Math.Max(1, addHorWidth);
             }
-            else if (sender == MyThumbBottomRight)
+            else if (sender == thumbs[7])//BottomRight
             {
-                Width = Math.Max(1, addWidth);
-                Height = Math.Max(1, addHeight);
+                Width = Math.Max(1, addHorWidth);
+                Height = Math.Max(1, addVerHeight);
             }
-            else if (sender == MyThumbLeft)
+            else if (sender == thumbs[3])//Left
             {
-                Width = Math.Max(1, subWidth);
+                Width = Math.Max(1, subHorWidth);
                 Canvas.SetLeft(this, left);
             }
-            else if (sender == MyThumbTop)
+            else if (sender == thumbs[1])//Top
             {
-                Height = Math.Max(1, subHeight);
+                Height = Math.Max(1, subVerHeight);
                 Canvas.SetTop(this, top);
             }
-            else if (sender == MyThumbBottomLeft)
+            else if (sender == thumbs[5])//BottomLeft
             {
-                Width = Math.Max(1, subWidth);
-                Height = Math.Max(1, addHeight);
+                Width = Math.Max(1, subHorWidth);
+                Height = Math.Max(1, addVerHeight);
                 Canvas.SetLeft(this, left);
             }
-            else if (sender == MyThumbTopRight)
+            else if (sender == thumbs[2])//TopRight
             {
-                Width = Math.Max(1, addWidth);
-                Height = Math.Max(1, subHeight);
+                Width = Math.Max(1, addHorWidth);
+                Height = Math.Max(1, subVerHeight);
                 Canvas.SetTop(this, top);
             }
-            else if (sender == MyThumbTopLeft)
+            else if (sender == thumbs[0])//TopLeft
             {
-                Width = Math.Max(1, subWidth);
-                Height = Math.Max(1, subHeight);
+                Width = Math.Max(1, subHorWidth);
+                Height = Math.Max(1, subVerHeight);
                 Canvas.SetLeft(this, left);
                 Canvas.SetTop(this, top);
             }
 
-            else if (sender == this)
+            else if (sender == this)//CanvasThumb
             {
                 Canvas.SetLeft(this, Canvas.GetLeft(this) + e.HorizontalChange);
                 Canvas.SetTop(this, Canvas.GetTop(this) + e.VerticalChange);
@@ -105,46 +91,34 @@ namespace _20250116_RangeThumb2
             e.Handled = true;
         }
 
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             if (GetTemplateChild("PART_canvas") is Canvas panel)
             {
-                panel.Children.Add(MyThumbTopLeft);
-
-                panel.Children.Add(MyThumbTop);
-                MyThumbTop.DataContext = this;
-                MyThumbTop.SetBinding(Canvas.LeftProperty, new Binding(nameof(Width)) { Mode = BindingMode.TwoWay, Converter = new MyConverterHalf() });
-
-                panel.Children.Add(MyThumbTopRight);
-                MyThumbTopRight.DataContext = this;
-                MyThumbTopRight.SetBinding(Canvas.LeftProperty, new Binding(nameof(Width)) { Mode = BindingMode.TwoWay });
-
-                panel.Children.Add(MyThumbRight);
-                MyThumbRight.DataContext = this;
-                MyThumbRight.SetBinding(Canvas.LeftProperty, new Binding(nameof(Width)) { Mode = BindingMode.TwoWay });
-                MyThumbRight.SetBinding(Canvas.TopProperty, new Binding(nameof(Height)) { Mode = BindingMode.TwoWay, Converter = new MyConverterHalf() });
-
-                panel.Children.Add(MyThumbLeft);
-                MyThumbLeft.DataContext = this;
-                MyThumbLeft.SetBinding(Canvas.TopProperty, new Binding(nameof(Height)) { Mode = BindingMode.TwoWay, Converter = new MyConverterHalf() });
-
-                panel.Children.Add(MyThumbBottomLeft);
-                MyThumbBottomLeft.DataContext = this;
-                MyThumbBottomLeft.SetBinding(Canvas.TopProperty, new Binding(nameof(Height)) { Mode = BindingMode.TwoWay });
-
-                panel.Children.Add(MyThumbBottom);
-                MyThumbBottom.DataContext = this;
-                MyThumbBottom.SetBinding(Canvas.TopProperty, new Binding(nameof(Height)) { Mode = BindingMode.TwoWay });
-                MyThumbBottom.SetBinding(Canvas.LeftProperty, new Binding(nameof(Width)) { Mode = BindingMode.TwoWay, Converter = new MyConverterHalf() });
-
-                panel.Children.Add(MyThumbBottomRight);
-                MyThumbBottomRight.DataContext = this;
-                MyThumbBottomRight.SetBinding(Canvas.LeftProperty, new Binding(nameof(Width)) { Mode = BindingMode.TwoWay });
-                MyThumbBottomRight.SetBinding(Canvas.TopProperty, new Binding(nameof(Height)) { Mode = BindingMode.TwoWay });
+                for (int i = 0; i < thumbs.Count; i++)
+                {
+                    panel.Children.Add(thumbs[i]);
+                    if (i == 1 || i == 6)// Top, Bottom
+                    {
+                        thumbs[i].SetBinding(Canvas.LeftProperty, new Binding(nameof(Width)) { Mode = BindingMode.TwoWay, Converter = new MyConverterHalf() });
+                    }
+                    if (i == 3 || i == 4)// Left, Right
+                    {
+                        thumbs[i].SetBinding(Canvas.TopProperty, new Binding(nameof(Height)) { Mode = BindingMode.TwoWay, Converter = new MyConverterHalf() });
+                    }
+                    if (i == 2 || i == 4 || i == 7) // TopRight, Right, BottomRight
+                    {
+                        thumbs[i].SetBinding(Canvas.LeftProperty, new Binding(nameof(Width)) { Mode = BindingMode.TwoWay });
+                    }
+                    if (i == 5 || i == 6 || i == 7) // BottomLeft, Bottom, BottomRight
+                    {
+                        thumbs[i].SetBinding(Canvas.TopProperty, new Binding(nameof(Height)) { Mode = BindingMode.TwoWay });
+                    }
+                }
             }
         }
-
     }
 
     public class MyConverterHalf : IValueConverter
