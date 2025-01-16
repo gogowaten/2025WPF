@@ -21,14 +21,14 @@ namespace _20250116_RangeThumb2
             for (int i = 0; i < 8; i++)
             {
                 Thumb t = new() { Width = 20, Height = 20, DataContext = this };
-                t.DragDelta += T_DragDelta;
+                t.DragDelta += Thumb_DragDelta;
                 thumbs.Add(t);
             }
-            DragDelta += T_DragDelta;
+            DragDelta += Thumb_DragDelta;
 
         }
 
-        private void T_DragDelta(object sender, DragDeltaEventArgs e)
+        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             //0 TopLeft        //1 Top           //2 TopRight
             //3 Left           //4 Right
