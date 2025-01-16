@@ -20,5 +20,11 @@ namespace _20250115
         {
             InitializeComponent();
         }
+
+        private void MyButtonSet_Click(object sender, RoutedEventArgs e)
+        {
+            MyGroup.SetTargetElement(MyEllipse);
+            //MyGroup.SetTargetElement(MyTextThumb);
+        }
     }
 }
