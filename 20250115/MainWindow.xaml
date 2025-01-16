@@ -18,9 +18,13 @@
         <local:TextBlockThumb x:Name="MyTextThumb" MyLeft="0" MyTop="0" MyText="Texttttttt"
                                 MyWidth="50" MyHeight="50" MyBackground="Gold"/>
         <local:ShapeKisoThumb x:Name="MyShape" MyLeft="150" MyTop="50" Width="50" Height="50"/>
+        
       </local:GroupThumb>
-
+      <local:CanvasThumb Width="100" Height="100" Background="Gold" Canvas.Left="20" Canvas.Top="80"/>
+      
     </Canvas>
+    
+    
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyGroup}">
       <Button x:Name="MyButtonSet" Content="set" Click="MyButtonSet_Click"/>
       <GroupBox DataContext="{Binding ElementName=MyGroup}" Header="{Binding Name}">

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -218,6 +219,321 @@ namespace _20250115
 
     //Thumbの種類の識別用
     public enum ThumbType { None = 0, Root, Group, Text, Ellipse, Rect, Anchor }
+
+    public class CanvasThumb : Thumb
+    {
+        private Thumb MyThumb { get; set; }
+        private Thumb MyThumbRight { get; set; }
+        private Thumb MyThumbTopRight { get; set; }
+        private Thumb MyThumbTop { get; set; }
+        private Thumb MyThumbTopLeft { get; set; }
+        private Thumb MyThumbLeft { get; set; }
+        private Thumb MyThumbBottomLeft { get; set; }
+        private Thumb MyThumbBottom { get; set; }
+
+        static CanvasThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(CanvasThumb), new FrameworkPropertyMetadata(typeof(CanvasThumb)));
+        }
+        public CanvasThumb()
+        {
+            MyThumb = new() { Width = 20, Height = 20 };
+            MyThumbRight = new() { Width = 20, Height = 20 };
+            MyThumbTopRight = new() { Width = 20, Height = 20 };
+            MyThumbTop = new() { Width = 20, Height = 20 };
+            MyThumbTopLeft = new() { Width = 20, Height = 20 };
+            MyThumbLeft = new() { Width = 20, Height = 20 };
+            MyThumbBottomLeft = new() { Width = 20, Height = 20 };
+            MyThumbBottom = new() { Width = 20, Height = 20 };
+
+            DragDelta += MyThumb_DragDelta;
+            MyThumb.DragDelta += MyThumb_DragDelta;
+            MyThumbRight.DragDelta += MyThumb_DragDelta;
+            MyThumbTopRight.DragDelta += MyThumb_DragDelta;
+            MyThumbTop.DragDelta += MyThumb_DragDelta;
+            MyThumbTopLeft.DragDelta += MyThumb_DragDelta;
+            MyThumbLeft.DragDelta += MyThumb_DragDelta;
+            MyThumbBottomLeft.DragDelta += MyThumb_DragDelta;
+            MyThumbBottom.DragDelta += MyThumb_DragDelta;
+        }
+
+        //private void MyThumbBottom_DragDelta(object sender, DragDeltaEventArgs e)
+        //{
+        //    double hh = Height + e.VerticalChange;
+        //    double top = Canvas.GetTop(this) + e.VerticalChange;
+        //    Height = Math.Max(1, hh);
+        //    if (Height == 1 && top >= 0)
+        //    {
+        //        Canvas.SetTop(this, top);
+        //    }
+        //    e.Handled = true;
+        //}
+
+        //private void MyThumbBottomLeft_DragDelta(object sender, DragDeltaEventArgs e)
+        //{
+        //    Height = Math.Max(1, Height + e.VerticalChange);
+        //    double top = Canvas.GetTop(this) + e.VerticalChange;
+        //    if (top >= 0 && Height == 1)
+        //    {
+        //        Canvas.SetTop(this, top);
+        //    }
+
+        //    e.Handled = true;
+        //}
+
+        //private void MyThumbLeft_DragDelta(object sender, DragDeltaEventArgs e)
+        //{
+        //    double left = Canvas.GetLeft(this) + e.HorizontalChange;
+        //    Canvas.SetLeft(this, Math.Max(0, left));
+        //    if (left > 0)
+        //    {
+        //        Width = Math.Max(1, Width - e.HorizontalChange);
+        //    }
+
+        //    e.Handled = true;
+        //}
+
+        //private void MyThumbTopLeft_DragDelta(object sender, DragDeltaEventArgs e)
+        //{
+        //    double top = Canvas.GetTop(this) + e.VerticalChange;
+        //    double left = Canvas.GetLeft(this) + e.HorizontalChange;
+
+        //    Canvas.SetLeft(this, Math.Max(0, left));
+        //    Canvas.SetTop(this, Math.Max(0, top));
+
+        //    if (left > 0)
+        //    {
+        //        Width = Math.Max(1, Width - e.HorizontalChange);
+        //    }
+        //    if (top > 0)
+        //    {
+        //        Height = Math.Max(1, Height - e.VerticalChange);
+        //    }
+
+        //    e.Handled = true;
+        //}
+
+        //private void MyThumbTop_DragDelta(object sender, DragDeltaEventArgs e)
+        //{
+
+        //    double top = Canvas.GetTop(this) + e.VerticalChange;
+        //    if (top < 0)
+        //    {
+        //        Canvas.SetTop(this, 0);
+        //    }
+        //    else
+        //    {
+        //        Canvas.SetTop(this, top);
+        //        Height = Math.Max(1, Height - e.VerticalChange);
+        //    }
+
+        //    e.Handled = true;
+        //}
+
+        //private void MyThumbTopRight_DragDelta(object sender, DragDeltaEventArgs e)
+        //{
+        //    if (sender == MyThumbTopRight)
+        //    {
+        //        //0サイズとマイナス座標を回避
+        //        double ww = Width + e.HorizontalChange;
+        //        double left = Canvas.GetLeft(this) + e.HorizontalChange;
+        //        double top = Canvas.GetTop(this) + e.VerticalChange;
+        //        Canvas.SetTop(this, Math.Max(0, top));
+        //        if (top >= 0)
+        //        {
+        //            Height = Math.Max(1, Height - e.VerticalChange);
+        //        }
+
+        //        if(ww < 1)
+        //        {
+        //            ww = 1;
+        //            Canvas.SetLeft(this, Math.Max(0, left));
+        //        }
+        //        Width = ww;
+
+        //        e.Handled = true;
+        //    }
+        //}
+
+        //private void MyThumbRight_DragDelta(object sender, DragDeltaEventArgs e)
+        //{
+        //    if (sender == MyThumbRight)
+        //    {
+        //        double ww = Width + e.HorizontalChange;
+        //        double left = Canvas.GetLeft(this);
+
+        //        //0サイズとマイナス座標を回避
+        //        if (ww < 1 && left > 0)
+        //        {
+        //            Canvas.SetLeft(this, Math.Max(0, ww + left));
+        //        }
+
+        //        Width = Math.Max(1, ww);
+        //        e.Handled = true;
+        //    }
+        //}
+
+        private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            double ww = Width + e.HorizontalChange;
+            double hh = Height + e.VerticalChange;
+            double left = Canvas.GetLeft(this) + e.HorizontalChange;
+            double top = Canvas.GetTop(this) + e.VerticalChange;
+
+            if (sender == MyThumbBottom)
+            {
+                Height = Math.Max(1, hh);
+                if (Height == 1 && top >= 0)
+                {
+                    Canvas.SetTop(this, top);
+                }
+            }
+            else if (sender == MyThumbBottomLeft)
+            {
+                Height = Math.Max(1, hh);
+                if (top >= 0 && Height == 1)
+                {
+                    Canvas.SetTop(this, top);
+                }
+                
+                Canvas.SetLeft(this, Math.Max(0,left));
+                if(left > 0)
+                {
+                    Width = Math.Max(1, Width - e.HorizontalChange);
+                }
+            }
+            else if (sender == MyThumbLeft)
+            {
+                Canvas.SetLeft(this, Math.Max(0, left));
+                if (left > 0)
+                {
+                    Width = Math.Max(1, Width - e.HorizontalChange);
+                }
+
+            }
+            else if (sender == MyThumbTopLeft)
+            {
+                Canvas.SetLeft(this, Math.Max(0, left));
+                Canvas.SetTop(this, Math.Max(0, top));
+
+                if (left > 0)
+                {
+                    Width = Math.Max(1, Width - e.HorizontalChange);
+                }
+                if (top > 0)
+                {
+                    Height = Math.Max(1, Height - e.VerticalChange);
+                }
+            }
+            else if (sender == MyThumbTop)
+            {
+                if (top < 0)
+                {
+                    Canvas.SetTop(this, 0);
+                }
+                else
+                {
+                    Canvas.SetTop(this, top);
+                    Height = Math.Max(1, Height - e.VerticalChange);
+                }
+            }
+            else if (sender == MyThumbTopRight)
+            {
+                //0サイズとマイナス座標を回避
+
+                Canvas.SetTop(this, Math.Max(0, top));
+                if (top >= 0)
+                {
+                    Height = Math.Max(1, Height - e.VerticalChange);
+                }
+
+                if (ww < 1)
+                {
+                    ww = 1;
+                    Canvas.SetLeft(this, Math.Max(0, left));
+                }
+                Width = ww;
+            }
+            else if (sender == MyThumbRight)
+            {
+                if (ww < 1 && left > 0)
+                {
+                    Canvas.SetLeft(this, Math.Max(0, ww + left));
+                }
+
+                Width = Math.Max(1, ww);
+            }
+            else if (sender == MyThumb)
+            {
+                Width = Math.Max(1, ww);
+                Height = Math.Max(1, hh);
+
+            }
+
+            else if (sender == this)
+            {
+                Canvas.SetLeft(this, Math.Max(0, Canvas.GetLeft(this) + e.HorizontalChange));
+                Canvas.SetTop(this, Math.Max(0, Canvas.GetTop(this) + e.VerticalChange));
+            }
+            e.Handled = true;
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            if (GetTemplateChild("PART_canvas") is Canvas panel)
+            {
+                panel.Children.Add(MyThumb);
+                MyThumb.DataContext = this;
+                MyThumb.SetBinding(Canvas.LeftProperty, new Binding(nameof(Width)) { Mode = BindingMode.TwoWay });
+                MyThumb.SetBinding(Canvas.TopProperty, new Binding(nameof(Height)) { Mode = BindingMode.TwoWay });
+
+                panel.Children.Add(MyThumbRight);
+                MyThumbRight.SetBinding(Canvas.LeftProperty, new Binding(nameof(Width)) { Source = this, Mode = BindingMode.TwoWay });
+                MyThumbRight.SetBinding(Canvas.TopProperty, new Binding(nameof(Height)) { Source = this, Mode = BindingMode.TwoWay, Converter = new MyConverterHalf() });
+
+                panel.Children.Add(MyThumbTopRight);
+                MyThumbTopRight.DataContext = this;
+                MyThumbTopRight.SetBinding(Canvas.LeftProperty, new Binding(nameof(Width)) { Mode = BindingMode.TwoWay });
+
+                panel.Children.Add(MyThumbTop);
+                MyThumbTop.DataContext = this;
+                MyThumbTop.SetBinding(Canvas.LeftProperty, new Binding(nameof(Width)) { Mode = BindingMode.TwoWay, Converter = new MyConverterHalf() });
+
+                panel.Children.Add(MyThumbTopLeft);
+
+                panel.Children.Add(MyThumbLeft);
+                MyThumbLeft.DataContext = this;
+                MyThumbLeft.SetBinding(Canvas.TopProperty, new Binding(nameof(Height)) { Mode = BindingMode.TwoWay, Converter = new MyConverterHalf() });
+
+                panel.Children.Add(MyThumbBottomLeft);
+                MyThumbBottomLeft.DataContext = this;
+                MyThumbBottomLeft.SetBinding(Canvas.TopProperty, new Binding(nameof(Height)) { Mode = BindingMode.TwoWay });
+
+                panel.Children.Add(MyThumbBottom);
+                MyThumbBottom.DataContext = this;
+                MyThumbBottom.SetBinding(Canvas.TopProperty, new Binding(nameof(Height)) { Mode = BindingMode.TwoWay });
+                MyThumbBottom.SetBinding(Canvas.LeftProperty, new Binding(nameof(Width)) { Mode = BindingMode.TwoWay, Converter = new MyConverterHalf() });
+
+            }
+        }
+
+    }
+
+    public class MyConverterHalf : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            //double v = (double)value;
+            return (double)value / 2.0;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 
 
     /// <summary>

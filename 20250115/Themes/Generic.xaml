@@ -32,7 +32,27 @@
     </Setter>
   </Style>
 
+  
+  
+  
+  <Style TargetType="{x:Type local:CanvasThumb}">
+    <Setter Property="Canvas.Left" Value="0"/>
+    <Setter Property="Canvas.Top" Value="0"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:CanvasThumb}">
+          <Canvas x:Name="PART_canvas"
+                  Width="{TemplateBinding Width}"
+                  Height="{TemplateBinding Height}"
+                  Background="{TemplateBinding Background}"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 
+  
+  
+  
   <Style TargetType="{x:Type local:RangeThumb}">
     <Setter Property="Canvas.Left" Value="0"/>
     <Setter Property="Canvas.Top" Value="0"/>
