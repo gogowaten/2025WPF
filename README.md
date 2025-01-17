@@ -1,5 +1,10 @@
-2025/01/17<br>
-_20250115_RangeThumbSimple<br>
+[:contents]
+
+
+
+# _20250115_RangeThumbSimple<br>
+WPF、サイズ可変＋マウスドラッグ移動可能なCanvasを「できるだけ簡易」にカスタムコントロールで作ってみた - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/01/17/133424<br>
 ![Animation20250117_122428-ezgif com-optimize](https://github.com/user-attachments/assets/aecfe62c-549d-4b3b-a331-0a62ec5e1dc6)
 <br><br><br>
 
