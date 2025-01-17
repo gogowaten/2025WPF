@@ -20,13 +20,22 @@
         <local:ShapeKisoThumb x:Name="MyShape" MyLeft="150" MyTop="50" Width="50" Height="50"/>
         
       </local:GroupThumb>
-      <local:CanvasThumb Width="100" Height="100" Background="Gold" Canvas.Left="20" Canvas.Top="80"/>
+      <!--<local:CanvasThumb Width="100" Height="100" Background="Gold" Canvas.Left="20" Canvas.Top="80"/>-->
+      <local:CanvasTestThumb x:Name="target" FontSize="50" Width="100" Height="100" TextBackColor="AliceBlue" Fill="Peru" Background="DarkOliveGreen" Canvas.Left="30" Canvas.Top="90"/>
       
     </Canvas>
     
     
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyGroup}">
       <Button x:Name="MyButtonSet" Content="set" Click="MyButtonSet_Click"/>
+      <GroupBox DataContext="{Binding ElementName=target}" Header="a">
+        <StackPanel>
+          <TextBlock Text="{Binding Path=ActualWidth, StringFormat=width {0:0.0}}"/>
+          <TextBlock Text="{Binding Path=ActualHeight, StringFormat=height {0:0.0}}"/>
+          <TextBlock Text="{Binding Path=(Canvas.Left), StringFormat=left {0:0.0}}"/>
+          <TextBlock Text="{Binding Path=(Canvas.Top), StringFormat=top {0:0.0}}"/>
+        </StackPanel>
+      </GroupBox>
       <GroupBox DataContext="{Binding ElementName=MyGroup}" Header="{Binding Name}">
         <StackPanel>
           <TextBlock Text="{Binding Path=ActualWidth, StringFormat=width {0:0.0}}"/>
@@ -41,14 +50,6 @@
           <TextBlock Text="{Binding Path=ActualHeight, StringFormat=height {0:0.0}}"/>
           <TextBlock Text="{Binding Path=MyLeft, StringFormat=left {0:0.0}}"/>
           <TextBlock Text="{Binding Path=MyTop, StringFormat=top {0:0.0}}"/>
-        </StackPanel>
-      </GroupBox>
-      <GroupBox DataContext="{Binding MyElemants[0]}" Header="{Binding MyText}">
-        <StackPanel>
-          <TextBlock Text="{Binding Path=ActualWidth, StringFormat=width {0:0.0}}"/>
-          <TextBlock Text="{Binding Path=ActualHeight, StringFormat=height {0:0.0}}"/>
-          <TextBlock Text="{Binding Path=(Canvas.Left), StringFormat=left {0:0.0}}"/>
-          <TextBlock Text="{Binding Path=(Canvas.Top), StringFormat=top {0:0.0}}"/>
         </StackPanel>
       </GroupBox>
       

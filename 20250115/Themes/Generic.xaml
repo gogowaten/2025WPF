@@ -32,10 +32,10 @@
     </Setter>
   </Style>
 
-  
-  
-  
-  <Style TargetType="{x:Type local:CanvasThumb}">
+
+
+
+  <Style x:Key="canvasT" TargetType="{x:Type local:CanvasThumb}">
     <Setter Property="Canvas.Left" Value="0"/>
     <Setter Property="Canvas.Top" Value="0"/>
     <Setter Property="Template">
@@ -50,9 +50,28 @@
     </Setter>
   </Style>
 
-  
-  
-  
+
+  <Style TargetType="{x:Type local:CanvasTestThumb}" BasedOn="{StaticResource canvasT}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:CanvasTestThumb}">
+          <Canvas x:Name="PART_canvas"
+               Width="{TemplateBinding Width}"
+               Height="{TemplateBinding Height}"
+               Background="{TemplateBinding Background}">
+            <Grid>
+              <Ellipse Width="{TemplateBinding Width}"
+                     Height="{TemplateBinding Height}"
+                     Fill="{TemplateBinding Fill}"/>
+              <TextBlock Background="{TemplateBinding TextBackColor}" Text="Test" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+          </Canvas>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
   <Style TargetType="{x:Type local:RangeThumb}">
     <Setter Property="Canvas.Left" Value="0"/>
     <Setter Property="Canvas.Top" Value="0"/>
