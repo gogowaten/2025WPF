@@ -1,3 +1,9 @@
+2025/01/17<br>
+_20250115_RangeThumbSimple<br>
+![Animation20250117_122428-ezgif com-optimize](https://github.com/user-attachments/assets/aecfe62c-549d-4b3b-a331-0a62ec5e1dc6)
+<br><br><br>
+
+
 20250113<br>
 WPFでテストアプリ、グループ化とその解除に伴うZIndexの変更 - 午後わてんのブログ<br>
 https://gogowaten.hatenablog.com/entry/2025/01/13/152408<br>
