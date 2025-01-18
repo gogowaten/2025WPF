@@ -1,5 +1,10 @@
-[:contents]
 
+
+# _20250117_EllipseCanvasThumb
+WPF、サイズ可変＋マウスドラッグ移動可能なEllipseをカスタムコントロールで作ってみた - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/01/18/144335<br>
+![Animation20250118_125456-ezgif com-optimize](https://github.com/user-attachments/assets/3a94f3ea-78b9-44bb-8b38-bb215b6ce08d)
+<br><br><br>
 
 
 # _20250115_RangeThumbSimple<br>
