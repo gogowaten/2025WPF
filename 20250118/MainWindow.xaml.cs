@@ -25,6 +25,8 @@ namespace _20250118
         {
             MyPolyline1.Test();
             MyPolyline1.AnchorsOn();
+            var poi = MyLine.MyPoints;
+            poi.Add(new Point(300, 22));
         }
     }
 }

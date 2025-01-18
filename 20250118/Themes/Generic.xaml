@@ -44,7 +44,7 @@
 
 
 
-  <Style TargetType="{x:Type local:PolylineThumb}">
+  <Style TargetType="{x:Type local:PolylineThumb}" BasedOn="{StaticResource canvasT}">
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:PolylineThumb}">
@@ -55,6 +55,22 @@
                       Stroke="{TemplateBinding Stroke}"
                       StrokeThickness="{TemplateBinding StrokeThickness}"/>
             <local:PolylineZ MyPoints="{TemplateBinding MyPoints}"
+                             Stroke="{TemplateBinding Stroke}"
+                             StrokeThickness="{TemplateBinding StrokeThickness}"/>
+          </Canvas>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+ <Style TargetType="{x:Type local:LineThumb}" BasedOn="{StaticResource canvasT}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:LineThumb}">
+          <Canvas x:Name="PART_Canvas"
+                  Background="{TemplateBinding Background}">
+            <local:MyLineShape x:Name="PART_line"
                              Stroke="{TemplateBinding Stroke}"
                              StrokeThickness="{TemplateBinding StrokeThickness}"/>
           </Canvas>

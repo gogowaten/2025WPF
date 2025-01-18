@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -290,13 +291,13 @@ namespace _20250118
         {
             if (sender is AnchorThumb at)
             {
-                MyPoints[0] = new Point(111, 222);
-                //Canvas.SetLeft(at, Canvas.GetLeft(at) + e.HorizontalChange);
-                //Canvas.SetTop(at, Canvas.GetTop(at) + e.VerticalChange);
-                //int pointIndex = (int)at.Tag;
-                //Point motoPoint = MyPoints[pointIndex];
-                //Point newPoint = new(motoPoint.X + e.HorizontalChange, motoPoint.Y + e.VerticalChange);
-                //MyPoints[pointIndex] = newPoint;
+                //MyPoints[0] = new Point(111, 222);
+                Canvas.SetLeft(at, Canvas.GetLeft(at) + e.HorizontalChange);
+                Canvas.SetTop(at, Canvas.GetTop(at) + e.VerticalChange);
+                int pointIndex = (int)at.Tag;
+                Point motoPoint = MyPoints[pointIndex];
+                Point newPoint = new(motoPoint.X + e.HorizontalChange, motoPoint.Y + e.VerticalChange);
+                MyPoints[pointIndex] = newPoint;
 
                 e.Handled = true;
             }
@@ -318,12 +319,105 @@ namespace _20250118
     }
 
 
+    [ContentProperty(nameof(MyPoints))]
+    public class LineThumb : CanvasThumb
+    {
+
+        #region 依存関係プロパティ
+
+        public PointCollection MyPoints
+        {
+            get { return (PointCollection)GetValue(MyPointsProperty); }
+            set { SetValue(MyPointsProperty, value); }
+        }
+        public static readonly DependencyProperty MyPointsProperty =
+            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(LineThumb), new PropertyMetadata(null));
+
+
+
+
+        public Brush Stroke
+        {
+            get { return (Brush)GetValue(StrokeProperty); }
+            set { SetValue(StrokeProperty, value); }
+        }
+        public static readonly DependencyProperty StrokeProperty =
+            DependencyProperty.Register(nameof(Stroke), typeof(Brush), typeof(LineThumb), new PropertyMetadata(Brushes.DodgerBlue));
+
+        public double StrokeThickness
+        {
+            get { return (double)GetValue(StrokeThicknessProperty); }
+            set { SetValue(StrokeThicknessProperty, value); }
+        }
+        public static readonly DependencyProperty StrokeThicknessProperty =
+            DependencyProperty.Register(nameof(StrokeThickness), typeof(double), typeof(LineThumb), new PropertyMetadata(1.0));
+
+        #endregion 依存関係プロパティ
+
+        public List<AnchorThumb> MyAnchors { get; set; }
+        static LineThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(LineThumb), new FrameworkPropertyMetadata(typeof(LineThumb)));
+        }
+
+        MyLineShape? MyLineShape = null;
+        public LineThumb()
+        {
+            MyAnchors = [];
+            Loaded += LineThumb_Loaded;
+
+        }
+
+        private void LineThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetAnchors();
+        }
+
+        private void SetAnchors()
+        {
+            MyAnchors.Clear();
+            for (int i = 0; i < MyPoints.Count; i++)
+            {
+                AnchorThumb t = new() { Width = 20, Height = 20 };
+                Canvas.SetLeft(t, MyPoints[i].X);
+                Canvas.SetTop(t, MyPoints[i].Y);
+                MyAnchors.Add(t);
+                AddElement(t);
+                t.DragDelta += Thumb_DragDelta;
+            }
+        }
+
+        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is AnchorThumb t)
+            {
+                double left = Canvas.GetLeft(t) + e.HorizontalChange;
+                double top = Canvas.GetTop(t) + e.VerticalChange;
+                Canvas.SetLeft(t, left);
+                Canvas.SetTop(t, top);
+                int index = MyAnchors.IndexOf(t);
+                MyPoints[index] = new Point(left, top);
+                e.Handled = true;
+            }
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            if (GetTemplateChild("PART_line") is MyLineShape shape)
+            {
+                MyLineShape = shape;
+                MyLineShape.MyObPoints = MyPoints;
+            }
+        }
 
 
 
 
 
 
+
+    }
 
 
 

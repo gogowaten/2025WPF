@@ -22,13 +22,13 @@ namespace _20250118
         {
             get
             {
-                if (MyPoints.Count == 0 || MyPoints is null) { return Geometry.Empty; }
+                if (MyObPoints is null || MyObPoints.Count == 0) { return Geometry.Empty; }
 
                 StreamGeometry geometry = new();
                 using (var context = geometry.Open())
                 {
-                    Point begin = MyPoints[0];
-                    Point end = MyPoints[^1];
+                    Point begin = MyObPoints[0];
+                    Point end = MyObPoints[^1];
                     DrawLine(context, begin, end);
 
                 }
@@ -40,29 +40,41 @@ namespace _20250118
         private void DrawLine(StreamGeometryContext context, Point begin, Point end)
         {
             context.BeginFigure(begin, false, false);
-            for (int i = 1; i < MyPoints.Count - 1; i++)
+            for (int i = 1; i < MyObPoints.Count - 1; i++)
             {
-                context.LineTo(MyPoints[i], true, false);
+                context.LineTo(MyObPoints[i], true, false);
             }
             context.LineTo(end, true, false);
         }
 
 
 
-        [TypeConverter(typeof(MyTypeConverterStringToPoints))]
-        public ObservableCollection<Point> MyPoints
+        //[TypeConverter(typeof(MyTypeConverterStringToPoints))]
+        //public ObservableCollection<Point> MyObPoints
+        //{
+        //    get { return (ObservableCollection<Point>)GetValue(MyPointsProperty); }
+        //    set { SetValue(MyPointsProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyPointsProperty =
+        //    DependencyProperty.Register(nameof(MyObPoints), typeof(ObservableCollection<Point>), typeof(MyLineShape),
+        //        new FrameworkPropertyMetadata(null,
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+
+
+        public PointCollection MyObPoints
         {
-            get { return (ObservableCollection<Point>)GetValue(MyPointsProperty); }
+            get { return (PointCollection)GetValue(MyPointsProperty); }
             set { SetValue(MyPointsProperty, value); }
         }
         public static readonly DependencyProperty MyPointsProperty =
-            DependencyProperty.Register(nameof(MyPoints), typeof(ObservableCollection<Point>), typeof(MyLineShape),
+            DependencyProperty.Register(nameof(MyObPoints), typeof(PointCollection), typ0eof(MyLineShape),
                 new FrameworkPropertyMetadata(null,
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-
 
     }
 

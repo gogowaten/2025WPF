@@ -21,7 +21,8 @@
                            StrokeThickness="40" Stroke="Tomato"/>
       <!--<Polyline Points="40,40,320,150" Stroke="Red" StrokeThickness="5"/>-->
       <local:PolylineZ MyPoints="100,0,250,150" Stroke="Red" StrokeThickness="10"/>
-      <local:MyLineShape MyPoints="0,0 100,200" Stroke="Blue" StrokeThickness="1"/>
+      <!--<local:MyLineShape x:Name="MyLine" MyPoints="0,0 100,200" Stroke="Blue" StrokeThickness="10"/>-->
+      <local:LineThumb x:Name="MyLine" MyPoints="0,30 100,200" Stroke="Gold" StrokeThickness="10"/>
     </Canvas>
 
     <DockPanel Grid.Column="1">
