@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250117_EllipseCanvasThumb"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="400">
+        Title="MainWindow" Height="450" Width="500">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -16,19 +16,31 @@
                           Width="100" Height="100"
                           Background="Pink"
                           Fill="Lavender" Stroke="Gray" StrokeThickness="5"/>
-      <local:EllipseTextThumb x:Name="text" Canvas.Left="0" Canvas.Top="0"
+      <local:EllipseTextThumb x:Name="EllipseTextThumb" Canvas.Left="0" Canvas.Top="0"
                               Width="100" Height="100"
-                              Background="Pink"
+                              Background="YellowGreen"
                               Fill="Lavender" Stroke="Gray" StrokeThickness="5"
                               Text="TextBlock" TextBackground="Transparent"/>
     </Canvas>
-    <GroupBox Grid.Column="1" Header="{Binding Name}" DataContext="{Binding ElementName=MyRange}">
-      <StackPanel Margin="5">
-        <TextBlock Text="{Binding Path=(Canvas.Left), StringFormat=left {0:0.0}}"/>
-        <TextBlock Text="{Binding Path=(Canvas.Top), StringFormat=top {0:0.0}}"/>
-        <TextBlock Text="{Binding Path=ActualWidth, StringFormat=width {0:0.0}}"/>
-        <TextBlock Text="{Binding Path=ActualHeight, StringFormat=height {0:0.0}}"/>
-      </StackPanel>
-    </GroupBox>
+    <DockPanel Grid.Column="1">
+      <GroupBox DockPanel.Dock="Top" Header="{Binding Name}" DataContext="{Binding ElementName=MyRange}">
+        <StackPanel Margin="5">
+          <TextBlock Text="{Binding Path=(Canvas.Left), StringFormat=left {0:0.0}}"/>
+          <TextBlock Text="{Binding Path=(Canvas.Top), StringFormat=top {0:0.0}}"/>
+          <TextBlock Text="{Binding Path=ActualWidth, StringFormat=width {0:0.0}}"/>
+          <TextBlock Text="{Binding Path=ActualHeight, StringFormat=height {0:0.0}}"/>
+        </StackPanel>
+      </GroupBox>
+      <GroupBox DockPanel.Dock="Top" Header="{Binding Name}" DataContext="{Binding ElementName=EllipseTextThumb}">
+        <StackPanel Margin="5">
+          <TextBlock Text="{Binding Path=(Canvas.Left), StringFormat=left {0:0.0}}"/>
+          <TextBlock Text="{Binding Path=(Canvas.Top), StringFormat=top {0:0.0}}"/>
+          <TextBlock Text="{Binding Path=ActualWidth, StringFormat=width {0:0.0}}"/>
+          <TextBlock Text="{Binding Path=ActualHeight, StringFormat=height {0:0.0}}"/>
+          <TextBlock Text="{Binding Path=Text, StringFormat=Text {0:0.0}}"/>
+          <TextBox Text="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+      </GroupBox>
+    </DockPanel>
   </Grid>
 </Window>
