@@ -10,13 +10,19 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 
+//StreamGeometryはBindingやアニメーションをサポートしていない、代わりに負荷が小さい、PathGeometryに比べて
+
 
 namespace _20250118
 {
     public class MyLineShape : Shape
     {
 
-        public MyLineShape() { }
+        public MyLineShape()
+        {
+
+        }
+
 
         protected override Geometry DefiningGeometry
         {
@@ -70,7 +76,7 @@ namespace _20250118
             set { SetValue(MyPointsProperty, value); }
         }
         public static readonly DependencyProperty MyPointsProperty =
-            DependencyProperty.Register(nameof(MyObPoints), typeof(PointCollection), typ0eof(MyLineShape),
+            DependencyProperty.Register(nameof(MyObPoints), typeof(PointCollection), typeof(MyLineShape),
                 new FrameworkPropertyMetadata(null,
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |

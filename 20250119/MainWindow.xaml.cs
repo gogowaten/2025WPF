@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace _20250118
+namespace _20250119
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -21,22 +21,9 @@ namespace _20250118
             InitializeComponent();
         }
 
-        private void MyButtonTest_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //MyPolyline1.Test();
-            //MyPolyline1.AnchorsOn();
-            //var poi = MyLine.MyPoints;
-            //poi[0]=new Point(0,0);
-            //poi.Add(new Point(300, 22));
-            //MyLine.AnchorOn();
-            MyLine.ResizeOn();
-
-        }
-
-        private void MyButtonAnchorOff_Click(object sender, RoutedEventArgs e)
-        {
-            //MyLine.AnchorOff();
-            MyLine.ResizeOff();
+            polyline2.PointChange();
         }
     }
 }

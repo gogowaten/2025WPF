@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:_20250118"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="600">
-    <Grid>
+  <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
-      <ColumnDefinition Width="150"/>
+      <ColumnDefinition Width="250"/>
     </Grid.ColumnDefinitions>
     <Canvas UseLayoutRounding="True">
       <Rectangle Canvas.Left="150" Stroke="Red" Width="100" Height="100" StrokeDashArray="4"/>
@@ -22,7 +22,11 @@
       <!--<Polyline Points="40,40,320,150" Stroke="Red" StrokeThickness="5"/>-->
       <local:PolylineZ MyPoints="100,0,250,150" Stroke="Red" StrokeThickness="10"/>
       <!--<local:MyLineShape x:Name="MyLine" MyPoints="0,0 100,200" Stroke="Blue" StrokeThickness="10"/>-->
-      <local:LineThumb x:Name="MyLine" MyPoints="0,30 100,200" Stroke="Gold" StrokeThickness="10"/>
+      <!--<local:LineThumb x:Name="MyLine" MyPoints="0,30 100,200" Stroke="Gold" StrokeThickness="10"/>-->
+      <!--<local:PathLine x:Name="MyLine" MyPoints="20,30,40,50" Stroke="Red"/>-->
+      <!--<local:PathLineThumb x:Name="MyLine" MyPoints="20,30 140,150" Stroke="Orange"
+                            Background="AliceBlue" Opacity="0.5"/>-->
+      <local:CanvasThumb2 x:Name="MyLine" Width="10" Height="20"/>
     </Canvas>
 
     <DockPanel Grid.Column="1">
@@ -34,8 +38,31 @@
           <TextBlock Text="{Binding ActualHeight, StringFormat=height {0:0.0}}"/>
           <TextBlock Text="{Binding MyPoints, StringFormat=points {0:0}}"/>
           <Button x:Name="MyButtonTest" Content="test" Click="MyButtonTest_Click"/>
+          <Button x:Name="MyButtonAnchorOff" Content="AnchorOff" Click="MyButtonAnchorOff_Click"/>
         </StackPanel>
       </GroupBox>
+      <GroupBox DockPanel.Dock="Top" DataContext="{Binding ElementName=MyLine}" Header="{Binding Name}">
+        <StackPanel>
+          <TextBlock Text="{Binding (Canvas.Left), StringFormat=left {0:0.0}}"/>
+          <TextBlock Text="{Binding (Canvas.Top), StringFormat=top {0:0.0}}"/>
+          <TextBlock Text="{Binding ActualWidth, StringFormat=width {0:0.0}}"/>
+          <TextBlock Text="{Binding ActualHeight, StringFormat=height {0:0.0}}"/>
+          <TextBlock Text="{Binding MyPoints, StringFormat=points {0:0}}"/>
+          <TextBlock Text="{Binding MyGeoLine}"/>
+          <TextBlock Text="{Binding MyGeoLine.ActualHeight}"/>
+          <TextBlock Text="{Binding MyGeoLine.MyPoints}"/>
+        </StackPanel>
+      </GroupBox>
+      <GroupBox DockPanel.Dock="Top" DataContext="{Binding ElementName=MyLine, Path=MyGeoLine}" Header="111111">
+        <StackPanel>
+          <TextBlock Text="{Binding Path=(Canvas.Left)}"/>
+          <!--<TextBlock Text="{Binding Path=(Canvas.Top),StringFormat=top {0:0}}"/>
+          <TextBlock Text="{Binding Path=ActualWidth, StringFormat=width {0:0.0}}"/>
+          <TextBlock Text="{Binding Path=ActualHeight, StringFormat=height {0:0.0}}"/>
+          <TextBlock Text="{Binding MyPoints, StringFormat=points {0:0}}"/>-->
+        </StackPanel>
+      </GroupBox>
+
     </DockPanel>
   </Grid>
 </Window>
