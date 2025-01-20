@@ -66,6 +66,15 @@ namespace _20250119
     [ContentProperty(nameof(MyPoints))]
     public class CanvasPolyLine : Control
     {
+
+        public double MyStrokeThickness
+        {
+            get { return (double)GetValue(MyStrokeThicknessProperty); }
+            set { SetValue(MyStrokeThicknessProperty, value); }
+        }
+        public static readonly DependencyProperty MyStrokeThicknessProperty =
+            DependencyProperty.Register(nameof(MyStrokeThickness), typeof(double), typeof(CanvasPolyLine), new PropertyMetadata(1.0));
+
         public Polyline MyPolyline
         {
             get { return (Polyline)GetValue(MyPolylineProperty); }
@@ -188,7 +197,9 @@ namespace _20250119
                 Canvas.SetTop(MyPolyline, 0);
 
                 //Bindingを切る
-                MyPolyline.Points = MyPoints;
+                //MyPolyline.Points = MyPoints;
+
+                MyPolyline.SizeChanged += MyPolyline_SizeChanged;
             }
             if (GetTemplateChild("PART_Panel") is Canvas panel)
             {
@@ -198,6 +209,16 @@ namespace _20250119
             }
 
         }
+
+        private void MyPolyline_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+           var w = e.WidthChanged;
+            var h=e.HeightChanged;
+            var si = e.NewSize;
+            var pre = e.PreviousSize;
+            UpdateDescendantBounds();
+        }
+
         private void CanvasPolyLine_Loaded(object sender, RoutedEventArgs e)
         {
             UpdateDescendantBounds();

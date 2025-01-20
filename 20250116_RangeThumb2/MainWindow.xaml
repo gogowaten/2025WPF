@@ -5,10 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250116_RangeThumb2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="600">
     <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
     <Canvas>
-      <local:CanvasThumb Canvas.Left="100" Canvas.Top="100" Width="100" Height="100" Background="DodgerBlue"/>
+      <local:CanvasThumb x:Name="MyThumb" Canvas.Left="100" Canvas.Top="100" Width="100" Height="100" Background="DodgerBlue"/>
     </Canvas>
-    </Grid>
+    <GroupBox Grid.Column="1" DataContext="{Binding ElementName=MyThumb}" Header="{Binding Name}">
+      <StackPanel Margin="5">
+        <TextBlock Text="{Binding (Canvas.Left), StringFormat=left {0:0}}"/>
+        <TextBlock Text="{Binding (Canvas.Top), StringFormat=top {0:0}}"/>
+        <TextBlock Text="{Binding ActualWidth, StringFormat=width {0:0}}"/>
+        <TextBlock Text="{Binding ActualHeight, StringFormat=height {0:0}}"/>
+      </StackPanel>
+    </GroupBox>
+  </Grid>
 </Window>

@@ -17,7 +17,7 @@
       </Grid>
       <local:GridPolyLine x:Name="polyline" Canvas.Left="0"/>
       <local:CanvasPolyLine x:Name="polyline2" Canvas.Left="50" Canvas.Top="50"
-                            MyPoints="10,10 200,100"
+                            MyPoints="10,10 200,100" MyStrokeThickness="111"
                             Background="Gold" Opacity="0.5"/>
     </Canvas>
     <DockPanel Grid.Column="1">

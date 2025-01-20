@@ -26,7 +26,7 @@
           <Canvas x:Name="PART_Panel" Background="{TemplateBinding Background}">
             <Polyline x:Name="PART_Line"
                       Points="{TemplateBinding MyPoints}"
-                      Stroke="DodgerBlue" StrokeThickness="100"/>
+                      Stroke="DodgerBlue" StrokeThickness="{TemplateBinding MyStrokeThickness}"/>
           </Canvas>
         </ControlTemplate>
       </Setter.Value>
