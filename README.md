@@ -1,3 +1,9 @@
+# _20250116_RangeThumb2
+WPF、「8点ハンドル」でサイズ可変＋マウスドラッグ移動可能なCanvasを「できるだけ簡易」にカスタムコントロールで作ってみた - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/01/20/160419<br>
+![Animation20250120_140743-ezgif com-optimize](https://github.com/user-attachments/assets/cadd6e89-55c7-48a1-9dab-2e4fa71a4d17)
+<br><br><br>
+
 
 
 # _20250117_EllipseCanvasThumb
