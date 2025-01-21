@@ -5,31 +5,61 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250120_OffsetPolyline"
         mc:Ignorable="d"
-        Title="MainWindow" Height="250" Width="600">
+        Title="MainWindow" Height="450" Width="600">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
-      <ColumnDefinition Width="200"/>
+      <ColumnDefinition Width="150"/>
+      <ColumnDefinition Width="150"/>
     </Grid.ColumnDefinitions>
-    
+
     <Canvas>
-      <local:OffsetPolyline x:Name="MyElement" Canvas.Left="0" Canvas.Top="0" Background="Gold"/>
-      
-      <Polyline             x:Name="MyPolyline" Canvas.Left="0" Canvas.Top="0"
-                 Points="10,10 200,100" Stroke="Gold" StrokeThickness="100" Opacity="0.5"/>
-      
+      <local:OffsetPolylineThumb x:Name="MyLine1" Canvas.Left="0" Canvas.Top="0"
+                            MyPoints="0,0,150,50" MyStrokeThickness="100"
+                            Background="Indigo" Opacity="0.5"/>
+
+
+
+      <local:PolylineThumb x:Name="MyLine2" Canvas.Left="0" Canvas.Top="0"
+                            MyPoints="0,0,150,50" MyStrokeThickness="100"
+                            Background="Indigo" Opacity="0.5"/>
     </Canvas>
-    
-    <DockPanel Grid.Column="1" DataContext="{Binding ElementName=MyElement}" >
+
+    <DockPanel Grid.Column="1" DataContext="{Binding ElementName=MyLine1}" Background="SkyBlue">
       <GroupBox DockPanel.Dock="Top" Header="{Binding Name}">
         <StackPanel>
           <TextBlock Text="{Binding (Canvas.Left), StringFormat={}{0} left}"/>
           <TextBlock Text="{Binding (Canvas.Top), StringFormat={}{0} top}"/>
           <TextBlock Text="{Binding ActualWidth, StringFormat={}{0:0} ActualWidth}"/>
           <TextBlock Text="{Binding ActualHeight, StringFormat={}{0:0} ActualHeight}"/>
+          <Button x:Name="MyButton1" Content="thickness++" Click="MyButton1_Click"/>
+          <Button x:Name="MyButton2" Content="thickness--" Click="MyButton2_Click"/>
+          <Button x:Name="MyButton5" Content="MovePoint" Click="MyButton5_Click"/>
         </StackPanel>
       </GroupBox>
-      <GroupBox DockPanel.Dock="Top" DataContext="{Binding MyPolyline}" Header="{Binding Name}">
+      <GroupBox DockPanel.Dock="Top" DataContext="{Binding MyPolyline}" Header="内部Polyline">
+        <StackPanel>
+          <TextBlock Text="{Binding (Canvas.Left), StringFormat={}{0:0.0} left}"/>
+          <TextBlock Text="{Binding (Canvas.Top), StringFormat={}{0:0.0} top}"/>
+          <TextBlock Text="{Binding ActualWidth, StringFormat={}{0:0} ActualWidth}"/>
+          <TextBlock Text="{Binding ActualHeight, StringFormat={}{0:0} ActualHeight}"/>
+        </StackPanel>
+      </GroupBox>
+
+    </DockPanel>
+
+    <DockPanel Grid.Column="2" DataContext="{Binding ElementName=MyLine2}" Background="Gold">
+      <GroupBox DockPanel.Dock="Top" Header="{Binding Name}">
+        <StackPanel>
+          <TextBlock Text="{Binding (Canvas.Left), StringFormat={}{0} left}"/>
+          <TextBlock Text="{Binding (Canvas.Top), StringFormat={}{0} top}"/>
+          <TextBlock Text="{Binding ActualWidth, StringFormat={}{0:0} ActualWidth}"/>
+          <TextBlock Text="{Binding ActualHeight, StringFormat={}{0:0} ActualHeight}"/>
+          <Button x:Name="MyButton3" Content="thickness++" Click="MyButton3_Click"/>
+          <Button x:Name="MyButton4" Content="thickness--" Click="MyButton4_Click"/>
+        </StackPanel>
+      </GroupBox>
+      <GroupBox DockPanel.Dock="Top" DataContext="{Binding MyPolyline}" Header="内部Polyline">
         <StackPanel>
           <TextBlock Text="{Binding (Canvas.Left), StringFormat={}{0:0.0} left}"/>
           <TextBlock Text="{Binding (Canvas.Top), StringFormat={}{0:0.0} top}"/>

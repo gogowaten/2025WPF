@@ -3,20 +3,37 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:_20250120_OffsetPolyline">
 
-  
-  <Style TargetType="{x:Type local:OffsetPolyline}">
-    
-    <Setter Property="Template">      
+
+  <Style TargetType="{x:Type local:OffsetPolylineThumb}">
+    <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="{x:Type local:OffsetPolyline}">
-          <Canvas Width="{Binding MyPolylineDescendantBounds}">
+        <ControlTemplate TargetType="{x:Type local:OffsetPolylineThumb}">
+          <Canvas Background="{TemplateBinding Background}">
             <Polyline x:Name="PART_polyline"
                     Stroke="DodgerBlue"
-                    StrokeThickness="100"
-                    Points="10,10,200,100"/>
+                    StrokeThickness="{TemplateBinding MyStrokeThickness}"
+                    Points="{Binding MyPoints}"/>
           </Canvas>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
   </Style>
+
+  <Style TargetType="{x:Type local:PolylineThumb}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:PolylineThumb}">
+          <Grid Background="{TemplateBinding Background}">
+            <Polyline x:Name="PART_polyline"
+                    Stroke="Gold"
+                    StrokeThickness="{TemplateBinding MyStrokeThickness}"
+                    Points="{TemplateBinding MyPoints}">
+            </Polyline>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
 </ResourceDictionary>
