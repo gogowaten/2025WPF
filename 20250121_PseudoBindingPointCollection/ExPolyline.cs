@@ -102,5 +102,26 @@ namespace _20250121_PseudoBindingPointCollection
         }
     }
 
+    public class PolylineThumb4 : KisoPolylineThumb
+    {
+        public new PointCollection MyPoints { get; set; }
+        static PolylineThumb4()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(PolylineThumb4), new FrameworkPropertyMetadata(typeof(PolylineThumb4)));
+        }
+        public PolylineThumb4()
+        {
+            DataContext = this;
+            MyPoints = [];
+
+            Loaded += PolylineThumb4_Loaded;
+        }
+
+        private void PolylineThumb4_Loaded(object sender, RoutedEventArgs e)
+        {
+            MyPoints = MyPolyline.Points;
+        }
+    }
+
 
 }

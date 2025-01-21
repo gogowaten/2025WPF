@@ -28,5 +28,10 @@ namespace _20250121_PseudoBindingPointCollection
             MyLine3.MyPoints[0] = new Point(point.X, point.Y + 10);
         }
 
+        private void Button4_Click(object sender, RoutedEventArgs e)
+        {
+            Point point = MyLine4.MyPoints[0];
+            MyLine4.MyPoints[0] = new Point(point.X, point.Y + 10);
+        }
     }
 }

@@ -43,5 +43,18 @@
     </Setter>
   </Style>
   
+
+  <Style TargetType="{x:Type local:PolylineThumb4}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:PolylineThumb4}">
+          <Polyline x:Name="PART_Polyline"
+                    Points="310,10,400,100"
+                    Stroke="Black" StrokeThickness="50"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
   
 </ResourceDictionary>
