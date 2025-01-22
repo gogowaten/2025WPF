@@ -27,7 +27,7 @@
             <Polyline x:Name="PART_polyline"
                     Stroke="Gold"
                     StrokeThickness="{TemplateBinding MyStrokeThickness}"
-                    Points="{TemplateBinding MyPoints}">
+                    Points="{Binding MyPoints}">
             </Polyline>
           </Grid>
         </ControlTemplate>

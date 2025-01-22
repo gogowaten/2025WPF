@@ -34,7 +34,8 @@
           <TextBlock Text="{Binding ActualHeight, StringFormat={}{0:0} ActualHeight}"/>
           <Button x:Name="MyButton1" Content="thickness++" Click="MyButton1_Click"/>
           <Button x:Name="MyButton2" Content="thickness--" Click="MyButton2_Click"/>
-          <Button x:Name="MyButton5" Content="MovePoint" Click="MyButton5_Click"/>
+          <Button x:Name="MyButton5" Content="PointMove" Click="MyButton5_Click"/>
+          <Button x:Name="MyButton7" Content="ToClipboard" Click="MyButton7_Click"/>
         </StackPanel>
       </GroupBox>
       <GroupBox DockPanel.Dock="Top" DataContext="{Binding MyPolyline}" Header="内部Polyline">
@@ -57,6 +58,8 @@
           <TextBlock Text="{Binding ActualHeight, StringFormat={}{0:0} ActualHeight}"/>
           <Button x:Name="MyButton3" Content="thickness++" Click="MyButton3_Click"/>
           <Button x:Name="MyButton4" Content="thickness--" Click="MyButton4_Click"/>
+          <Button x:Name="MyButton6" Content="PointMove" Click="MyButton6_Click"/>
+          <Button x:Name="MyButton8" Content="ToClipboard" Click="MyButton8_Click"/>
         </StackPanel>
       </GroupBox>
       <GroupBox DockPanel.Dock="Top" DataContext="{Binding MyPolyline}" Header="内部Polyline">

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
@@ -40,7 +41,11 @@ namespace _20250120_OffsetPolyline
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(KisoPolyThumb), new FrameworkPropertyMetadata(typeof(KisoPolyThumb)));
         }
-        public KisoPolyThumb() { DragDelta += KisoPolyThumb_DragDelta; }
+        public KisoPolyThumb()
+        {
+            DragDelta += KisoPolyThumb_DragDelta;
+        }
+        
 
         private void KisoPolyThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
@@ -51,6 +56,18 @@ namespace _20250120_OffsetPolyline
                 e.Handled = true;
             }
         }
+
+        //Polylineのサイズ変更イベントハンドラ
+        //Polylineのオフセットと自身のサイズ変更
+        private void MyPolyline_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Rect bounds = VisualTreeHelper.GetDescendantBounds(MyPolyline);
+            Canvas.SetLeft(MyPolyline, -bounds.Left);
+            Canvas.SetTop(MyPolyline, -bounds.Top);
+            Width = bounds.Width;
+            Height = bounds.Height;
+        }
+
         //起動時のTemplate適用後に
         //TemplateからPolylineを取得
         public override void OnApplyTemplate()
@@ -59,8 +76,10 @@ namespace _20250120_OffsetPolyline
             if (GetTemplateChild("PART_polyline") is Polyline polyline)
             {
                 MyPolyline = polyline;
+                MyPolyline.SizeChanged += MyPolyline_SizeChanged;
             }
         }
+
     }
 
 
@@ -74,32 +93,17 @@ namespace _20250120_OffsetPolyline
         public OffsetPolylineThumb()
         {
             DataContext = this;
-            Loaded += OffsetPolylineThumb_Loaded;
         }
 
-        private void OffsetPolylineThumb_Loaded(object sender, RoutedEventArgs e)
-        {
-            //MyPolyline.Points = MyPoints;
-        }
 
         //起動時のTemplate適用後に
         //Polylineのサイズ変更のイベントハンドラ設定
         public override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
-            MyPolyline.SizeChanged += MyPolyline_SizeChanged;
+            base.OnApplyTemplate();            
         }
 
-        //Polylineのサイズ変更イベントハンドラ
-        //Polylineのオフセットと自身のサイズ変更
-        private void MyPolyline_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            Rect bounds = VisualTreeHelper.GetDescendantBounds(MyPolyline);
-            Canvas.SetLeft(MyPolyline, -bounds.Left);
-            Canvas.SetTop(MyPolyline, -bounds.Top);
-            Width = bounds.Width;
-            Height = bounds.Height;
-        }
+        
     }
 
 
@@ -111,7 +115,7 @@ namespace _20250120_OffsetPolyline
         }
         public PolylineThumb()
         {
-
+            DataContext = this;
         }
 
     }
