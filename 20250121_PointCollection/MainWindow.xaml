@@ -11,9 +11,15 @@
       <ColumnDefinition/>
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
+
+
+    <Canvas>
     <Polyline x:Name="MyLine1" Points="10,10 110,100" Stroke="Tomato" StrokeThickness="10"/>
     <Polyline x:Name="MyLine2" Points="100,10 210,100" Stroke="DodgerBlue" StrokeThickness="10"/>
     <!--<Polyline x:Name="MyLine2" Points="{Binding MyPoints}" Stroke="DodgerBlue" StrokeThickness="10"/>-->
+    <local:PolylineThumb MyPoints="10,10,100,100" Background="Red" MyPolylineAngle="20" MyStroke="YellowGreen" MyStrokeThickness="10"/>
+    </Canvas>
+
     <DockPanel Grid.Column="1">
       <GroupBox DockPanel.Dock="Top" DataContext="{Binding ElementName=MyLine1}" Header="{Binding Name}">
         <StackPanel>

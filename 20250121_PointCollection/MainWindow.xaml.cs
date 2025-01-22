@@ -40,8 +40,6 @@ namespace _20250121_PointCollection
 
         private void MyButtonLine2_Click(object sender, RoutedEventArgs e)
         {
-            //Point p = MyLine2.Points[0];
-            //MyLine2.Points[0] = new Point(p.X + 10, p.Y + 10);
             Point p = MyPoints[0];
             MyPoints[0] = new Point(p.X + 10, p.Y + 10);
         }
