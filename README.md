@@ -1,3 +1,10 @@
+# _20250121_PseudoBindingPointCollection
+
+![Animation20250121_175541](https://github.com/user-attachments/assets/e0e2d0cc-a1a7-4f39-8497-064b42812ade)
+<br><br><br>
+
+
+
 # _20250116_RangeThumb2
 WPF、「8点ハンドル」でサイズ可変＋マウスドラッグ移動可能なCanvasを「できるだけ簡易」にカスタムコントロールで作ってみた - 午後わてんのブログ<br>
 https://gogowaten.hatenablog.com/entry/2025/01/20/160419<br>
