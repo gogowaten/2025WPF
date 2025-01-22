@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+//WPF、PolylineのPointCollection型プロパティPointsとのBindingと連携方法をカスタムコントロールでいろいろ試した - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/01/22/121159
 
 namespace _20250121_PseudoBindingPointCollection
 {
