@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
@@ -45,8 +44,8 @@ namespace _20250120_OffsetPolyline
         {
             DragDelta += KisoPolyThumb_DragDelta;
         }
-        
 
+        //マウスドラッグ移動
         private void KisoPolyThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             if (sender is KisoPolyThumb t)
@@ -57,8 +56,8 @@ namespace _20250120_OffsetPolyline
             }
         }
 
-        //Polylineのサイズ変更イベントハンドラ
-        //Polylineのオフセットと自身のサイズ変更
+        //Polylineのサイズ変更時に
+        //Polylineのオフセットと自身(Thumb)のサイズ変更
         private void MyPolyline_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Rect bounds = VisualTreeHelper.GetDescendantBounds(MyPolyline);
@@ -94,16 +93,6 @@ namespace _20250120_OffsetPolyline
         {
             DataContext = this;
         }
-
-
-        //起動時のTemplate適用後に
-        //Polylineのサイズ変更のイベントハンドラ設定
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();            
-        }
-
-        
     }
 
 
@@ -117,7 +106,6 @@ namespace _20250120_OffsetPolyline
         {
             DataContext = this;
         }
-
     }
 
 }

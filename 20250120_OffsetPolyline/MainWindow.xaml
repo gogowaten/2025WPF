@@ -15,18 +15,18 @@
 
     <Canvas>
       <local:OffsetPolylineThumb x:Name="MyLine1" Canvas.Left="0" Canvas.Top="0"
-                            MyPoints="0,0,150,50" MyStrokeThickness="100"
+                            MyPoints="0,0,100,50" MyStrokeThickness="51"
                             Background="Indigo" Opacity="0.5"/>
 
 
 
       <local:PolylineThumb x:Name="MyLine2" Canvas.Left="0" Canvas.Top="0"
-                            MyPoints="0,0,150,50" MyStrokeThickness="100"
+                            MyPoints="0,0,100,50" MyStrokeThickness="51"
                             Background="Indigo" Opacity="0.5"/>
     </Canvas>
 
     <DockPanel Grid.Column="1" DataContext="{Binding ElementName=MyLine1}" Background="SkyBlue">
-      <GroupBox DockPanel.Dock="Top" Header="{Binding Name}">
+      <GroupBox DockPanel.Dock="Top" Header="CanvasPolylineThumb">
         <StackPanel>
           <TextBlock Text="{Binding (Canvas.Left), StringFormat={}{0} left}"/>
           <TextBlock Text="{Binding (Canvas.Top), StringFormat={}{0} top}"/>
@@ -35,7 +35,7 @@
           <Button x:Name="MyButton1" Content="thickness++" Click="MyButton1_Click"/>
           <Button x:Name="MyButton2" Content="thickness--" Click="MyButton2_Click"/>
           <Button x:Name="MyButton5" Content="PointMove" Click="MyButton5_Click"/>
-          <Button x:Name="MyButton7" Content="ToClipboard" Click="MyButton7_Click"/>
+          <Button x:Name="MyButton7" Content="ImageToClipboard" Click="MyButton7_Click"/>
         </StackPanel>
       </GroupBox>
       <GroupBox DockPanel.Dock="Top" DataContext="{Binding MyPolyline}" Header="内部Polyline">
@@ -50,7 +50,7 @@
     </DockPanel>
 
     <DockPanel Grid.Column="2" DataContext="{Binding ElementName=MyLine2}" Background="Gold">
-      <GroupBox DockPanel.Dock="Top" Header="{Binding Name}">
+      <GroupBox DockPanel.Dock="Top" Header="GridPolylineThumb">
         <StackPanel>
           <TextBlock Text="{Binding (Canvas.Left), StringFormat={}{0} left}"/>
           <TextBlock Text="{Binding (Canvas.Top), StringFormat={}{0} top}"/>
@@ -59,7 +59,7 @@
           <Button x:Name="MyButton3" Content="thickness++" Click="MyButton3_Click"/>
           <Button x:Name="MyButton4" Content="thickness--" Click="MyButton4_Click"/>
           <Button x:Name="MyButton6" Content="PointMove" Click="MyButton6_Click"/>
-          <Button x:Name="MyButton8" Content="ToClipboard" Click="MyButton8_Click"/>
+          <Button x:Name="MyButton8" Content="ImageToClipboard" Click="MyButton8_Click"/>
         </StackPanel>
       </GroupBox>
       <GroupBox DockPanel.Dock="Top" DataContext="{Binding MyPolyline}" Header="内部Polyline">

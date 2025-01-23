@@ -1,12 +1,11 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+//WPF、カスタムコントロールのThumbに表示するPolylineはGridよりCanvasに乗せると都合がいい - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/01/23/125044
 
 namespace _20250120_OffsetPolyline
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -42,14 +41,14 @@ namespace _20250120_OffsetPolyline
 
         private void MyButton5_Click(object sender, RoutedEventArgs e)
         {
-            Point p = MyLine1.MyPoints[0];
-            MyLine1.MyPoints[0] = new Point(p.X + 10, p.Y + 10);
+            Point p = MyLine1.MyPoints[1];
+            MyLine1.MyPoints[1] = new Point(p.X + 10, p.Y + 10);
         }
 
         private void MyButton6_Click(object sender, RoutedEventArgs e)
         {
-            Point p = MyLine2.MyPoints[0];
-            MyLine2.MyPoints[0] = new Point(p.X + 10, p.Y + 10);
+            Point p = MyLine2.MyPoints[1];
+            MyLine2.MyPoints[1] = new Point(p.X + 10, p.Y + 10);
         }
 
         /// <summary>

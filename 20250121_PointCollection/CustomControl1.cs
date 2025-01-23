@@ -173,6 +173,7 @@ namespace _20250121_PointCollection
             using (DrawingContext dc = dv.RenderOpen())
             {
                 dc.DrawRectangle(new VisualBrush(element), null, new Rect(0, 0, w, h));
+                //dc.DrawRectangle(new BitmapCacheBrush(element), null, new Rect(0, 0, w, h));
             }
             var bmp = new RenderTargetBitmap((int)w, (int)h, 96, 96, PixelFormats.Pbgra32);
             bmp.Render(dv);
