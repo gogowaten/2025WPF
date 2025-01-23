@@ -1,8 +1,8 @@
 
 # _20250120_OffsetPolyline
+![Animation20250123_112919](https://github.com/user-attachments/assets/ee3c169a-e339-4120-afee-02ade06add4b)<br>
 WPF、カスタムコントロールのThumbに表示するPolylineはGridよりCanvasに乗せると都合がいい - 午後わてんのブログ<br>
 https://gogowaten.hatenablog.com/entry/2025/01/23/125044<br>
-![Animation20250123_112919](https://github.com/user-attachments/assets/ee3c169a-e339-4120-afee-02ade06add4b)
 <br><br><br>
 
 
