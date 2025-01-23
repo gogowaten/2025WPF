@@ -45,13 +45,17 @@ namespace _20250123
             MyShape1.InvalidateVisual();//描画更新
             //MyShape1.UpdateLayout();//これだと反応ない
             p = MyThumb1.MyPoints[0];
-            MyThumb1.MyPoints[0] = new Point(p.X + 10, p.Y + 10);
+            MyThumb1.MyPoints[0] = new Point(p.X + 10, p.Y + 100);
             //MyThumb1.InvalidateVisual();
         }
 
         private void MyButtonStroke_Click(object sender, RoutedEventArgs e)
         {
             MyThumb1.MyStroke = Brushes.YellowGreen;
+            var neko = MyThumb1.RenderTransform;
+            var inu = MyThumb1.MyExLine.RenderTransform;
+            var uma = MyThumb1.MyExLine.MyRotate;
+            var tako = MyThumb1.MyExLine.GeometryTransform;
         }
 
     }

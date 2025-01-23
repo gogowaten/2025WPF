@@ -51,17 +51,54 @@ namespace _20250123
         public static readonly DependencyProperty MyPenProperty =
             DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(ExLine), new PropertyMetadata(null));
 
+
+        public double MyAngle
+        {
+            get { return (double)GetValue(MyAngleProperty); }
+            set { SetValue(MyAngleProperty, value); }
+        }
+        public static readonly DependencyProperty MyAngleProperty =
+            DependencyProperty.Register(nameof(MyAngle), typeof(double), typeof(ExLine), new PropertyMetadata(0.0, new PropertyChangedCallback(OnMyAngleChanged)));
+        private static void OnMyAngleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ExLine line)
+            {
+                double nAngle = (double)e.NewValue;
+                RotateTransform rt = new(nAngle);
+                Geometry geoClone = line.DefiningGeometry.Clone();
+                
+                ////冗長かもしれないけど、これがないと微妙にずれる
+                geoClone.Transform = rt;
+                line.MyBounds = geoClone.GetWidenedPathGeometry(line.MyPen).Bounds;
+                Canvas.SetLeft(line, -line.MyBounds.Left);
+                Canvas.SetTop(line, -line.MyBounds.Top);
+
+            }
+        }
+
+        public RotateTransform MyRotate
+        {
+            get { return (RotateTransform)GetValue(MyRotateProperty); }
+            set { SetValue(MyRotateProperty, value); }
+        }
+        public static readonly DependencyProperty MyRotateProperty =
+            DependencyProperty.Register(nameof(MyRotate), typeof(RotateTransform), typeof(ExLine), new PropertyMetadata(new RotateTransform(0)));
+
+
         #endregion 依存関係プロパティ
         public ExLine()
         {
-            
+
             Binding b1 = new() { Source = this, Path = new PropertyPath(StrokeProperty) };
             Binding b2 = new() { Source = this, Path = new PropertyPath(StrokeThicknessProperty) };
             MultiBinding mb = new();
             mb.Bindings.Add(b1);
             mb.Bindings.Add(b2);
             mb.Converter = new MyConverterPen();
-            SetBinding(MyPenProperty, mb);
+            _ = SetBinding(MyPenProperty, mb);
+
+            _ = SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyAngleProperty), Converter = new MyConverterRotate(),Mode=BindingMode.TwoWay });
+            
         }
 
         
@@ -74,16 +111,24 @@ namespace _20250123
                 if (MyPoints.Count == 0) { return Geometry.Empty; }
 
                 StreamGeometry geo = new();
+
                 using (var context = geo.Open())
                 {
                     DrawLine(context, MyPoints[0], MyPoints[^1]);
                 }
                 geo.Freeze();
-                //MyBounds = VisualTreeHelper.GetDescendantBounds(this);
-                //PathGeometry neko = geo.GetWidenedPathGeometry(MyPen);
-                //MyBounds = neko.Bounds;
-                MyBounds = geo.GetWidenedPathGeometry(MyPen).Bounds;
 
+                //MyBounds = VisualTreeHelper.GetDescendantBounds(this);//違う
+                //MyBounds = geo.GetWidenedPathGeometry(MyPen).Bounds;//回転とか変形無しならこれでいい
+                
+                var geoClone = geo.Clone();
+                //var geoClone = geo.Clone();
+                //geoClone.Transform = RenderTransform;
+                //geoClone.Transform = MyRotate;
+                geoClone.Transform = RenderTransform;
+
+                PathGeometry pg = geoClone.GetWidenedPathGeometry(MyPen);
+                MyBounds = pg.Bounds;
 
                 Canvas.SetLeft(this, -MyBounds.Left);
                 Canvas.SetTop(this, -MyBounds.Top);
@@ -92,6 +137,32 @@ namespace _20250123
                 return geo;
             }
         }
+
+        //回転とか無しならこれでいい
+        //protected override Geometry DefiningGeometry
+        //{
+        //    get
+        //    {
+        //        if (MyPoints is null) { return Geometry.Empty; }
+        //        if (MyPoints.Count == 0) { return Geometry.Empty; }
+
+        //        StreamGeometry geo = new();
+
+        //        using (var context = geo.Open())
+        //        {
+        //            DrawLine(context, MyPoints[0], MyPoints[^1]);
+        //        }
+        //        geo.Freeze();
+        //        //MyBounds = VisualTreeHelper.GetDescendantBounds(this);//違う
+        //        MyBounds = geo.GetWidenedPathGeometry(MyPen).Bounds;//回転とか変形無しならこれでいい
+
+        //        Canvas.SetLeft(this, -MyBounds.Left);
+        //        Canvas.SetTop(this, -MyBounds.Top);
+        //        //Width = MyBounds.Width;
+        //        //Height = MyBounds.Height;
+        //        return geo;
+        //    }
+        //}
 
 
 
@@ -125,6 +196,20 @@ namespace _20250123
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyConverterRotate : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double angle = (double)value;
+            return new RotateTransform(angle);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

@@ -27,6 +27,7 @@
         <TextBlock Text="{Binding (Canvas.Top), StringFormat=top {0:0}}"/>
         <TextBlock Text="{Binding ActualWidth, StringFormat=width {0:0}}"/>
         <TextBlock Text="{Binding ActualHeight, StringFormat=height {0:0}}"/>
+        <Slider Value="{Binding MyExLine.MyAngle}" Minimum="0.0" Maximum="90"/>
       </StackPanel>
     </DockPanel>
   </Grid>
