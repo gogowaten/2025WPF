@@ -204,7 +204,7 @@ namespace _20250124
         {
 
             drawingContext.DrawGeometry(MyFill, MyPen, MyPathGeometry);
-
+            TestSize();
 
             //Bindingを使わないで描画
             //PolyLineSegment seg = new(MyPoints.Skip(1), MyIsStroked);
@@ -227,7 +227,34 @@ namespace _20250124
             //base.OnRender(drawingContext);
         }
 
+        private void TestSize()
+        {
+            var geo = MyPathGeometry.Clone();
+            var geoRect = geo.Bounds;
+            //Width = geoRect.Width;
+            //Height = geoRect.Height;
+            PathGeometry flat = geo.GetFlattenedPathGeometry();
+            var fratRect = flat.Bounds;//元のサイズと同じ
+            PathGeometry outLine = geo.GetOutlinedPathGeometry();
+            var outLineRect = outLine.Bounds;//元のサイズと同じ
+            PathGeometry wideGeo = geo.GetWidenedPathGeometry(MyPen);
+            var wideGeoRect = geo.GetWidenedPathGeometry(MyPen).Bounds;
+            if (wideGeoRect.IsEmpty)
+            {
+                Width = geoRect.Width;
+                Height = geoRect.Height;
+            }
+            else
+            {
+                Width = wideGeoRect.Width;
+                Height = wideGeoRect.Height;
+            }
+        }
+
     }
+
+
+    #region コンバーター
 
 
     /// <summary>
@@ -257,7 +284,7 @@ namespace _20250124
     public class MyConverterSegment : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {            
+        {
             if (value is PointCollection pc)
             {
                 if (pc.Count >= 2)
@@ -304,5 +331,5 @@ namespace _20250124
         }
     }
 
-
+    #endregion コンバーター
 }
