@@ -5,14 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250124"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="500">
+        Title="MainWindow" Height="500" Width="500">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
 
-    <Path x:Name="MyPath" Stroke="Red" StrokeThickness="10" Fill="Pink">
+    <Canvas>
+      <local:ExLine x:Name="MyPath" MyPoints="20,20,150,200,200,40,10,200,250,150"
+                    MyStroke="Green" MyStrokeThickness="10"
+                    MyFill="MediumAquamarine" MyIsFilled="True" MyIsClosed="True"/>
+      <local:ExLine MyPoints="20,30,40,50,100,200"/>
+    </Canvas>
+    <!--<Path x:Name="MyPath" Stroke="Red" StrokeThickness="10" Fill="Pink">
       <Path.Data>
         <PathGeometry x:Name="Geometry" FillRule="EvenOdd">
           <PathGeometry.Figures>
@@ -23,7 +29,7 @@
           </PathGeometry.Figures>
         </PathGeometry>
       </Path.Data>
-    </Path>
+    </Path>-->
 
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyPath}">
       <StackPanel.Resources>
@@ -32,21 +38,45 @@
         </Style>
       </StackPanel.Resources>
 
-      <GroupBox DataContext="{Binding ElementName=Geometry}" Header="PathGeometry FillRule">
+      <TextBlock Text="{Binding ActualWidth, StringFormat=width {0:0}}"/>
+      <TextBlock Text="{Binding ActualHeight, StringFormat=height {0:0}}"/>
+      <Button Content="test" Click="Button_Click"/>
+
+      <GroupBox Header="aaaaaaaaa">
+        <UniformGrid Columns="2">
+
+          <TextBlock Text="{Binding MyIsFilled}"/>
+          <ToggleButton Content="MyIsFilled" IsChecked="{Binding MyIsFilled}"/>
+          <TextBlock Text="{Binding MyIsClosed}"/>
+          <ToggleButton Content="MyIsClosed" IsChecked="{Binding MyIsClosed}"/>
+          <TextBlock Text="{Binding MyIsStroked}"/>
+          <ToggleButton Content="MyIsStroked" IsChecked="{Binding MyIsStroked}"/>
+          
+          
+
+        </UniformGrid>
+      </GroupBox>
+      
+      <TextBlock Text="{Binding MyPolyLineSegment.Points}"/>
+      <TextBlock Text="{Binding MyPoints}"/>
+
+      <GroupBox DataContext="{Binding MyPathGeometry}" Header="PathGeometry FillRule">
         <UniformGrid Columns="2">
           <TextBlock Text="{Binding Path=FillRule}"/>
           <ComboBox x:Name="ComboFillRule" SelectedValue="{Binding Path=FillRule}"/>
         </UniformGrid>
       </GroupBox>
-      <GroupBox DataContext="{Binding ElementName=Figure}" Header="PathFigure">
+
+      <GroupBox DataContext="{Binding MyPathFigure}" Header="PathFigure">
         <UniformGrid Columns="2" Rows="2">
-          <TextBlock Text="{Binding Path=IsFilled}"/>
-          <ToggleButton Content="IsFilled" IsChecked="{Binding Path=IsFilled}"/>
+          <!--<TextBlock Text="{Binding Path=IsFilled}"/>
+          <ToggleButton Content="IsFilled" IsChecked="{Binding Path=IsFilled}"/>-->
           <TextBlock Text="{Binding Path=IsClosed}"/>
           <ToggleButton Content="IsClosed" IsChecked="{Binding Path=IsClosed}"/>
         </UniformGrid>
       </GroupBox>
-      <GroupBox DataContext="{Binding ElementName=Segment}" Header="PolyLineSegment">
+
+      <GroupBox DataContext="{Binding MyPolyLineSegment}" Header="PolyLineSegment">
         <UniformGrid Columns="2" Rows="2">
           <TextBlock Text="{Binding Path=IsStroked}"/>
           <ToggleButton Content="IsStroked" IsChecked="{Binding Path=IsStroked}"/>

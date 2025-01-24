@@ -22,5 +22,10 @@ namespace _20250124
 
             ComboFillRule.ItemsSource = Enum.GetValues(typeof(FillRule));
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MyPath.MyPoints.Remove(MyPath.MyPoints[0]);
+        }
     }
 }
