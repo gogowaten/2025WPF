@@ -1,4 +1,15 @@
 
+
+
+# _20250124_PathGeomerty
+![Animation20250124_143007](https://github.com/user-attachments/assets/ff50e302-0dca-4ec8-9e62-23947a9825f3)
+WPF、PathGeometryで直線図形を描画したときの動作確認してみた、FillRule、IsFilled、IsClosed、IsStroked、IsSmoothJoin - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/01/24/151432<br>
+<br><br><br>
+
+
+
+
 # _20250120_OffsetPolyline
 ![Animation20250123_112919](https://github.com/user-attachments/assets/ee3c169a-e339-4120-afee-02ade06add4b)<br>
 WPF、カスタムコントロールのThumbに表示するPolylineはGridよりCanvasに乗せると都合がいい - 午後わてんのブログ<br>
