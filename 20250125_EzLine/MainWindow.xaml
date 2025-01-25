@@ -1,0 +1,72 @@
+﻿<Window x:Class="_20250125_EzLine.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_20250125_EzLine"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="600">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
+
+    <Canvas UseLayoutRounding="True">
+      
+      <!--<Path x:Name="MyPath" Canvas.Left="180" Canvas.Top="50"
+            Stroke="Red" StrokeThickness="20" Fill="Pink">
+        <Path.Data>
+          <PathGeometry FillRule="Nonzero">
+            <PathGeometry.Figures>
+              <PathFigure StartPoint="20,20" IsFilled="True" IsClosed="True">
+                <PolyLineSegment Points="150,200,200,40,10,200,250,150" IsStroked="True"/>
+              </PathFigure>
+            </PathGeometry.Figures>
+          </PathGeometry>
+        </Path.Data>
+      </Path>
+      
+      <Rectangle DataContext="{Binding ElementName=MyPath}"
+                 Canvas.Left="{Binding Path=(Canvas.Left)}" Canvas.Top="{Binding Path=(Canvas.Top)}"
+                 Width="{Binding ActualWidth}"
+                 Height="{Binding ActualHeight}" Stroke="Red"/>-->
+
+      
+      <local:EzLine x:Name="MyEzLine" Canvas.Left="50" Canvas.Top="50"
+                    MyPoints="20,20,150,200,200,40,10,200,250,150"
+                    MyStroke="DodgerBlue" MyStrokeThickness="20" MyFill="SkyBlue"
+                    MyFillRule="Nonzero" MyIsFilled="True" MyIsStroked="True" MyIsClosed="True"/>
+      
+      <Rectangle DataContext="{Binding ElementName=MyEzLine}"
+           Canvas.Left="{Binding Path=(Canvas.Left)}" Canvas.Top="{Binding Path=(Canvas.Top)}"
+           Width="{Binding ActualWidth}"
+           Height="{Binding ActualHeight}" Stroke="Blue"/>
+
+    </Canvas>
+
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyEzLine}">
+      <GroupBox Header="{Binding Name}">
+        <StackPanel Margin="4">
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding ActualWidth, StringFormat={}{0:0.0} width}"/>
+            <TextBlock Text="{Binding (Canvas.Left), StringFormat={}{0:0.0} left}"/>
+            <TextBlock Text="{Binding ActualHeight, StringFormat={}{0:000.0} height}"/>
+            <TextBlock Text="{Binding (Canvas.Top), StringFormat={}{0:000.0} top}"/>            
+          </UniformGrid>
+          <Separator/>
+          <DockPanel>
+            <TextBlock Text="{Binding MyStrokeThickness, StringFormat=000.0}"/>
+            <Slider Value="{Binding MyStrokeThickness}" Minimum="0" Maximum="100"/>
+          </DockPanel>
+          <Button Content="Add RandomPoint" Click="Button_Click"/>
+          <Button Content="Remove 1stPoint" Click="Button_Click_1"/>
+          <Separator/>
+          <TextBlock Text="{Binding MyPoints, StringFormat=MyPoints {0}}" TextWrapping="Wrap"/>
+        </StackPanel>
+      </GroupBox>
+    </StackPanel>
+    
+    
+  </Grid>
+</Window>

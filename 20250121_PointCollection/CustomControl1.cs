@@ -17,14 +17,6 @@ using System.Windows.Shapes;
 namespace _20250121_PointCollection
 {
 
-    public class CustomControl1 : Control
-    {
-        static CustomControl1()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(CustomControl1), new FrameworkPropertyMetadata(typeof(CustomControl1)));
-        }
-    }
-
     public class PolylineThumb : Thumb
     {
         #region 依存関係プロパティ

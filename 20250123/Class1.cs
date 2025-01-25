@@ -88,7 +88,7 @@ namespace _20250123
         #endregion 依存関係プロパティ
         public ExLine()
         {
-
+            //RenderTransformOrigin = new Point(0.5,0.5);
             Binding b1 = new() { Source = this, Path = new PropertyPath(StrokeProperty) };
             Binding b2 = new() { Source = this, Path = new PropertyPath(StrokeThicknessProperty) };
             MultiBinding mb = new();

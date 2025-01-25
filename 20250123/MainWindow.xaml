@@ -14,7 +14,7 @@
     <Canvas>
       <local:ExLine x:Name="MyShape1" MyPoints="0,0,100,100" StrokeThickness="10" Stroke="Red"/>
       <local:LineThumb x:Name="MyThumb1" Canvas.Left="20" Canvas.Top="50" Background="Red"
-                       MyPoints="0,0,100,100" MyStroke="DarkMagenta" MyStrokeThickness="10"/>
+                       MyPoints="0,0,100,100,200,20" MyStroke="DarkMagenta" MyStrokeThickness="10"/>
     </Canvas>
 
     <DockPanel Grid.Column="1" DataContext="{Binding ElementName=MyThumb1}">
@@ -27,7 +27,10 @@
         <TextBlock Text="{Binding (Canvas.Top), StringFormat=top {0:0}}"/>
         <TextBlock Text="{Binding ActualWidth, StringFormat=width {0:0}}"/>
         <TextBlock Text="{Binding ActualHeight, StringFormat=height {0:0}}"/>
-        <Slider Value="{Binding MyExLine.MyAngle}" Minimum="0.0" Maximum="90"/>
+        <DockPanel>
+          <TextBlock Text="{Binding MyExLine.MyAngle, StringFormat=角度 {0:0.0}}"/>
+          <Slider Value="{Binding MyExLine.MyAngle}" Minimum="0.0" Maximum="90"/>
+        </DockPanel>
       </StackPanel>
     </DockPanel>
   </Grid>
