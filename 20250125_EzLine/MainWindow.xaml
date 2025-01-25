@@ -14,7 +14,7 @@
 
     <Canvas UseLayoutRounding="True">
       
-      <!--<Path x:Name="MyPath" Canvas.Left="180" Canvas.Top="50"
+      <Path x:Name="MyPath" Canvas.Left="180" Canvas.Top="50"
             Stroke="Red" StrokeThickness="20" Fill="Pink">
         <Path.Data>
           <PathGeometry FillRule="Nonzero">
@@ -30,7 +30,7 @@
       <Rectangle DataContext="{Binding ElementName=MyPath}"
                  Canvas.Left="{Binding Path=(Canvas.Left)}" Canvas.Top="{Binding Path=(Canvas.Top)}"
                  Width="{Binding ActualWidth}"
-                 Height="{Binding ActualHeight}" Stroke="Red"/>-->
+                 Height="{Binding ActualHeight}" Stroke="Red"/>
 
       
       <local:EzLine x:Name="MyEzLine" Canvas.Left="50" Canvas.Top="50"
