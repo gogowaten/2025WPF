@@ -14,7 +14,7 @@ namespace _20250124
     internal class Class1
     {
     }
-    public class ExLine : FrameworkElement
+    public class EzLine : FrameworkElement
     {
 
         #region 依存関係プロパティ
@@ -29,7 +29,7 @@ namespace _20250124
             set { SetValue(MyPointsProperty, value); }
         }
         public static readonly DependencyProperty MyPointsProperty =
-            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(ExLine),
+            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(EzLine),
                 new FrameworkPropertyMetadata(null,
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
@@ -41,7 +41,7 @@ namespace _20250124
             set { SetValue(MyStrokeThicknessProperty, value); }
         }
         public static readonly DependencyProperty MyStrokeThicknessProperty =
-            DependencyProperty.Register(nameof(MyStrokeThickness), typeof(double), typeof(ExLine), new FrameworkPropertyMetadata(1.0,
+            DependencyProperty.Register(nameof(MyStrokeThickness), typeof(double), typeof(EzLine), new FrameworkPropertyMetadata(1.0,
                 FrameworkPropertyMetadataOptions.AffectsRender |// デザイン画面上での更新で必要
                 FrameworkPropertyMetadataOptions.AffectsMeasure)); // 必要ないかも？
 
@@ -51,7 +51,7 @@ namespace _20250124
             set { SetValue(MyStrokeProperty, value); }
         }
         public static readonly DependencyProperty MyStrokeProperty =
-            DependencyProperty.Register(nameof(MyStroke), typeof(Brush), typeof(ExLine), new FrameworkPropertyMetadata(Brushes.Magenta,
+            DependencyProperty.Register(nameof(MyStroke), typeof(Brush), typeof(EzLine), new FrameworkPropertyMetadata(Brushes.Magenta,
                 FrameworkPropertyMetadataOptions.AffectsRender |
                 FrameworkPropertyMetadataOptions.AffectsMeasure));
 
@@ -62,7 +62,7 @@ namespace _20250124
             set { SetValue(MyFillProperty, value); }
         }
         public static readonly DependencyProperty MyFillProperty =
-            DependencyProperty.Register(nameof(MyFill), typeof(Brush), typeof(ExLine), new FrameworkPropertyMetadata(Brushes.Pink,
+            DependencyProperty.Register(nameof(MyFill), typeof(Brush), typeof(EzLine), new FrameworkPropertyMetadata(Brushes.Pink,
                 FrameworkPropertyMetadataOptions.AffectsRender |
                 FrameworkPropertyMetadataOptions.AffectsMeasure));
 
@@ -72,7 +72,7 @@ namespace _20250124
             set { SetValue(MyIsFilledProperty, value); }
         }
         public static readonly DependencyProperty MyIsFilledProperty =
-            DependencyProperty.Register(nameof(MyIsFilled), typeof(bool), typeof(ExLine), new FrameworkPropertyMetadata(true,
+            DependencyProperty.Register(nameof(MyIsFilled), typeof(bool), typeof(EzLine), new FrameworkPropertyMetadata(true,
                 FrameworkPropertyMetadataOptions.AffectsRender |
                 FrameworkPropertyMetadataOptions.AffectsMeasure));
 
@@ -82,7 +82,7 @@ namespace _20250124
             set { SetValue(MyIsStrokedProperty, value); }
         }
         public static readonly DependencyProperty MyIsStrokedProperty =
-            DependencyProperty.Register(nameof(MyIsStroked), typeof(bool), typeof(ExLine), new FrameworkPropertyMetadata(true,
+            DependencyProperty.Register(nameof(MyIsStroked), typeof(bool), typeof(EzLine), new FrameworkPropertyMetadata(true,
                 FrameworkPropertyMetadataOptions.AffectsRender |
                 FrameworkPropertyMetadataOptions.AffectsMeasure));
 
@@ -93,7 +93,7 @@ namespace _20250124
             set { SetValue(MyIsClosedProperty, value); }
         }
         public static readonly DependencyProperty MyIsClosedProperty =
-            DependencyProperty.Register(nameof(MyIsClosed), typeof(bool), typeof(ExLine), new FrameworkPropertyMetadata(false,
+            DependencyProperty.Register(nameof(MyIsClosed), typeof(bool), typeof(EzLine), new FrameworkPropertyMetadata(false,
                 FrameworkPropertyMetadataOptions.AffectsRender |
                 FrameworkPropertyMetadataOptions.AffectsMeasure));
 
@@ -114,7 +114,7 @@ namespace _20250124
             set { SetValue(MyPenProperty, value); }
         }
         public static readonly DependencyProperty MyPenProperty =
-            DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(ExLine), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(EzLine), new PropertyMetadata(null));
 
 
         #endregion 依存関係プロパティ
@@ -122,7 +122,7 @@ namespace _20250124
         #region 読み取り専用依存関係プロパティ
 
         private static readonly DependencyPropertyKey MyPathGeometryPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(MyPathGeometry), typeof(PathGeometry), typeof(ExLine), new PropertyMetadata(null));
+            DependencyProperty.RegisterReadOnly(nameof(MyPathGeometry), typeof(PathGeometry), typeof(EzLine), new PropertyMetadata(null));
         public static readonly DependencyProperty MyPathGeometryProperty = MyPathGeometryPropertyKey.DependencyProperty;
         public PathGeometry MyPathGeometry
         {
@@ -131,7 +131,7 @@ namespace _20250124
         }
 
         private static readonly DependencyPropertyKey MyPathFigurePropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(MyPathFigure), typeof(PathFigure), typeof(ExLine), new PropertyMetadata(null));
+            DependencyProperty.RegisterReadOnly(nameof(MyPathFigure), typeof(PathFigure), typeof(EzLine), new PropertyMetadata(null));
         public static readonly DependencyProperty MyPathFigureProperty = MyPathFigurePropertyKey.DependencyProperty;
         public PathFigure MyPathFigure
         {
@@ -141,7 +141,7 @@ namespace _20250124
 
 
         private static readonly DependencyPropertyKey MyPolyLineSegmentPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(MyPolyLineSegment), typeof(PolyLineSegment), typeof(ExLine), new PropertyMetadata(null));
+            DependencyProperty.RegisterReadOnly(nameof(MyPolyLineSegment), typeof(PolyLineSegment), typeof(EzLine), new PropertyMetadata(null));
         public static readonly DependencyProperty MyPolyLineSegmentProperty = MyPolyLineSegmentPropertyKey.DependencyProperty;
         public PolyLineSegment MyPolyLineSegment
         {
@@ -153,7 +153,7 @@ namespace _20250124
 
 
 
-        public ExLine()
+        public EzLine()
         {
             DataContext = this;
             MyPathGeometry = new PathGeometry() { FillRule = FillRule.Nonzero };
