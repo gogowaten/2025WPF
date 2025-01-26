@@ -1,7 +1,7 @@
 
 
 
-
+# 20250126_CustomEzLine
 ![Animation20250126_181818](https://github.com/user-attachments/assets/8ba914dc-5e70-4389-b09e-39dd5e7d983f)<br>
 WPF、折れ線図形を描画するクラスをShapeを継承したカスタムコントロールで作ってみた、線の太さを考慮してサイズ計算 - 午後わてんのブログ<br>
 https://gogowaten.hatenablog.com/entry/2025/01/26/212009<br>
