@@ -160,7 +160,7 @@ namespace _20250126_CustomEzLine
 
                 //書き換えのたびにここでnewするのが気になる
                 StreamGeometry geo = new() { FillRule = MyFillRule };
-                using (var context = geo.Open())
+                using (StreamGeometryContext context = geo.Open())
                 {
                     context.BeginFigure(MyPoints[0], MyIsFilled, MyIsClosed);
                     context.PolyLineTo(MySegmentPoints, MyIsStroked, MyIsSmoothJoin);

@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+//WPF、折れ線図形を描画するクラスをShapeを継承したカスタムコントロールで作ってみた、線の太さを考慮してサイズ計算 - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/01/26/212009
 
 namespace _20250126_CustomEzLine
 {
