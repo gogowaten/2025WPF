@@ -1,0 +1,73 @@
+﻿<Window x:Class="_20250126_CustomEzLine.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_20250126_CustomEzLine"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="600">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
+    <Canvas UseLayoutRounding="True">
+      <local:EzLineShape x:Name="MyLine" Canvas.Left="100" Canvas.Top="100"
+                         MyPoints="10,20,100,100,50,0"
+                         Stroke="LightCoral" MyIsStroked="True" MyIsClosed="True"
+                         StrokeThickness="20"
+                         Fill="Pink" MyIsFilled="True" MyFillRule="Nonzero"
+                         MyIsSmoothJoin="False"/>
+
+      
+      <Rectangle DataContext="{Binding ElementName=MyLine}"
+                 Stroke="DarkSeaGreen" StrokeThickness="1"
+                 Width="{Binding MyBounds.Width}"
+                 Height="{Binding MyBounds.Height}"
+                 Canvas.Left="{Binding (Canvas.Left)}"
+                 Canvas.Top="{Binding (Canvas.Top)}"/>
+      <Rectangle DataContext="{Binding ElementName=MyLine}"
+                 Stroke="DeepSkyBlue" StrokeThickness="1"
+                 Width="{Binding ActualWidth}"
+                 Height="{Binding ActualHeight}"
+                 Canvas.Left="{Binding (Canvas.Left)}"
+                 Canvas.Top="{Binding (Canvas.Top)}"/>
+      <Rectangle DataContext="{Binding ElementName=MyLine}"
+                 Stroke="Blue" StrokeThickness="1"
+                 Width="{Binding MyBoundsWithPen.Width}"
+                 Height="{Binding MyBoundsWithPen.Height}"
+                 Canvas.Left="{Binding (Canvas.Left)}"
+                 Canvas.Top="{Binding (Canvas.Top)}"/>
+
+
+    </Canvas>
+
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyLine}">
+      <TextBlock Text="{Binding Width, StringFormat=width {0:0.0}}"/>
+      <TextBlock Text="{Binding ActualWidth, StringFormat=actualWidth {0:0}}" Foreground="DeepSkyBlue"/>
+      <TextBlock Text="{Binding ActualHeight, StringFormat=actualHeight {0:0}}" Foreground="DeepSkyBlue"/>
+      <TextBlock Text="{Binding MyBounds, StringFormat=boundsGeo {0:0  }}" Foreground="DarkSeaGreen"/>
+      <TextBlock Text="{Binding MyBoundsWithPen, StringFormat=boundsPen {0:0  }}" Foreground="Blue"/>
+      <Separator/>
+      <TextBlock Text="{Binding StrokeThickness, StringFormat=strokeThickness {0:0.0}}"/>
+      <Slider Value="{Binding StrokeThickness}" Minimum="0" Maximum="50" TickFrequency="10" IsSnapToTickEnabled="True"/>
+      <UniformGrid Columns="2">
+        <UniformGrid.Resources>
+          <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+          </Style>
+        </UniformGrid.Resources>
+        <TextBlock Text="{Binding MyIsStroked}"/>
+        <ToggleButton Content="IsStroked" Click="ToggleButton_Click"/>
+        <TextBlock Text="{Binding MyIsClosed}"/>
+        <ToggleButton Content="MyIsClosed" Click="ToggleButton_Click_1"/>
+        <TextBlock Text="{Binding MyIsSmoothJoin}"/>
+        <ToggleButton Content="MyIsSmoothJoin" Click="ToggleButton_Click_2"/>
+        
+      </UniformGrid>
+      <Button Content="AddRandomPoint" Click="Button_Click"/>
+      <TextBlock Text="{Binding MyPoints, StringFormat=Points {0:0 }}" TextWrapping="Wrap"/>
+    </StackPanel>
+  </Grid>
+</Window>
