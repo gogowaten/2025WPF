@@ -20,5 +20,11 @@ namespace _20250125
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Random r = new();
+            MyLineShape.MyPoints.Add(new Point(r.Next(200), r.Next(200)));
+        }
     }
 }

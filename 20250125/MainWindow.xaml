@@ -7,16 +7,56 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="600">
     <Grid>
-    <Canvas>
-      <local:EzLineShape MyPoints="0,0,100,100,120,10,20,80,150,80"
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
+    <Canvas UseLayoutRounding="True">
+      <local:EzLineShape x:Name="MyLineShape" Canvas.Left="100" Canvas.Top="50"
+                         MyPoints="20,10,100,100,120,10,20,80,150,80"
                          Stroke="DodgerBlue"
-                         StrokeThickness="5"
+                         StrokeThickness="20"
                          Fill="LightSkyBlue"
                          MyIsFilled="True"
                          MyIsStroked="True"
                          MyIsClosed="False"
-                         MyFillRule="Nonzero"/>
-      <Path/>
+                         MyFillRule="Nonzero"
+                         MyIsSmoothJoin="False"/>
+
+      <!--<local:EzLine x:Name="MyLineShape" Canvas.Left="100" Canvas.Top="50"
+              MyPoints="40,20,50,100,150,130"
+              MyStroke="Gold" MyStrokeThickness="20.0" MyFill="SteelBlue"
+              MyFillRule="Nonzero"
+              MyIsFilled="True" MyIsClosed="True"
+              MyIsSmoothJoin="False" MyIsStroked="True"/>-->
+
+      <!--<local:EzLine MyPoints="0,0,100,100" MyStroke="Beige" MyFill="Red" MyFillRule="Nonzero"
+                    MyIsClosed="False" MyIsFilled="True" MyIsSmoothJoin="True" MyIsStroked="True" MyStrokeThickness="10" x:Name="aaaaaa"/>-->
+
+      <Rectangle DataContext="{Binding ElementName=MyLineShape}"
+                 Stroke="DeepPink" Width="{Binding ActualWidth}"
+                 Height="{Binding ActualHeight}"
+                 Canvas.Left="{Binding (Canvas.Left)}"
+                 Canvas.Top="{Binding (Canvas.Top)}"/>
+      
+      <Rectangle DataContext="{Binding ElementName=MyLineShape}" Opacity="0.5"
+                 Stroke="DodgerBlue"
+                 Width="{Binding MyBoundsWithPen.Width}"
+                 Height="{Binding MyBoundsWithPen.Height}"
+                 Canvas.Left="{Binding (Canvas.Left)}"
+                 Canvas.Top="{Binding (Canvas.Top)}"/>
+
+      
     </Canvas>
+
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyLineShape}">
+      <Button Content="AddPoint" Click="Button_Click"/>
+      <TextBlock Text="{Binding ActualWidth, StringFormat=width {0:0.0}}" Foreground="DeepPink"/>
+      <TextBlock Text="{Binding ActualHeight, StringFormat=height {0:0.0}}" Foreground="DeepPink"/>
+      
+      <TextBlock Text="{Binding MyBoundsWithPen, StringFormat=bounds {0: 0.0}}" Foreground="DodgerBlue"/>
+      <Slider Value="{Binding StrokeThickness}" Minimum="0" Maximum="50"/>
+    </StackPanel>
+      
     </Grid>
 </Window>
