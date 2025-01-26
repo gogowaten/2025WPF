@@ -228,6 +228,48 @@ namespace _20250125
 
 
 
+    //Shape継承＋カスタムコントロールで作ろうとしたけど、ShapeにはTemplateプロパティがない！？
+    //なので、PathFigureやPolylineSegmentをプロパティで書く必要がある、もしくは描画ごとにNew
+    //なので、あんまり意味ない感じで諦めた、やっぱりControlクラス継承のカスタムコントロールがいい
+    public class PathGeoLine : Shape
+    {
+
+        public PointCollection MyPoints
+        {
+            get { return (PointCollection)GetValue(MyPointsProperty); }
+            set { SetValue(MyPointsProperty, value); }
+        }
+        public static readonly DependencyProperty MyPointsProperty =
+            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(PathGeoLine),
+                new FrameworkPropertyMetadata(new PointCollection(),
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+
+        protected override Geometry DefiningGeometry
+        {
+            get
+            {
+                PolyLineSegment seg = new(MyPoints, true);
+                PathFigure fig = new();
+                fig.StartPoint = MyPoints[0];
+                fig.Segments.Add(seg);
+                PathGeometry geo = new();
+                geo.Figures.Add(fig);
+                
+                return geo;
+                //throw new NotImplementedException();
+            }
+        
+        }
+
+        public PathGeoLine()
+        {
+            MyPoints = [new Point(0, 0), new Point(100, 100)];
+
+        }
+    }
 
 
 

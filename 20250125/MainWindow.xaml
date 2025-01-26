@@ -46,7 +46,7 @@
                  Canvas.Left="{Binding (Canvas.Left)}"
                  Canvas.Top="{Binding (Canvas.Top)}"/>
 
-      
+      <local:PathGeoLine Stroke="Red" StrokeThickness="20"/>
     </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyLineShape}">
