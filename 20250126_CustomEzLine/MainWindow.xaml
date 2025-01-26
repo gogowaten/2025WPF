@@ -9,11 +9,11 @@
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
-      <ColumnDefinition Width="200"/>
+      <ColumnDefinition Width="300"/>
     </Grid.ColumnDefinitions>
     <Canvas UseLayoutRounding="True">
       <local:EzLineShape x:Name="MyLine" Canvas.Left="100" Canvas.Top="100"
-                         MyPoints="10,20,100,100,50,0"
+                         MyPoints="30,10,10,100,100,120,50,150"
                          Stroke="LightCoral" MyIsStroked="True" MyIsClosed="True"
                          StrokeThickness="20"
                          Fill="Pink" MyIsFilled="True" MyFillRule="Nonzero"
@@ -46,11 +46,11 @@
       <TextBlock Text="{Binding Width, StringFormat=width {0:0.0}}"/>
       <TextBlock Text="{Binding ActualWidth, StringFormat=actualWidth {0:0}}" Foreground="DeepSkyBlue"/>
       <TextBlock Text="{Binding ActualHeight, StringFormat=actualHeight {0:0}}" Foreground="DeepSkyBlue"/>
-      <TextBlock Text="{Binding MyBounds, StringFormat=boundsGeo {0:0  }}" Foreground="DarkSeaGreen"/>
-      <TextBlock Text="{Binding MyBoundsWithPen, StringFormat=boundsPen {0:0  }}" Foreground="Blue"/>
+      <TextBlock Text="{Binding MyBoundsWithPen, StringFormat={}{0:0  }GeoRenderBounds}" Foreground="Blue"/>
+      <TextBlock Text="{Binding MyBounds, StringFormat={} {0:0  }GeoBounds}" Foreground="DarkSeaGreen"/>
       <Separator/>
       <TextBlock Text="{Binding StrokeThickness, StringFormat=strokeThickness {0:0.0}}"/>
-      <Slider Value="{Binding StrokeThickness}" Minimum="0" Maximum="50" TickFrequency="10" IsSnapToTickEnabled="True"/>
+      <Slider Value="{Binding StrokeThickness}" Minimum="0" Maximum="50" TickFrequency="5" IsSnapToTickEnabled="True"/>
       <UniformGrid Columns="2">
         <UniformGrid.Resources>
           <Style TargetType="TextBlock">
