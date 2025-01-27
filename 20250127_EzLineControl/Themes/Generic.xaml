@@ -1,0 +1,38 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:_20250127_EzLineControl">
+
+
+  <Style TargetType="{x:Type local:EzLine}">
+    <Style.Resources>
+      <local:MyConverterSegment x:Key="seg"/>
+      <local:MyConverterPen x:Key="pen"/>
+    </Style.Resources>
+    
+    <Setter Property="MyPen" Value="{Binding MyStrokeThickness, Converter={StaticResource pen}}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:EzLine}">
+          <Path x:Name="PART_Path"
+                Stroke="{Binding MyStroke}"
+                Fill="{Binding MyFill}"
+                StrokeThickness="{Binding MyStrokeThickness}">
+            <Path.Data>
+              <PathGeometry x:Name="aa" FillRule="{Binding MyFillRule}">
+                <PathFigure x:Name="aaa" IsFilled="{Binding MyIsFilled}"
+                            IsClosed="{Binding MyIsClosed}"
+                            StartPoint="{Binding MyPoints[0]}">
+                  <PolyLineSegment Points="{Binding MyPoints, Converter={StaticResource seg}}"
+                                   IsSmoothJoin="{Binding MyIsSmoothJoin}"
+                                   IsStroked="{Binding MyIsStroked}"/>
+                </PathFigure>
+              </PathGeometry>
+            </Path.Data>
+          </Path>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+</ResourceDictionary>
