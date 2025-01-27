@@ -45,6 +45,9 @@
         <StackPanel Grid.Column="1" DataContext="{Binding Path=MyBoundsWithPen}">
           <TextBlock Text="{Binding Width, StringFormat={}{0:0.0} WithPenWidth}" Foreground="Orange"/>
           <TextBlock Text="{Binding Height, StringFormat={}{0:0.0} WithPenHeight}" Foreground="Orange"/>
+          <TextBlock Text="{Binding Left, StringFormat={}{0:0.0} WithPenLeft}" Foreground="Orange"/>
+          <TextBlock Text="{Binding Top, StringFormat={}{0:0.0} WithPenTop}" Foreground="Orange"/>
+          
         </StackPanel>
       </Grid>
       <Separator/>

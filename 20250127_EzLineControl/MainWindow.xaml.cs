@@ -1,19 +1,11 @@
-﻿using System.Text;
+﻿//WPF、折れ線図形を描画するクラスをControlを継承したカスタムコントロールで作ってみた、線の太さを考慮してサイズ計算 - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/01/27/141459
+
+
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace _20250127_EzLineControl
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
