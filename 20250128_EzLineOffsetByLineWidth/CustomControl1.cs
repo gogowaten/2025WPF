@@ -222,6 +222,27 @@ namespace _20250128_EzLineOffsetByLineWidth
         }
 
 
+        private static readonly DependencyPropertyKey MyReverseOffsetLeftPropertyKey =
+            DependencyProperty.RegisterReadOnly(nameof(MyReverseOffsetLeft), typeof(double), typeof(EzLine), new PropertyMetadata(0.0));
+        public static readonly DependencyProperty MyReverseOffsetLeftProperty = MyReverseOffsetLeftPropertyKey.DependencyProperty;
+        public double MyReverseOffsetLeft
+        {
+            get { return (double)GetValue(MyReverseOffsetLeftPropertyKey.DependencyProperty); }
+            internal set { SetValue(MyReverseOffsetLeftPropertyKey, value); }
+        }
+
+
+        private static readonly DependencyPropertyKey MyReverseOffsetTopPropertyKey =
+            DependencyProperty.RegisterReadOnly(nameof(MyReverseOffsetTop), typeof(double), typeof(EzLine), new PropertyMetadata(0.0));
+        public static readonly DependencyProperty MyReverseOffsetTopProperty = MyReverseOffsetTopPropertyKey.DependencyProperty;
+        public double MyReverseOffsetTop
+        {
+            get { return (double)GetValue(MyReverseOffsetTopPropertyKey.DependencyProperty); }
+            internal set { SetValue(MyReverseOffsetTopPropertyKey, value); }
+        }
+
+
+
         #endregion 読み取り専用依存関係プロパティ
 
 
@@ -276,18 +297,31 @@ namespace _20250128_EzLineOffsetByLineWidth
 
                     //var cloneGeo = MyPath.Data.Clone();//これだとクローンできない
                     var geo = MyPath.RenderedGeometry.Clone();
-                    var RoTF = MyPath.RenderTransform;
+                    var rotateTF = (RotateTransform)MyPath.RenderTransform;
+                    Rect motoGeoRect = geo.Bounds;
+                    Rect motoGeoPenRect = geo.GetRenderBounds(MyPen);
 
-                    geo.Transform = RoTF;
+                    //rotateTF.CenterX = motoGeoPenRect.Width / 2;
+                    //rotateTF.CenterY = motoGeoPenRect.Height / 2;
+
+                    Rect motoGeoPenTRRect = rotateTF.TransformBounds(motoGeoPenRect);
+                                        
+                    geo.Transform = rotateTF;
                     Rect rectGeoTF = geo.Bounds;
                     Rect rectGeoTFPen = geo.GetRenderBounds(MyPen);
 
                     Width = rectGeoTFPen.Width;
                     Height = rectGeoTFPen.Height;
+
                     MyOffsetLeft = -rectGeoTFPen.Left;
                     MyOffsetTop = -rectGeoTFPen.Top;
-                    MyBoundsWithAngle = rectGeoTFPen;
+                    //MyOffsetLeft = -motoGeoPenRect.Left/2;
+                    //MyOffsetTop = -motoGeoPenRect.Top/2;
 
+                    //MyReverseOffsetLeft = rectGeoTFPen.Left;
+                    //MyReverseOffsetTop = rectGeoTFPen.Top;
+
+                    MyBoundsWithAngle = rectGeoTFPen;
                 }
 
 

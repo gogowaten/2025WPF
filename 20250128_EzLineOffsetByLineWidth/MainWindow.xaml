@@ -13,9 +13,10 @@
     </Grid.ColumnDefinitions>
     
     <Canvas UseLayoutRounding="True">
-      <local:EzLine x:Name="MyLine" MyPoints="0,0,200,00"
+      <local:EzLine x:Name="MyLine" MyPoints="0,0,200,0"
+                    Canvas.Left="100" Canvas.Top="100"
                     MyStrokeThickness="100"
-                    MyAngle="10"/>
+                    MyAngle="10" MyIsClosed="False" MyIsFilled="False"/>
 
       <Rectangle DataContext="{Binding ElementName=MyLine}"
                  Width="{Binding ActualWidth}"
@@ -39,20 +40,23 @@
                  Canvas.Top="{Binding ElementName=MyLine, Path=MyOffsetTop}"/>
 
 
-      <!--<Path Name="MyPath" Canvas.Left="50" Canvas.Top="150" Stroke="Red" StrokeThickness="10" RenderTransformOrigin="0.5,0.5">
+      <Path Name="MyPath" Canvas.Left="50" Canvas.Top="150" Stroke="Gold"
+            StrokeThickness="50"
+            
+            >
         <Path.RenderTransform>
-          <RotateTransform x:Name="PathAngle" Angle="100"/>
+          <RotateTransform x:Name="PathAngle" Angle="0" CenterX="-100" CenterY="50"/>
         </Path.RenderTransform>
         <Path.Data>
           <PathGeometry>
             <PathFigure StartPoint="0,0">
               <PathFigure.Segments>
-                <PolyLineSegment Points="100,0" IsStroked="True"/>
+                <PolyLineSegment Points="150,0,150,100,250,100" IsStroked="True"/>
               </PathFigure.Segments>
             </PathFigure>
           </PathGeometry>
         </Path.Data>
-      </Path>-->
+      </Path>
 
 
     </Canvas>
@@ -65,9 +69,9 @@
       <Slider Value="{Binding MyStrokeThickness}" Minimum="0" Maximum="100"/>
       <Separator Margin="10"/>
       <TextBlock Text="{Binding MyAngle, StringFormat={}{0:0.0} MyAngle}"/>
-      <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="180" TickFrequency="10" IsSnapToTickEnabled="True"/>
+      <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="180" TickFrequency="10" IsSnapToTickEnabled="False"/>
       <Separator Margin="10"/>
-      <Slider Value="{Binding ElementName=PathAngle, Path=Angle}" Minimum="0" Maximum="180"/>
+      
       <Separator/>
       <TextBlock Text="{Binding ActualWidth, StringFormat={}{0:0.0} ActualWidth}"/>
       <TextBlock Text="{Binding ActualHeight, StringFormat={}{0:0.0} ActualHeight}"/>
@@ -76,6 +80,9 @@
       <TextBlock Text="{Binding MyPath.Data.Transform, StringFormat= {}{0:0} dataTransform}"/>
       <TextBlock Text="{Binding MyBasePanel.Height, StringFormat= {}{0:0} canvasHeight}"/>
       <TextBlock Text="{Binding MyBasePanel.Width, StringFormat= {}{0:0} canvasWidth}"/>
+
+      <Slider Value="{Binding ElementName=PathAngle, Path=Angle}" Minimum="0" Maximum="180"/>
+      <Slider Value="{Binding ElementName=MyPath, Path=StrokeThickness}" Minimum="0" Maximum="100"/>
     </StackPanel>
   </Grid>
 </Window>
