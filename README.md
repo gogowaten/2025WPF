@@ -1,4 +1,9 @@
 
+# _20250129_CenterRotateShape
+![Animation20250129_184735](https://github.com/user-attachments/assets/f6c8b789-7fef-458d-87a4-2393cc715ca1)<br>
+WPF、図形の回転、PathGeometryで描画した図形の「中央」を中心に回転させるには - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/01/29/190555<br>
+<br><br><br>
 
 
 
