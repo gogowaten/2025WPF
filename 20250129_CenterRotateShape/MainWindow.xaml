@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250129_CenterRotateShape"
         mc:Ignorable="d"
-        Title="Rotate Shapes" Height="450" Width="600">
+        Title="Rotate Shapes" Height="367" Width="600">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -45,11 +45,11 @@
             Stroke="Blue" StrokeThickness="{Binding ElementName=MySlider2, Path=Value}" Opacity="0.7">
       </Line>
 
-      <Polygon Canvas.Left="50" Canvas.Top="200" Points="0,0,100,100,200,20" Opacity="0.7"
+      <Polygon Canvas.Left="50" Canvas.Top="200" Points="0,0,100,80,200,20" Opacity="0.7"
                StrokeThickness="{Binding ElementName=MySlider2, Path=Value}"
                Stroke="SeaGreen" Fill="Gold" RenderTransformOrigin="0.5,0.5">        
       </Polygon>
-      <Polygon Canvas.Left="50" Canvas.Top="200" Points="0,0,100,100,200,20" Opacity="0.7"
+      <Polygon Canvas.Left="50" Canvas.Top="200" Points="0,0,100,80,200,20" Opacity="0.7"
                StrokeThickness="{Binding ElementName=MySlider2, Path=Value}"
                Stroke="SeaGreen" Fill="Gold" RenderTransformOrigin="0.5,0.5">
         <Polygon.RenderTransform>
@@ -57,12 +57,12 @@
         </Polygon.RenderTransform>
       </Polygon>
       
-      <Polygon Canvas.Left="250" Canvas.Top="200" Points="0,0,100,100,200,20" Opacity="0.7"
+      <Polygon Canvas.Left="250" Canvas.Top="200" Points="0,0,100,80,200,20" Opacity="0.7"
                StrokeThickness="{Binding ElementName=MySlider2, Path=Value}"
                Stroke="DodgerBlue" Fill="Gold">        
       </Polygon>
       <Polygon x:Name="MyShape5"
-               Canvas.Left="250" Canvas.Top="200" Points="0,0,100,100,200,20" Opacity="0.7"
+               Canvas.Left="250" Canvas.Top="200" Points="0,0,100,80,200,20" Opacity="0.7"
                StrokeThickness="{Binding ElementName=MySlider2, Path=Value}"
                Stroke="DodgerBlue" Fill="Gold">        
       </Polygon>
@@ -72,7 +72,7 @@
     <StackPanel Grid.Column="1">
       <TextBlock Text="DefaultRotateTransform" Foreground="Tomato"/>
       <TextBlock Text="RenderTransfomOrigin 0.5, 0.5" Foreground="SeaGreen"/>
-      <TextBlock Text="違和感のない中心軸に変更" Foreground="Blue"/>
+      <TextBlock Text="CenterXとCenterYを調整" Foreground="Blue"/>
       <Separator Margin="10"/>
       <TextBlock Text="{Binding ElementName=MySlider, Path=Value, StringFormat={}{0:0} angle}"/>
       <Slider x:Name="MySlider" Minimum="0" Maximum="180" Value="{Binding MyAngle}"/>

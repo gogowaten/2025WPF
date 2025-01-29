@@ -1,21 +1,13 @@
 ﻿using System.Globalization;
-using System.Reflection;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+//WPF、図形の回転、PathGeometryで描画した図形の「中央」を中心に回転させるには - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/01/29/190555
 
 namespace _20250129_CenterRotateShape
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
