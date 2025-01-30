@@ -5,8 +5,85 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250130_CenterRotateEzLine"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="絶対回転黙示録" Height="367" Width="602">
+  <Window.Resources>
+    <Storyboard x:Key="anime">
+      <DoubleAnimation
+        Storyboard.TargetName="MyAngle"
+        Storyboard.TargetProperty="Value"
+        From="0"
+        To="360"
+        Duration="0:0:5"
+        RepeatBehavior="0:0:10"
+        />
+    </Storyboard>
+  </Window.Resources>
+  
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
+    <Canvas>
+      <local:EzLine Opacity="0.5"
+                    Canvas.Left="50" Canvas.Top="80"
+                    MyIsRotateCenterAverage="True"
+                    MyPoints="0,0, 100,50, 100,200, 200,0, 10,150, 100,0"
+                    Stroke="Pink"
+                    StrokeThickness="{Binding ElementName=slStrokeThickness, Path=Value}"
+                    Fill="MistyRose"
+                    MyIsFilled="{Binding ElementName=toggIsFilled, Path=IsChecked}"
+                    MyIsClosed="True"/>
+      <local:EzLine x:Name="tenjo" Opacity="0.5"
+                    Canvas.Left="50" Canvas.Top="80"
+                    MyIsRotateCenterAverage="True"
+                    MyPoints="0,0, 100,50, 100,200, 200,0, 10,150, 100,0"
+                    Stroke="Fuchsia"
+                    StrokeThickness="{Binding ElementName=slStrokeThickness, Path=Value}"
+                    MyAngle="{Binding ElementName=MyAngle, Path=Value}"
+                    Fill="MistyRose"
+                    MyIsFilled="{Binding ElementName=toggIsFilled, Path=IsChecked}"
+                    MyIsClosed="True"/>
+      <local:EzLine Opacity="0.5"
+                    Canvas.Left="250" Canvas.Top="80"
+                    MyIsRotateCenterAverage="True"
+                    MyPoints="0,0, 100,50, 100,200, 200,0, 10,150, 100,0"
+                    Stroke="Pink"
+                    Fill="MistyRose"
+                    StrokeThickness="{Binding ElementName=slStrokeThickness, Path=Value}"
+                    MyIsFilled="{Binding ElementName=toggIsFilled, Path=IsChecked}"
+                    MyIsClosed="True"/>
+      <local:EzLine x:Name="himemiya" Opacity="0.5"
+                    Canvas.Left="250" Canvas.Top="80"
+                    MyIsRotateCenterAverage="False"
+                    MyPoints="0,0, 100,50, 100,200, 200,0, 10,150, 100,0"
+                    Stroke="Red"
+                    Fill="MistyRose"
+                    StrokeThickness="{Binding ElementName=slStrokeThickness, Path=Value}"
+                    MyAngle="{Binding ElementName=MyAngle, Path=Value}"
+                    MyIsFilled="{Binding ElementName=toggIsFilled, Path=IsChecked}"
+                    MyIsClosed="True"/>
+      <Ellipse Width="10" Height="10" Canvas.Left="216.6" Canvas.Top="150"/>
+    </Canvas>
 
-    </Grid>
+    <StackPanel Grid.Column="1">
+      <TextBlock Text="全頂点の平均座標で回転" FontSize="24" Foreground="Fuchsia" TextWrapping="Wrap"/>
+      <TextBlock Text="図形が収まる矩形の中心で回転" FontSize="24" TextWrapping="Wrap" Foreground="Red"/>
+      <TextBlock Text="{Binding ElementName=MyAngle, Path=Value, StringFormat={}{0:000} 回転角度}"/>
+      <Slider x:Name="MyAngle" Minimum="0" Maximum="360" TickFrequency="5"
+              IsSnapToTickEnabled="True" Margin="10"/>
+      <TextBlock Text="{Binding ElementName=slStrokeThickness, Path=Value, StringFormat={}{0:000} 線の太さ}"/>
+      <Slider x:Name="slStrokeThickness" Value="20" Minimum="0" Maximum="50" TickFrequency="5"
+              IsSnapToTickEnabled="True" Margin="10"/>
+      <ToggleButton x:Name="toggIsFilled" Content="IsFilled"/>
+      
+      <Button Content="anime">
+        <Button.Triggers>
+          <EventTrigger RoutedEvent="Button.Click">
+            <BeginStoryboard Storyboard="{StaticResource anime}"/>
+          </EventTrigger>
+        </Button.Triggers>
+      </Button>
+    </StackPanel>
+  </Grid>
 </Window>
