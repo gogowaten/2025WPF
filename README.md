@@ -1,3 +1,17 @@
+[:contents]
+
+# _20250129
+![Animation20250130_105655](https://github.com/user-attachments/assets/a72f6374-cc79-4f7f-9a6b-bba73a6e66be)
+https://github.com/gogowaten/2025WPF/tree/main/20250129
+<br><br><br>
+
+
+
+# _20250128_EzLineOffsetByLineWidth
+![Animation20250130_104845](https://github.com/user-attachments/assets/30d36b21-f540-4754-a5b6-dc540a21c58a)
+<br><br><br>
+
+
 
 # _20250129_CenterRotateShape
 ![Animation20250129_184735](https://github.com/user-attachments/assets/f6c8b789-7fef-458d-87a4-2393cc715ca1)<br>
