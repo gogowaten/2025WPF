@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250129"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="600">
+        Title="MainWindow" Height="367" Width="602">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -68,10 +68,10 @@
         <Separator/>
         
         <TextBlock Text="{Binding StrokeThickness, StringFormat={}{0:0} strokeBold}"/>
-        <Slider Value="{Binding StrokeThickness}" Minimum="0" Maximum="100"/>
+        <Slider Value="{Binding StrokeThickness}" Minimum="0" Maximum="100" TickFrequency="5" IsSnapToTickEnabled="True"/>
         <Separator/>
         <TextBlock Text="{Binding MyAngle, StringFormat={}{0:0} angle}"/>
-        <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="180"/>
+        <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="180" TickFrequency="5" IsSnapToTickEnabled="True"/>
       </StackPanel>
       
       <Separator Margin="10"/>

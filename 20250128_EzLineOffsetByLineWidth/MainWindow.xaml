@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250128_EzLineOffsetByLineWidth"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="600">
+        Title="MainWindow" Height="451" Width="602">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -13,10 +13,10 @@
     </Grid.ColumnDefinitions>
     
     <Canvas UseLayoutRounding="True">
-      <local:EzLine x:Name="MyLine" MyPoints="0,0,200,0"
+      <local:EzLine x:Name="MyLine" MyPoints="0,0,150,0,200,100,300,100"
                     Canvas.Left="100" Canvas.Top="100"
-                    MyStrokeThickness="100"
-                    MyAngle="10" MyIsClosed="False" MyIsFilled="False"/>
+                    MyStrokeThickness="50"
+                    MyAngle="0" MyIsClosed="False" MyIsFilled="False"/>
 
       <Rectangle DataContext="{Binding ElementName=MyLine}"
                  Width="{Binding ActualWidth}"
@@ -66,10 +66,10 @@
       <TextBlock Text="{Binding (Canvas.Top), StringFormat=top {0:0.0}}"/>
       <TextBlock Text="{Binding MyBoundsWithPen.Left, StringFormat=Left {0:0.0}}"/>
       <TextBlock Text="{Binding MyStrokeThickness, StringFormat={}{0:0.0} StrokeThickness}"/>
-      <Slider Value="{Binding MyStrokeThickness}" Minimum="0" Maximum="100"/>
+      <Slider Value="{Binding MyStrokeThickness}" Minimum="0" Maximum="100" TickFrequency="10" IsSnapToTickEnabled="True"/>
       <Separator Margin="10"/>
       <TextBlock Text="{Binding MyAngle, StringFormat={}{0:0.0} MyAngle}"/>
-      <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="180" TickFrequency="10" IsSnapToTickEnabled="False"/>
+      <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="180" TickFrequency="10" IsSnapToTickEnabled="True"/>
       <Separator Margin="10"/>
       
       <Separator/>
