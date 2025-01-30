@@ -1,3 +1,8 @@
+# _20250128_EzLineOffsetByLineWidth
+![Animation20250130_104845](https://github.com/user-attachments/assets/30d36b21-f540-4754-a5b6-dc540a21c58a)
+<br><br><br>
+
+
 
 # _20250129_CenterRotateShape
 ![Animation20250129_184735](https://github.com/user-attachments/assets/f6c8b789-7fef-458d-87a4-2393cc715ca1)<br>
