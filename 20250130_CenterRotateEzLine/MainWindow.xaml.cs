@@ -1,19 +1,9 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+//WPF、図形の回転、PathGeometryで描画した図形の中心は全頂点の平均座標もいいね - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/01/31/132237
 
 namespace _20250130_CenterRotateEzLine
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
