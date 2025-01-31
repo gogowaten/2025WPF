@@ -2,7 +2,8 @@
 
 
 # _20250130_CenterRotateEzLine
-![Animation20250131_120222_60fps](https://github.com/user-attachments/assets/81ba87a7-db11-4258-a575-bcd694430edf)<br>
+![Animation20250131_120353](https://github.com/user-attachments/assets/3dcb0009-3cac-43d3-9771-e5b35cd2493f)
+
 <br><br><br>
 
 # _20250129
