@@ -1,14 +1,23 @@
-[:contents]
+
+
+
+# _20250130_CenterRotateEzLine
+![Animation20250131_120353](https://github.com/user-attachments/assets/3dcb0009-3cac-43d3-9771-e5b35cd2493f)<br>
+WPF、図形の回転、PathGeometryで描画した図形の中心は全頂点の平均座標もいいね - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/01/31/132237<br>
+
+<br><br><br>
+
 
 # _20250129
-![Animation20250130_105655](https://github.com/user-attachments/assets/a72f6374-cc79-4f7f-9a6b-bba73a6e66be)
+![Animation20250130_105655](https://github.com/user-attachments/assets/a72f6374-cc79-4f7f-9a6b-bba73a6e66be)<br>
 https://github.com/gogowaten/2025WPF/tree/main/20250129
 <br><br><br>
 
 
 
 # _20250128_EzLineOffsetByLineWidth
-![Animation20250130_104845](https://github.com/user-attachments/assets/30d36b21-f540-4754-a5b6-dc540a21c58a)
+![Animation20250130_104845](https://github.com/user-attachments/assets/30d36b21-f540-4754-a5b6-dc540a21c58a)<br>
 <br><br><br>
 
 
