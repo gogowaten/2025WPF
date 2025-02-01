@@ -5,8 +5,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250201"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="450" Width="600">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
+    <Canvas HorizontalAlignment="Left" VerticalAlignment="Top">
+      <local:KisoThumb x:Name="nemo" Width="100" Height="100"
+                       Background="Red">
+        <local:ItemData MyX="20" MyY="50"/>
+      </local:KisoThumb>
 
-    </Grid>
+      <local:EzLineThumb x:Name="nemo2" Width="100" Height="100" Background="Transparent">
+        <local:ItemData MyX="100" MyY="20" MyPoints="0,0,200,0" MyStroke="Gold" MyStrokeThickness="10"/>
+      </local:EzLineThumb>
+      
+      <!--<local:EzLine MyPoints="0,0,200,100" MyStroke="Blue"  MyStrokeThickness="20"
+                    />-->
+      
+    </Canvas>
+
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=nemo2}">
+      <TextBlock Text="{Binding MyData.MyX}"/>
+      <TextBlock Text="{Binding (Canvas.Left)}"/>
+      <TextBlock Text="{Binding MyData.MyPoints}"/>
+      <TextBlock Text="{Binding MyData.MyStrokeThickness}"/>
+      <Button Content="test" Click="Button_Click"/>
+    </StackPanel>
+  </Grid>
 </Window>

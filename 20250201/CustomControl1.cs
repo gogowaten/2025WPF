@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -15,40 +17,76 @@ using System.Windows.Shapes;
 
 namespace _20250201
 {
-    /// <summary>
-    /// このカスタム コントロールを XAML ファイルで使用するには、手順 1a または 1b の後、手順 2 に従います。
-    ///
-    /// 手順 1a) 現在のプロジェクトに存在する XAML ファイルでこのカスタム コントロールを使用する場合
-    /// この XmlNamespace 属性を使用場所であるマークアップ ファイルのルート要素に
-    /// 追加します:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:_20250201"
-    ///
-    ///
-    /// 手順 1b) 異なるプロジェクトに存在する XAML ファイルでこのカスタム コントロールを使用する場合
-    /// この XmlNamespace 属性を使用場所であるマークアップ ファイルのルート要素に
-    /// 追加します:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:_20250201;assembly=_20250201"
-    ///
-    /// また、XAML ファイルのあるプロジェクトからこのプロジェクトへのプロジェクト参照を追加し、
-    /// リビルドして、コンパイル エラーを防ぐ必要があります:
-    ///
-    ///     ソリューション エクスプローラーで対象のプロジェクトを右クリックし、
-    ///     [参照の追加] の [プロジェクト] を選択してから、このプロジェクトを参照し、選択します。
-    ///
-    ///
-    /// 手順 2)
-    /// コントロールを XAML ファイルで使用します。
-    ///
-    ///     <MyNamespace:CustomControl1/>
-    ///
-    /// </summary>
-    public class CustomControl1 : Control
+
+    [ContentProperty(nameof(MyData))]
+    public  class KisoThumb : Thumb
     {
-        static CustomControl1()
+        static KisoThumb()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(CustomControl1), new FrameworkPropertyMetadata(typeof(CustomControl1)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(KisoThumb),new FrameworkPropertyMetadata(typeof(KisoThumb)));
         }
+        public KisoThumb() {
+            //MyData = new();
+            DataContext = MyData;
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            if (GetTemplateChild("PART_Canvas") is Canvas panel)
+            {
+                MyBaseCanvas = panel;
+            }
+        }
+
+        public ItemData MyData
+        {
+            get { return (ItemData)GetValue(MyDataProperty); }
+            set { SetValue(MyDataProperty, value); }
+        }
+        public static readonly DependencyProperty MyDataProperty =
+            DependencyProperty.Register(nameof(MyData), typeof(ItemData), typeof(KisoThumb),
+                new FrameworkPropertyMetadata(null,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure ));
+
+
+        #region 依存関係プロパティ
+
+        #region 読み取り専用
+
+        private static readonly DependencyPropertyKey MyBaseCanvasPropertyKey =
+            DependencyProperty.RegisterReadOnly(nameof(MyBaseCanvas), typeof(Canvas), typeof(KisoThumb), new PropertyMetadata(null));
+        public static readonly DependencyProperty MyBaseCanvasProperty = MyBaseCanvasPropertyKey.DependencyProperty;
+        public Canvas MyBaseCanvas
+        {
+            get { return (Canvas)GetValue(MyBaseCanvasPropertyKey.DependencyProperty); }
+            internal set { SetValue(MyBaseCanvasPropertyKey, value); }
+        }
+
+
+        #endregion 読み取り専用
+
+        #region 通常
+
+
+
+        #endregion 通常
+
+
+        #endregion 依存関係プロパティ
+    }
+
+    public class EzLineThumb : KisoThumb
+    {
+        static EzLineThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(EzLineThumb), new FrameworkPropertyMetadata(typeof(EzLineThumb)));
+        }
+        public EzLineThumb()
+        {
+
+        }
+
     }
 }
