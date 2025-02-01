@@ -5,8 +5,8 @@
 
 
   <Style TargetType="{x:Type local:KisoThumb}" x:Key="kiso">
-    <Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=MyData.MyX}"/>
-    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyData.MyY}"/>
+    <Setter Property="Canvas.Left" Value="{Binding Path=MyX}"/>
+    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyY}"/>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:KisoThumb}">
@@ -22,18 +22,30 @@
 
   </Style>
 
+  
+  
   <Style TargetType="{x:Type local:TextBlockThumb}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Canvas.Left" Value="{Binding MyOffsetX}"/>
+    <Setter Property="Canvas.Top" Value="{Binding MyOffsetY}"/>
     
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:TextBlockThumb}">
           <Canvas x:Name="PART_Canvas" Background="{TemplateBinding Background}"
-                  Width="{Binding ElementName=text, Path=ActualWidth}"
-                  Height="{Binding ElementName=text, Path=ActualHeight}">
-            <TextBlock x:Name="text" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyData.MyText}"/>
+                  >
+            <TextBlock x:Name="text"
+                       Canvas.Left="{Binding MyContentOffsetX}"
+                       Canvas.Top="{Binding MyContentOffsetY}"
+                       Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyText}"
+                       RenderTransformOrigin="0.0,0.0">
+              <TextBlock.RenderTransform>
+                <RotateTransform Angle="{Binding MyAngle}"/>
+              </TextBlock.RenderTransform>
+            </TextBlock>
             <Rectangle Stroke="Red" StrokeThickness="1.0"
-                       Width="{Binding ElementName=text, Path=ActualWidth}"
-                       Height="{Binding ElementName=text, Path=ActualHeight}"/>
+                       Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}"
+                       Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"
+                       />
           </Canvas>
         </ControlTemplate>
       </Setter.Value>
@@ -47,9 +59,9 @@
         <ControlTemplate TargetType="{x:Type local:EzLineThumb}">
           <Canvas x:Name="PART_Canvas" Background="{TemplateBinding Background}">
             <local:EzLine
-              MyPoints="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyData.MyPoints}"
-              MyStroke="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyData.MyStroke}"
-              MyStrokeThickness="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyData.MyStrokeThickness}"/>
+              MyPoints="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyPoints}"
+              MyStroke="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyStroke}"
+              MyStrokeThickness="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyStrokeThickness}"/>
             <Rectangle Stroke="Red" StrokeThickness="1.0"
                        Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Width}"
                        Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Height}"/>

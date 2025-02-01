@@ -6,34 +6,47 @@
         xmlns:local="clr-namespace:_20250201"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="600">
-  <Grid>
+  <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
     <Canvas HorizontalAlignment="Left" VerticalAlignment="Top">
-      
-      <local:EzLineThumb x:Name="nemo2" Width="100" Height="100" Background="Transparent">
-        <local:ItemData MyX="100" MyY="20" MyPoints="0,0,200,0" MyStroke="Gold"
-                        MyStrokeThickness="20"/>
-      </local:EzLineThumb>
 
-      <local:TextBlockThumb x:Name="nemo3" FontSize="30">
-        <local:ItemData MyText="aaaaaaaaaauhaa"
-                        MyX="20" MyY="100"/>
+      <local:EzLineThumb x:Name="nemo2" Width="100" Height="100" Background="Transparent"
+                         MyX="100" MyY="20" MyPoints="0,0,200,0" MyStroke="Gold"
+                         MyStrokeThickness="20"/>
+
+      <local:TextBlockThumb FontSize="100" Background="MistyRose" MyText="AAAA" MyX="10" MyY="150"/>
+      <local:TextBlockThumb x:Name="nemo3" Opacity="0.7"
+                            FontSize="100" Background="MistyRose" MyText="AAAA"
+                            MyX="10" MyY="150"
+                            MyAngle="{Binding ElementName=sld, Path=Value}">
+        
       </local:TextBlockThumb>
+
+
       <!--<local:EzLine MyPoints="0,0,200,100" MyStroke="Blue"  MyStrokeThickness="20"
                     />-->
-      
+
     </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=nemo3}">
-      <TextBlock Text="{Binding MyData.MyX}"/>
-      <TextBlock Text="{Binding ActualWidth}"/>
-      <TextBlock Text="{Binding ActualHeight}"/>
-      <TextBlock Text="{Binding (Canvas.Left)}"/>
-      <TextBlock Text="{Binding MyData.MyPoints}"/>
-      <TextBlock Text="{Binding MyData.MyStrokeThickness}"/>
+      <Slider x:Name="sld" Value="0" Minimum="0" Maximum="360"
+              TickFrequency="10" IsSnapToTickEnabled="False"/>
+      <TextBlock Text="{Binding MyX, StringFormat=x 0}"/>
+      <TextBlock Text="{Binding MyOffsetX, StringFormat=xOff 0}"/>
+      <TextBlock Text="{Binding MyY, StringFormat=y 0}"/>
+      <TextBlock Text="{Binding MyOffsetY, StringFormat=yOff 0}"/>
+      
+      <TextBlock Text="{Binding ActualWidth, StringFormat=aw 0.0}"/>
+      <TextBlock Text="{Binding ActualHeight,StringFormat=ah 0.0}"/>
+      <TextBlock Text="{Binding MyAngle, StringFormat=angle 0}"/>
+      <TextBlock Text="{Binding MyBounds}"/>
+      <TextBlock Text="{Binding (Canvas.Left), StringFormat=contentLeft 0}" DataContext="{Binding MyContent}"/>
+      <TextBlock Text="{Binding (Canvas.Top), StringFormat=contentTop 0}" DataContext="{Binding MyContent}"/>
+      <TextBlock Text="{Binding MyTransformedBounds, StringFormat=0}"/>
+      <TextBlock Text="{Binding (Canvas.Left), StringFormat=Left 0}"/>
       <!--<TextBlock Text="{Binding MyEzLine.MyBoundsWithPen}"/>-->
       <Button Content="test" Click="Button_Click"/>
     </StackPanel>

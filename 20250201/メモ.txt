@@ -1,0 +1,6 @@
+﻿<Setter Property="Canvas.Left" Value="{Binding Path=MyX}"/>
+<Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyY}"/>
+バインドの設定方法は、
+{Binding Path=MyX}でもいいけど
+{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyY}にすると
+入力候補が出てくる
