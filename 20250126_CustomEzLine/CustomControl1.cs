@@ -85,8 +85,8 @@ namespace _20250126_CustomEzLine
 
 
 
-        ////読み取り専用のPen、バインドできない、エラーになる
-        ////ArgumentException: 'Setter' オブジェクトでは、読み取り専用プロパティ 'MyPen' の値を指定できません。
+        //読み取り専用のPen、バインドできない、エラーになる
+        //ArgumentException: 'Setter' オブジェクトでは、読み取り専用プロパティ 'MyPen' の値を指定できません。
         //private static readonly DependencyPropertyKey MyPenPropertyKey =
         //    DependencyProperty.RegisterReadOnly(nameof(MyPen), typeof(Pen), typeof(EzLineShape), new PropertyMetadata(null));
         //public static readonly DependencyProperty MyPenProperty = MyPenPropertyKey.DependencyProperty;

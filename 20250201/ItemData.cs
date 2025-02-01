@@ -22,7 +22,7 @@ namespace _20250201
         }
         public static readonly DependencyProperty MyXProperty =
             DependencyProperty.Register(nameof(MyX), typeof(double), typeof(ItemData),
-                new FrameworkPropertyMetadata(110.0,
+                new FrameworkPropertyMetadata(0.0,
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
@@ -34,7 +34,7 @@ namespace _20250201
         }
         public static readonly DependencyProperty MyYProperty =
             DependencyProperty.Register(nameof(MyY), typeof(double), typeof(ItemData),
-                new FrameworkPropertyMetadata(50.0,
+                new FrameworkPropertyMetadata(0.0,
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
@@ -168,24 +168,24 @@ namespace _20250201
 
 
         //読み取り専用にしたい
-        //public Pen MyPen
-        //{
-        //    get { return (Pen)GetValue(MyPenProperty); }
-        //    set { SetValue(MyPenProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyPenProperty =
-        //    DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(ItemData), new FrameworkPropertyMetadata(new Pen(),
-        //        FrameworkPropertyMetadataOptions.AffectsRender |
-        //        FrameworkPropertyMetadataOptions.AffectsMeasure));
-
-        private static readonly DependencyPropertyKey MyPenPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(MyPen), typeof(Pen), typeof(ItemData), new PropertyMetadata(new Pen()));
-        public static readonly DependencyProperty MyPenProperty = MyPenPropertyKey.DependencyProperty;
         public Pen MyPen
         {
-            get { return (Pen)GetValue(MyPenPropertyKey.DependencyProperty); }
-            internal set { SetValue(MyPenPropertyKey, value); }
+            get { return (Pen)GetValue(MyPenProperty); }
+            set { SetValue(MyPenProperty, value); }
         }
+        public static readonly DependencyProperty MyPenProperty =
+            DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(ItemData), new FrameworkPropertyMetadata(new Pen(),
+                FrameworkPropertyMetadataOptions.AffectsRender |
+                FrameworkPropertyMetadataOptions.AffectsMeasure));
+
+        //private static readonly DependencyPropertyKey MyPenPropertyKey =
+        //    DependencyProperty.RegisterReadOnly(nameof(MyPen), typeof(Pen), typeof(ItemData), new PropertyMetadata(new Pen()));
+        //public static readonly DependencyProperty MyPenProperty = MyPenPropertyKey.DependencyProperty;
+        //public Pen MyPen
+        //{
+        //    get { return (Pen)GetValue(MyPenPropertyKey.DependencyProperty); }
+        //    internal set { SetValue(MyPenPropertyKey, value); }
+        //}
 
 
 

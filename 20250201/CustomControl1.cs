@@ -77,6 +77,23 @@ namespace _20250201
         #endregion 依存関係プロパティ
     }
 
+
+    public class TextBlockThumb : KisoThumb
+    {
+        static TextBlockThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(TextBlockThumb), new FrameworkPropertyMetadata(typeof(TextBlockThumb)));
+        }
+        public TextBlockThumb()
+        {
+
+        }
+
+    }
+
+
+
+
     public class EzLineThumb : KisoThumb
     {
         static EzLineThumb()
@@ -85,8 +102,26 @@ namespace _20250201
         }
         public EzLineThumb()
         {
-
+           
+            Loaded += EzLineThumb_Loaded;
         }
+
+        private void EzLineThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            var neko = MyBaseCanvas.Children;
+            var el =(EzLine) MyBaseCanvas.Children[0];
+            MyEzLine = el;
+            
+        }
+
+        //確認用
+        public EzLine MyEzLine
+        {
+            get { return (EzLine)GetValue(MyEzLineProperty); }
+            set { SetValue(MyEzLineProperty, value); }
+        }
+        public static readonly DependencyProperty MyEzLineProperty =
+            DependencyProperty.Register(nameof(MyEzLine), typeof(EzLine), typeof(EzLineThumb), new PropertyMetadata(null));
 
     }
 }

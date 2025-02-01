@@ -23,7 +23,7 @@ namespace _20250130
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MyLine.MyPoints[0] = new Point(20, 40);
+            //MyLine.MyPoints[0] = new Point(20, 40);
         }
     }
 }

@@ -173,15 +173,15 @@ namespace _20250130
 
 
         //読み取り専用にしたい
-        public Pen MyPen
-        {
-            get { return (Pen)GetValue(MyPenProperty); }
-            set { SetValue(MyPenProperty, value); }
-        }
-        public static readonly DependencyProperty MyPenProperty =
-            DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(EzLine), new FrameworkPropertyMetadata(new Pen(),
-                FrameworkPropertyMetadataOptions.AffectsRender |
-                FrameworkPropertyMetadataOptions.AffectsMeasure));
+        //public Pen MyPen
+        //{
+        //    get { return (Pen)GetValue(MyPenProperty); }
+        //    set { SetValue(MyPenProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyPenProperty =
+        //    DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(EzLine), new FrameworkPropertyMetadata(new Pen(),
+        //        FrameworkPropertyMetadataOptions.AffectsRender |
+        //        FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         
         #endregion 図形関連

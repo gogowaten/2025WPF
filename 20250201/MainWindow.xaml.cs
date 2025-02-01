@@ -23,7 +23,8 @@ namespace _20250201
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            nemo.MyData.MyX += 10;
+            
+            
         }
     }
 }

@@ -153,6 +153,7 @@ namespace _20250201
                 FrameworkPropertyMetadataOptions.AffectsMeasure));
 
 
+
         #endregion 依存関係プロパティ
 
         #region 読み取り専用依存関係プロパティ
@@ -261,18 +262,8 @@ namespace _20250201
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
-            var defpenbounds = this.DefiningGeometry.GetRenderBounds(MyPen);
-            var penbounds = this.RenderedGeometry.GetRenderBounds(MyPen);
-            var bounds = this.RenderedGeometry.Bounds;
-            //if (MyPath != null)
-            //{
-            //    var bounds = MyPath.Data.GetRenderBounds(MyPen);
-            //    //var bounds = MyPath.Data.GetWidenedPathGeometry(MyPen).Bounds;
-            //    if (bounds.Width > 0)
-            //    {
-            //        MyBoundsWithPen = bounds;
-            //    }
-            //}
+            Rect r=DefiningGeometry.GetRenderBounds(MyPen);
+            if (r.Width > 0) { MyBoundsWithPen = r; }            
         }
     }
 
