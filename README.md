@@ -32,6 +32,7 @@ https://gogowaten.hatenablog.com/entry/2025/01/29/190555<br>
 
 
 # _20250127_EzLineControl
+https://github.com/gogowaten/2025WPF/tree/main/20250127<br>
 ![Animation20250127_121115](https://github.com/user-attachments/assets/715c8d9b-2c1d-46f5-8ccf-c1781b57c3f0)<br>
 WPF、折れ線図形を描画するクラスをControlを継承したカスタムコントロールで作ってみた、線の太さを考慮してサイズ計算 - 午後わてんのブログ<br>
 https://gogowaten.hatenablog.com/entry/2025/01/27/141459<br>
