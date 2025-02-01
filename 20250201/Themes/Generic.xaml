@@ -33,7 +33,7 @@
         <ControlTemplate TargetType="{x:Type local:TextBlockThumb}">
           <Canvas x:Name="PART_Canvas" Background="{TemplateBinding Background}"
                   >
-            <TextBlock x:Name="text"
+            <TextBlock x:Name="text" Background="Gold"
                        Canvas.Left="{Binding MyContentOffsetX}"
                        Canvas.Top="{Binding MyContentOffsetY}"
                        Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyText}"

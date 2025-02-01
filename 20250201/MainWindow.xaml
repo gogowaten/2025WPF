@@ -6,6 +6,17 @@
         xmlns:local="clr-namespace:_20250201"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="600">
+  <Window.Resources>
+    <Storyboard x:Key="kaiten">
+      <DoubleAnimation
+        Storyboard.TargetName="Angle"
+        Storyboard.TargetProperty="Value"
+        From="0"
+        To="360"
+        Duration="0:0:5"
+        RepeatBehavior="0:0:10"/>
+    </Storyboard>
+  </Window.Resources>
   <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -13,18 +24,17 @@
     </Grid.ColumnDefinitions>
     <Canvas HorizontalAlignment="Left" VerticalAlignment="Top">
 
-      <local:EzLineThumb x:Name="nemo2" Width="100" Height="100" Background="Transparent"
+      <!--<local:EzLineThumb x:Name="nemo2" Width="100" Height="100" Background="Transparent"
                          MyX="100" MyY="20" MyPoints="0,0,200,0" MyStroke="Gold"
-                         MyStrokeThickness="20"/>
+                         MyStrokeThickness="20"/>-->
 
-      <local:TextBlockThumb FontSize="100" Background="MistyRose" MyText="AAAA" MyX="10" MyY="150"/>
+      <local:TextBlockThumb FontSize="50" Background="MistyRose" MyText="AAAA" MyX="100" MyY="150"/>
       <local:TextBlockThumb x:Name="nemo3" Opacity="0.7"
-                            FontSize="100" Background="MistyRose" MyText="AAAA"
-                            MyX="10" MyY="150"
-                            MyAngle="{Binding ElementName=sld, Path=Value}">
+                            FontSize="50" Background="MistyRose" MyText="AAAA"
+                            MyX="100" MyY="150"
+                            MyAngle="{Binding ElementName=Angle, Path=Value}">
         
       </local:TextBlockThumb>
-
 
       <!--<local:EzLine MyPoints="0,0,200,100" MyStroke="Blue"  MyStrokeThickness="20"
                     />-->
@@ -32,7 +42,7 @@
     </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=nemo3}">
-      <Slider x:Name="sld" Value="0" Minimum="0" Maximum="360"
+      <Slider x:Name="Angle" Value="0" Minimum="0" Maximum="360"
               TickFrequency="10" IsSnapToTickEnabled="False"/>
       <TextBlock Text="{Binding MyX, StringFormat=x 0}"/>
       <TextBlock Text="{Binding MyOffsetX, StringFormat=xOff 0}"/>
@@ -49,6 +59,13 @@
       <TextBlock Text="{Binding (Canvas.Left), StringFormat=Left 0}"/>
       <!--<TextBlock Text="{Binding MyEzLine.MyBoundsWithPen}"/>-->
       <Button Content="test" Click="Button_Click"/>
+      <Button Content="anime">
+        <Button.Triggers>
+          <EventTrigger RoutedEvent="Button.Click">
+            <BeginStoryboard Storyboard="{StaticResource kaiten}"/>
+          </EventTrigger>
+        </Button.Triggers>
+      </Button>
     </StackPanel>
   </Grid>
 </Window>
