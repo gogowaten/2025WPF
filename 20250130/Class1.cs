@@ -15,9 +15,9 @@ namespace _20250130
     internal class Class1
     {
     }
-    public class EzLine : Shape
+    public class EzLine2 : Shape
     {
-        public EzLine()
+        public EzLine2()
         {
 
             MultiBinding mb = new() { Converter = new MyConverterRotateTF() };
@@ -87,7 +87,7 @@ namespace _20250130
             set { SetValue(MyAngleProperty, value); }
         }
         public static readonly DependencyProperty MyAngleProperty =
-            DependencyProperty.Register(nameof(MyAngle), typeof(double), typeof(EzLine),
+            DependencyProperty.Register(nameof(MyAngle), typeof(double), typeof(EzLine2),
                 new FrameworkPropertyMetadata(0.0,
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
@@ -116,7 +116,7 @@ namespace _20250130
 
 
         private static readonly DependencyPropertyKey MyRectPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(MyRect), typeof(Rect), typeof(EzLine), new PropertyMetadata(new Rect()));
+            DependencyProperty.RegisterReadOnly(nameof(MyRect), typeof(Rect), typeof(EzLine2), new PropertyMetadata(new Rect()));
         public static readonly DependencyProperty MyRectProperty = MyRectPropertyKey.DependencyProperty;
         public Rect MyRect
         {
@@ -132,7 +132,7 @@ namespace _20250130
             set { SetValue(MyPointsProperty, value); }
         }
         public static readonly DependencyProperty MyPointsProperty =
-            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(EzLine),
+            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(EzLine2),
                 new FrameworkPropertyMetadata(new PointCollection(),
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |

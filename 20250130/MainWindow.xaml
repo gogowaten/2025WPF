@@ -12,14 +12,32 @@
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
     <Canvas>
-      <local:EzLine x:Name="MyLine" Canvas.Left="100" Canvas.Top="100"
-                    MyPoints="0,0,120,0,150,100,250,100" Stroke="Red" StrokeThickness="50"
-                    MyAngle="0"
-                    />
+      <!--<local:EzLine x:Name="MyLine" Canvas.Left="100" Canvas.Top="100"
+                    MyPoints="0,0,120,0,150,100,250,100" MyStroke="Red" MyStrokeThickness="20"
+                    />-->
+      <!--<local:EzLineThumb Width="100" Height="100" Background="MistyRose"
+                         MyPoints="0,0,100,200"/>-->
+      <!--<local:EEZLine x:Name="MyLine" MyPoints="0,0,200,30" Width="100" Height="100"/>-->
+
+      <Grid Name="element1">
+        <Canvas Name="element2" ClipToBounds="True"
+                Width="{Binding ElementName=test, Path=ActualWidth}"
+                Height="{Binding ElementName=test, Path=ActualHeight}">
+          
+          <Line x:Name="test" X1="0" Y1="0" X2="200" Y2="0" Stroke="Red" StrokeThickness="50"
+                Margin="0,25,0,0"/>
+        </Canvas>
+      </Grid>
     </Canvas>
 
+      
+      
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyLine}">
-      <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="180" TickFrequency="10" IsSnapToTickEnabled="False"/>
+      <!--<Slider Value="{Binding MyAngle}" Minimum="0" Maximum="180" TickFrequency="10" IsSnapToTickEnabled="False"/>-->
+      <TextBlock Text="{Binding ElementName=element1, Path=ActualWidth}"/>
+      <TextBlock Text="{Binding ElementName=element2, Path=ActualWidth}"/>
+      <TextBlock Text="{Binding ElementName=test, Path=ActualHeight}"/>
+      <Button Content="test" Click="Button_Click"/>
     </StackPanel>
     </Grid>
 </Window>

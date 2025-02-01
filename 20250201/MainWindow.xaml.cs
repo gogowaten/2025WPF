@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace _20250130
+namespace _20250201
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -19,11 +19,6 @@ namespace _20250130
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            MyLine.MyPoints[0] = new Point(20, 40);
         }
     }
 }

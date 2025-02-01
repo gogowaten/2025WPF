@@ -4,16 +4,142 @@
     xmlns:local="clr-namespace:_20250130">
 
 
-    <Style TargetType="{x:Type local:CustomControl1}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:CustomControl1}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+
+  <Style x:Key="TopLeft" TargetType="{x:Type local:CanvasThumb}">
+    <Setter Property="Canvas.Left" Value="0"/>
+    <Setter Property="Canvas.Top" Value="0"/>
+  </Style>
+
+  <Style TargetType="{x:Type local:CanvasThumb}" BasedOn="{StaticResource TopLeft}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:CanvasThumb}">
+          <Canvas x:Name="PART_Canvas"
+                  Background="{TemplateBinding Background}"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  
+
+  <Style TargetType="{x:Type local:WithAnchorThumb}" BasedOn="{StaticResource TopLeft}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:WithAnchorThumb}">
+          <Canvas x:Name="PART_Canvas" HorizontalAlignment="Left" VerticalAlignment="Top"
+              Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Background}"
+                  Width="{TemplateBinding Width}"
+                  Height="{TemplateBinding Height}">
+            <Thumb x:Name="AnchorThumb" Width="20" Height="20"
+                   Canvas.Left="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Width, Mode=TwoWay}"
+                   Canvas.Top="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Height, Mode=TwoWay}"/>
+
+          </Canvas>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  
+
+
+  <Style TargetType="{x:Type local:EzLine}">
+    <Style.Resources>
+      <local:MyConverterSegment x:Key="seg"/>
+      <local:MyConverterPen x:Key="pen"/>
+    </Style.Resources>
+
+    <Setter Property="MyPen" Value="{Binding MyStrokeThickness, Converter={StaticResource pen}}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:EzLine}">
+          <Path x:Name="PART_Path"
+                Stroke="{Binding MyStroke}"
+                Fill="{Binding MyFill}"
+                StrokeThickness="{Binding MyStrokeThickness}">
+            <Path.Data>
+              <PathGeometry x:Name="aa" FillRule="{Binding MyFillRule}">
+                <PathFigure x:Name="aaa" IsFilled="{Binding MyIsFilled}"
+                            IsClosed="{Binding MyIsClosed}"
+                            StartPoint="{Binding MyPoints[0]}">
+                  <PolyLineSegment Points="{Binding MyPoints, Converter={StaticResource seg}}"
+                                   IsSmoothJoin="{Binding MyIsSmoothJoin}"
+                                   IsStroked="{Binding MyIsStroked}"/>
+                </PathFigure>
+              </PathGeometry>
+            </Path.Data>
+          </Path>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+
+  <Style TargetType="{x:Type local:EzLineThumb}" BasedOn="{StaticResource TopLeft}">
+    <Setter Property="Width" Value="{Binding MyLine.MyBoundsWithPen.Width, RelativeSource={RelativeSource Mode=Self}}"/>
+    <Setter Property="Height" Value="{Binding MyLine.MyBoundsWithPen.Height, RelativeSource={RelativeSource Mode=Self}}"/>
+    
+    
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:WithAnchorThumb}">
+          <Canvas x:Name="PART_Canvas" HorizontalAlignment="Left" VerticalAlignment="Top"
+              Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Background}"
+                  Width="{TemplateBinding Width}"
+                  Height="{TemplateBinding Height}"
+                  >
+
+            <local:EzLine x:Name="EzLine"
+                          MyPoints="{Binding MyPoints, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                          MyStroke="{Binding MyStroke, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                          MyStrokeThickness="{Binding MyStrokeThickness, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                          MyFill="{Binding MyFill, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                          MyFillRule="{Binding MyFillRule, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                          MyIsClosed="{Binding MyIsClosed, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                          MyIsFilled="{Binding MyIsFilled, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                          MyIsSmoothJoin="{Binding MyIsSmoothJoin, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                          MyIsStroked="{Binding MyIsStroked, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                          MyIsOffset="{Binding MyIsOffsetShape, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"                          
+                          
+                          />
+
+            <Thumb x:Name="AnchorThumb" Width="20" Height="20"
+                   Canvas.Left="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Width, Mode=TwoWay}"
+                   Canvas.Top="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Height, Mode=TwoWay}"/>
+
+          </Canvas>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="{x:Type local:TCanvasThumb}" BasedOn="{StaticResource TopLeft}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:CanvasThumb}">
+          <Canvas x:Name="PART_Canvas"
+                Background="{TemplateBinding Background}"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="{x:Type local:EEZLine}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:EEZLine}">
+          <Canvas x:Name="PART_Canvas"
+                  Background="{TemplateBinding Background}">
+            <local:EzLine MyPoints="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyPoints}"
+                          MyStroke="Red"
+                          MyStrokeThickness="10"/>
+          </Canvas>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
 </ResourceDictionary>
