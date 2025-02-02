@@ -1,6 +1,16 @@
 
 
 
+
+# _20250202_RotateTextBlockThumb
+![Animation20250202_191059](https://github.com/user-attachments/assets/6ff968ef-eba4-4960-99ec-0df1f5f030c8)<br>
+WPF、中のTextBlock(子要素)を回転させたときに、自身(親要素)のサイズと位置を違和感なく変更できた - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/02/02/192340<br>
+<br><br><br>
+
+
+
+
 # _20250130_CenterRotateEzLine
 ![Animation20250131_120353](https://github.com/user-attachments/assets/3dcb0009-3cac-43d3-9771-e5b35cd2493f)<br>
 WPF、図形の回転、PathGeometryで描画した図形の中心は全頂点の平均座標もいいね - 午後わてんのブログ<br>
