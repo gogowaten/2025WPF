@@ -19,6 +19,9 @@ namespace _20250202
         public MainWindow()
         {
             InitializeComponent();
+            EzLine ezLine = new();
+            
+            //ezLine.MyBoundsWithPen = new Rect();
         }
     }
 }

@@ -1,0 +1,72 @@
+﻿<Window x:Class="_20250203.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_20250203"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="600">
+  <Grid UseLayoutRounding="True">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="250"/>
+    </Grid.ColumnDefinitions>
+    <Canvas>
+      
+      <Path x:Name="nemo0" Stroke="DodgerBlue" StrokeThickness="100" Canvas.Top="100">
+        <Path.Data>
+          <PathGeometry>
+            <PathFigure StartPoint="0,0">
+              <PolyLineSegment Points="200,0, 200,100"/>
+            </PathFigure>
+          </PathGeometry>
+        </Path.Data>
+      </Path>
+      <Path x:Name="nemo1" Stroke="Green" StrokeThickness="100" Opacity="0.7" Canvas.Top="100"
+            RenderTransformOrigin="0.5,0.5">
+        <Path.RenderTransform>
+          <RotateTransform Angle="{Binding ElementName=MyAngle, Path=Value}"/>
+        </Path.RenderTransform>
+        <Path.Data>
+          <PathGeometry>
+            <PathFigure StartPoint="0,0">
+              <PolyLineSegment Points="200,0,200,100"/>
+            </PathFigure>
+          </PathGeometry>
+        </Path.Data>
+      </Path>
+      <Path x:Name="nemo2" Stroke="Red" StrokeThickness="100" Opacity="0.7" Canvas.Top="100">
+        <Path.RenderTransform>
+          <RotateTransform Angle="{Binding ElementName=MyAngle, Path=Value}" CenterX="125" CenterY="75"/>
+        </Path.RenderTransform>
+        <Path.Data>
+          <PathGeometry>
+            <PathFigure StartPoint="0,0">
+              <PolyLineSegment Points="200,0,200,100"/>
+            </PathFigure>
+          </PathGeometry>
+        </Path.Data>
+      </Path>
+      <Path x:Name="nemo3" Stroke="Gold" StrokeThickness="100" Opacity="0.7" Canvas.Top="100">
+        <Path.RenderTransform>
+          <RotateTransform Angle="{Binding ElementName=MyAngle, Path=Value}" CenterX="133.3" CenterY="33.3"/>
+        </Path.RenderTransform>
+        <Path.Data>
+          <PathGeometry>
+            <PathFigure StartPoint="0,0">
+              <PolyLineSegment Points="200,0,200,100"/>
+            </PathFigure>
+          </PathGeometry>
+        </Path.Data>
+      </Path>
+      
+      
+    </Canvas>
+
+    <StackPanel Grid.Column="1">
+      <Slider Name="MyAngle" Minimum="0" Maximum="360" Value="20"
+              TickFrequency="10" IsSnapToTickEnabled="True"/>
+      <Button Content="test" Click="Button_Click"/>
+    </StackPanel>
+  </Grid>
+</Window>

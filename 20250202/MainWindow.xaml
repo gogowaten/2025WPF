@@ -5,18 +5,66 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250202"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="600">
+        Title="MainWindow" Height="450" Width="700">
   <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
-      <ColumnDefinition Width="200"/>
+      <ColumnDefinition Width="250"/>
     </Grid.ColumnDefinitions>
     <Canvas>
-      <local:EzLine x:Name="nemo1" Stroke="Red" StrokeThickness="10" MyPoints="0,0,100,0"/>
+      <!--<local:EzLine x:Name="nemo1" Stroke="Red"
+                    StrokeThickness="50"
+                    MyPoints="0,0,100,0"
+                    />-->
+      
+      <Rectangle Width="100" Height="100" Fill="DodgerBlue"/>
+      <local:EzLineThumb MyX="100" MyY="100"
+                         Background="MistyRose"
+                         MyPoints="0,0,200,0,100,50"
+                         MyStroke="Green" MyIsClosed="False"
+                         MyStrokeThickness="50"
+                         MyAngle="0"/>
+<local:EzLineThumb x:Name="nemo2" MyX="100" MyY="100" Opacity="0.7"
+                         Background="MistyRose"
+                         MyPoints="0,0,200,0,100,50"
+                         MyStroke="Green" MyIsClosed="False"
+                         MyStrokeThickness="50"
+                         MyAngle="20"/>
+
     </Canvas>
 
-    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=nemo1}">
-      <TextBlock Text="{Binding MyBoundsWithPen}"/>
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=nemo2}">
+      <TextBlock Text="{Binding MyAngle, StringFormat=angle 0}"/>
+      <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="360"
+              TickFrequency="10" IsSnapToTickEnabled="True"/>
+      
+      <TextBlock Text="{Binding MyTransformedBounds, StringFormat=boundsPen {0:0.0}}"/>
+      <TextBlock Text="{Binding MyBounds, StringFormat=bounds {0:0.0}}"/>
+      <TextBlock Text="{Binding MyEzLine.MyGeometryBounds, StringFormat=geobounds {0:0.0}}"/>
+      <TextBlock Text="{Binding MyEzLine.MyGeometryRenderdBounds, StringFormat=georenderbounds {0:0.0}}"/>
+      <TextBlock Text="{Binding MyEzLine.MyGeometryRenderRotateBounds, StringFormat=geoRotatebounds {0:0.0}}"/>
+      <TextBlock Text="{Binding MyEzLine.MyGeometryRotatePenBoounds, StringFormat=geoRotatebounds {0:0.0}}"/>
+      
+      
+
+      <!--<TextBlock Text="{Binding MySegmentPoints, StringFormat=segPoints {0}}"/>-->
+      <!--<TextBlock Text="{Binding MyPen.Thickness, StringFormat=penThickness 0}"/>-->
+      <TextBlock Text="{Binding MyContentsRotateCenterX, StringFormat=centerX 0}"/>
+      <TextBlock Text="{Binding MyContentsRotateCneterY, StringFormat=centerY 0}"/>
+      <Separator/>
+      <TextBlock Text="{Binding MyOffsetX, StringFormat=offsetX 0.0}"/>
+      <TextBlock Text="{Binding MyX, StringFormat=MyX 0.0}"/>
+      <TextBlock Text="{Binding (Canvas.Left), StringFormat=canvasLeft 0.0}"/>
+      <Separator/>
+      <TextBlock Text="{Binding MyOffsetY, StringFormat=offsetY 0}"/>
+      <TextBlock Text="{Binding MyY, StringFormat=MyY 0.0}"/>
+      <TextBlock Text="{Binding (Canvas.Top), StringFormat=canvasTop 0}"/>
+      <TextBlock Text="{Binding ActualWidth, StringFormat=acW 0}"/>
+      <TextBlock Text="{Binding ActualHeight, StringFormat=acH 0}"/>
+      <!--<TextBlock Text="{Binding ElementName=nemo2, Path=MyBounds}"/>
+      <TextBlock Text="{Binding ElementName=nemo2, Path=MyPoints}"/>
+      <TextBlock Text="{Binding ElementName=nemo2, Path=MyStroke}"/>
+      <TextBlock Text="{Binding ElementName=nemo2, Path=MyStrokeThickness, StringFormat=0.0}"/>-->
     </StackPanel>
   </Grid>
 </Window>

@@ -3,21 +3,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:_20250202">
 
-  <Style TargetType="{x:Type local:EzLine}">
-    <Style.Resources>
-      <local:MyConverterMakeSegmentPoints x:Key="MakeSeg"/>
-      <local:MyConverterPen x:Key="MakePen"/>
-    </Style.Resources>
-    <Setter Property="MySegmentPoints" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyPoints, Converter={StaticResource MakeSeg}}"/>
-    <Setter Property="MyPen" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=StrokeThickness, Converter={StaticResource MakePen}}"/>    
-  </Style>
-
-
-
-
+  
   <Style TargetType="{x:Type local:KisoThumb}" x:Key="kiso">
     <Setter Property="Canvas.Left" Value="{Binding Path=MyX}"/>
     <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyY}"/>
+    
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:KisoThumb}">
@@ -38,7 +28,7 @@
 
   <Style TargetType="{x:Type local:TextBlockThumb}" BasedOn="{StaticResource kiso}">
     <Setter Property="Canvas.Left" Value="{Binding MyOffsetX}"/>
-    <Setter Property="Canvas.Top" Value="{Binding MyOffsetY}"/>
+    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetY}"/>
 
     <Setter Property="Template">
       <Setter.Value>
@@ -49,7 +39,8 @@
                        Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyText}"
                        RenderTransformOrigin="0.0,0.0">
               <TextBlock.RenderTransform>
-                <RotateTransform x:Name="rotate" Angle="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyAngle}"/>
+                <RotateTransform x:Name="rotate"
+                                 Angle="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyAngle}"/>
               </TextBlock.RenderTransform>
             </TextBlock>
             <Rectangle Stroke="Black" StrokeThickness="1.0"
@@ -63,5 +54,43 @@
   </Style>
 
 
+  <Style TargetType="{x:Type local:EzLineThumb}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Canvas.Left" Value="{Binding MyOffsetX}"/>
+    <Setter Property="Canvas.Top" Value="{Binding MyOffsetY}"/>
+    
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:EzLineThumb}">
+          <Canvas x:Name="PART_Canvas" Background="{TemplateBinding Background}">
+            <local:EzLine x:Name="ezLine"
+                          RenderTransformOrigin="0.0,0.0"
+                          MyPoints="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyPoints}"
+                          Stroke="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyStroke}"
+                          StrokeThickness="{Binding
+                                            RelativeSource={RelativeSource Mode=TemplatedParent},
+                                            Path=MyStrokeThickness}"
+                          MyIsClosed="{Binding
+                                        RelativeSource={RelativeSource Mode=TemplatedParent},
+                                        Path=MyIsClosed}"
+                          >
+              <local:EzLine.RenderTransform>
+                <RotateTransform x:Name="rotate"
+                                 Angle="{Binding
+                                         RelativeSource={RelativeSource Mode=TemplatedParent},
+                                         Path=MyAngle}"
+                                 CenterX="{Binding
+                                            RelativeSource={RelativeSource Mode=TemplatedParent},
+                                            Path=MyContentsRotateCenterX}"
+                                 CenterY="{Binding
+                                            RelativeSource={RelativeSource Mode=TemplatedParent},
+                                            Path=MyContentsRotateCneterY}"
+                                 />
+              </local:EzLine.RenderTransform>
+            </local:EzLine>
+          </Canvas>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 
 </ResourceDictionary>

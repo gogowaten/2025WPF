@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -63,18 +64,48 @@ namespace _20250202
             get { return (Canvas)GetValue(MyBaseCanvasPropertyKey.DependencyProperty); }
             internal set { SetValue(MyBaseCanvasPropertyKey, value); }
         }
+
+        ////コンテンツの中心軸Point
+
+
+        public double MyContentsRotateCenterX
+        {
+            get { return (double)GetValue(MyContentsRotateCenterXProperty); }
+            protected set { SetValue(MyContentsRotateCenterXProperty, value); }
+        }
+        public static readonly DependencyProperty MyContentsRotateCenterXProperty =
+            DependencyProperty.Register(nameof(MyContentsRotateCenterX), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
+
+
+        public double MyContentsRotateCneterY
+        {
+            get { return (double)GetValue(MyContentsRotateCneterYProperty); }
+            protected set { SetValue(MyContentsRotateCneterYProperty, value); }
+        }
+        public static readonly DependencyProperty MyContentsRotateCneterYProperty =
+            DependencyProperty.Register(nameof(MyContentsRotateCneterY), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
+
+
+
         #endregion 読み取り専用
 
         #region 通常
 
         //表示するコンテンツを入れておく用、読み取り専用にしたほうがいいかも
-        public TextBlock MyContent
+        public FrameworkElement MyContent
         {
-            get { return (TextBlock)GetValue(MyContentProperty); }
+            get { return (FrameworkElement)GetValue(MyContentProperty); }
             set { SetValue(MyContentProperty, value); }
         }
         public static readonly DependencyProperty MyContentProperty =
-            DependencyProperty.Register(nameof(MyContent), typeof(TextBlock), typeof(TextBlockThumb), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(MyContent), typeof(FrameworkElement), typeof(TextBlockThumb), new PropertyMetadata(null));
+        //  public TextBlock MyContent
+        //{
+        //    get { return (TextBlock)GetValue(MyContentProperty); }
+        //    set { SetValue(MyContentProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyContentProperty =
+        //    DependencyProperty.Register(nameof(MyContent), typeof(TextBlock), typeof(TextBlockThumb), new PropertyMetadata(null));
 
         //自身のX座標
         public double MyX
@@ -167,6 +198,16 @@ namespace _20250202
         #endregion 通常
 
         #region 図形関連
+
+        //Geometryのサイズ
+        public Rect MyGeometryBoudnds
+        {
+            get { return (Rect)GetValue(MyGeometryBoundsProperty); }
+            set { SetValue(MyGeometryBoundsProperty, value); }
+        }
+        public static readonly DependencyProperty MyGeometryBoundsProperty =
+            DependencyProperty.Register(nameof(MyGeometryBoudnds), typeof(Rect), typeof(KisoThumb), new PropertyMetadata(Rect.Empty));
+
 
         //線の描画を考慮したBoundsを使ってオフセット表示をする
         public bool MyIsOffset
@@ -333,7 +374,6 @@ namespace _20250202
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
-            var neko = MyTransformedBounds.Left;
         }
         private void TextBlockThumb_Loaded(object sender, RoutedEventArgs e)
         {
@@ -419,6 +459,7 @@ namespace _20250202
             mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyXProperty), Mode = BindingMode.OneWay });
             mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyTransformedBoundsProperty), Mode = BindingMode.OneWay });
             SetBinding(MyOffsetXProperty, mb);
+
             mb = new() { Converter = new MyConverterOffsetY() };
             mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyYProperty), Mode = BindingMode.OneWay });
             mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyTransformedBoundsProperty), Mode = BindingMode.OneWay });
@@ -437,195 +478,208 @@ namespace _20250202
     }
 
 
-    public class EzLine : Shape
+
+
+
+    public class EzLineThumb : KisoThumb
     {
-        #region 依存関係プロパティ
-        // FrameworkPropertyMetadataOptions.AffectsRender // デザイン画面上での更新で必要
-        // FrameworkPropertyMetadataOptions.AffectsMeasure // 必要ないかも？
 
-
-        //線の描画を考慮したBoundsを使ってオフセット表示をする
-        public bool MyIsOffset
+        public EzLine MyEzLine
         {
-            get { return (bool)GetValue(MyIsOffsetProperty); }
-            set { SetValue(MyIsOffsetProperty, value); }
+            get { return (EzLine)GetValue(MyEzLineProperty); }
+            set { SetValue(MyEzLineProperty, value); }
         }
-        public static readonly DependencyProperty MyIsOffsetProperty =
-            DependencyProperty.Register(nameof(MyIsOffset), typeof(bool), typeof(EzLine), new FrameworkPropertyMetadata(false,
-                FrameworkPropertyMetadataOptions.AffectsRender |
-                FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty MyEzLineProperty =
+            DependencyProperty.Register(nameof(MyEzLine), typeof(EzLine), typeof(EzLineThumb), new PropertyMetadata(null));
 
-        public PointCollection MyPoints
+        static EzLineThumb()
         {
-            get { return (PointCollection)GetValue(MyPointsProperty); }
-            set { SetValue(MyPointsProperty, value); }
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(EzLineThumb), new FrameworkPropertyMetadata(typeof(EzLineThumb)));
         }
-        public static readonly DependencyProperty MyPointsProperty =
-            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(EzLine),
-                new FrameworkPropertyMetadata(null,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-        public bool MyIsFilled
+        public EzLineThumb()
         {
-            get { return (bool)GetValue(MyIsFilledProperty); }
-            set { SetValue(MyIsFilledProperty, value); }
+            Loaded += EzLineThumb_Loaded;
         }
-        public static readonly DependencyProperty MyIsFilledProperty =
-            DependencyProperty.Register(nameof(MyIsFilled), typeof(bool), typeof(EzLine), new FrameworkPropertyMetadata(true,
-                FrameworkPropertyMetadataOptions.AffectsRender |
-                FrameworkPropertyMetadataOptions.AffectsMeasure));
 
-        public bool MyIsStroked
+        private void EzLineThumb_Loaded(object sender, RoutedEventArgs e)
         {
-            get { return (bool)GetValue(MyIsStrokedProperty); }
-            set { SetValue(MyIsStrokedProperty, value); }
+            SetBinding(MyBoundsProperty, new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyGeometryRenderdBoundsProperty), Mode = BindingMode.OneWay });
+
+
+            SetBinding(MyContentsRotateCenterXProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterAveragePointsX() });
+            SetBinding(MyContentsRotateCneterYProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterAveragePointsY() });
+
+            MyBindContentTransformedRect();
+            MyBindFitContentSize();
+            MyBindOffset();
+            MyBindContentOffset();
+
+            var geoBounds = MyEzLine.MyGeometryBounds;
+            var geoRenderBounds = MyEzLine.MyGeometryRenderdBounds;
+            var tf = MyEzLine.RenderTransform;
+            var nekos = tf.TransformBounds(geoBounds);
+            var inus = tf.TransformBounds(geoRenderBounds);
+            RotateTransform moto = (RotateTransform)MyEzLine.RenderTransform;
+            RotateTransform rt = new(moto.Angle, geoBounds.Width / 2, geoBounds.Height / 2);
+            var bounds1 = rt.TransformBounds(geoBounds);
+            var bounds2 = rt.TransformBounds(geoRenderBounds);
         }
-        public static readonly DependencyProperty MyIsStrokedProperty =
-            DependencyProperty.Register(nameof(MyIsStroked), typeof(bool), typeof(EzLine), new FrameworkPropertyMetadata(true,
-                FrameworkPropertyMetadataOptions.AffectsRender |
-                FrameworkPropertyMetadataOptions.AffectsMeasure));
 
 
-        public bool MyIsClosed
+        //コンテンツのオフセット位置
+        private void MyBindContentOffset()
         {
-            get { return (bool)GetValue(MyIsClosedProperty); }
-            set { SetValue(MyIsClosedProperty, value); }
+            MyContent.SetBinding(Canvas.LeftProperty, new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyGeometryRotatePenBooundsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterContentOffsetX() });
+            MyContent.SetBinding(Canvas.TopProperty, new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyGeometryRotatePenBooundsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterContentOffsetY() });
+
+            //MyContent.SetBinding(Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyTransformedBoundsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterContentOffsetX() });
+            //MyContent.SetBinding(Canvas.TopProperty, new Binding() { Source = this, Path = new PropertyPath(MyTransformedBoundsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterContentOffsetY() });
+
         }
-        public static readonly DependencyProperty MyIsClosedProperty =
-            DependencyProperty.Register(nameof(MyIsClosed), typeof(bool), typeof(EzLine), new FrameworkPropertyMetadata(false,
-                FrameworkPropertyMetadataOptions.AffectsRender |
-                FrameworkPropertyMetadataOptions.AffectsMeasure));
 
-
-        public bool MyIsSmoothJoin
+        //オフセットの計算
+        private void MyBindOffset()
         {
-            get { return (bool)GetValue(MyIsSmoothJoinProperty); }
-            set { SetValue(MyIsSmoothJoinProperty, value); }
+            MultiBinding mb = new() { Converter = new MyConverterOffsetX() };
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyXProperty), Mode = BindingMode.OneWay });
+            mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyGeometryRotatePenBooundsProperty), Mode = BindingMode.OneWay });
+            SetBinding(MyOffsetXProperty, mb);
+
+            mb = new() { Converter = new MyConverterOffsetY() };
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyYProperty), Mode = BindingMode.OneWay });
+            mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyGeometryRotatePenBooundsProperty), Mode = BindingMode.OneWay });
+            SetBinding(MyOffsetYProperty, mb);
+
         }
-        public static readonly DependencyProperty MyIsSmoothJoinProperty =
-            DependencyProperty.Register(nameof(MyIsSmoothJoin), typeof(bool), typeof(EzLine),
-                new FrameworkPropertyMetadata(false,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-
-        public FillRule MyFillRule
+        //自身のサイズを変形後のコンテンツに合わせる
+        private void MyBindFitContentSize()
         {
-            get { return (FillRule)GetValue(MyFillRuleProperty); }
-            set { SetValue(MyFillRuleProperty, value); }
+            SetBinding(WidthProperty, new Binding()
+            {
+                Source = MyEzLine,
+                Path = new PropertyPath(EzLine.MyGeometryRotatePenBooundsProperty),
+        //        Path = new PropertyPath(MyTransformedBoundsProperty),
+                Mode = BindingMode.OneWay,
+                Converter = new MyConverterRectWidth()
+            });
+            SetBinding(HeightProperty, new Binding()
+            {
+                Source = MyEzLine,
+                Path = new PropertyPath(EzLine.MyGeometryRotatePenBooundsProperty),
+          //      Path = new PropertyPath(MyTransformedBoundsProperty),
+                Mode = BindingMode.OneWay,
+                Converter = new MyConverterRectHeight()
+            });
         }
-        public static readonly DependencyProperty MyFillRuleProperty =
-            DependencyProperty.Register(nameof(MyFillRule), typeof(FillRule), typeof(EzLine),
-                new FrameworkPropertyMetadata(FillRule.Nonzero,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-
-        public Pen MyPen
+        //コンテンツの変形後のサイズ
+        private void MyBindContentTransformedRect()
         {
-            get { return (Pen)GetValue(MyPenProperty); }
-            set { SetValue(MyPenProperty, value); }
+            MultiBinding mb = new() { Converter = new MyConverterRenderSizeTransformedRect2() };
+            mb.Bindings.Add(new Binding()
+            {
+                Source = MyEzLine,
+                Path = new PropertyPath(EzLine.MyGeometryRenderdBoundsProperty),
+                //Path = new PropertyPath(MyBoundsProperty),
+                Mode = BindingMode.OneWay,
+            });
+            mb.Bindings.Add(new Binding()
+            {
+                Source = MyEzLine,
+                Path = new PropertyPath(RenderTransformProperty),
+                Mode = BindingMode.OneWay,
+            });
+            SetBinding(MyTransformedBoundsProperty, mb);
         }
-        public static readonly DependencyProperty MyPenProperty =
-            DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(EzLine), new FrameworkPropertyMetadata(new Pen(),
-                FrameworkPropertyMetadataOptions.AffectsRender |
-                FrameworkPropertyMetadataOptions.AffectsMeasure));
 
-
-
-        #endregion 依存関係プロパティ
-
-        #region 読み取り専用依存関係プロパティ
-
-        ////図形本体のPath
-        //private static readonly DependencyPropertyKey MyPathPropertyKey =
-        //    DependencyProperty.RegisterReadOnly(nameof(MyPath), typeof(Path), typeof(EzLine), new PropertyMetadata(null));
-        //public static readonly DependencyProperty MyPathProperty = MyPathPropertyKey.DependencyProperty;
-        //public Path MyPath
+        ////変形後のコンテンツのサイズを取得
+        //private void MyBindCotentTransfomedRect2()
         //{
-        //    get { return (Path)GetValue(MyPathPropertyKey.DependencyProperty); }
-        //    internal set { SetValue(MyPathPropertyKey, value); }
+        //    MultiBinding mb = new() { Converter = new MyConverterRenderSizeTransformedRect2() };
+        //    mb.Bindings.Add(new Binding()
+        //    {
+        //        Source = this,
+        //        Path = new PropertyPath(MyBoundsProperty),
+        //        Mode = BindingMode.OneWay
+        //    });
+        //    mb.Bindings.Add(new Binding()
+        //    {
+        //        Source = MyContent,
+        //        Path = new PropertyPath(RenderTransformProperty),
+        //        Mode = BindingMode.OneWay
+        //    });
+        //    SetBinding(MyTransformedBoundsProperty, mb);
         //}
 
-        /// <summary>
-        /// Pen(Stroke)の太さを考慮した位置とサイズ
-        /// </summary>
-        private static readonly DependencyPropertyKey MyBoundsWithPenPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(MyBoundsWithPen), typeof(Rect), typeof(EzLine), new PropertyMetadata(new Rect()));
-        public static readonly DependencyProperty MyBoundsWithPenProperty = MyBoundsWithPenPropertyKey.DependencyProperty;
-        public Rect MyBoundsWithPen
+
+        public override void OnApplyTemplate()
         {
-            get { return (Rect)GetValue(MyBoundsWithPenPropertyKey.DependencyProperty); }
-            internal set { SetValue(MyBoundsWithPenPropertyKey, value); }
-        }
-
-
-        public PointCollection MySegmentPoints
-        {
-            get { return (PointCollection)GetValue(MySegmentPointsProperty); }
-            set { SetValue(MySegmentPointsProperty, value); }
-        }
-        public static readonly DependencyProperty MySegmentPointsProperty =
-            DependencyProperty.Register(nameof(MySegmentPoints), typeof(PointCollection), typeof(EzLine), new PropertyMetadata(new PointCollection()));
-
-        #endregion 読み取り専用依存関係プロパティ
-
-
-        protected override Geometry DefiningGeometry
-        {
-            get
+            base.OnApplyTemplate();
+            if (GetTemplateChild("ezLine") is EzLine ez)
             {
-                if (MyPoints == null || MyPoints.Count == 0) { return Geometry.Empty; }
-                StreamGeometry geo = new();
-                using (var context = geo.Open())
-                {
-                    context.BeginFigure(MyPoints[0], MyIsFilled, MyIsClosed);
-                    context.PolyLineTo(MySegmentPoints, MyIsStroked, MyIsSmoothJoin);
-                }
-                geo.Freeze();
-                return geo;
+                MyEzLine = ez;
+                MyContent = ez;
             }
         }
 
-
-        
-
-        static EzLine()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(EzLine), new FrameworkPropertyMetadata(typeof(EzLine)));
-        }
-        public EzLine()
-        {
-            DataContext = this;
-            Loaded += EzLine_Loaded;
-        }
-
-        private void EzLine_Loaded(object sender, RoutedEventArgs e)
-        {
-          
-        }
-
-     
-
-        //描画直後に線(Pen)の描画を考慮した位置とサイズの取得
-        protected override void OnRender(DrawingContext drawingContext)
-        {
-            base.OnRender(drawingContext);
-            Rect r = DefiningGeometry.GetRenderBounds(MyPen);
-            var neko = ActualHeight;
-            var inu= RenderTransform.TransformBounds(new Rect(0, 0, ActualWidth, ActualHeight));
-            
-            if (r.Width > 0) { MyBoundsWithPen = r; }
-            
-        }
     }
 
 
     #region コンバーター
+
+    public class MyConverterAveragePointsY : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var pc = (PointCollection)value;
+            double d = 0;
+            foreach (Point item in pc) { d += item.Y; }
+            return d / pc.Count;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class MyConverterAveragePointsX : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var pc = (PointCollection)value;
+            double d = 0;
+            foreach (Point item in pc) { d += item.X; }
+            return d / pc.Count;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    //Geometry系の図形用、RotateTransformのCenterの値を計算
+    public class MyConverterCenterPoint : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var pc = (PointCollection)value;
+            if (pc is null) { return new Point(); }
+            double x = 0, y = 0;
+            foreach (var item in pc)
+            {
+                x += item.X;
+                y += item.Y;
+            }
+            return new Point(x / pc.Count, y / pc.Count);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     //コンテンツのオフセット位置Y
     public class MyConverterContentOffsetY : IValueConverter
@@ -657,27 +711,6 @@ namespace _20250202
         }
     }
 
-    //Geometry系の図形用、RotateTransformのCenterの値を計算
-    public class MyConverterCenterPoint : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var pc = (PointCollection)value;
-            if (pc is null) { return new Point(); }
-            double x = 0, y = 0;
-            foreach (var item in pc)
-            {
-                x += item.X;
-                y += item.Y;
-            }
-            return new Point(x / pc.Count, y / pc.Count);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
 
     //指定表示座標とコンテンツの変形後のRectから、自身の実際のY座標を返す
     public class MyConverterOffsetY : IMultiValueConverter
@@ -744,6 +777,26 @@ namespace _20250202
     //変形後のコンテンツのRectを計算
     //コンテンツのサイズの半分の値をRotateTransformのCenterの値にして
     //TransformBoundsメソッドにコンテンツのサイズを入れて計算
+    public class MyConverterRenderSizeTransformedRect2 : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var r = (Rect)values[0];
+
+            if (values[1] is RotateTransform tf)
+            {
+                var neko = tf.TransformBounds(r);
+                return tf.TransformBounds(r);
+            }
+            else { return new Rect(); }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class MyConverterRenderSizeTransformedRect : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -783,48 +836,4 @@ namespace _20250202
     #endregion コンバーター
 
 
-    #region 図形用コンバーター
-    
-    public class MyConverterMakeSegmentPoints : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is PointCollection pc)
-            {
-
-                if (pc.Count == 0) { return DependencyProperty.UnsetValue; }
-                var clone = pc.Clone();
-                clone.RemoveAt(0);
-                return clone;
-            }
-            else { return new PointCollection(); }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
-    /// <summary>
-    /// 太さから透明色のPenを作って返す
-    /// </summary>
-    public class MyConverterPen : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            double thickness = (double)value;
-            return new Pen(Brushes.Transparent, thickness);
-        }
-
-        //こっちは未使用になるはず        
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            Pen pen = (Pen)value;
-            return pen.Thickness;
-            //throw new NotImplementedException();
-        }
-    }
-    #endregion 図形用コンバーター
 }
