@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Ink;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
-using System.Windows.Controls;
-using System.Diagnostics.Metrics;
-using System.ComponentModel;
 
-namespace _20250202
+namespace _20250203
 {
-    class Class1
+    internal class Class1
     {
     }
+
 
     public class EzLine : Shape
     {
@@ -108,6 +108,43 @@ namespace _20250202
                 FrameworkPropertyMetadataOptions.AffectsRender |
                 FrameworkPropertyMetadataOptions.AffectsMeasure));
 
+
+        public double MyAngle
+        {
+            get { return (double)GetValue(MyAngleProperty); }
+            set { SetValue(MyAngleProperty, value); }
+        }
+        public static readonly DependencyProperty MyAngleProperty =
+            DependencyProperty.Register(nameof(MyAngle), typeof(double), typeof(EzLine),
+                new FrameworkPropertyMetadata(0.0,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(OnMyAnglePropertyChanged)));
+
+        private static void OnMyAnglePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is EzLine ez)
+            {
+                var tf = ez.RenderTransform;
+                if (ez.RenderTransform is RotateTransform ro)
+                {
+                    ro.Angle = (double)e.NewValue;
+                }
+            }
+        }
+
+
+        public RotateTransform MyRotateTransform
+        {
+            get { return (RotateTransform)GetValue(MyRotateTransformProperty); }
+            set { SetValue(MyRotateTransformProperty, value); }
+        }
+        public static readonly DependencyProperty MyRotateTransformProperty =
+            DependencyProperty.Register(nameof(MyRotateTransform), typeof(RotateTransform), typeof(EzLine), new PropertyMetadata(new RotateTransform()));
+
+
+
+
+
         #endregion 基本
 
         #endregion 依存関係プロパティ
@@ -123,14 +160,16 @@ namespace _20250202
         public static readonly DependencyProperty MyGeometryProperty =
             DependencyProperty.Register(nameof(MyGeometry), typeof(Geometry), typeof(EzLine), new PropertyMetadata(Geometry.Empty));
 
-        public Rect MyGeometryRotatePenBoounds
+        //Geometryを回転してからのPen付きRect
+        public Rect MyGeometryRotatePenBounds
         {
-            get { return (Rect)GetValue(MyGeometryRotatePenBooundsProperty); }
-            set { SetValue(MyGeometryRotatePenBooundsProperty, value); }
+            get { return (Rect)GetValue(MyGeometryRotatePenBoundsProperty); }
+            set { SetValue(MyGeometryRotatePenBoundsProperty, value); }
         }
-        public static readonly DependencyProperty MyGeometryRotatePenBooundsProperty =
-            DependencyProperty.Register(nameof(MyGeometryRotatePenBoounds), typeof(Rect), typeof(EzLine), new PropertyMetadata(Rect.Empty));
+        public static readonly DependencyProperty MyGeometryRotatePenBoundsProperty =
+            DependencyProperty.Register(nameof(MyGeometryRotatePenBounds), typeof(Rect), typeof(EzLine), new PropertyMetadata(Rect.Empty));
 
+        //未使用、GeometryのPen付きRectを回転したRect
         public Rect MyGeometryRenderRotateBounds
         {
             get { return (Rect)GetValue(MyGeometryRenderRotateBoundsProperty); }
@@ -140,19 +179,16 @@ namespace _20250202
             DependencyProperty.Register(nameof(MyGeometryRenderRotateBounds), typeof(Rect), typeof(EzLine), new PropertyMetadata(Rect.Empty));
 
 
-        /// <summary>
-        /// Pen(Stroke)の太さを考慮した位置とサイズ
-        /// </summary>
-
-        public Rect MyGeometryRenderdBounds
+        //GeometryのPen付きRect
+        public Rect MyGeometryRenderBounds
         {
-            get { return (Rect)GetValue(MyGeometryRenderdBoundsProperty); }
-            private set { SetValue(MyGeometryRenderdBoundsProperty, value); }
+            get { return (Rect)GetValue(MyGeometryRenderBoundsProperty); }
+            private set { SetValue(MyGeometryRenderBoundsProperty, value); }
         }
-        public static readonly DependencyProperty MyGeometryRenderdBoundsProperty =
-            DependencyProperty.Register(nameof(MyGeometryRenderdBounds), typeof(Rect), typeof(EzLine), new PropertyMetadata(Rect.Empty));
+        public static readonly DependencyProperty MyGeometryRenderBoundsProperty =
+            DependencyProperty.Register(nameof(MyGeometryRenderBounds), typeof(Rect), typeof(EzLine), new PropertyMetadata(Rect.Empty));
 
-
+        //GeometryのPenなしRect
         public Rect MyGeometryBounds
         {
             get { return (Rect)GetValue(MyGeometryBoundsProperty); }
@@ -185,14 +221,10 @@ namespace _20250202
                     context.PolyLineTo(MySegmentPoints, MyIsStroked, MyIsSmoothJoin);
                 }
                 geo.Freeze();
-                //MyBounds = geo.Bounds;
                 MyGeometry = geo;
-
                 MyGeometryBounds = geo.Bounds;
-                MyGeometryRenderdBounds = geo.GetRenderBounds(MyPen);
-                MyGeometryRenderRotateBounds = RenderTransform.TransformBounds(MyGeometryRenderdBounds);
-                //Geometry inu = geo;
-                //Geometry neko = geo.Clone();
+                MyGeometryRenderBounds = geo.GetRenderBounds(MyPen);
+                //MyGeometryRenderRotateBounds = RenderTransform.TransformBounds(MyGeometryRenderBounds);
                 return geo;
             }
         }
@@ -207,20 +239,62 @@ namespace _20250202
         public EzLine()
         {
             DataContext = this;
+
+            Loaded += EzLine_Loaded;
             MyBindSet();
         }
+
+        private void EzLine_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            var x = MyGeometryRotatePenBounds.Width / 2.0;
+            var y = MyGeometryRotatePenBounds.Height / 2.0;
+            
+            //var x = MyGeometryRenderBounds.Width / 2.0;
+            //var y = MyGeometryRenderBounds.Height / 2.0;
+            //var x = MyGeometryBounds.Width / 2.0;
+            //var y = MyGeometryBounds.Height / 2.0;
+
+            RenderTransform = new RotateTransform(MyAngle, x, y);
+        }
+
         private void MyBindSet()
         {
+
             SetBinding(MyPenProperty, new Binding() { Source = this, Path = new PropertyPath(StrokeThicknessProperty), Mode = BindingMode.OneWay, Converter = new MyConverterPen() });
             SetBinding(MySegmentPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterMakeSegmentPoints() });
 
-            //Bounds
+            //MyGeometryRotatePenBooundsProperty
+            //Geometryを回転してからPen付きのRect
             MultiBinding multi = new() { Converter = new MyConverterGeometryRotatePenBounds() };
             multi.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyGeometryProperty), Mode = BindingMode.OneWay });
             multi.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyPenProperty), Mode = BindingMode.OneWay });
             multi.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(RenderTransformProperty), Mode = BindingMode.OneWay });
-            SetBinding(MyGeometryRotatePenBooundsProperty, multi);
+            SetBinding(MyGeometryRotatePenBoundsProperty, multi);
 
+
+            //回転角度
+
+            ////3
+            //MultiBinding mb = new() { Converter = new MyConverterAngle3() };
+            //mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyAngleProperty), Mode = BindingMode.OneWay });
+            //mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay });
+            //SetBinding(RenderTransformProperty, mb);
+
+            ////2-2
+            //MultiBinding mb = new() { Converter = new MyConverterAngle2() };
+            //mb.Bindings.Add(new Binding() { Source=this,Path=new PropertyPath(MyAngleProperty), Mode = BindingMode.OneWay });
+            //mb.Bindings.Add(new Binding() { Source=this,Path=new PropertyPath(MyGeometryRenderBoundsProperty), Mode = BindingMode.OneWay });
+            //SetBinding(RenderTransformProperty, mb);
+
+            ////2-1
+            //MultiBinding mb = new() { Converter = new MyConverterAngle2() };
+            //mb.Bindings.Add(new Binding() { Source=this,Path=new PropertyPath(MyAngleProperty), Mode = BindingMode.OneWay });
+            //mb.Bindings.Add(new Binding() { Source=this,Path=new PropertyPath(MyGeometryBoundsProperty), Mode = BindingMode.OneWay });
+            //SetBinding(RenderTransformProperty, mb);
+
+            //1
+            //SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyAngleProperty), Mode = BindingMode.OneWay, Converter = new MyConverterAngle() });
 
             //MultiBinding mb = new() { Converter = new MyConverterRotateTF() };
             //mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyIsRotateCenterAverageProperty), Mode = BindingMode.OneWay });
@@ -230,87 +304,73 @@ namespace _20250202
             //SetBinding(RenderTransformProperty, mb);
         }
 
-
-
-        //描画直後に線(Pen)の描画を考慮した位置とサイズの取得
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
-            Rect r = DefiningGeometry.GetRenderBounds(MyPen);
-            var neko = ActualHeight;
-            var inu = RenderTransform.TransformBounds(new Rect(0, 0, ActualWidth, ActualHeight));
-
-            //if (r.Width > 0) { MyBoundsWithPen = r; }
 
         }
     }
 
 
-
-
-    public class AAA : Shape, INotifyPropertyChanged
-    {
-
-        private double _bbb;
-        public double BBB { get => _bbb; private set => SetProperty(ref _bbb, value); }
-
-        public double ccc { get; private set; }
-
-        protected void SetProperty<T>(ref T field, T value, [System.Runtime.CompilerServices.CallerMemberName] string? name = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(field, value)) return;
-            field = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-        public AAA()
-        {
-            StrokeThickness = 10;
-            Stroke = Brushes.Black;
-
-        }
-        public Rect MyBounds
-        {
-            get { return (Rect)GetValue(MyBoundsProperty); }
-            private set { SetValue(MyBoundsProperty, value); }
-        }
-        public static readonly DependencyProperty MyBoundsProperty =
-            DependencyProperty.Register(nameof(MyBounds), typeof(Rect), typeof(AAA), new PropertyMetadata(new Rect()));
-
-        public Rect MyBounds2
-        {
-            get { return (Rect)GetValue(MyBounds2Property); }
-            set { SetValue(MyBounds2Property, value); }
-        }
-        public static readonly DependencyProperty MyBounds2Property =
-            DependencyProperty.Register(nameof(MyBounds2), typeof(Rect), typeof(AAA), new PropertyMetadata(new Rect()));
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected override Geometry DefiningGeometry
-        {
-            get
-            {
-
-                StreamGeometry geom = new StreamGeometry();
-                using (var context = geom.Open())
-                {
-                    context.BeginFigure(new Point(), true, false);
-                    context.PolyLineTo([new Point(100, 100)], true, false);
-                }
-                geom.Freeze();
-                MyBounds = geom.Bounds;
-                MyBounds2 = geom.GetRenderBounds(new Pen(Brushes.Black, StrokeThickness));
-                BBB = MyBounds2.X;
-                ccc = MyBounds2.X;
-                return geom;
-            }
-        }
-    }
 
 
 
     #region 図形用コンバーター
+
+    public class MyConverterAngle3 : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var angle = (double)values[0];
+            if (values[1] is PointCollection pc)
+            {
+                double x = 0, y = 0;
+                foreach (var item in pc)
+                {
+                    x += item.X;
+                    y += item.Y;
+                }
+                return new RotateTransform(angle, x / pc.Count, y / pc.Count);
+            }
+            else { return Transform.Identity; }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyConverterAngle2 : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var angle = (double)values[0];
+            var re = (Rect)values[1];
+            return new RotateTransform(angle, re.Width / 2.0, re.Height / 2.0);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class MyConverterAngle : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var angle = (double)value;
+            return new RotateTransform(angle);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class MyConverterGeometryRotatePenBounds : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

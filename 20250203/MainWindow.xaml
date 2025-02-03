@@ -13,7 +13,7 @@
     </Grid.ColumnDefinitions>
     <Canvas>
       
-      <Path x:Name="nemo0" Stroke="DodgerBlue" StrokeThickness="100" Canvas.Top="100">
+      <!--<Path x:Name="nemo0" Stroke="DodgerBlue" StrokeThickness="100" Canvas.Top="100">
         <Path.Data>
           <PathGeometry>
             <PathFigure StartPoint="0,0">
@@ -58,15 +58,30 @@
             </PathFigure>
           </PathGeometry>
         </Path.Data>
-      </Path>
+      </Path>-->
+      <local:EzLine Canvas.Top="100" Canvas.Left="100" Opacity="0.7"
+                    MyPoints="0,0,200,0,200,100"
+                    Stroke="Red" StrokeThickness="50"/>
       
-      
+      <local:EzLine x:Name="nemo0" Canvas.Top="100" Canvas.Left="100" Opacity="0.7"
+                    MyPoints="0,0,200,0,200,100"
+                    Stroke="Red" StrokeThickness="50"
+                    MyAngle="{Binding ElementName=MyAngle, Path=Value}">
+        
+      </local:EzLine>
+
     </Canvas>
 
-    <StackPanel Grid.Column="1">
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=nemo0}">
       <Slider Name="MyAngle" Minimum="0" Maximum="360" Value="20"
               TickFrequency="10" IsSnapToTickEnabled="True"/>
       <Button Content="test" Click="Button_Click"/>
+      <TextBlock Text="{Binding MyGeometryBounds, StringFormat=bounds {0}}"/>
+      <TextBlock Text="{Binding MyGeometryRenderBounds, StringFormat=bounds {0}}"/>
+      <TextBlock Text="{Binding MyGeometryRenderRotateBounds, StringFormat=bounds {0}}"/>
+      <TextBlock Text="{Binding MyGeometryRotatePenBoounds, StringFormat=bounds {0}}"/>
+      <TextBlock Text="{Binding ActualWidth, StringFormat=W 0}"/>
+      <TextBlock Text="{Binding ActualHeight, StringFormat=H 0}"/>
     </StackPanel>
   </Grid>
 </Window>

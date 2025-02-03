@@ -23,19 +23,19 @@ namespace _20250203
 
         private void MyTest()
         {
-           var neko = nemo3.RenderSize;
-           var geoBounds = nemo3.RenderedGeometry.Bounds;
-            Pen pen=new(nemo3.Stroke,nemo3.StrokeThickness);
-            var penBounds = nemo3.RenderedGeometry.GetRenderBounds(pen);
-           var tf=(RotateTransform) nemo3.RenderTransform;
-            var bounds = tf.TransformBounds(geoBounds);
-            var penTFBounds = tf.TransformBounds(penBounds);
-            Geometry geo = nemo3.Data;
-           var geoTF= geo.Transform;
-            Geometry clone = geo.Clone();
-            clone.Transform = tf;
-            var geoTFBounds = clone.Bounds;
-            var geoTFPenBounds = clone.GetRenderBounds(pen);
+           //var neko = nemo3.RenderSize;
+           //var geoBounds = nemo3.RenderedGeometry.Bounds;
+           // Pen pen=new(nemo3.Stroke,nemo3.StrokeThickness);
+           // var penBounds = nemo3.RenderedGeometry.GetRenderBounds(pen);
+           //var tf=(RotateTransform) nemo3.RenderTransform;
+           // var bounds = tf.TransformBounds(geoBounds);
+           // var penTFBounds = tf.TransformBounds(penBounds);
+           // Geometry geo = nemo3.Data;
+           //var geoTF= geo.Transform;
+           // Geometry clone = geo.Clone();
+           // clone.Transform = tf;
+           // var geoTFBounds = clone.Bounds;
+           // var geoTFPenBounds = clone.GetRenderBounds(pen);
         }
 
         public Rect MyBounds
