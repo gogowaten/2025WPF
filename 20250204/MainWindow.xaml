@@ -1,0 +1,98 @@
+﻿<Window x:Class="_20250204.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_20250204"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="600">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
+    <Canvas x:Name="MyCanvas" UseLayoutRounding="True">
+
+      <local:EzLine x:Name="nemo0" Canvas.Left="150" Canvas.Top="100" Opacity="0.5"
+                    MyPoints="0,0, 100,0, 0,100" StrokeLineJoin="Bevel"
+                    Stroke="Blue" StrokeThickness="50" MyIsClosed="False"/>
+
+      <local:EzLine x:Name="nemo1" Canvas.Left="150" Canvas.Top="100" Opacity="0.5"
+                    MyPoints="0,0, 100,0, 0,100" StrokeLineJoin="Bevel"
+                    Stroke="Red" StrokeThickness="50" MyIsClosed="False" MyIsSmoothJoin="False">
+        <local:EzLine.RenderTransform>
+          <TransformGroup>
+            <ScaleTransform ScaleX="1.0" ScaleY="1.0"/>
+            <RotateTransform x:Name="aaa" Angle="20"/>
+          </TransformGroup>
+        </local:EzLine.RenderTransform>
+      </local:EzLine>
+
+      <Rectangle Stroke="Cyan" DataContext="{Binding ElementName=nemo1, Path=MyBounds}"
+                 Width="{Binding Width}" Height="{Binding Height}"
+                 Canvas.Left="150" Canvas.Top="100"/>
+      <Rectangle Stroke="Blue" DataContext="{Binding ElementName=nemo1, Path=MyBounds2}"
+                 Width="{Binding Width}" Height="{Binding Height}"
+                 Canvas.Left="132" Canvas.Top="75"/>
+      <Rectangle Stroke="Gold" DataContext="{Binding ElementName=nemo1, Path=MyBounds3}"
+                 Width="{Binding Width}" Height="{Binding Height}"
+                 Canvas.Left="140" Canvas.Top="84"/>
+      <Rectangle Stroke="YellowGreen" DataContext="{Binding ElementName=nemo1, Path=MyBounds4}"
+                 Width="{Binding Width}" Height="{Binding Height}"
+                 Canvas.Left="129" Canvas.Top="60"/>
+      
+      
+      <!--<Viewbox>
+        <Canvas Width="250" Height="150" RenderTransformOrigin="0.5,0.5">
+          <Canvas.RenderTransform>
+            <RotateTransform Angle="20"/>
+          </Canvas.RenderTransform>
+          <Path Stroke="Red" StrokeThickness="100" Canvas.Top="50">
+            <Path.Data>
+              <PathGeometry>
+                <PathFigure StartPoint="0,0">
+                  <PolyLineSegment Points="200,0, 200,100"/>
+                </PathFigure>
+              </PathGeometry>
+            </Path.Data>
+          </Path>
+        </Canvas>
+      </Viewbox>-->
+      <!--<Rectangle Width="100" Height="100" Fill="MistyRose" Canvas.Left="0" Canvas.Top="0"/>
+      <Rectangle x:Name="MyRect" Width="100" Height="100" Fill="Gold" Canvas.Left="0" Canvas.Top="0" Opacity="0.5">
+        <Rectangle.RenderTransform>
+          <RotateTransform Angle="20"/>
+        </Rectangle.RenderTransform>
+      </Rectangle>
+
+      <Rectangle Width="100" Height="100" Fill="DodgerBlue" Canvas.Left="450" Canvas.Top="100"/>
+      <Canvas x:Name="MyCanvas2" Background="Red" Canvas.Left="450" Canvas.Top="100" Opacity="0.5">
+        <Rectangle x:Name="MyRect2" Width="100" Height="100" Fill="Gold" Canvas.Left="0" Canvas.Top="0">
+          <Rectangle.RenderTransform>
+            <RotateTransform Angle="20"/>
+          </Rectangle.RenderTransform>
+        </Rectangle>
+      </Canvas>-->
+
+    </Canvas>
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=nemo1}" Margin="10">
+      <TextBlock Text="{Binding ActualHeight, StringFormat=H 0.0}"/>
+      <TextBlock Text="{Binding ActualWidth, StringFormat=W 0.0}"/>
+
+      <Separator/>
+      <TextBlock Text="{Binding MyPoints, StringFormat=points {0}}"/>
+      <TextBlock Text="{Binding MySegmentPoints, StringFormat=segpoints {0}}"/>
+      <TextBlock Text="{Binding MyPen.Thickness, StringFormat=pen {0:0.0}}"/>
+      <TextBlock Text="{Binding MyBounds, StringFormat=bounds {0:0.0}}"/>
+      <TextBlock Text="{Binding MyBounds2, StringFormat=bounds2 {0:0.0}}"/>
+      <TextBlock Text="{Binding MyBounds3, StringFormat=bounds3 {0:0.0}}"/>
+      <TextBlock Text="{Binding MyBounds4, StringFormat=bounds4 {0:0.0}}"/>
+      <TextBlock Text="{Binding MyBounds5, StringFormat=bounds5 {0:0.0}}"/>
+
+
+
+      <Button Content="test" Click="Button_Click"/>
+      <Slider x:Name="MySlider" Value="{Binding ElementName=aaa, Path=Angle}" Minimum="0" Maximum="360" TickFrequency="10"/>
+    </StackPanel>
+  </Grid>
+</Window>
