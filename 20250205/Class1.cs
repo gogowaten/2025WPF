@@ -49,6 +49,20 @@ namespace _20250205
 
             MyPenBind();
             MyRenderTransformBind();
+            MyOffsetBind();
+        }
+
+        private void MyOffsetBind()
+        {
+            MultiBinding mb = new() { Converter = new MyConverterIsOffsetX() };
+            mb.Bindings.Add(MakeOneWayBind(MyIsOffsetProperty));
+            mb.Bindings.Add(MakeOneWayBind(MyBounds4Property));
+            SetBinding(Canvas.LeftProperty, mb);
+            
+            mb = new() { Converter = new MyConverterIsOffsetY() };
+            mb.Bindings.Add(MakeOneWayBind(MyIsOffsetProperty));
+            mb.Bindings.Add(MakeOneWayBind(MyBounds4Property));
+            SetBinding(Canvas.TopProperty, mb);
         }
 
         //Penのバインド、Penは図形のBoundsを計測するために必要
@@ -85,6 +99,19 @@ namespace _20250205
         }
 
         #region 依存関係プロパティ
+
+
+        public bool MyIsOffset
+        {
+            get { return (bool)GetValue(MyIsOffsetProperty); }
+            set { SetValue(MyIsOffsetProperty, value); }
+        }
+        public static readonly DependencyProperty MyIsOffsetProperty =
+            DependencyProperty.Register(nameof(MyIsOffset), typeof(bool), typeof(EzLine),
+                new FrameworkPropertyMetadata(false,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
         #region 通常
@@ -202,7 +229,7 @@ namespace _20250205
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         #endregion 通常
 
-        #region 読み取り専用
+        #region Private set
 
         //変形後の線描画のBounds
         //TFGeo.GetRenderBounds(MyPen);
@@ -262,7 +289,7 @@ namespace _20250205
         public static readonly DependencyProperty MySegmentPointsProperty =
             DependencyProperty.Register(nameof(MySegmentPoints), typeof(PointCollection), typeof(EzLine), new PropertyMetadata(null));
 
-        #endregion 読み取り専用
+        #endregion Private set
 
         #endregion 依存関係プロパティ
 
@@ -271,44 +298,78 @@ namespace _20250205
     }
 
 
-    public class EzLineCanvas : Canvas
-    {
-        public EzLine MyEzLine { get; private set; } = new EzLine();
-        public EzLineCanvas()
-        {
-            DataContext = this;
-            Children.Add(MyEzLine);
-            MyBind();
-        }
+    //public class EzLineCanvas : Canvas
+    //{
+    //    public EzLine MyEzLine { get; private set; } = new EzLine();
+    //    public EzLineCanvas()
+    //    {
+    //        DataContext = this;
+    //        Children.Add(MyEzLine);
+    //        MyBind();
+    //    }
 
-        private void MyBind()
-        {
-            BindingOperations.SetBinding(MyEzLine, EzLine.MyPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty) });
-            MyEzLine.Stroke = Brushes.Red;
-            MyEzLine.StrokeThickness = 10;
+    //    private void MyBind()
+    //    {
+    //        BindingOperations.SetBinding(MyEzLine, EzLine.MyPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty) });
+    //        MyEzLine.Stroke = Brushes.Red;
+    //        MyEzLine.StrokeThickness = 10;
 
-        }
+    //    }
 
-        #region 依存関係プロパティ
+    //    #region 依存関係プロパティ
 
-        public PointCollection MyPoints
-        {
-            get { return (PointCollection)GetValue(MyPointsProperty); }
-            set { SetValue(MyPointsProperty, value); }
-        }
-        public static readonly DependencyProperty MyPointsProperty =
-            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(EzLineCanvas),
-                new FrameworkPropertyMetadata(null,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+    //    public PointCollection MyPoints
+    //    {
+    //        get { return (PointCollection)GetValue(MyPointsProperty); }
+    //        set { SetValue(MyPointsProperty, value); }
+    //    }
+    //    public static readonly DependencyProperty MyPointsProperty =
+    //        DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(EzLineCanvas),
+    //            new FrameworkPropertyMetadata(null,
+    //                FrameworkPropertyMetadataOptions.AffectsRender |
+    //                FrameworkPropertyMetadataOptions.AffectsMeasure |
+    //                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        
-        #endregion 依存関係プロパティ
 
-    }
+    //    #endregion 依存関係プロパティ
+
+    //}
 
     #region コンバーター
+
+    public class MyConverterIsOffsetY : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var offset=(bool)values[0];
+            var bounds=(Rect)values[1];
+            if (offset) { return -bounds.Y; }
+            else { return 0.0; }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    
+    public class MyConverterIsOffsetX : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var offset=(bool)values[0];
+            var bounds=(Rect)values[1];
+            if (offset) { return -bounds.X; }
+            else { return 0.0; }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     //回転軸のY座標、見た目通りの矩形(Bounds2)の中央にしている
     public class MyConverterCenterY : IValueConverter
     {

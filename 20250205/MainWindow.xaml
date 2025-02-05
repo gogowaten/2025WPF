@@ -7,19 +7,45 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="367" Width="602">
 
-  <Grid UseLayoutRounding="True">
+  <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
       <ColumnDefinition Width="250"/>
     </Grid.ColumnDefinitions>
     <Canvas>
-      <!--<local:KisoThumb Width="100" Height="100" Background="Red"/>-->
-      <local:EzLine MyPoints="0,0"/>
-      <local:EzLineCanvas MyPoints="0,0,200,0,100,100"/>
-    </Canvas>
-
-    <StackPanel Grid.Column="1">
+      <local:EzLineThumb MyLeft="50" MyTop="50" Background="Blue" Opacity="0.5"
+                         MyPoints="0,0,200,0,100,100"
+                         MyStrokeThickness="30" MyStroke="Red" MyIsStroked="True" MyIsClosed="False"
+                         MyStrokeEndLineCap="Flat" MyStrokeStartLineCap="Round"
+                         MyFill="Transparent"
+                         MyStrokeMiterLimit="5" MyStrokeLineJoin="Miter"
+                         MyAngle="0"/>
       
+      <local:EzLineThumb x:Name="MyEz" MyLeft="50" MyTop="50" Background="Blue" Opacity="0.5"
+                         MyPoints="0,0,200,0,100,100"
+                         MyStrokeThickness="30" MyStroke="Cyan" MyIsStroked="True" MyIsClosed="False"
+                         
+                         MyStrokeEndLineCap="Flat" MyStrokeStartLineCap="Round"
+                         MyFill="Transparent" MyFillRule="Nonzero"
+                         MyStrokeMiterLimit="5" MyStrokeLineJoin="Miter"
+                         MyAngle="10"/>
+
+      
+    </Canvas>
+    <Rectangle StrokeEndLineCap="Flat" StrokeLineJoin="Bevel"/>
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyEz}">
+      <TextBlock Text="{Binding MyLeft, StringFormat=Left {0:0.0}}"/>
+      <TextBlock Text="{Binding MyTop, StringFormat=Top {0:0.0}}"/>
+      <TextBlock Text="{Binding ActualWidth, StringFormat=W {0:0.0}}"/>
+      <TextBlock Text="{Binding ActualHeight, StringFormat=H {0:0.0}}"/>
+      <TextBlock Text="{Binding MyEzLine.MyBounds4, StringFormat=H {0:0.0}}"/>
+      <TextBlock Text="{Binding MyOffsetLeft, StringFormat=OffsetLeft {0:0.0}}"/>
+      <TextBlock Text="{Binding MyOffsetTop, StringFormat=OffsetTop {0:0.0}}"/>
+      
+      <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="360"
+              TickFrequency="1" IsSnapToTickEnabled="True"/>
+      <Slider Value="{Binding MyStrokeThickness}" Minimum="0" Maximum="50"/>
+      <Button Content="addPoint" Click="Button_Click"/>
     </StackPanel>
   </Grid>
 </Window>

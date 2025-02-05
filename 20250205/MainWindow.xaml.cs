@@ -20,5 +20,12 @@ namespace _20250205
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Random r = new();
+            Point p = new(r.Next(300), r.Next(300));
+            MyEz.MyPoints.Add(p);
+        }
     }
 }
