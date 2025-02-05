@@ -5,60 +5,68 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250204_EzLineShape"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="600">
+        Title="MainWindow" Height="367" Width="602">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
-      <ColumnDefinition Width="200"/>
+      <ColumnDefinition Width="260"/>
     </Grid.ColumnDefinitions>
     <Canvas UseLayoutRounding="True">
       <local:EzLine Canvas.Top="0" Canvas.Left="0" Opacity="0.5"
                     MyPoints="100,100,200,0,0,0,50,100"
-                    Stroke="Blue" StrokeThickness="50" StrokeLineJoin="Bevel"/>
+                    Stroke="MediumAquamarine" StrokeThickness="50" StrokeLineJoin="Bevel"/>
 
       <local:EzLine x:Name="ez" Canvas.Top="0" Canvas.Left="0" Opacity="0.5"
                     MyPoints="100,100,200,0,0,0,50,100"
-                    Stroke="Red" StrokeThickness="50" StrokeLineJoin="Bevel"
-                    MyAngle="40">
+                    Stroke="Tomato" StrokeThickness="50" StrokeLineJoin="Miter"
+                    MyAngle="60">
         <!--<local:EzLine.RenderTransform>
           <RotateTransform Angle="180"/>
         </local:EzLine.RenderTransform>-->
       </local:EzLine>
-      <!--<Rectangle Width="218" Height="10" Fill="Gold" Canvas.Top="20"/>
-      <Rectangle Width="109" Height="10" Fill="Gold" Canvas.Top="40"/>
-      <Rectangle Width="120" Height="10" Fill="Gold" Canvas.Top="60"/>-->
-      <Rectangle DataContext="{Binding ElementName=ez, Path=MyBounds1}" StrokeThickness="2" Stroke="DodgerBlue"
-                 Width="{Binding Width}" Height="{Binding Height}"/>
-      <Rectangle DataContext="{Binding ElementName=ez, Path=MyBounds2}" StrokeThickness="4" Stroke="Cyan"
+      
+      <Rectangle DataContext="{Binding ElementName=ez, Path=MyBounds1}" StrokeThickness="2" Stroke="Green"
+                 Width="{Binding Width}" Height="{Binding Height}" StrokeDashArray="2"/>
+      <Rectangle DataContext="{Binding ElementName=ez, Path=MyBounds2}" StrokeThickness="2" Stroke="Green"
                  Width="{Binding Width}" Height="{Binding Height}"
                  Canvas.Left="{Binding Left}" Canvas.Top="{Binding Top}"/>
       <Rectangle DataContext="{Binding ElementName=ez, Path=MyBounds3}" StrokeThickness="2" Stroke="Crimson"
-                 Width="{Binding Width}" Height="{Binding Height}"
+                 Width="{Binding Width}" Height="{Binding Height}" StrokeDashArray="2"
                  Canvas.Left="{Binding Left}" Canvas.Top="{Binding Top}"/>
-      <Rectangle DataContext="{Binding ElementName=ez, Path=MyBounds4}" StrokeThickness="4" Stroke="Magenta"
+      <Rectangle DataContext="{Binding ElementName=ez, Path=MyBounds4}" StrokeThickness="2" Stroke="Crimson"
                  Width="{Binding Width}" Height="{Binding Height}"
                  Canvas.Left="{Binding Left}" Canvas.Top="{Binding Top}"/>
 
 
     </Canvas>
 
-    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=ez}">
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=ez}" Margin="4">
       <TextBlock Text="{Binding ActualWidth, StringFormat=W 0}"/>
       <TextBlock Text="{Binding ActualHeight, StringFormat=H 0}"/>
       <Separator/>
-      <TextBlock Text="{Binding MyBounds1, StringFormat=Bounds1 {0: 0.0 }}" Foreground="DodgerBlue"/>
-      <TextBlock Text="{Binding MyBounds2, StringFormat=Bounds2 {0: 0.0 }}" Background="Cyan"/>
+      <TextBlock Text="{Binding MyBounds1, StringFormat=Bounds1 {0: 0.0 }}" Foreground="Green"/>
+      <TextBlock Text="{Binding MyBounds2, StringFormat=Bounds2 {0: 0.0 }}" Foreground="Green"/>
       <TextBlock Text="{Binding MyBounds3, StringFormat=Bounds3 {0: 0.0 }}" Foreground="Crimson"/>
-      <TextBlock Text="{Binding MyBounds4, StringFormat=Bounds4 {0: 0.0 }}" Background="Magenta"/>
+      <TextBlock Text="{Binding MyBounds4, StringFormat=Bounds4 {0: 0.0 }}" Foreground="Crimson"/>
       <Separator/>
-      <TextBlock Text="{Binding MyPoints, StringFormat=Pints {0}}"/>
+      <TextBlock Text="{Binding MyPoints, StringFormat=Points {0}}"/>
       <TextBlock Text="{Binding RenderedGeometry, StringFormat=RenderGeo {0:0}}"/>
       <Separator/>
       <TextBlock Text="{Binding MyCenterX, StringFormat=MyCenterX {0:0.0}}"/>
       <TextBlock Text="{Binding MyCenterY, StringFormat=MyCenterY {0:0.0}}"/>
       <TextBlock Text="{Binding MyAngle, StringFormat=MyAngle {0:0.0}}"/>
+      <Slider x:Name="MySliderAngle" Value="{Binding MyAngle}"
+              Minimum="0" Maximum="360" TickFrequency="10" IsSnapToTickEnabled="True"/>
       <Separator/>
-      <TextBlock Text="{Binding RenderTransform, StringFormat=RenderTF {0}}"/>
+      
+      <UniformGrid Columns="2">
+        <TextBlock Text="LineJoin" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <ComboBox x:Name="MyComboJoin" SelectedValue="{Binding StrokeLineJoin}"/>
+        <TextBlock Text="StartCap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <ComboBox x:Name="MyComboStartCap" SelectedValue="{Binding StrokeStartLineCap}"/>
+        <TextBlock Text="{Binding StrokeMiterLimit, StringFormat=MiterLimit 0.0}" HorizontalAlignment="Center"/>
+        <Slider Value="{Binding StrokeMiterLimit}" Minimum="1" Maximum="5"/>
+      </UniformGrid>
     </StackPanel>
   </Grid>
 </Window>

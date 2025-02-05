@@ -11,10 +11,7 @@ using System.Windows;
 
 namespace _20250204_EzLineShape
 {
-    internal class Class1
-    {
-    }
-
+    
     public class EzLine : Shape
     {
 
@@ -43,6 +40,7 @@ namespace _20250204_EzLineShape
                 return geo;
             }
         }
+
         public EzLine()
         {
             DataContext = this;
@@ -85,24 +83,12 @@ namespace _20250204_EzLineShape
             return new Binding() { Source = this, Path = new PropertyPath(property), Mode = BindingMode.OneWay };
         }
 
-        protected override void OnRender(DrawingContext drawingContext)
-        {
-            base.OnRender(drawingContext);
-            //MyBoundsUpdate();
-        }
-        //private void MyBoundsUpdate()
-        //{
-        //    MyBounds1 = this.RenderedGeometry.Bounds;
-        //    MyBounds2 = this.RenderedGeometry.GetRenderBounds(MyPen);//ok thickness join, points
-        //    var clone = this.RenderedGeometry.Clone();
-        //    clone.Transform = this.RenderTransform;
-        //    MyBounds3 = clone.Bounds;
-        //    MyBounds4 = clone.GetRenderBounds(MyPen);//ok thickness join, points
-
-        //}
-
         #region 依存関係プロパティ
 
+
+        #region 通常
+
+        #region 回転
 
         public double MyAngle
         {
@@ -139,8 +125,7 @@ namespace _20250204_EzLineShape
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-        #region 通常
+        #endregion 回転
 
         public FillRule MyFillRule
         {
@@ -218,16 +203,6 @@ namespace _20250204_EzLineShape
 
         #region 読み取り専用
 
-        ////線描画のBoundsをOnRenderで取得したもの、MyBounds3と同じ値
-        ////this.RenderedGeometry.GetRenderBounds(MyPen);
-        //public Rect MyBounds5
-        //{
-        //    get { return (Rect)GetValue(MyBounds5Property); }
-        //    private set { SetValue(MyBounds5Property, value); }
-        //}
-        //public static readonly DependencyProperty MyBounds5Property =
-        //    DependencyProperty.Register(nameof(MyBounds5), typeof(Rect), typeof(EzLine), new PropertyMetadata(new Rect()));
-
         //変形後の線描画のBounds
         //TFGeo.GetRenderBounds(MyPen);
         public Rect MyBounds4
@@ -296,13 +271,13 @@ namespace _20250204_EzLineShape
 
 
     #region コンバーター
+    //回転軸のY座標、見た目通りの矩形(Bounds2)の中央にしている
     public class MyConverterCenterY : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var r = (Rect)value;
             return (r.Y * 2 + r.Height) / 2.0;
-            //return r.Height / 2.0;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -316,7 +291,6 @@ namespace _20250204_EzLineShape
         {
             var r = (Rect)value;
             return (r.X * 2 + r.Width) / 2.0;
-            //return r.Width / 2.0;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -324,16 +298,12 @@ namespace _20250204_EzLineShape
             throw new NotImplementedException();
         }
     }
+
+    //RenderTransformはRotateTransformに決め打ちしている
     public class MyConverterRenderTransform : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            //var angle = (double)values[0];
-            //var bounds = (Rect)values[1];
-            //double x = (bounds.X + bounds.Width) / 2.0;
-            //double y = (bounds.Y + bounds.Height) / 2.0;
-            //return new RotateTransform(angle, x, y);
-
+        {   
             var angle = (double)values[0];
             var x = (double)values[1];
             var y = (double)values[2];
@@ -345,6 +315,8 @@ namespace _20250204_EzLineShape
             throw new NotImplementedException();
         }
     }
+
+    //Penの生成、各種プロパティも反映
     public class MyConverterPen : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -354,11 +326,13 @@ namespace _20250204_EzLineShape
             var end = (PenLineCap)values[2];
             var sta = (PenLineCap)values[3];
             var join = (PenLineJoin)values[4];
-            Pen result = new Pen(Brushes.Transparent, thick);
-            result.EndLineCap = end;
-            result.StartLineCap = sta;
-            result.LineJoin = join;
-            result.MiterLimit = miter;
+            Pen result = new(Brushes.Transparent, thick)
+            {
+                EndLineCap = end,
+                StartLineCap = sta,
+                LineJoin = join,
+                MiterLimit = miter
+            };
             return result;
         }
 
@@ -368,6 +342,8 @@ namespace _20250204_EzLineShape
         }
     }
 
+    //Segment用のPointCollection生成
+    //ソースに影響を与えないためにクローン作成して、その先頭要素を削除して返す
     public class MyConverterSegmentPoints : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
