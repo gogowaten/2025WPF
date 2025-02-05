@@ -8,8 +8,9 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
+using System.Windows.Controls;
 
-namespace _20250204_EzLineShape
+namespace _20250205
 {
 
     public class EzLine : Shape
@@ -269,6 +270,43 @@ namespace _20250204_EzLineShape
 
     }
 
+
+    public class EzLineCanvas : Canvas
+    {
+        public EzLine MyEzLine { get; private set; } = new EzLine();
+        public EzLineCanvas()
+        {
+            DataContext = this;
+            Children.Add(MyEzLine);
+            MyBind();
+        }
+
+        private void MyBind()
+        {
+            BindingOperations.SetBinding(MyEzLine, EzLine.MyPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty) });
+            MyEzLine.Stroke = Brushes.Red;
+            MyEzLine.StrokeThickness = 10;
+
+        }
+
+        #region 依存関係プロパティ
+
+        public PointCollection MyPoints
+        {
+            get { return (PointCollection)GetValue(MyPointsProperty); }
+            set { SetValue(MyPointsProperty, value); }
+        }
+        public static readonly DependencyProperty MyPointsProperty =
+            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(EzLineCanvas),
+                new FrameworkPropertyMetadata(null,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        
+        #endregion 依存関係プロパティ
+
+    }
 
     #region コンバーター
     //回転軸のY座標、見た目通りの矩形(Bounds2)の中央にしている
