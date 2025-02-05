@@ -1,3 +1,8 @@
+# _20250204_EzLineShape
+![20250205_140933](https://github.com/user-attachments/assets/05cdad60-8ab9-40df-939d-e239f74d4dce)<br>
+WPF、簡単に折れ線描画できて見た目通りのサイズと位置が取得できるクラスをShapeクラス継承で - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/02/05/161559<br>
+<br><br><br>
 
 
 
