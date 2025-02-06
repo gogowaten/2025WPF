@@ -20,7 +20,7 @@
       <ColumnDefinition/>
       <ColumnDefinition Width="250"/>
     </Grid.ColumnDefinitions>
-    <Canvas>
+    <Canvas UseLayoutRounding="True">
       <local:EzLineThumb MyLeft="100" MyTop="100" Background="SteelBlue" Opacity="0.4"
                          MyPoints="0,0,100,0,50,50"
                          MyStrokeThickness="30" MyStroke="YellowGreen" MyIsStroked="True" MyIsClosed="False"

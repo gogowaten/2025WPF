@@ -1,19 +1,9 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+//WPF、図形を中心で回転、PathGeometry＋Canvas＋Thumbのカスタムコントロール - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/02/06/132308
 
 namespace _20250206_RotateEzLineThumb
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
