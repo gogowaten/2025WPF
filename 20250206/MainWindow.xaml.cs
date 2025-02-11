@@ -41,5 +41,12 @@ namespace _20250206
         {
             MyEz.MyPoints[0] = new Point(0, 0);
         }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            Point p = MyEz.MyPoints[0];
+            Point np = new Point(p.X - 10, p.Y);
+            MyEz.MyPoints[0] = np;
+        }
     }
 }

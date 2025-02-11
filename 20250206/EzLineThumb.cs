@@ -387,9 +387,14 @@ namespace _20250206
             {
                 Thumb t = new() { Width = 20, Height = 20, Tag = i };
                 Point p = MyPoints[i];
+                Rect offset = MyEzLine.MyBounds4;
 
-                Canvas.SetLeft(t, p.X);
-                Canvas.SetTop(t, p.Y);
+                //Canvas.SetLeft(t, p.X);
+                //Canvas.SetTop(t, p.Y);
+
+                Canvas.SetLeft(t, p.X - offset.X);
+                Canvas.SetTop(t, p.Y - offset.Y);
+
                 t.DragDelta += Thumb_DragDelta;
                 MyAnchors.Add(t);
                 MyBaseCanvas.Children.Add(t);
@@ -400,56 +405,42 @@ namespace _20250206
         {
             if (sender is Thumb t)
             {
-                //int index = (int)t.Tag;
-                //Point p = MyPoints[index];
-                //double left = p.X + e.HorizontalChange;
-                //double top = p.Y + e.VerticalChange;
-                //MyPoints[index] = new Point(left, top);
-                //Canvas.SetLeft(t, left);
-                //Canvas.SetTop(t, top);
-
-                //e.Handled = true;
-
-                double left = Canvas.GetLeft(t) + e.HorizontalChange;
-                double top = Canvas.GetTop(t) + e.VerticalChange;
                 int index = (int)t.Tag;
+                Point p = MyPoints[index];
+                Rect bb4 = MyEzLine.MyBounds4;
+                double left = p.X + e.HorizontalChange;
+                double top = p.Y + e.VerticalChange;
+                MyPoints[index] = new Point(left, top);
+                UpdateLayout();// 必須、これでBoundsが更新される
 
-                if (left < 0)
-                {                    
-                    for (int i = 0; i < MyPoints.Count; i++)
-                    {
-                        if (i != index)
-                        {
-                            Point p = new Point(MyPoints[i].X - left, MyPoints[i].Y);
-                            MyPoints[i] = p;
-                            var neko = MyAnchors[i];
-                            //Canvas.SetLeft(MyAnchors[i], p.X);
-                        }
-                    }
-                }
-                else if (top < 0)
+                Point b4 = MyEzLine.MyBounds4.TopLeft;
+                //頂点座標変更前後のBoundsの座標を比較、
+                //差異があれば全ツマミ座標を更新
+                //なければ対象ツマミ座標だけを更新
+                if (bb4.X != b4.X || bb4.Y != b4.Y)
                 {
-                    for (int i = 0; i < MyPoints.Count; i++)
-                    {
-                        if (i != index)
-                        {
-                            Point p = new Point(MyPoints[i].X, MyPoints[i].Y-top);
-                            MyPoints[i] = p;
-                            //Canvas.SetTop(MyAnchors[i], p.Y);
-                        }
-                    }
+                    ResetAnchorLocate2();
                 }
                 else
                 {
-                    Canvas.SetLeft(t, left);
-                    Canvas.SetTop(t, top);
-
-                    MyPoints[index] = new Point(left, top);
+                    Canvas.SetLeft(t, left - bb4.Left);
+                    Canvas.SetTop(t, top - bb4.Top);
                 }
                 e.Handled = true;
-
             }
         }
+
+        private void ResetAnchorLocate2()
+        {
+            Rect b4 = MyEzLine.MyBounds4;
+            for (int i = 0; i < MyPoints.Count; i++)
+            {
+                Point p = MyPoints[i];
+                Canvas.SetLeft(MyAnchors[i], p.X-b4.X);
+                Canvas.SetTop(MyAnchors[i], p.Y-b4.Y);
+            }
+        }
+        
 
         public override void OnApplyTemplate()
         {
