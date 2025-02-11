@@ -1,0 +1,55 @@
+﻿<Window x:Class="_20250211.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_20250211"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="367" Width="602">
+  <Window.Resources>
+    <Storyboard x:Key="anime">
+      <DoubleAnimation Storyboard.TargetName="MyEz"
+                       Storyboard.TargetProperty="MyAngle"
+                       From="0" To="360"
+                       Duration="0:0:4" RepeatBehavior="0:0:4"
+                       FillBehavior="Stop"/>
+    </Storyboard>
+  </Window.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="250"/>
+    </Grid.ColumnDefinitions>
+    <Canvas UseLayoutRounding="True">
+      <local:EzLineThumb x:Name="MyEz" MyLeft="100" MyTop="100" Background="MistyRose" MyIsFilled="False"
+                         MyPoints="100,0,-10,0,-10,50"
+                         MyStrokeThickness="20"
+                         MyStroke="Tomato" MyStrokeMiterLimit="2"
+                         MyAngle="0"/>
+    </Canvas>
+
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyEz}">
+      <TextBlock Text="{Binding MyPoints, StringFormat=points {0:0}}"/>
+      <TextBlock Text="{Binding MyLeft, StringFormat=left 0.0}"/>
+      <TextBlock Text="{Binding MyTop, StringFormat=top 0.0}"/>
+      <TextBlock Text="{Binding MyOffsetLeft, StringFormat=offsetLeft 0.0}"/>
+      <TextBlock Text="{Binding MyOffsetTop, StringFormat=offsetTop 0.0}"/>
+      <TextBlock Text="{Binding MyEzLine.MyBounds4, StringFormat=bounds4  {0:0.0  }}"/>
+      <Button Content="AnchorOn" Click="Button_Click"/>
+      <Button Content="AnchorOff" Click="Button_Click_1"/>
+      <Button Content="test" Click="Button_Click_2"/>
+      <Button Content="test2" Click="Button_Click_3"/>
+      <Button Content="test3" Click="Button_Click_4"/>
+      <UniformGrid Columns="2">
+        <TextBlock Text="{Binding MyStrokeThickness, StringFormat=strokeThickness 0}"/>
+        <TextBlock Text="{Binding MyAngle, StringFormat=Angle 0}"/>
+        <Slider Value="{Binding MyStrokeThickness}" Minimum="0" Maximum="50"
+              TickFrequency="10" IsSnapToTickEnabled="True"/>
+        <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="360"
+              TickFrequency="10" IsSnapToTickEnabled="True"/>
+      </UniformGrid>
+    </StackPanel>
+
+
+  </Grid>
+</Window>
