@@ -33,24 +33,14 @@ namespace _20250211
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            MyEz.AnchorsOff();
+            //MyEz.AnchorsOff();
+            if (AdornerLayer.GetAdornerLayer(MyEz.MyEzLine) is AdornerLayer layer)
+            {
+               var ado = layer.GetAdorners(MyEz.MyEzLine);
+                layer.Remove(ado[0]);
+            }
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            MyEz.MyPoints[0] = new Point(-50, 0);
-        }
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            MyEz.MyPoints[0] = new Point(0, 0);
-        }
-
-        private void Button_Click_4(object sender, RoutedEventArgs e)
-        {
-            Point p = MyEz.MyPoints[0];
-            Point np = new Point(p.X - 10, p.Y);
-            MyEz.MyPoints[0] = np;
-        }
     }
 }

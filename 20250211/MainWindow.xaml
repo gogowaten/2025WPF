@@ -22,8 +22,8 @@
     </Grid.ColumnDefinitions>
     <Canvas UseLayoutRounding="True">
       <local:EzLineThumb x:Name="MyEz" MyLeft="100" MyTop="100" Background="MistyRose" MyIsFilled="False"
-                         MyPoints="100,0,-10,0,-10,50"
-                         MyStrokeThickness="20"
+                         MyPoints="0,0,100,0,50,50,100,100"
+                         MyStrokeThickness="40"
                          MyStroke="Tomato" MyStrokeMiterLimit="2"
                          MyAngle="0"/>
     </Canvas>
@@ -34,12 +34,16 @@
       <TextBlock Text="{Binding MyTop, StringFormat=top 0.0}"/>
       <TextBlock Text="{Binding MyOffsetLeft, StringFormat=offsetLeft 0.0}"/>
       <TextBlock Text="{Binding MyOffsetTop, StringFormat=offsetTop 0.0}"/>
+      <TextBlock Text="{Binding MyEzLine.MyBounds1, StringFormat=bounds1  {0:0.0  }}"/>
+      <TextBlock Text="{Binding MyEzLine.MyBounds2, StringFormat=bounds2  {0:0.0  }}"/>
+      <TextBlock Text="{Binding MyEzLine.MyBounds3, StringFormat=bounds3  {0:0.0  }}"/>
       <TextBlock Text="{Binding MyEzLine.MyBounds4, StringFormat=bounds4  {0:0.0  }}"/>
+      <TextBlock Text="{Binding MyEzLine.ActualWidth, StringFormat=EzLineAW  {0:0.0  }}"/>
+      <TextBlock Text="{Binding MyEzLine.ActualHeight, StringFormat=EzLineAH  {0:0.0  }}"/>
+      <TextBlock Text="{Binding ActualWidth, StringFormat=ThumbW 0}"/>
+      <TextBlock Text="{Binding ActualHeight, StringFormat=ThumbH 0}"/>
       <Button Content="AnchorOn" Click="Button_Click"/>
       <Button Content="AnchorOff" Click="Button_Click_1"/>
-      <Button Content="test" Click="Button_Click_2"/>
-      <Button Content="test2" Click="Button_Click_3"/>
-      <Button Content="test3" Click="Button_Click_4"/>
       <UniformGrid Columns="2">
         <TextBlock Text="{Binding MyStrokeThickness, StringFormat=strokeThickness 0}"/>
         <TextBlock Text="{Binding MyAngle, StringFormat=Angle 0}"/>
