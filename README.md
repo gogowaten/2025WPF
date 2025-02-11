@@ -1,3 +1,13 @@
+# _20250211
+![Animation20250211_181604](https://github.com/user-attachments/assets/5cad01f0-9b80-4b3a-86ca-4ec7bc97ac24)<br>
+2025WPF/20250211 at main · gogowaten/2025WPF<br>
+https://github.com/gogowaten/2025WPF/tree/main/20250211<br>
+Adornerを使ったAnchorThumbで頂点座標の変更。回転が入ると動きがおかしくなるのはCanvasのサイズと位置の自動調整が原因かも？<br>
+自動調整は止めにしようと思うので、また作り直し<br>
+<br><br><br>
+
+
+
 # _20250206
 ![Animation20250211_121837](https://github.com/user-attachments/assets/aaae9d99-4a27-4e9d-b73e-9099935481a2)<br>
 2025WPF/20250206 at main · gogowaten/2025WPF<br>
