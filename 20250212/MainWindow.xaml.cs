@@ -42,7 +42,7 @@ namespace _20250212
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            MyEz.OffsetEzLine();
+            MyEz.OffsetEzLineAndThis2();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
@@ -53,6 +53,11 @@ namespace _20250212
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
             MyEz.OffsetForRotate();
+        }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            MyEz.OffsetEzLine();
         }
     }
 }

@@ -369,7 +369,8 @@ namespace _20250212
 
             //Width = MyEzLine.MyBounds4.Width;
             //Height = MyEzLine.MyBounds4.Height;
-            OffsetEzLine();
+            OffsetEzLineAndThis();
+            RepairSize();
         }
 
         public override void OnApplyTemplate()
@@ -432,7 +433,55 @@ namespace _20250212
         public static readonly DependencyProperty MyEzLineProperty =
             DependencyProperty.Register(nameof(MyEzLine), typeof(EzLine), typeof(EzLineThumb), new PropertyMetadata(null));
 
+
+        public void OffsetEzLine2()
+        {
+            var bounds4 = MyEzLine.MyBounds4;
+            var ezleft = Canvas.GetLeft(MyEzLine);
+            var eztop = Canvas.GetTop(MyEzLine);
+            var bounds4Top = bounds4.Top;
+            Canvas.SetLeft(MyEzLine, -bounds4.X);
+            Canvas.SetTop(MyEzLine, -bounds4.Y);
+        }
+
         public void OffsetEzLine()
+        {
+            RepairSize();
+            var bounds4 = MyEzLine.MyBounds4;
+            //var ezleft = Canvas.GetLeft(MyEzLine);
+            //var eztop = Canvas.GetTop(MyEzLine);
+            //var bTop = bounds4.Top;
+            //var ezTopHenka = eztop + bTop;
+
+            MyLeft += Canvas.GetLeft(MyEzLine) + bounds4.Left;
+            MyTop += Canvas.GetTop(MyEzLine) + bounds4.Top;
+            Canvas.SetLeft(MyEzLine, -bounds4.X);
+            Canvas.SetTop(MyEzLine, -bounds4.Y);
+        }
+
+        public void OffsetEzLineAndThis2()
+        {
+            var ezleft = Canvas.GetLeft(MyEzLine);
+            var eztop = Canvas.GetTop(MyEzLine);
+            var bounds4 = MyEzLine.MyBounds4;
+            var bounds2 = MyEzLine.MyBounds2;
+            var b4top = bounds4.Top;
+            if (ezleft != -bounds4.Left)
+            {
+                Canvas.SetLeft(MyEzLine, -bounds4.X);
+                MyLeft += bounds4.X - bounds2.X;
+            }
+            if (eztop != -bounds4.Top)
+            {
+                Canvas.SetTop(MyEzLine, -bounds4.Y);
+                var neko = bounds4.Y - bounds2.Y;
+                var inu = MyTop + neko;
+                MyTop += bounds4.Y - bounds2.Y;
+            }
+
+        }
+
+        public void OffsetEzLineAndThis()
         {
             var bounds4 = MyEzLine.MyBounds4;
             Canvas.SetLeft(MyEzLine, -bounds4.X);

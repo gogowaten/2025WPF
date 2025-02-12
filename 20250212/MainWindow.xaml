@@ -24,7 +24,7 @@
       <local:EzLineThumb x:Name="MyEz" MyLeft="100" MyTop="100" Background="MistyRose" MyIsFilled="False"
                          MyPoints="0,0,100,0,50,50,100,100"
                          MyStrokeThickness="40"
-                         MyStroke="Tomato" MyStrokeMiterLimit="2"
+                         MyStroke="Tomato" MyStrokeMiterLimit="10"
                          MyAngle="0"/>
     </Canvas>
 
@@ -47,6 +47,7 @@
       <Button Content="Offset" Click="Button_Click_2"/>
       <Button Content="RepairSize" Click="Button_Click_3"/>
       <Button Content="OffsetForRotate" Click="Button_Click_4"/>
+      <Button Content="Offset1" Click="Button_Click_5"/>
       <UniformGrid Columns="2">
         <TextBlock Text="{Binding MyStrokeThickness, StringFormat=strokeThickness 0}"/>
         <TextBlock Text="{Binding MyAngle, StringFormat=Angle 0}"/>
