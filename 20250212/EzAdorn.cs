@@ -15,8 +15,8 @@ namespace _20250212
     public class EzAdorn : Adorner
     {
         //readonly Thumb MyThumb;//サイズ変更用つまみ
-        List<Thumb> MyKnobList;
-        Canvas MyCanvas;
+        private readonly List<Thumb> MyKnobList;
+        private readonly Canvas MyCanvas;
         readonly VisualCollection MyVisualChildren;//表示したい要素を管理する用？
         readonly EzLine MyTarget;//装飾する対象要素
         public EzAdorn(EzLine adornedElement) : base(adornedElement)
@@ -85,7 +85,7 @@ namespace _20250212
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-
+            //MyCanvas.Arrange(new Rect(0, 0, 1,1));
             MyCanvas.Arrange(new Rect(0, 0, finalSize.Width, finalSize.Height));
             return base.ArrangeOverride(finalSize);
         }

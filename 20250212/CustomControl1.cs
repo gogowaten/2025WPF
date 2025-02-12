@@ -428,21 +428,11 @@ namespace _20250212
         public EzLine MyEzLine
         {
             get { return (EzLine)GetValue(MyEzLineProperty); }
-            private set { SetValue(MyEzLineProperty, value); }
+            protected set { SetValue(MyEzLineProperty, value); }
         }
         public static readonly DependencyProperty MyEzLineProperty =
             DependencyProperty.Register(nameof(MyEzLine), typeof(EzLine), typeof(EzLineThumb), new PropertyMetadata(null));
 
-
-        public void OffsetEzLine2()
-        {
-            var bounds4 = MyEzLine.MyBounds4;
-            var ezleft = Canvas.GetLeft(MyEzLine);
-            var eztop = Canvas.GetTop(MyEzLine);
-            var bounds4Top = bounds4.Top;
-            Canvas.SetLeft(MyEzLine, -bounds4.X);
-            Canvas.SetTop(MyEzLine, -bounds4.Y);
-        }
 
         public void OffsetEzLine()
         {
@@ -455,8 +445,8 @@ namespace _20250212
 
             MyLeft += Canvas.GetLeft(MyEzLine) + bounds4.Left;
             MyTop += Canvas.GetTop(MyEzLine) + bounds4.Top;
-            Canvas.SetLeft(MyEzLine, -bounds4.X);
-            Canvas.SetTop(MyEzLine, -bounds4.Y);
+            Canvas.SetLeft(MyEzLine, -bounds4.Left);
+            Canvas.SetTop(MyEzLine, -bounds4.Top);
         }
 
         public void OffsetEzLineAndThis2()
@@ -496,30 +486,7 @@ namespace _20250212
             MyTop += bounds4.Y - bounds2.Y;
         }
 
-        //回転後専用
-        public void OffsetForRotate()
-        {
-            var bounds4 = MyEzLine.MyBounds4;
-            var bounds2 = MyEzLine.MyBounds2;
-            var left = bounds4.Left;
-            var top = bounds4.Top;
-            var ezleft = Canvas.GetLeft(MyEzLine);
-            var eztop = Canvas.GetTop(MyEzLine);
-            if (ezleft != -bounds4.Left)
-            {
-                Canvas.SetLeft(MyEzLine, -bounds4.X);
-                var offsleft = MyLeft + bounds4.X - bounds2.X;//106
-                MyLeft += bounds4.X - bounds2.X;
-
-            }
-            if (eztop != -bounds4.Top)
-            {
-                Canvas.SetTop(MyEzLine, -bounds4.Y);
-
-                MyTop += bounds4.Y - bounds2.Y;
-
-            }
-        }
+      
 
         public void RepairSize()
         {

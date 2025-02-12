@@ -23,7 +23,7 @@ namespace _20250212
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //MyEz.AnchorsOn();
+
             if (AdornerLayer.GetAdornerLayer(MyEz.MyEzLine) is AdornerLayer layer)
             {
                 layer.Add(new EzAdorn(MyEz.MyEzLine));
@@ -52,12 +52,30 @@ namespace _20250212
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            MyEz.OffsetForRotate();
+            Point po = MyEz.MyPoints[1];
+            MyEz.MyPoints[1] = new Point(po.X + 100, po.Y + 0);
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
             MyEz.OffsetEzLine();
+        }
+
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            if (AdornerLayer.GetAdornerLayer(MyEz.MyEzLine) is AdornerLayer layer)
+            {
+                var layerTF = layer.RenderTransform;
+                var neko = layer.GetAdorners(MyEz.MyEzLine);
+                var EzTF = MyEz.MyEzLine.RenderTransform;
+                if (neko != null && neko[0] is EzAdorn adorn)
+                {
+                    adorn.RenderTransform = EzTF;
+                }
+
+                //layer.RenderTransform = EzTF;
+
+            }
         }
     }
 }

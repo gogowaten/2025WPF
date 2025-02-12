@@ -42,12 +42,15 @@
       <TextBlock Text="{Binding MyEzLine.ActualHeight, StringFormat=EzLineAH  {0:0  }}"/>
       <TextBlock Text="{Binding ActualWidth, StringFormat=ThumbW 0}"/>
       <TextBlock Text="{Binding ActualHeight, StringFormat=ThumbH 0}"/>
+      <TextBlock DataContext="{Binding MyEzLine}" Text="{Binding (Canvas.Left) , StringFormat=LineLeft 0}"/>
+      <TextBlock DataContext="{Binding MyEzLine}" Text="{Binding (Canvas.Top) , StringFormat=LineTop 0}"/>
       <Button Content="AnchorOn" Click="Button_Click"/>
       <Button Content="AnchorOff" Click="Button_Click_1"/>
       <Button Content="Offset" Click="Button_Click_2"/>
       <Button Content="RepairSize" Click="Button_Click_3"/>
-      <Button Content="OffsetForRotate" Click="Button_Click_4"/>
+      <Button Content="test" Click="Button_Click_4"/>
       <Button Content="Offset1" Click="Button_Click_5"/>
+      <Button Content="getadorn" Click="Button_Click_6"/>
       <UniformGrid Columns="2">
         <TextBlock Text="{Binding MyStrokeThickness, StringFormat=strokeThickness 0}"/>
         <TextBlock Text="{Binding MyAngle, StringFormat=Angle 0}"/>
