@@ -543,6 +543,27 @@ namespace _20250213_TopLeftRotateEzLineThumb
             DependencyProperty.Register(nameof(MyEzLine), typeof(EzLine), typeof(EzLineThumb), new PropertyMetadata(null));
 
         /// <summary>
+        /// 回転軸を左上にする
+        /// 頂点移動や追加削除で回転軸がズレてしまったのを直す
+        /// </summary>
+        public void ZeroFix()
+        {
+            var rect1 = MyEzLine.MyBounds1;
+            //全頂点座標の修正
+            for (int i = 0; i < MyPoints.Count; i++)
+            {
+                Point po = MyPoints[i];
+                MyPoints[i] = new Point(po.X - rect1.X, po.Y - rect1.Y);
+            }
+            //自身の座標を修正
+            MyLeft += rect1.Left;
+            MyTop += rect1.Top;
+
+            AnchorReset();
+        }
+
+
+        /// <summary>
         /// 頂点追加
         /// </summary>
         /// <param name="po">座標</param>

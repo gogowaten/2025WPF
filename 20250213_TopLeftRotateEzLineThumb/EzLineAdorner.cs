@@ -105,7 +105,7 @@ namespace _20250213_TopLeftRotateEzLineThumb
             set { SetValue(AnchorSizeProperty, value); }
         }
         public static readonly DependencyProperty AnchorSizeProperty =
-            DependencyProperty.Register(nameof(AnchorSize), typeof(double), typeof(EzLineAdorner), new PropertyMetadata(50.0));
+            DependencyProperty.Register(nameof(AnchorSize), typeof(double), typeof(EzLineAdorner), new PropertyMetadata(31.0));
 
 
         protected override Size ArrangeOverride(Size finalSize)

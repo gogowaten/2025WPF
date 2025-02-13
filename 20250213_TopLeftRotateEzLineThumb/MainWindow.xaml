@@ -32,6 +32,7 @@
       <Button Content="AddRamdomPoint" Click="Button_Click_2"/>
       <Button Content="RemoveLastPoint" Click="Button_Click_3"/>
       <TextBlock Text="{Binding MyPoints, StringFormat=Points {0:0 }}" TextWrapping="Wrap"/>
+      <Button Content="test" Click="Button_Click_4"/>
     </StackPanel>
   </Grid>
 </Window>

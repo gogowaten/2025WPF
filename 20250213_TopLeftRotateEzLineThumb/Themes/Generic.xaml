@@ -8,11 +8,12 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:AnchorThumb}">
-          <Canvas x:Name="PART_Canvas"/>
+          <Grid x:Name="PART_Panel"/>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
   </Style>
+  
   <Style TargetType="{x:Type local:AnchorEllipseThumb}">
     <Setter Property="Template">
       <Setter.Value>

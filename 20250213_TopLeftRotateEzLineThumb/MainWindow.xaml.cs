@@ -45,4 +45,9 @@ public partial class MainWindow : Window
             MyEz.RemovePoint(MyEz.MyPoints.Count-1);
         }
     }
+
+    private void Button_Click_4(object sender, RoutedEventArgs e)
+    {
+        MyEz.ZeroFix();
+    }
 }
