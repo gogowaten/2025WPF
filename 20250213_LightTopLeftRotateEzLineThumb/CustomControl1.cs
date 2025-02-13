@@ -16,98 +16,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace _20250213_TopLeftRotateEzLineThumb
+namespace _20250213_LightTopLeftRotateEzLineThumb
 {
-    public class AnchorThumb : Thumb
-    {
-        static AnchorThumb()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(AnchorThumb), new FrameworkPropertyMetadata(typeof(AnchorThumb)));
-        }
-        public AnchorThumb()
-        {
-
-        }
-
-        public double MyOutSize
-        {
-            get { return (double)GetValue(MyOutSizeProperty); }
-            set { SetValue(MyOutSizeProperty, value); }
-        }
-        public static readonly DependencyProperty MyOutSizeProperty =
-            DependencyProperty.Register(nameof(MyOutSize), typeof(double), typeof(AnchorThumb), new PropertyMetadata(21.0));
-
-        public double MyInSize
-        {
-            get { return (double)GetValue(MyInSizeProperty); }
-            set { SetValue(MyInSizeProperty, value); }
-        }
-        public static readonly DependencyProperty MyInSizeProperty =
-            DependencyProperty.Register(nameof(MyInSize), typeof(double), typeof(AnchorThumb), new PropertyMetadata(21.0));
-
-        public Brush MyOutBrush
-        {
-            get { return (Brush)GetValue(MyOutBrushProperty); }
-            set { SetValue(MyOutBrushProperty, value); }
-        }
-        public static readonly DependencyProperty MyOutBrushProperty =
-            DependencyProperty.Register(nameof(MyOutBrush), typeof(Brush), typeof(AnchorThumb), new PropertyMetadata(Brushes.Red));
-
-        public Brush MyInBrush
-        {
-            get { return (Brush)GetValue(MyInBrushProperty); }
-            set { SetValue(MyInBrushProperty, value); }
-        }
-        public static readonly DependencyProperty MyInBrushProperty =
-            DependencyProperty.Register(nameof(MyInBrush), typeof(Brush), typeof(AnchorThumb), new PropertyMetadata(Brushes.White));
-
-        public double MyOutThickness
-        {
-            get { return (double)GetValue(MyOutThicknessProperty); }
-            set { SetValue(MyOutThicknessProperty, value); }
-        }
-        public static readonly DependencyProperty MyOutThicknessProperty =
-            DependencyProperty.Register(nameof(MyOutThickness), typeof(double), typeof(AnchorThumb), new PropertyMetadata(1.0));
-
-        public double MyInThickness
-        {
-            get { return (double)GetValue(MyInThicknessProperty); }
-            set { SetValue(MyInThicknessProperty, value); }
-        }
-        public static readonly DependencyProperty MyInThicknessProperty =
-            DependencyProperty.Register(nameof(MyInThickness), typeof(double), typeof(AnchorThumb), new PropertyMetadata(1.0));
-
-        public DoubleCollection MyDashArray
-        {
-            get { return (DoubleCollection)GetValue(MyDashArrayProperty); }
-            set { SetValue(MyDashArrayProperty, value); }
-        }
-        public static readonly DependencyProperty MyDashArrayProperty =
-            DependencyProperty.Register(nameof(MyDashArray), typeof(DoubleCollection), typeof(AnchorThumb), new PropertyMetadata(new DoubleCollection() { 1.0 }));
-
-
-        public Brush MyOutBackground
-        {
-            get { return (Brush)GetValue(MyOutBackgroundProperty); }
-            set { SetValue(MyOutBackgroundProperty, value); }
-        }
-        public static readonly DependencyProperty MyOutBackgroundProperty =
-            DependencyProperty.Register(nameof(MyOutBackground), typeof(Brush), typeof(AnchorThumb), new PropertyMetadata(Brushes.Transparent));
-
-    }
-
-    public class AnchorEllipseThumb : AnchorThumb
-    {
-        static AnchorEllipseThumb()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(AnchorEllipseThumb), new FrameworkPropertyMetadata(typeof(AnchorEllipseThumb)));
-        }
-        public AnchorEllipseThumb()
-        {
-
-        }
-    }
-
     public class KisoThumb : Thumb
     {
         static KisoThumb()
@@ -143,18 +53,18 @@ namespace _20250213_TopLeftRotateEzLineThumb
 
         #region 共通
 
-        //テキスト系要素のText要素
-        public string MyText
-        {
-            get { return (string)GetValue(MyTextProperty); }
-            set { SetValue(MyTextProperty, value); }
-        }
-        public static readonly DependencyProperty MyTextProperty =
-            DependencyProperty.Register(nameof(MyText), typeof(string), typeof(KisoThumb),
-                new FrameworkPropertyMetadata(string.Empty,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        ////テキスト系要素のText要素
+        //public string MyText
+        //{
+        //    get { return (string)GetValue(MyTextProperty); }
+        //    set { SetValue(MyTextProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyTextProperty =
+        //    DependencyProperty.Register(nameof(MyText), typeof(string), typeof(KisoThumb),
+        //        new FrameworkPropertyMetadata(string.Empty,
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         //コンテンツの回転角度
         public double MyAngle
@@ -343,86 +253,86 @@ namespace _20250213_TopLeftRotateEzLineThumb
 
         #endregion 図形基本
 
-        #region 図形細部
+        //#region 図形細部
 
-        public DoubleCollection MyStrokeDashArray
-        {
-            get { return (DoubleCollection)GetValue(MyStrokeDashArrayProperty); }
-            set { SetValue(MyStrokeDashArrayProperty, value); }
-        }
-        public static readonly DependencyProperty MyStrokeDashArrayProperty =
-            DependencyProperty.Register(nameof(MyStrokeDashArray), typeof(DoubleCollection), typeof(KisoThumb),
-                new FrameworkPropertyMetadata(null,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-
-        public PenLineCap MyStrokeDashCap
-        {
-            get { return (PenLineCap)GetValue(MyStrokeDashCapProperty); }
-            set { SetValue(MyStrokeDashCapProperty, value); }
-        }
-        public static readonly DependencyProperty MyStrokeDashCapProperty =
-            DependencyProperty.Register(nameof(MyStrokeDashCap), typeof(PenLineCap), typeof(KisoThumb),
-                new FrameworkPropertyMetadata(PenLineCap.Flat,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        //public DoubleCollection MyStrokeDashArray
+        //{
+        //    get { return (DoubleCollection)GetValue(MyStrokeDashArrayProperty); }
+        //    set { SetValue(MyStrokeDashArrayProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyStrokeDashArrayProperty =
+        //    DependencyProperty.Register(nameof(MyStrokeDashArray), typeof(DoubleCollection), typeof(KisoThumb),
+        //        new FrameworkPropertyMetadata(null,
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
-        public double MyStrokeDashOffset
-        {
-            get { return (double)GetValue(MyStrokeDashOffsetProperty); }
-            set { SetValue(MyStrokeDashOffsetProperty, value); }
-        }
-        public static readonly DependencyProperty MyStrokeDashOffsetProperty =
-            DependencyProperty.Register(nameof(MyStrokeDashOffset), typeof(double), typeof(KisoThumb),
-                new FrameworkPropertyMetadata(0.0,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        //public PenLineCap MyStrokeDashCap
+        //{
+        //    get { return (PenLineCap)GetValue(MyStrokeDashCapProperty); }
+        //    set { SetValue(MyStrokeDashCapProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyStrokeDashCapProperty =
+        //    DependencyProperty.Register(nameof(MyStrokeDashCap), typeof(PenLineCap), typeof(KisoThumb),
+        //        new FrameworkPropertyMetadata(PenLineCap.Flat,
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
-        public PenLineCap MyStrokeEndLineCap
-        {
-            get { return (PenLineCap)GetValue(MyStrokeEndLineCapProperty); }
-            set { SetValue(MyStrokeEndLineCapProperty, value); }
-        }
-        public static readonly DependencyProperty MyStrokeEndLineCapProperty =
-            DependencyProperty.Register(nameof(MyStrokeEndLineCap), typeof(PenLineCap), typeof(KisoThumb),
-                new FrameworkPropertyMetadata(PenLineCap.Flat,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        //public double MyStrokeDashOffset
+        //{
+        //    get { return (double)GetValue(MyStrokeDashOffsetProperty); }
+        //    set { SetValue(MyStrokeDashOffsetProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyStrokeDashOffsetProperty =
+        //    DependencyProperty.Register(nameof(MyStrokeDashOffset), typeof(double), typeof(KisoThumb),
+        //        new FrameworkPropertyMetadata(0.0,
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
-        public PenLineCap MyStrokeStartLineCap
-        {
-            get { return (PenLineCap)GetValue(MyStrokeStartLineCapProperty); }
-            set { SetValue(MyStrokeStartLineCapProperty, value); }
-        }
-        public static readonly DependencyProperty MyStrokeStartLineCapProperty =
-            DependencyProperty.Register(nameof(MyStrokeStartLineCap), typeof(PenLineCap), typeof(KisoThumb),
-                new FrameworkPropertyMetadata(PenLineCap.Flat,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        //public PenLineCap MyStrokeEndLineCap
+        //{
+        //    get { return (PenLineCap)GetValue(MyStrokeEndLineCapProperty); }
+        //    set { SetValue(MyStrokeEndLineCapProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyStrokeEndLineCapProperty =
+        //    DependencyProperty.Register(nameof(MyStrokeEndLineCap), typeof(PenLineCap), typeof(KisoThumb),
+        //        new FrameworkPropertyMetadata(PenLineCap.Flat,
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
-        public double MyStrokeMiterLimit
-        {
-            get { return (double)GetValue(MyStrokeMiterLimitProperty); }
-            set { SetValue(MyStrokeMiterLimitProperty, value); }
-        }
-        public static readonly DependencyProperty MyStrokeMiterLimitProperty =
-            DependencyProperty.Register(nameof(MyStrokeMiterLimit), typeof(double), typeof(KisoThumb),
-                new FrameworkPropertyMetadata(10.0,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        //public PenLineCap MyStrokeStartLineCap
+        //{
+        //    get { return (PenLineCap)GetValue(MyStrokeStartLineCapProperty); }
+        //    set { SetValue(MyStrokeStartLineCapProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyStrokeStartLineCapProperty =
+        //    DependencyProperty.Register(nameof(MyStrokeStartLineCap), typeof(PenLineCap), typeof(KisoThumb),
+        //        new FrameworkPropertyMetadata(PenLineCap.Flat,
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        #endregion 図形細部
+
+        //public double MyStrokeMiterLimit
+        //{
+        //    get { return (double)GetValue(MyStrokeMiterLimitProperty); }
+        //    set { SetValue(MyStrokeMiterLimitProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyStrokeMiterLimitProperty =
+        //    DependencyProperty.Register(nameof(MyStrokeMiterLimit), typeof(double), typeof(KisoThumb),
+        //        new FrameworkPropertyMetadata(10.0,
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        //#endregion 図形細部
         #endregion 図形関連
 
         #region 特殊
@@ -443,7 +353,7 @@ namespace _20250213_TopLeftRotateEzLineThumb
 
     public class EzLineThumb : KisoThumb
     {
-        //public ObservableCollection<Thumb> MyAnchors { get; private set; } = [];
+        public ObservableCollection<Thumb> MyAnchors { get; private set; } = [];
         static EzLineThumb()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(EzLineThumb), new FrameworkPropertyMetadata(typeof(EzLineThumb)));
@@ -453,52 +363,10 @@ namespace _20250213_TopLeftRotateEzLineThumb
 
         }
 
-
-        #region 頂点移動用のThumb表示用のAdorner
-
-        //表示
         public void AnchorOn()
         {
-            if (AdornerLayer.GetAdornerLayer(MyEzLine) is AdornerLayer layer)
-            {
-                AnchorClear(layer);
-                EzLineAdorner ado = new(MyEzLine);
-                layer.Add(ado);
-            }
-        }
 
-        //削除
-        public void AnchorOff()
-        {
-            if (AdornerLayer.GetAdornerLayer(MyEzLine) is AdornerLayer layer)
-            {
-                AnchorClear(layer);
-            }
         }
-
-        //指定AdornerLayerに含まれるEzLineAdornerすべてを削除
-        private void AnchorClear(AdornerLayer layer)
-        {
-            var ados = layer.GetAdorners(MyEzLine);
-            if (ados is null) { return; }
-            for (int i = 0; i < ados.Length; i++)
-            {
-                if (ados[i] is EzLineAdorner ezado)
-                {
-                    layer.Remove(ezado);
-                }
-            }
-        }
-
-        //頂点追加時、Adornerをリセット、効率よくないけど簡単
-        //Pointの追加、削除時に使用
-        public void AnchorReset()
-        {
-            AnchorOff();
-            AnchorOn();
-        }
-
-        #endregion 頂点移動用のThumb表示用のAdorner
 
         public override void OnApplyTemplate()
         {
@@ -542,26 +410,6 @@ namespace _20250213_TopLeftRotateEzLineThumb
         public static readonly DependencyProperty MyEzLineProperty =
             DependencyProperty.Register(nameof(MyEzLine), typeof(EzLine), typeof(EzLineThumb), new PropertyMetadata(null));
 
-        /// <summary>
-        /// 頂点追加
-        /// </summary>
-        /// <param name="po">座標</param>
-        /// <param name="id">index、リストの中での位置</param>
-        public void AddPoint(Point po, int id)
-        {
-            MyPoints.Insert(id, po);
-            AnchorReset();
-        }
-
-        /// <summary>
-        /// 頂点削除
-        /// </summary>
-        /// <param name="id">index、リストの中での位置</param>
-        public void RemovePoint(int id)
-        {
-            MyPoints.RemoveAt(id);
-            AnchorReset();
-        }
     }
 
     #region コンバーター

@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace _20250213_TopLeftRotateEzLineThumb;
+namespace _20250213_LightTopLeftRotateEzLineThumb;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -23,26 +23,21 @@ public partial class MainWindow : Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        MyEz.AnchorOn();
-
+        if(AdornerLayer.GetAdornerLayer(MyEz.MyEzLine) is AdornerLayer layer)
+        {
+            layer.Add(new EzLineAdorner(MyEz.MyEzLine));
+        }
     }
 
     private void Button_Click_1(object sender, RoutedEventArgs e)
     {
-        MyEz.AnchorOff();
-    }
-
-    private void Button_Click_2(object sender, RoutedEventArgs e)
-    {
-        Random r = new();
-        MyEz.AddPoint(new Point(r.Next(200), r.Next(200)), MyEz.MyPoints.Count);
-    }
-
-    private void Button_Click_3(object sender, RoutedEventArgs e)
-    {
-        if (MyEz.MyPoints.Count > 0)
+        if (AdornerLayer.GetAdornerLayer(MyEz.MyEzLine) is AdornerLayer layer)
         {
-            MyEz.RemovePoint(MyEz.MyPoints.Count-1);
+            var ados = layer.GetAdorners(MyEz.MyEzLine);
+            if(ados!=null&& ados.Length > 0)
+            {
+                layer.Remove(ados[0]);
+            }
         }
     }
 }

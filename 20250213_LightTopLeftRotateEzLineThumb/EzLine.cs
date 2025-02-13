@@ -9,9 +9,8 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
-using System.Windows.Documents;
 
-namespace _20250213_TopLeftRotateEzLineThumb
+namespace _20250213_LightTopLeftRotateEzLineThumb
 {
     public class EzLine : Shape
     {
@@ -52,8 +51,6 @@ namespace _20250213_TopLeftRotateEzLineThumb
             MyOffsetBind();
         }
 
-
-
         //オフセット移動値のバインド
         private void MyOffsetBind()
         {
@@ -80,31 +77,21 @@ namespace _20250213_TopLeftRotateEzLineThumb
             SetBinding(MyPenProperty, mb);
         }
 
-        //図形の左上を回転軸にした場合のRenderTransformとのバインド
+        //RenderTransformとのバインド、これでMyAngle変更時にもBoundsが更新される
         private void MyRenderTransformBind()
         {
-            SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyAngleProperty), Converter = new MyConverterRotateTransform() });
+            ////中心軸座標、Penでの描画Boundsの中心にしているけど、それ以外にも試したい
+            ////三角形なら重心、四角形ならそのまま、それ以上なら平均座標とか
+            //SetBinding(MyCenterXProperty, new Binding() { Source = this, Path = new PropertyPath(MyBounds2Property), Converter = new MyConverterCenterX(), Mode = BindingMode.OneWay });
+            //SetBinding(MyCenterYProperty, new Binding() { Source = this, Path = new PropertyPath(MyBounds2Property), Converter = new MyConverterCenterY(), Mode = BindingMode.OneWay });
+
+            //RenderTransformとのバインド、RenderTransformはRotateTransformに決め打ちしている
+            MultiBinding mb = new() { Converter = new MyConverterRenderTransform() };
+            mb.Bindings.Add(MakeOneWayBind(MyAngleProperty));
+            mb.Bindings.Add(MakeOneWayBind(MyCenterXProperty));
+            mb.Bindings.Add(MakeOneWayBind(MyCenterYProperty));
+            SetBinding(RenderTransformProperty, mb);
         }
-
-
-        ////図形の中心を回転軸にした場合のRenderTransformとのバインド、
-        ////これでMyAngle変更時にもBoundsが更新される
-        //private void MyRenderTransformBind()
-        //{
-        //    //中心軸座標、Penでの描画Boundsの中心にしているけど、それ以外にも試したい
-        //    //三角形なら重心、四角形ならそのまま、それ以上なら平均座標とか
-        //    SetBinding(MyCenterXProperty, new Binding() { Source = this, Path = new PropertyPath(MyBounds2Property), Converter = new MyConverterCenterX(), Mode = BindingMode.OneWay });
-        //    SetBinding(MyCenterYProperty, new Binding() { Source = this, Path = new PropertyPath(MyBounds2Property), Converter = new MyConverterCenterY(), Mode = BindingMode.OneWay });
-
-        //    //RenderTransformとのバインド、RenderTransformはRotateTransformに決め打ちしている
-        //    MultiBinding mb = new() { Converter = new MyConverterRenderTransform() };
-        //    mb.Bindings.Add(MakeOneWayBind(MyAngleProperty));
-        //    mb.Bindings.Add(MakeOneWayBind(MyCenterXProperty));
-        //    mb.Bindings.Add(MakeOneWayBind(MyCenterYProperty));
-        //    SetBinding(RenderTransformProperty, mb);
-        //}
-
-
 
         private Binding MakeOneWayBind(DependencyProperty property)
         {
@@ -345,21 +332,6 @@ namespace _20250213_TopLeftRotateEzLineThumb
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    //回転軸を図形の左上にした場合のRotateTransform
-    public class MyConverterRotateTransform : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var angle = (double)value;
-            return new RotateTransform(angle, 0, 0);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

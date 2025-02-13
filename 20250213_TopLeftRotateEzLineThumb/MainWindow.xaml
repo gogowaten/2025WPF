@@ -6,27 +6,32 @@
         xmlns:local="clr-namespace:_20250213_TopLeftRotateEzLineThumb"
         mc:Ignorable="d"
               Title="MainWindow" Height="367" Width="602">
-  <Window.Resources>
-    <Storyboard x:Key="anime">
-      <DoubleAnimation Storyboard.TargetName="MyEz"
-                       Storyboard.TargetProperty="MyAngle"
-                       From="0" To="360"
-                       Duration="0:0:4" RepeatBehavior="0:0:4"
-                       FillBehavior="Stop"/>
-    </Storyboard>
-  </Window.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
       <ColumnDefinition Width="250"/>
     </Grid.ColumnDefinitions>
-    <Canvas UseLayoutRounding="True">
-      <local:EzLineThumb x:Name="MyEz" MyLeft="100" MyTop="100" Background="MistyRose" MyIsFilled="False"
+    <Canvas UseLayoutRounding="True" Background="Transparent">
+      <local:EzLineThumb x:Name="MyEz" MyLeft="100" MyTop="100" Background="AliceBlue" MyIsFilled="False"
                          MyPoints="0,0,100,0,50,50,100,100"
                          MyStrokeThickness="40"
-                         MyStroke="Tomato" MyStrokeMiterLimit="2"
+                         MyStroke="DodgerBlue" MyStrokeMiterLimit="2"
                          MyAngle="0"/>
-
+      
     </Canvas>
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyEz}">
+      <UniformGrid Columns="2">
+        <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="360"/>
+        <TextBlock Text="{Binding MyAngle, StringFormat=Angle 0}"/>
+        <Slider Value="{Binding MyStrokeThickness}" Minimum="0" Maximum="60"/>
+        <TextBlock Text="{Binding MyStrokeThickness, StringFormat=StrokeThickness 0}"/>
+        
+      </UniformGrid>
+      <Button Content="AnchorOn" Click="Button_Click"/>
+      <Button Content="AnchorOff" Click="Button_Click_1"/>
+      <Button Content="AddRamdomPoint" Click="Button_Click_2"/>
+      <Button Content="RemoveLastPoint" Click="Button_Click_3"/>
+      <TextBlock Text="{Binding MyPoints, StringFormat=Points {0:0 }}" TextWrapping="Wrap"/>
+    </StackPanel>
   </Grid>
 </Window>

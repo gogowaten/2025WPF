@@ -9,79 +9,104 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows;
+using System.Windows.Data;
 
 namespace _20250213_TopLeftRotateEzLineThumb
 {
     public class EzLineAdorner : Adorner
     {
         //readonly Thumb MyThumb;//サイズ変更用つまみ
-        private readonly List<Thumb> MyKnobList;
+        private readonly List<AnchorEllipseThumb> MyAnchorList;
         private readonly Canvas MyCanvas;
         readonly VisualCollection MyVisualChildren;//表示したい要素を管理する用？
         readonly EzLine MyTarget;//装飾する対象要素
         public EzLineAdorner(EzLine adornedElement) : base(adornedElement)
         {
             MyCanvas = new();
+            MyAnchorList = [];
             MyTarget = adornedElement;
-            MyVisualChildren = new VisualCollection(this)
-            {
-                MyCanvas
-            };
-            MyKnobList = [];
+            MyVisualChildren = new VisualCollection(this) { MyCanvas };
+            
 
-            PointCollection pc = MyTarget.MyPoints;
-            for (int i = 0; i < pc.Count; i++)
+            for (int i = 0; i < MyTarget.MyPoints.Count; i++)
             {
-                Thumb knob = MakeKnobThumb();
-                knob.Tag = i;
-                knob.DragDelta += MyThumb_DragDelta;
-                MyKnobList.Add(knob);
-                MyCanvas.Children.Add(knob);
+                MakeKnobThumb2(i);
             }
 
             ResetAnchorLocate();
-
+            Loaded += EzLineAdorner_Loaded;
         }
 
+        private void EzLineAdorner_Loaded(object sender, RoutedEventArgs e)
+        {
+            MyBind();
+        }
+
+        private void MyBind()
+        {
+            Binding bind = new() { Source = this, Path = new PropertyPath(AnchorSizeProperty) };
+            foreach (var item in MyAnchorList)
+            {
+                item.SetBinding(AnchorThumb.MyOutSizeProperty, bind);
+                item.SetBinding(AnchorThumb.MyInSizeProperty, bind);
+            }
+        }
         private void ResetAnchorLocate()
         {
             for (int i = 0; i < MyTarget.MyPoints.Count; i++)
             {
                 Point p = MyTarget.MyPoints[i];
-                Canvas.SetLeft(MyKnobList[i], p.X);
-                Canvas.SetTop(MyKnobList[i], p.Y);
+                Canvas.SetLeft(MyAnchorList[i], p.X - AnchorSize / 2.0);
+                Canvas.SetTop(MyAnchorList[i], p.Y - AnchorSize / 2.0);
             }
         }
 
 
-        private static Thumb MakeKnobThumb()
+        private AnchorEllipseThumb MakeKnobThumb2(int id)
         {
-            Thumb knob = new()
+            AnchorEllipseThumb anchor = new()
             {
-                Cursor = Cursors.SizeNWSE,
-                Height = 20,
-                Width = 20,
-                Opacity = 0.5,
-                Background = Brushes.Red,
+                Cursor = Cursors.Hand,
+                Height = AnchorSize,
+                Width = AnchorSize,
+                //Opacity = 0.3,
+                //Background = Brushes.Red,
+                Tag = id
             };
-            return knob;
+            anchor.DragDelta += MyThumb_DragDelta;
+            MyAnchorList.Insert(id, anchor);
+            MyCanvas.Children.Insert(id, anchor);
+            return anchor;
         }
+
 
         private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            if (sender is Thumb t)
+            if (sender is AnchorEllipseThumb t)
             {
                 int id = (int)t.Tag;
                 Point po = MyTarget.MyPoints[id];
                 double left = po.X + e.HorizontalChange;
                 double top = po.Y + e.VerticalChange;
+
                 Point npo = new(left, top);
                 MyTarget.MyPoints[id] = npo;
-                Canvas.SetLeft(t, left);
-                Canvas.SetTop(t, top);
+
+                Canvas.SetLeft(t, left - AnchorSize / 2.0);
+                Canvas.SetTop(t, top - AnchorSize / 2.0);
                 e.Handled = true;
             }
         }
+
+
+        public double AnchorSize
+        {
+            get { return (double)GetValue(AnchorSizeProperty); }
+            set { SetValue(AnchorSizeProperty, value); }
+        }
+        public static readonly DependencyProperty AnchorSizeProperty =
+            DependencyProperty.Register(nameof(AnchorSize), typeof(double), typeof(EzLineAdorner), new PropertyMetadata(50.0));
+
 
         protected override Size ArrangeOverride(Size finalSize)
         {
@@ -96,5 +121,9 @@ namespace _20250213_TopLeftRotateEzLineThumb
 
         protected override Visual GetVisualChild(int index) => MyVisualChildren[index];
         #endregion VisualCollectionで必要
+
+
+
+
     }
 }
