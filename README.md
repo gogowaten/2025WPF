@@ -4,6 +4,11 @@
 https://github.com/gogowaten/2025WPF/tree/main/20250211<br>
 Adornerを使ったAnchorThumbで頂点座標の変更。回転が入ると動きがおかしくなるのはCanvasのサイズと位置の自動調整が原因かも？<br>
 自動調整は止めにしようと思うので、また作り直し<br>
+かと思っていたけど、おかしな動きは図形の回転軸が中心だったことが原因だった<br>
+
+左上にしたら普通に動いた<br>
+![Animation20250212_215553](https://github.com/user-attachments/assets/1a328767-49c2-413b-9318-0a3857860103)
+もうこれでいい、中心回転は諦める
 <br><br><br>
 
 
