@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+//WPF、図形の回転後の頂点移動できた、ただし回転軸は左上 - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/02/13/183700
 
 namespace _20250213_TopLeftRotateEzLineThumb;
 

@@ -18,7 +18,10 @@ using System.Windows.Shapes;
 
 namespace _20250213_TopLeftRotateEzLineThumb
 {
-    public class AnchorThumb : Thumb
+    /// <summary>
+    /// 頂点移動用のThumbの基礎
+    /// </summary>
+    public abstract class AnchorThumb : Thumb
     {
         static AnchorThumb()
         {
