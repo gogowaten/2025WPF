@@ -374,12 +374,12 @@ namespace _20250211
             var x = (double)values[1];
             var y = (double)values[2];
 
-            //図形のBoundsの中心で回転、
-            //これだと回転は自然だけど、回転時の頂点移動の処理がうまくできない
-            return new RotateTransform(angle, x, y);
+            ////図形のBoundsの中心で回転、
+            ////これだと回転は自然だけど、回転時の頂点移動の処理がうまくできない
+            //return new RotateTransform(angle, x, y);
 
-            ////図形の左上を中心に回転、これなら回転時の頂点移動も普通に処理できる
-            //return new RotateTransform(angle, 0, 0);
+            //図形の左上を中心に回転、これなら回転時の頂点移動も普通に処理できる
+            return new RotateTransform(angle, 0, 0);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

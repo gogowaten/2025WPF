@@ -36,11 +36,16 @@ namespace _20250211
             //MyEz.AnchorsOff();
             if (AdornerLayer.GetAdornerLayer(MyEz.MyEzLine) is AdornerLayer layer)
             {
-               var ado = layer.GetAdorners(MyEz.MyEzLine);
+                var ado = layer.GetAdorners(MyEz.MyEzLine);
                 layer.Remove(ado[0]);
             }
         }
 
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            //MyEz.ContentRotate(90);
+            //MyEz.ContentRotate(MyEz.MyAngle + 45);
 
+        }
     }
 }

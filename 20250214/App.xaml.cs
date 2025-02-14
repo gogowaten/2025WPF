@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace _20250213_LightTopLeftRotateEzLineThumb;
+namespace _20250214;
 
 /// <summary>
 /// Interaction logic for App.xaml

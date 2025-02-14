@@ -406,6 +406,33 @@ namespace _20250211
         public static readonly DependencyProperty MyEzLineProperty =
             DependencyProperty.Register(nameof(MyEzLine), typeof(EzLine), typeof(EzLineThumb), new PropertyMetadata(null));
 
+        //public void ContentRotate(double angle)
+        //{
+        //    var rect = MyEzLine.MyBounds2;
+        //    var rect4 = MyEzLine.MyBounds4;
+
+        //    var rtf = MyEzLine.RenderTransform.Clone();
+
+        //    RotateTransform topLeftRotate = new(angle);
+        //    var topLeftRect = topLeftRotate.TransformBounds(rect4);
+        //    var topLeftRect2 = topLeftRotate.TransformBounds(rect);
+
+        //    var centerRotate = new RotateTransform(angle, rect4.Width / 2, rect4.Height / 2);
+        //    var centerRect = centerRotate.TransformBounds(rect4);
+        //    var centerRect2 = centerRotate.TransformBounds(rect);
+        //    var centerZeroRect = centerRotate.TransformBounds(new Rect(0, 0, rect4.Width, rect4.Height));
+        //    var centerZeroRect2 = centerRotate.TransformBounds(new Rect(0, 0, rect.Width, rect.Height));
+
+        //    MyEzLine.MyAngle = angle;
+
+        //    var deffx = MyLeft + centerZeroRect.Left - topLeftRect.Left + rect4.Left;
+        //    var diffy = MyTop + centerZeroRect.Top - topLeftRect.Top + rect4.Top;
+        //    var tlc = MyTop + centerRect.Top - topLeftRect.Top;
+        //    MyTop = diffy;
+        //    MyLeft = deffx;
+        //}
+
+
     }
 
     #region コンバーター

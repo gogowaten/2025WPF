@@ -52,6 +52,7 @@
         <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="360"
               TickFrequency="30" IsSnapToTickEnabled="True"/>
       </UniformGrid>
+      <Button Content="rotate" Click="Button_Click_2"/>
     </StackPanel>
 
 
