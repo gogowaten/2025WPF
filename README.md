@@ -1,3 +1,11 @@
+# _20250213_TopLeftRotateEzLineThumb
+![Animation20250213_170317](https://github.com/user-attachments/assets/d54f28b9-b479-472b-b7aa-1b354900ab79)<br>
+WPF、図形の回転後の頂点移動できた、ただし回転軸は左上 - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/02/13/183700<br>
+<br><br><br>
+
+
+
 # _20250211
 ![Animation20250211_181604](https://github.com/user-attachments/assets/5cad01f0-9b80-4b3a-86ca-4ec7bc97ac24)<br>
 2025WPF/20250211 at main · gogowaten/2025WPF<br>
@@ -7,7 +15,7 @@ Adornerを使ったAnchorThumbで頂点座標の変更。回転が入ると動�
 かと思っていたけど、おかしな動きは図形の回転軸が中心だったことが原因だった<br>
 
 左上にしたら普通に動いた<br>
-![Animation20250212_215553](https://github.com/user-attachments/assets/1a328767-49c2-413b-9318-0a3857860103)
+![Animation20250212_215553](https://github.com/user-attachments/assets/1a328767-49c2-413b-9318-0a3857860103)<br>
 もうこれでいい、中心回転は諦める
 <br><br><br>
 
