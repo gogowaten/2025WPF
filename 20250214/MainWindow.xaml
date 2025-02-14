@@ -5,8 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250214"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="367" Width="602">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="250"/>
+    </Grid.ColumnDefinitions>
+    <Canvas x:Name="MyCanvas" UseLayoutRounding="True" Background="Transparent">
+      <local:EzLineThumb x:Name="MyEz" Background="AliceBlue" MyIsFilled="False"
+                         MyLeft="100" MyTop="100"
+                         MyStrokeThickness="4" MyPoints="0,0,100,100"
+                         MyStroke="DodgerBlue" MyStrokeMiterLimit="2" MyStrokeDashArray="2" MyStrokeDashOffset="10"
+                         MyAngle="0"/>
 
-    </Grid>
+      <local:TextThumb x:Name="MyTextThumb" MyText="aaaaaaaaaa"
+                       MyLeft="50" MyTop="50"
+                       Foreground="Red"/>
+
+    </Canvas>
+    
+    
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyEz}">
+      <UniformGrid Columns="2">
+        <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="360"/>
+        <TextBlock Text="{Binding MyAngle, StringFormat=Angle 0}"/>
+        <Slider Value="{Binding MyStrokeThickness}" Minimum="0" Maximum="60"/>
+        <TextBlock Text="{Binding MyStrokeThickness, StringFormat=StrokeThickness 0}"/>
+      </UniformGrid>
+      
+      <Button Content="AnchorOn" Click="Button_Click"/>
+      <Button Content="AnchorOff" Click="Button_Click_1"/>
+      <Button Content="AddRamdomPoint" Click="Button_Click_2"/>
+      <Button Content="RemoveLastPoint" Click="Button_Click_3"/>
+      <TextBlock Text="{Binding MyPoints, StringFormat=Points {0:0 }}" TextWrapping="Wrap"/>
+      <TextBlock Text="{Binding MyItemData.MyPoints, StringFormat=DataPoints {0:0 }}" TextWrapping="Wrap"/>
+      <TextBlock Text="{Binding MyItemData.MyStrokeThickness, StringFormat=DataStrokeThickness {0:0 }}" TextWrapping="Wrap"/>
+      <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=DataLeft {0:0 }}" TextWrapping="Wrap"/>
+      <Button Content="test" Click="Button_Click_4"/>
+      <Button Content="oekaki" Click="Button_Click_5"/>
+    </StackPanel>
+  </Grid>
 </Window>
