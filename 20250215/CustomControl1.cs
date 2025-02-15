@@ -17,36 +17,56 @@ using System.Windows.Shapes;
 
 namespace _20250215
 {
+    public enum ItemType { None = 0, Text }
     public class KisoThumb : Thumb
     {
+        protected ItemType MyItemType { get; set; }
         static KisoThumb()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(KisoThumb), new FrameworkPropertyMetadata(typeof(KisoThumb)));
         }
         public KisoThumb()
         {
-            //DataContext = MyItemData;
+            MyItemData = new() { MyItemType = ItemType.None };
+            DataContext = MyItemData;
             DragDelta += KisoThumb_DragDelta;
-            Loaded += KisoThumb_Loaded;
+            Initialized += KisoThumb_Initialized;
         }
 
-        private void KisoThumb_Loaded(object sender, RoutedEventArgs e)
+        private void KisoThumb_Initialized(object? sender, EventArgs e)
         {
-            if (MyItemData is null)
-            {
-                MyItemData = new();
-                MyBind();
+            //デザイン画面で作成された要素の場合、ItemDataは無いので新規作成後に
+            //デザイン画面の設定をItemDataに反映してからバインド設定
+            if (MyItemData.MyItemType==ItemType.None)
+            {                
+                if (MyItemType == ItemType.Text)
+                {
+                    MyItemData.MyItemType = ItemType.Text;
+                }
+                CopyValueToItemData();
+                MyItemDataBind();
             }
+            //ファイルやItemDataから作成された要素の場合、そのままItemDataとバインド
             else
             {
-
+                MyItemDataBind();
             }
+
+            DataContext = MyItemData; //ここで適用
+            
         }
 
-        private void MyBind()
+        public KisoThumb(ItemData data)
+        {
+            MyItemData = data;
+        }
+
+
+        //ItemDataなしのコンストラクタで使う
+        //バインドの前に、XAMLからの設定をItemDataにいれる
+        private void CopyValueToItemData()
         {
             //XAMLでの設定をItemDataに入れる
-            DataContext = MyItemData;
             MyItemData.MyText = MyText;
             Color bc = ((SolidColorBrush)MyForeground).Color;
             MyItemData.MyForegroundA = bc.A;
@@ -60,7 +80,11 @@ namespace _20250215
             MyItemData.MyBackgroundG = bc.G;
             MyItemData.MyBackgroundB = bc.B;
 
+        }
 
+        //バインド、ItemDataをソース
+        private void MyItemDataBind()
+        {
             //バインド、ItemDataをソース
             SetBinding(MyTextProperty, nameof(MyItemData.MyText));
             SetBinding(MyLeftProperty, nameof(MyItemData.MyLeft));
@@ -93,14 +117,6 @@ namespace _20250215
             }
         }
 
-        //public override void OnApplyTemplate()
-        //{
-        //    base.OnApplyTemplate();
-        //    if (GetTemplateChild("PART_Canvas") is Canvas panel)
-        //    {
-        //        MyBaseCanvas = panel;
-        //    }
-        //}
 
         #region 依存関係プロパティ
 
@@ -169,14 +185,6 @@ namespace _20250215
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
-
-        //public Canvas MyBaseCanvas
-        //{
-        //    get { return (Canvas)GetValue(MyBaseCanvasProperty); }
-        //    private set { SetValue(MyBaseCanvasProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyBaseCanvasProperty =
-        //    DependencyProperty.Register(nameof(MyBaseCanvas), typeof(Canvas), typeof(KisoThumb), new PropertyMetadata(null));
 
 
         public double MyLeft
@@ -446,9 +454,15 @@ namespace _20250215
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TextThumb), new FrameworkPropertyMetadata(typeof(TextThumb)));
         }
+
         public TextThumb()
         {
+            MyItemType = ItemType.Text;
+        }
 
+        public TextThumb(ItemData data)
+        {
+            MyItemData = data;
         }
     }
 

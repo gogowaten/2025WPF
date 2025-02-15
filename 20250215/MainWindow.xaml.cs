@@ -45,8 +45,37 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-
             throw new ArgumentException(ex.Message);
+        }
+    }
+
+    private T? Deserialize<T>(string filePath)
+    {
+        DataContractSerializer serializer = new(typeof(T));
+        using XmlReader reader = XmlReader.Create(filePath);
+        try
+        {
+            if(serializer.ReadObject(reader) is T t) { return t; }
+        }
+        catch (Exception ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+        return default;
+    }
+
+    private void Button_Click_1(object sender, RoutedEventArgs e)
+    {
+        string filePath = "E:\\20250215.xml";
+        ItemData? data = Deserialize<ItemData>(filePath);
+
+        if(data is not null)
+        {
+            if(data.MyItemType == ItemType.Text)
+            {
+                var thumb = new TextThumb(data);
+                MyCanvas.Children.Add(thumb);
+            }
         }
     }
 }

@@ -11,7 +11,7 @@
       <ColumnDefinition/>
       <ColumnDefinition Width="250"/>
     </Grid.ColumnDefinitions>
-    <Canvas UseLayoutRounding="True" Background="Transparent">
+    <Canvas x:Name="MyCanvas" UseLayoutRounding="True">
       <local:TextThumb x:Name="MyTT" FontSize="30"
                        MyText="bbbbbbbbbbbbbb"
                        MyForeground="Red"
@@ -21,17 +21,28 @@
     </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyTT}">
-      <TextBlock Text="{Binding MyText}"/>
-      <TextBlock Text="{Binding MyItemData.MyText}"/>
-      <TextBox Text="{Binding MyItemData.MyText, UpdateSourceTrigger=PropertyChanged}"/>
-      <Separator/>
-      <TextBlock Text="{Binding MyForeground, StringFormat=Fore {0}}"/>
-      <TextBlock Text="{Binding MyItemData.MyForegroundR, StringFormat=ForeR 0}"/>
-
-      <Separator/>
-      <TextBlock Text="{Binding MyLeft}"/>
-      <TextBlock Text="{Binding MyItemData.MyLeft}"/>
+      <UniformGrid Columns="2">
+        <TextBlock Text="{Binding MyText}"/>
+        <TextBlock Text="Text"/>
+        <TextBlock Text="{Binding MyItemData.MyText}"/>
+        <TextBlock Text="DataText"/>
+        <TextBox Text="{Binding MyItemData.MyText, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Text="入力用"/>
+        <Separator/>
+        <Separator/>
+        <TextBlock Text="{Binding MyForeground, StringFormat=Fore {0}}"/>
+        <TextBlock Text="Foreground"/>
+        <TextBlock Text="{Binding MyItemData.MyForegroundR, StringFormat=ForeR 0}"/>
+        <TextBlock Text="DataForegroundRed"/>
+        <Slider Value="{Binding MyItemData.MyForegroundR}" Minimum="0" Maximum="255"/>
+        <TextBlock Text="入力用"/>
+        <Separator/>
+        <Separator/>
+        <TextBlock Text="{Binding MyLeft}"/>
+        <TextBlock Text="{Binding MyItemData.MyLeft}"/>
+      </UniformGrid>
       <Button Content="serealize" Click="Button_Click"/>
+      <Button Content="deserealize" Click="Button_Click_1"/>
     </StackPanel>
   </Grid>
 </Window>
