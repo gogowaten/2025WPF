@@ -18,9 +18,9 @@
                          MyStroke="DodgerBlue" MyStrokeMiterLimit="2" MyStrokeDashArray="2" MyStrokeDashOffset="10"
                          MyAngle="0"/>
 
-      <local:TextThumb x:Name="MyTextThumb" MyText="aaaaaaaaaa"
+      <!--<local:TextThumb x:Name="MyTextThumb" MyText="aaaaaaaaaa"
                        MyLeft="50" MyTop="50"
-                       Foreground="Red"/>
+                       Foreground="Red"/>-->
 
     </Canvas>
     

@@ -458,25 +458,42 @@ namespace _20250214
         }
         public KisoThumb()
         {
-            var left = MyLeft;
-            MyItemData = new();
-            
+            //MyItemData = new();
+
             DataContext = MyItemData;
             DragDelta += KisoThumb_DragDelta;
             Loaded += KisoThumb_Loaded;
         }
 
-        private void KisoThumb_Loaded(object sender, RoutedEventArgs e)
-        {
-            //if (MyItemData is null) { MyItemData = new(); }
-            //ItemDataBind();
-            //ItemDataBindSourceThis();
-        }
-
         public KisoThumb(ItemData itemData) : this()
         {
-            //MyBindThisSource();//ItemDataソース
+            //var name = this.Name;
+            //var left = MyLeft;
+            //MyItemData = itemData;            
+            //MyBindItemSource();
+            //var aleft = MyLeft;
+            //var dleft = MyItemData.MyLeft;
+
             MyItemData = itemData;
+        }
+
+        private void KisoThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            var name = this.Name;
+            var left = MyLeft;
+            //MyItemData ??= new();
+            //MyBindThisSource();
+            if (MyItemData is null)
+            {
+                MyItemData = new();
+                MyBindThisSource();
+            }
+            else
+            {
+                MyBindItemSource();
+            }
+            var aleft = MyLeft;
+            var dleft = MyItemData.MyLeft;
         }
 
 
@@ -489,8 +506,6 @@ namespace _20250214
             var iniLeft = MyLeft;
             var data = MyItemData;
 
-            
-
             SetBinding(MyTextProperty, MakeBindSourceItemData(ItemData.MyTextProperty));
             SetBinding(MyAngleProperty, MakeBindSourceItemData(ItemData.MyAngleProperty));
             SetBinding(MyFillProperty, MakeBindSourceItemData(ItemData.MyFillProperty));
@@ -502,13 +517,13 @@ namespace _20250214
             SetBinding(MyIsStrokedProperty, MakeBindSourceItemData(ItemData.MyIsStrokedProperty));
             SetBinding(MyStrokeDashOffsetProperty, MakeBindSourceItemData(ItemData.MyStrokeDashOffsetProperty));
             SetBinding(MyPointsProperty, MakeBindSourceItemData(ItemData.MyPointsProperty));
-            
+
             SetBinding(MyTopProperty, MakeBindSourceItemData(ItemData.MyTopProperty));
             SetBinding(MyLeftProperty, MakeBindSourceItemData(ItemData.MyLeftProperty));
             SetBinding(MyStrokeThicknessProperty, MakeBindSourceItemData(ItemData.MyStrokeThicknessProperty));
             SetBinding(MyStrokeProperty, MakeBindSourceItemData(ItemData.MyStrokeProperty));
             SetBinding(MyStrokeLineJoinProperty, MakeBindSourceItemData(ItemData.MyStrokeLineJoinProperty));
-            
+
             SetBinding(MyStrokeDashArrayProperty, MakeBindSourceItemData(ItemData.MyStrokeDashArrayProperty));
             SetBinding(MyStrokeDashCapProperty, MakeBindSourceItemData(ItemData.MyStrokeDashCapProperty));
             SetBinding(MyStrokeEndLineCapProperty, MakeBindSourceItemData(ItemData.MyStrokeEndLineCapProperty));
@@ -519,7 +534,7 @@ namespace _20250214
         }
 
         /// <summary>
-        /// ItemDataをソース
+        /// thisをソース
         /// </summary>
         protected void MyBindThisSource()
         {
@@ -944,14 +959,15 @@ namespace _20250214
         }
         public EzLineThumb()
         {
-            
+
             Loaded += EzLineThumb_Loaded;
         }
 
         private void EzLineThumb_Loaded(object sender, RoutedEventArgs e)
         {
             var left = MyLeft;
-            MyBindThisSource();
+            //MyBindThisSource();
+            //MyBindItemSource();
             var ll = MyLeft;
             var dal = MyItemData.MyLeft;
         }

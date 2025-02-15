@@ -21,6 +21,7 @@ namespace _20250214;
 /// </summary>
 public partial class MainWindow : Window
 {
+    private EzLineThumb MyTT;
     public MainWindow()
     {
         InitializeComponent();
@@ -34,13 +35,13 @@ public partial class MainWindow : Window
         {
             MyLeft = 200,
             MyPoints = pc,
-
+            MyStrokeThickness=20,
         };
 
-        //EzLineThumb ez = new(data);
-        //ez.Name = "eeeeeeeeee";
-        //MyCanvas.Children.Add(ez);
-        //var neko = ez.MyItemData;
+        MyTT = new(data);
+        MyTT.Name = "eeeeeeeeee";
+        MyCanvas.Children.Add(MyTT);
+        var neko = MyTT.MyItemData;
     }
 
     private void MyCanvas_MouseMove(object sender, MouseEventArgs e)
@@ -79,17 +80,11 @@ public partial class MainWindow : Window
 
     private void Button_Click_4(object sender, RoutedEventArgs e)
     {
-        MyEz.ZeroFix();
+        var left = MyTT.MyLeft;
+        var data = MyTT.MyItemData;
+        //MyEz.ZeroFix();
     }
 
-    private void OekakiOn()
-    {
-        MyEz.MyPoints = [];
-        MyCanvas.PreviewMouseLeftButtonDown += MyCanvas_PreviewMouseLeftButtonDown;
-        //MyCanvas.MouseLeftButtonDown += MyCanvas_MouseLeftButtonDown;
-        MyCanvas.MouseMove += MyCanvas_MouseMove;
-        MyCanvas.MouseRightButtonDown += MyCanvas_MouseRightButtonDown;
-    }
 
     private void MyCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
@@ -116,9 +111,17 @@ public partial class MainWindow : Window
 
         
         string filePath = "E:\\20250214.xml";
-        
-        SaveLine(MyEz.MyItemData, filePath);
 
+        //SaveLine(MyEz.MyItemData, filePath);
+        CCC c = new();
+        //SaveLine3(c, filePath);
+        //SaveLine2(MyEz, filePath);
+        string kanac = KanaSerialize(MyEz);
+        var kanad = KanaDeserialize(kanac);
+        if(kanad is EzLineThumb kana)
+        {
+            MyCanvas.Children.Add(kana);
+        }
     }
 
 
@@ -128,5 +131,116 @@ public partial class MainWindow : Window
         using FileStream stream = new(filePath, FileMode.Create);
         serializer.WriteObject(stream, line);
     }
+    private void SaveLine2<T>(T line, string filePath)
+    {
+        DataContractSerializer serializer = new(typeof(T));
+        using FileStream stream = new(filePath, FileMode.Create);
+        serializer.WriteObject(stream, line);
+    }
+    private void SaveLine3<T>(T line, string filePath)
+    {
+        DataContractSerializer serializer = new(typeof(T));
+        using (XmlWriter writer = XmlWriter.Create(filePath))
+        {
+            try
+            {
+                serializer.WriteObject(writer, line);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+        
+    }
 
+    // 指定の WPF オブジェクトをシリアル化する
+    // obj : シリアル化するオブジェクト
+    // 戻り値は、シリアル化後の XML ドキュメント形式の文字列
+    private string KanaSerialize(object obj)
+    {
+        var settings = new XmlWriterSettings();
+
+        // 出力時の条件
+        settings.Indent = true;
+        settings.NewLineOnAttributes = false;
+
+        // XML バージョン情報の出力を抑制する
+        // バージョン情報が必要な場合は ConformanceLevel.Document を指定する
+        settings.ConformanceLevel = ConformanceLevel.Fragment;
+
+        var sb = new StringBuilder();
+        XmlWriter writer = null;
+        XamlDesignerSerializationManager manager = null;
+
+        try
+        {
+            writer = XmlWriter.Create(sb, settings);
+            manager = new XamlDesignerSerializationManager(writer);
+            manager.XamlWriterMode = XamlWriterMode.Expression;
+            System.Windows.Markup.XamlWriter.Save(obj, manager);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
+        finally
+        {
+            if (writer != null)
+                writer.Close();
+        }
+
+        return sb.ToString();
+    }
+
+    //---------------------------------------------------------------------------------------------
+    // 指定の XML 文を読み込んで逆シリアル化し、WPF オブジェクトを返す
+    // xmlText : XML 文
+    // 戻り値  : WPF オブジェクト
+    private object KanaDeserialize(string xmlText)
+    {
+        var doc = new XmlDocument();
+
+        try
+        {
+            doc.LoadXml(xmlText);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
+
+        object obj = null;
+
+        try
+        {
+            obj = System.Windows.Markup.XamlReader.Load(new XmlNodeReader(doc));
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
+
+        return obj;
+    }
+}
+
+
+[DataContract]
+[KnownType(typeof(SolidColorBrush))]
+public class CCC : DependencyObject
+{
+    [DataMember]
+    public Brush MyBrush
+    {
+        get { return (Brush)GetValue(MyBrushProperty); }
+        set { SetValue(MyBrushProperty, value); }
+    }
+    public static readonly DependencyProperty MyBrushProperty =
+        DependencyProperty.Register(nameof(MyBrush), typeof(Brush), typeof(CCC), new PropertyMetadata(Brushes.Transparent));
+
+    public CCC()
+    {
+        MyBrush = Brushes.Red;
+    }
 }
