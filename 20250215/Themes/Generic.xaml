@@ -31,6 +31,8 @@
           <Canvas x:Name="PART_Canvas" Background="{TemplateBinding Background}">
             <TextBlock x:Name="PART_TextBlock"
                        Text="{TemplateBinding MyText}"
+                       Foreground="{TemplateBinding MyForeground}"
+                       Background="{TemplateBinding MyBackground}"
                        />
             <Rectangle/>
           </Canvas>

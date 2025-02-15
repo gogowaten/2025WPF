@@ -5,10 +5,12 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace _20250215
 {
     [DataContract]
+    [KnownType(typeof(SolidColorBrush)), KnownType(typeof(MatrixTransform))]
     public class ItemData : IExtensibleDataObject, INotifyPropertyChanged
     {
         #region 必要
@@ -38,7 +40,16 @@ namespace _20250215
 
         private string _myText = string.Empty;
         [DataMember] public string MyText { get => _myText; set => SetProperty(ref _myText, value); }
-        
+
+
+        //private Brush _myForeground = Brushes.Black;
+        //[DataMember] public Brush MyForeground { get => _myForeground; set => SetProperty(ref _myForeground, value); }
+
+        //private Brush _myBackground = null!;
+        //[DataMember] public Brush MyBackground { get => _myBackground; set => SetProperty(ref _myBackground, value); }
+
+        private byte _myForegroundA;
+        public byte MyForegroundA { get => _myForegroundA; set => SetProperty(ref _myForegroundA, value); }
 
 
     }

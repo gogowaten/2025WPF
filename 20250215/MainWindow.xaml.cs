@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.Serialization;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -8,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace _20250215;
 
@@ -19,5 +21,32 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+    }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        string filePath = "E:\\20250215.xml";
+        DataSerealize(MyTT.MyItemData, filePath);
+    }
+
+    private void DataSerealize<T>(T data, string filePath)
+    {
+        XmlWriterSettings settings = new()
+        {
+            Indent = true,
+            Encoding = new UTF8Encoding(false),
+            NewLineOnAttributes = true
+        };
+        DataContractSerializer serializer = new(typeof(T));
+        using XmlWriter writer = XmlWriter.Create(filePath, settings);
+        try
+        {
+            serializer.WriteObject(writer, data);
+        }
+        catch (Exception ex)
+        {
+
+            throw new ArgumentException(ex.Message);
+        }
     }
 }

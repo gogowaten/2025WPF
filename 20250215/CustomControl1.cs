@@ -47,7 +47,13 @@ namespace _20250215
             //SetBinding(MyTextProperty, new Binding(nameof(ItemData.MyText)) { Source = MyItemData });
             DataContext = MyItemData;
             MyItemData.MyText = MyText;
+            MyItemData.MyForeground = MyForeground;
+            MyItemData.MyBackground = MyBackground;
             SetBinding(MyTextProperty, nameof(MyItemData.MyText));
+            SetBinding(MyLeftProperty, nameof(MyItemData.MyLeft));
+            SetBinding(MyTopProperty, nameof(MyItemData.MyTop));
+            SetBinding(MyForegroundProperty, nameof(MyItemData.MyForeground));
+            SetBinding(MyBackgroundProperty, nameof(MyItemData.MyBackground));
         }
 
         private void KisoThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -82,6 +88,32 @@ namespace _20250215
 
 
         #region 共通
+
+        public Brush MyForeground
+        {
+            get { return (Brush)GetValue(MyForegroundProperty); }
+            set { SetValue(MyForegroundProperty, value); }
+        }
+        public static readonly DependencyProperty MyForegroundProperty =
+            DependencyProperty.Register(nameof(MyForeground), typeof(Brush), typeof(KisoThumb),
+                new FrameworkPropertyMetadata(Brushes.Black,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+
+        public Brush MyBackground
+        {
+            get { return (Brush)GetValue(MyBackgroundProperty); }
+            set { SetValue(MyBackgroundProperty, value); }
+        }
+        public static readonly DependencyProperty MyBackgroundProperty =
+            DependencyProperty.Register(nameof(MyBackground), typeof(Brush), typeof(KisoThumb),
+                new FrameworkPropertyMetadata(null,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
 
         //テキスト系要素のText要素
         public string MyText

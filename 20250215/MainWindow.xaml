@@ -13,13 +13,19 @@
     </Grid.ColumnDefinitions>
     <Canvas UseLayoutRounding="True" Background="Transparent">
       <local:TextThumb x:Name="MyTT" FontSize="30"
-                       MyText="bbbbbbbbbbbbbb"/>
+                       MyText="bbbbbbbbbbbbbb"
+                       MyForeground="Red"
+                       MyBackground="MistyRose"/>
+      
     </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyTT}">
       <TextBlock Text="{Binding MyText}"/>
-      <TextBlock Text="{Binding MyItemData.MyText}"/>
+      <TextBlock x:Name="MyTX" Text="{Binding MyItemData.MyText}"/>
       <TextBox Text="{Binding MyItemData.MyText, UpdateSourceTrigger=PropertyChanged}"/>
+      <TextBlock Text="{Binding MyLeft}"/>
+      <TextBlock Text="{Binding MyItemData.MyLeft}"/>
+      <Button Content="serealize" Click="Button_Click"/>
     </StackPanel>
   </Grid>
 </Window>
