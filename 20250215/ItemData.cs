@@ -49,7 +49,23 @@ namespace _20250215
         //[DataMember] public Brush MyBackground { get => _myBackground; set => SetProperty(ref _myBackground, value); }
 
         private byte _myForegroundA;
-        public byte MyForegroundA { get => _myForegroundA; set => SetProperty(ref _myForegroundA, value); }
+        [DataMember] public byte MyForegroundA { get => _myForegroundA; set => SetProperty(ref _myForegroundA, value); }
+        private byte _myForegroundR;
+        [DataMember] public byte MyForegroundR { get => _myForegroundR; set => SetProperty(ref _myForegroundR, value); }
+        private byte _myForegroundG;
+        [DataMember] public byte MyForegroundG { get => _myForegroundG; set => SetProperty(ref _myForegroundG, value); }
+        private byte _myForegroundB;
+        [DataMember] public byte MyForegroundB { get => _myForegroundB; set => SetProperty(ref _myForegroundB, value); }
+
+
+        private byte _myBackgroundA;
+        [DataMember] public byte MyBackgroundA { get => _myBackgroundA; set => SetProperty(ref _myBackgroundA, value); }
+        private byte _myBackgroundR;
+        [DataMember] public byte MyBackgroundR { get => _myBackgroundR; set => SetProperty(ref _myBackgroundR, value); }
+        private byte _myBackgroundG;
+        [DataMember] public byte MyBackgroundG { get => _myBackgroundG; set => SetProperty(ref _myBackgroundG, value); }
+        private byte _myBackgroundB;
+        [DataMember] public byte MyBackgroundB { get => _myBackgroundB; set => SetProperty(ref _myBackgroundB, value); }
 
 
     }

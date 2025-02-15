@@ -33,7 +33,9 @@
                        Text="{TemplateBinding MyText}"
                        Foreground="{TemplateBinding MyForeground}"
                        Background="{TemplateBinding MyBackground}"
-                       />
+                       >
+              
+            </TextBlock>
             <Rectangle/>
           </Canvas>
         </ControlTemplate>

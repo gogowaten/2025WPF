@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace _20250215
 
         private void KisoThumb_Loaded(object sender, RoutedEventArgs e)
         {
-            if(MyItemData is null)
+            if (MyItemData is null)
             {
                 MyItemData = new();
                 MyBind();
@@ -44,16 +45,42 @@ namespace _20250215
 
         private void MyBind()
         {
-            //SetBinding(MyTextProperty, new Binding(nameof(ItemData.MyText)) { Source = MyItemData });
+            //XAMLでの設定をItemDataに入れる
             DataContext = MyItemData;
             MyItemData.MyText = MyText;
-            MyItemData.MyForeground = MyForeground;
-            MyItemData.MyBackground = MyBackground;
+            Color bc = ((SolidColorBrush)MyForeground).Color;
+            MyItemData.MyForegroundA = bc.A;
+            MyItemData.MyForegroundR = bc.R;
+            MyItemData.MyForegroundG = bc.G;
+            MyItemData.MyForegroundB = bc.B;
+
+            bc = ((SolidColorBrush)MyBackground).Color;
+            MyItemData.MyBackgroundA = bc.A;
+            MyItemData.MyBackgroundR = bc.R;
+            MyItemData.MyBackgroundG = bc.G;
+            MyItemData.MyBackgroundB = bc.B;
+
+
+            //バインド、ItemDataをソース
             SetBinding(MyTextProperty, nameof(MyItemData.MyText));
             SetBinding(MyLeftProperty, nameof(MyItemData.MyLeft));
             SetBinding(MyTopProperty, nameof(MyItemData.MyTop));
-            SetBinding(MyForegroundProperty, nameof(MyItemData.MyForeground));
-            SetBinding(MyBackgroundProperty, nameof(MyItemData.MyBackground));
+
+            var mb = new MultiBinding() { Converter = new MyConverterARGBtoSolidBrush() };
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyForegroundA)));
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyForegroundR)));
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyForegroundG)));
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyForegroundB)));
+            SetBinding(MyForegroundProperty, mb);
+
+
+            mb = new() { Converter = new MyConverterARGBtoSolidBrush() };
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyBackgroundA)));
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyBackgroundR)));
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyBackgroundG)));
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyBackgroundB)));
+            SetBinding(MyBackgroundProperty, mb);
+
         }
 
         private void KisoThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -426,6 +453,24 @@ namespace _20250215
     }
 
 
+    public class MyConverterARGBtoSolidBrush : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var a = (byte)values[0];
+            var r = (byte)values[1];
+            var g = (byte)values[2];
+            var b = (byte)values[3];
+            return new SolidColorBrush(Color.FromArgb(a, r, g, b));
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            var br = (SolidColorBrush)value;
+            return [br.Color.A, br.Color.R, br.Color.G, br.Color.B];
+
+        }
+    }
 
 
 }

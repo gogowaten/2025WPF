@@ -15,14 +15,20 @@
       <local:TextThumb x:Name="MyTT" FontSize="30"
                        MyText="bbbbbbbbbbbbbb"
                        MyForeground="Red"
-                       MyBackground="MistyRose"/>
-      
+                       MyBackground="MistyRose"
+                       />
+
     </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyTT}">
       <TextBlock Text="{Binding MyText}"/>
-      <TextBlock x:Name="MyTX" Text="{Binding MyItemData.MyText}"/>
+      <TextBlock Text="{Binding MyItemData.MyText}"/>
       <TextBox Text="{Binding MyItemData.MyText, UpdateSourceTrigger=PropertyChanged}"/>
+      <Separator/>
+      <TextBlock Text="{Binding MyForeground, StringFormat=Fore {0}}"/>
+      <TextBlock Text="{Binding MyItemData.MyForegroundR, StringFormat=ForeR 0}"/>
+
+      <Separator/>
       <TextBlock Text="{Binding MyLeft}"/>
       <TextBlock Text="{Binding MyItemData.MyLeft}"/>
       <Button Content="serealize" Click="Button_Click"/>
