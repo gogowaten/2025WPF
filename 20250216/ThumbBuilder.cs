@@ -12,7 +12,7 @@ namespace _20250216
         {
             if(data.MyItemType == ItemType.Text)
             {
-                var thumb = new TextBlockThumb(data);
+                //var thumb = new TextBlockThumb(data);
             }
         }
     }

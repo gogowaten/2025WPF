@@ -4,131 +4,75 @@
     xmlns:local="clr-namespace:_20250216">
 
 
-
-
-  <Style x:Key="waku4" TargetType="Border">
-    <Style.Resources>
-      <local:MyWakuBrushConverter x:Key="wakuConvert2"/>
-    </Style.Resources>
-    <Setter Property="Visibility" Value="{Binding IsWakuVisible}"/>
-    <Setter Property="BorderThickness" Value="1.0"/>
-    <Setter Property="BorderBrush">
-      <Setter.Value>
-        <MultiBinding Converter="{StaticResource wakuConvert2}">
-          <Binding Path="MyBrushList"/>
-          <Binding Path="IsFocus"/>
-          <Binding Path="IsSelected"/>
-          <Binding Path="IsSelectable"/>
-          <Binding Path="IsActiveGroup"/>
-        </MultiBinding>
-      </Setter.Value>
-    </Setter>
-  </Style>
-
-
-  <Style x:Key="kiso" TargetType="{x:Type local:KisoThumb}">
-    <Setter Property="Canvas.Left" Value="{Binding MyLeft}"/>
-    <Setter Property="Canvas.Top" Value="{Binding MyTop}"/>
-    <Setter Property="Panel.ZIndex" Value="{Binding MyZIndex, Mode=TwoWay}"/>
-  </Style>
-
-
-  <Style TargetType="{x:Type local:AnchorThumb}"
-       BasedOn="{StaticResource kiso}">
+  <Style TargetType="{x:Type local:Waku}">
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate>
-          <Rectangle/>
+        <ControlTemplate TargetType="{x:Type local:Waku}">
+          <Border x:Name="PART_Border"
+                  BorderThickness="1.0"
+                  Width="{TemplateBinding Width}"
+                  Height="{TemplateBinding Height}"
+                  >
+            <Border.BorderBrush>
+              <VisualBrush>
+                <VisualBrush.Visual>
+                  <Rectangle StrokeDashArray="4 2"
+                      Stroke="Red"
+                      StrokeThickness="2"
+                      RadiusX="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=CornerRadius.TopRight}"
+                      RadiusY="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=CornerRadius.BottomLeft}"
+                      Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
+                      Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"/>
+                </VisualBrush.Visual>
+              </VisualBrush>
+            </Border.BorderBrush>
+          </Border>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
   </Style>
 
 
-  <Style TargetType="{x:Type local:TextBlockThumb}"
-         BasedOn="{StaticResource kiso}">
+
+  <Style TargetType="{x:Type local:KisoThumb}" x:Key="kiso">
+    <Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=MyLeft}"/>
+    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyTop}"/>
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate>
-          <Grid>
-            <TextBlock Text="{Binding MyText}"
-                     Background="{Binding MyBackground}"/>
-            <Border Style="{StaticResource waku4}"/>
+        <ControlTemplate TargetType="{x:Type local:KisoThumb}">
+          <local:ExCanvas x:Name="PART_Canvas" Background="{TemplateBinding Background}">
+            <Rectangle/>
+          </local:ExCanvas>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+  <Style TargetType="{x:Type local:KisoThumb}" BasedOn="{StaticResource kiso}">
+
+  </Style>
+
+  <Style TargetType="{x:Type local:TextThumb}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:TextThumb}">
+          <Grid x:Name="PART_Canvas" Background="{TemplateBinding Background}">
+            <TextBlock x:Name="PART_TextBlock"
+                       Text="{TemplateBinding MyText}"
+                       Foreground="{TemplateBinding MyForeground}"
+                       Background="{TemplateBinding MyBackground}"
+                       FontSize="{TemplateBinding FontSize}"
+                       >
+
+            </TextBlock>
+            <Rectangle/>
           </Grid>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
   </Style>
 
-
-
-
-
-  <Style TargetType="{x:Type local:EllipseTextThumb}"
-         BasedOn="{StaticResource kiso}">
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate>
-          <Grid>
-            <Ellipse Width="{Binding MyWidth}"
-                     Height="{Binding MyHeight}"
-                     Fill="{Binding MyFill}"/>
-            <TextBlock Text="{Binding MyText}"
-                       Background="{Binding MyBackground}"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
-            <Border Style="{StaticResource waku4}"/>
-          </Grid>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
-
-
-
-  <Style TargetType="{x:Type local:GroupThumb}"
-         BasedOn="{StaticResource kiso}">
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate>
-          <Grid>
-            <ItemsControl x:Name="PART_ItemsControl"
-                        ItemsSource="{Binding MyThumbs}"
-                        Background="{TemplateBinding Background}"
-                        Focusable="False">
-              <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <local:ExCanvas/>
-                </ItemsPanelTemplate>
-              </ItemsControl.ItemsPanel>
-            </ItemsControl>
-            <Border Style="{StaticResource waku4}"/>
-          </Grid>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
-
-  <Style TargetType="{x:Type local:RootThumb}"
-         BasedOn="{StaticResource kiso}">
-    <Setter Property="KeyboardNavigation.TabNavigation" Value="Cycle"/>
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate>
-          <ItemsControl x:Name="PART_ItemsControl"
-                        ItemsSource="{Binding MyThumbs}"
-                        Background="{TemplateBinding Background}"
-                        Focusable="False">
-            <ItemsControl.ItemsPanel>
-              <ItemsPanelTemplate>
-                <local:ExCanvas/>
-              </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-          </ItemsControl>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
 
 
 </ResourceDictionary>
