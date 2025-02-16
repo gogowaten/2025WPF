@@ -1,4 +1,5 @@
 # _20250216_Serialize
+https://github.com/gogowaten/2025WPF/tree/main/20250216_Serialize<br>
 ![Animation20250216_121545](https://github.com/user-attachments/assets/685579fc-544e-4035-a524-3a364156eddc)<br>
 シリアライズ、デシリアライズのテスト<br>
 textThumbのみ<br>
