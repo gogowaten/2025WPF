@@ -11,7 +11,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
 
-namespace _20250215;
+namespace _20250216_Serialize;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -55,7 +55,7 @@ public partial class MainWindow : Window
         using XmlReader reader = XmlReader.Create(filePath);
         try
         {
-            if(serializer.ReadObject(reader) is T t) { return t; }
+            if (serializer.ReadObject(reader) is T t) { return t; }
         }
         catch (Exception ex)
         {
@@ -66,14 +66,16 @@ public partial class MainWindow : Window
 
     private void Button_Click_1(object sender, RoutedEventArgs e)
     {
-        string filePath = "E:\\20250215.xml";        
-        if(Deserialize<ItemData>(filePath) is ItemData data)
+        string filePath = "E:\\20250215.xml";
+        ItemData? data = Deserialize<ItemData>(filePath);
+
+        if (data is not null)
         {
             if (data.MyItemType == ItemType.Text)
             {
-                MyCanvas.Children.Add(new TextThumb(data));
+                var thumb = new TextThumb(data);
+                MyCanvas.Children.Add(thumb);
             }
         }
     }
-
 }

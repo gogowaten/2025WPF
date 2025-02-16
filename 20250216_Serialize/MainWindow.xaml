@@ -1,11 +1,11 @@
-﻿<Window x:Class="_20250215.MainWindow"
+﻿<Window x:Class="_20250216_Serialize.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:_20250215"
+        xmlns:local="clr-namespace:_20250216_Serialize"
         mc:Ignorable="d"
-                     Title="MainWindow" Height="367" Width="602">
+        Title="MainWindow" Height="367" Width="602">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -14,8 +14,8 @@
     <Canvas x:Name="MyCanvas" UseLayoutRounding="True">
       <local:TextThumb x:Name="MyTT" FontSize="30"
                        MyText="bbbbbbbbbbbbbb"
-                       MyForeground="Blue"
-                       MyBackground="Gold"
+                       MyForeground="Red"
+                       MyBackground="MistyRose"
                        />
 
     </Canvas>
@@ -30,22 +30,16 @@
         <TextBlock Text="入力用"/>
         <Separator/>
         <Separator/>
-        <TextBlock Text="{Binding MyForeground}"/>
+        <TextBlock Text="{Binding MyForeground, StringFormat=Fore {0}}"/>
         <TextBlock Text="Foreground"/>
-        <TextBlock Text="{Binding MyItemData.MyForegroundR}"/>
+        <TextBlock Text="{Binding MyItemData.MyForegroundR, StringFormat=ForeR 0}"/>
         <TextBlock Text="DataForegroundRed"/>
         <Slider Value="{Binding MyItemData.MyForegroundR}" Minimum="0" Maximum="255"/>
-        <TextBlock Text="DataForegroundRed"/>
+        <TextBlock Text="入力用"/>
         <Separator/>
         <Separator/>
         <TextBlock Text="{Binding MyLeft}"/>
-        <TextBlock Text="Left"/>
         <TextBlock Text="{Binding MyItemData.MyLeft}"/>
-        <TextBlock Text="DataLeft"/>
-        <Slider Value="{Binding MyItemData.MyLeft}" Minimum="0" Maximum="300"
-                TickFrequency="1.0" IsSnapToTickEnabled="True"/>
-        <TextBlock Text="DataLeft"/>
-
       </UniformGrid>
       <Button Content="serealize" Click="Button_Click"/>
       <Button Content="deserealize" Click="Button_Click_1"/>
