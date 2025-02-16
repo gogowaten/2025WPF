@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace _20250216_Serialize
 {
@@ -45,6 +46,9 @@ namespace _20250216_Serialize
 
         private string _myText = string.Empty;
         [DataMember] public string MyText { get => _myText; set => SetProperty(ref _myText, value); }
+
+        private double _myFontSize = SystemFonts.MessageFontSize;
+        [DataMember] public double MyFontSize { get => _myFontSize; set => SetProperty(ref _myFontSize, value); }
 
 
 

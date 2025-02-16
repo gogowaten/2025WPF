@@ -29,6 +29,18 @@ public partial class MainWindow : Window
         DataSerealize(MyTT.MyItemData, filePath);
     }
 
+    private void Button_Click_1(object sender, RoutedEventArgs e)
+    {
+        string filePath = "E:\\20250215.xml";
+        if (Deserialize<ItemData>(filePath) is ItemData data)
+        {
+            if (data.MyItemType == ItemType.Text)
+            {
+                MyCanvas.Children.Add(new TextThumb(data));
+            }
+        }
+    }
+
     private void DataSerealize<T>(T data, string filePath)
     {
         XmlWriterSettings settings = new()
@@ -64,18 +76,5 @@ public partial class MainWindow : Window
         return default;
     }
 
-    private void Button_Click_1(object sender, RoutedEventArgs e)
-    {
-        string filePath = "E:\\20250215.xml";
-        ItemData? data = Deserialize<ItemData>(filePath);
 
-        if (data is not null)
-        {
-            if (data.MyItemType == ItemType.Text)
-            {
-                var thumb = new TextThumb(data);
-                MyCanvas.Children.Add(thumb);
-            }
-        }
-    }
 }

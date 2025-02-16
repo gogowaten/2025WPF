@@ -34,6 +34,7 @@
                        Text="{TemplateBinding MyText}"
                        Foreground="{TemplateBinding MyForeground}"
                        Background="{TemplateBinding MyBackground}"
+                       FontSize="{TemplateBinding FontSize}"
                        >
 
             </TextBlock>
