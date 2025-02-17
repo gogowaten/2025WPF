@@ -14,12 +14,12 @@
     </Grid.ColumnDefinitions>
     <Canvas>
       <local:TextThumb x:Name="texttext" MyLeft="100" MyTop="50"
-                       MyText="aaaaaa" MyForeground="Red" MyBackground="MistyRose"/>
-      <local:Waku Width="100" Height="100"/>
-      <Border Width="50" Height="50" BorderBrush="Blue" BorderThickness="10" />
-
+                       MyText="texthumb" MyForeground="Red" MyBackground="MistyRose"/>
+      
+      <local:Waku Width="100" Height="100" BorderThickness="3"/>
+      
       <Border Canvas.Left="150" Background="Red">
-        <TextBlock Text="aaaaaaaaaaaaaaaa"/>
+        <TextBlock Text="borderintextblock"/>
       </Border>
 
     </Canvas>
