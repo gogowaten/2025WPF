@@ -12,13 +12,25 @@
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
 
-    <Canvas>
+    <Canvas UseLayoutRounding="True">
       <local:Waku Canvas.Left="50" Canvas.Top="50" Width="200" Height="100"
                   BorderThickness="1" 
                   BorderBrush="MistyRose"
                   MyStrokeDash="Tomato"
                   MyStrokeDashArray="10 "
                   />
+      <local:DashBorder Width="100" Height="100" Canvas.Left="200"
+                        BorderThickness="4"
+                        MyDashColorType="B"
+                        MyLowerBrush="MistyRose"
+                        MyStrokeDashArray="10 3"
+                        />
+
+      <local:DashBorder Width="50" Height="50" MyBorderThickness="3" MyDashColorType="B"/>
+
+      <local:TextThumb MyText="AAAAAAA" BorderThickness="2"
+                       Canvas.Left="120" Canvas.Top="10"
+                       />
     </Canvas>
 
     <StackPanel>
