@@ -1,3 +1,13 @@
+# _20250218_DashedBorderTextThumb
+2025WPF/20250218_DashedBorderTextThumb at main · gogowaten/2025WPF<br>
+https://github.com/gogowaten/2025WPF/tree/main/20250218_DashedBorderTextThumb<br>
+![Animation20250218_150410](https://github.com/user-attachments/assets/b7e7d786-7bdf-495a-8d86-e4f68a1838de)<br>
+破線枠表示用のカスタムコントロール<br>
+破れているところの色も指定できる<br>
+<br><br><br>
+
+
+
 # _20250216_Serialize
 https://github.com/gogowaten/2025WPF/tree/main/20250216_Serialize<br>
 ![Animation20250216_121545](https://github.com/user-attachments/assets/685579fc-544e-4035-a524-3a364156eddc)<br>
