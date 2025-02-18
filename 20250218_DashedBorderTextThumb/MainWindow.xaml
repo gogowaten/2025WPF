@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250218_DashedBorderTextThumb"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="600">
+        Title="MainWindow" Height="367" Width="602">
     <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
