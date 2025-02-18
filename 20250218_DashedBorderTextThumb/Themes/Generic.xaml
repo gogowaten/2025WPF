@@ -1,0 +1,82 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:_20250218_DashedBorderTextThumb">
+
+
+
+  <Style TargetType="{x:Type local:DashBorder}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:DashBorder}">
+          <ControlTemplate.Resources>
+            <local:MyConverter x:Key="con"/>
+            <local:MyConverterThickness x:Key="thickness"/>
+          </ControlTemplate.Resources>
+          <Grid x:Name="PART_Grid">
+            <Border x:Name="lowerLine"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    BorderBrush="{TemplateBinding MyLowerBrush}"/>
+            <Border x:Name="dashLine"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    >
+              <Border.BorderBrush>
+                <VisualBrush>
+                  <VisualBrush.Visual>
+                    <Rectangle x:Name="dashRect"
+                               Width="{TemplateBinding Width}"
+                               Height="{TemplateBinding Height}"
+                               StrokeThickness="{Binding
+                                  RelativeSource={RelativeSource Mode=TemplatedParent},
+                                  Path=BorderThickness,
+                                  Converter={StaticResource thickness}}"
+                               StrokeDashArray="{TemplateBinding MyStrokeDashArray}"
+                               >
+                      <Rectangle.Stroke>
+                        <MultiBinding Converter="{StaticResource con}">
+                          <Binding Path="MyDashColorType"/>
+                          <Binding Path="MyDashBrushTransparent"/>
+                          <Binding Path="MyDashBrushA"/>
+                          <Binding Path="MyDashBrushB"/>
+                          <Binding Path="MyDashBrushC"/>
+                          <Binding Path="MyDashBrushD"/>
+                          <Binding Path="MyDashBrushE"/>
+                          <Binding Path="MyDashBrushF"/>
+                        </MultiBinding>
+                      </Rectangle.Stroke>
+                    </Rectangle>
+                  </VisualBrush.Visual>
+                </VisualBrush>
+              </Border.BorderBrush>
+            </Border>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+
+  <Style TargetType="{x:Type local:TextThumb}">
+    <Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyLeft}"/>
+    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyTop}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:TextThumb}">
+          <Grid x:Name="PART_Panel">
+            <TextBlock Text="{TemplateBinding MyText}"
+                       Margin="10"/>
+            <local:DashBorder BorderThickness="{TemplateBinding BorderThickness}"
+                              MyDashColorType="C"
+                              Width="{Binding ElementName=PART_Panel, Path=ActualWidth}"
+                              Height="{Binding ElementName=PART_Panel, Path=ActualHeight}"
+                              />
+
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+</ResourceDictionary>

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35806.99 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "20250218_DashedBorderTextThumb", "20250218_DashedBorderTextThumb.csproj", "{2BECB672-FAAD-4960-851B-C2484A996C6B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2BECB672-FAAD-4960-851B-C2484A996C6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BECB672-FAAD-4960-851B-C2484A996C6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BECB672-FAAD-4960-851B-C2484A996C6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BECB672-FAAD-4960-851B-C2484A996C6B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {31F0529E-9757-40A1-91B2-48DBC226AAB0}
+	EndGlobalSection
+EndGlobal
