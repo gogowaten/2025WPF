@@ -233,10 +233,10 @@ namespace _20250113_GroupUngroup
             //DragDelta += Thumb_DragDelta;
             //DragDelta += Thumb_DragDelta2;
             DragDelta += Thumb_DragDelta3;
-            KeyDown += KisoThumb_KeyDown;
+            //KeyDown += KisoThumb_KeyDown;
             KeyUp += KisoThumb_KeyUp;
             PreviewKeyDown += KisoThumb_PreviewKeyDown;
-            
+
         }
 
 
@@ -244,27 +244,35 @@ namespace _20250113_GroupUngroup
         {
             if (sender is RootThumb rt && rt.MyClickedThumb != null)
             {
-                if (e.Key == Key.Left)
-                {
-                    rt.MyClickedThumb.MyLeft -= 10;
-                    e.Handled = true;
-                }
-                else if (e.Key == Key.Right)
-                {
-                    rt.MyClickedThumb.MyLeft += 10;
-                    e.Handled = true;
-                }
-                else if (e.Key == Key.Up)
-                {
-                    rt.MyClickedThumb.MyTop -= 10;
-                    e.Handled = true;
-                }
-                else if (e.Key == Key.Down)
-                {
-                    rt.MyClickedThumb.MyTop += 10;
-                    e.Handled = true;
-                }
+                MoveThumb(rt.MySelectedThumbs, e.Key, 10);
+                e.Handled = true;
+            }
+        }
 
+        private void MoveThumb(ObservableCollection<KisoThumb> thumbs, Key key, double amount)
+        {
+            foreach (var item in thumbs)
+            {
+                MoveThumb(item, key, amount);
+            }
+        }
+        
+        private void MoveThumb(KisoThumb kiso, Key key, double amount)
+        {
+            switch (key)
+            {
+                case Key.Left:
+                    kiso.MyLeft -= amount;
+                    break;
+                case Key.Right:
+                    kiso.MyLeft += amount;
+                    break;
+                case Key.Up:
+                    kiso.MyTop -= amount;
+                    break;
+                case Key.Down:
+                    kiso.MyTop += amount;
+                    break;
             }
         }
 
@@ -286,36 +294,36 @@ namespace _20250113_GroupUngroup
         }
 
 
-        /// <summary>
-        /// 方向キーの方向へ10ピクセル移動
-        /// </summary>
-        internal void KisoThumb_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (sender is KisoThumb t)
-            {
-                if (e.Key == Key.Left)
-                {
-                    t.MyLeft -= 10;
-                    e.Handled = true;
-                }
-                else if (e.Key == Key.Right)
-                {
-                    t.MyLeft += 10;
-                    e.Handled = true;
-                }
-                else if (e.Key == Key.Up)
-                {
-                    t.MyTop -= 10;
-                    e.Handled = true;
-                }
-                else if (e.Key == Key.Down)
-                {
-                    t.MyTop += 10;
-                    e.Handled = true;
-                }
+        ///// <summary>
+        ///// 方向キーの方向へ10ピクセル移動
+        ///// </summary>
+        //internal void KisoThumb_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (sender is KisoThumb t)
+        //    {
+        //        if (e.Key == Key.Left)
+        //        {
+        //            t.MyLeft -= 10;
+        //            e.Handled = true;
+        //        }
+        //        else if (e.Key == Key.Right)
+        //        {
+        //            t.MyLeft += 10;
+        //            e.Handled = true;
+        //        }
+        //        else if (e.Key == Key.Up)
+        //        {
+        //            t.MyTop -= 10;
+        //            e.Handled = true;
+        //        }
+        //        else if (e.Key == Key.Down)
+        //        {
+        //            t.MyTop += 10;
+        //            e.Handled = true;
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
 
         /// <summary>
@@ -895,7 +903,7 @@ namespace _20250113_GroupUngroup
             DragDelta -= Thumb_DragDelta3;
             DragStarted -= KisoThumb_DragStarted2;
             DragCompleted -= KisoThumb_DragCompleted2;
-            KeyDown -= KisoThumb_KeyDown;
+            //KeyDown -= KisoThumb_KeyDown;
             KeyUp -= KisoThumb_KeyUp;
             GotKeyboardFocus += RootThumb_GotKeyboardFocus;
             Loaded += RootThumb_Loaded;
@@ -945,7 +953,8 @@ namespace _20250113_GroupUngroup
                 if (ChangeActiveGroupThumb(gt))
                 {
                     AddToSelectedThumbs(motoGroup);
-                };
+                }
+                ;
             }
         }
 
@@ -979,7 +988,8 @@ namespace _20250113_GroupUngroup
                 if (ChangeActiveGroupThumb(gt))
                 {
                     AddToSelectedThumbs(MyClickedThumb);
-                };
+                }
+                ;
             }
         }
 
