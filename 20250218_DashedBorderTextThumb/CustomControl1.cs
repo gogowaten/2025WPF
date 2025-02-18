@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,8 +19,12 @@ using static _20250218_DashedBorderTextThumb.DashBorder;
 
 namespace _20250218_DashedBorderTextThumb
 {
+
     public enum DashColor { Transparent = 0, A, B, C, D, E, F }
 
+
+
+    
     public class DashBorder : Control
     {
 
@@ -30,7 +35,7 @@ namespace _20250218_DashedBorderTextThumb
         public DashBorder()
         {
             DataContext = this;
-            SetBinding(BorderThicknessProperty, new Binding() { Source = this, Path = new PropertyPath(MyBorderThicknessProperty) });
+           
         }
 
 
@@ -136,36 +141,6 @@ namespace _20250218_DashedBorderTextThumb
 
 
     }
-    public class MyConverter : IMultiValueConverter
-    {
-        public object Convert(object[] values, System.Type targetType, object parameter, CultureInfo culture)
-        {
-            var type = (DashColor)values[0];
-            var iro1 = (Brush)values[1];
-            var iro2 = (Brush)values[2];
-            var iro3 = (Brush)values[3];
-            var iro4 = (Brush)values[4];
-            var iro5 = (Brush)values[5];
-            var iro6 = (Brush)values[6];
-            var iro7 = (Brush)values[7];
-            return type switch
-            {
-                DashColor.Transparent => iro1,
-                DashColor.A => iro2,
-                DashColor.B => iro3,
-                DashColor.C => iro4,
-                DashColor.D => iro5,
-                DashColor.E => iro6,
-                DashColor.F => iro7,
-                _ => iro1
-            };
-        }
-
-        public object[] ConvertBack(object value, System.Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
 
     public class TextThumb : Thumb
     {
@@ -213,66 +188,74 @@ namespace _20250218_DashedBorderTextThumb
         public static readonly DependencyProperty MyTopProperty =
             DependencyProperty.Register(nameof(MyTop), typeof(double), typeof(TextThumb), new PropertyMetadata(0.0));
 
-    }
 
-    public class Waku : Control
-    {
-        static Waku()
+        public double MyBorderThickness
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(Waku), new FrameworkPropertyMetadata(typeof(Waku)));
+            get { return (double)GetValue(MyBorderThicknessProperty); }
+            set { SetValue(MyBorderThicknessProperty, value); }
         }
-        public Waku()
+        public static readonly DependencyProperty MyBorderThicknessProperty =
+            DependencyProperty.Register(nameof(MyBorderThickness), typeof(double), typeof(TextThumb), new PropertyMetadata(1.0));
+
+
+        public DashColor MyDashColorType
         {
-            Initialized += Waku_Initialized;
+            get { return (DashColor)GetValue(MyDashColorTypeProperty); }
+            set { SetValue(MyDashColorTypeProperty, value); }
         }
-
-        private void Waku_Initialized(object? sender, EventArgs e)
-        {
-            InitialBind();
-        }
-
-        private void InitialBind()
-        {
-
-
-        }
-
-
-
-        public DoubleCollection MyStrokeDashArray
-        {
-            get { return (DoubleCollection)GetValue(MyStrokeDashArrayProperty); }
-            set { SetValue(MyStrokeDashArrayProperty, value); }
-        }
-        public static readonly DependencyProperty MyStrokeDashArrayProperty =
-            DependencyProperty.Register(nameof(MyStrokeDashArray), typeof(DoubleCollection), typeof(Waku), new PropertyMetadata(null));
-
-
-        public Brush MyStrokeDash
-        {
-            get { return (Brush)GetValue(MyStrokeDashProperty); }
-            set { SetValue(MyStrokeDashProperty, value); }
-        }
-        public static readonly DependencyProperty MyStrokeDashProperty =
-            DependencyProperty.Register(nameof(MyStrokeDash), typeof(Brush), typeof(Waku), new PropertyMetadata(Brushes.Transparent));
+        public static readonly DependencyProperty MyDashColorTypeProperty =
+            DependencyProperty.Register(nameof(MyDashColorType), typeof(DashColor), typeof(TextThumb), new PropertyMetadata(DashColor.A));
 
 
     }
 
 
-    public class MyConverterThickness : IValueConverter
+    public class MyConverter : IMultiValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, System.Type targetType, object parameter, CultureInfo culture)
         {
-            var v = (Thickness)value;
-            return v.Top;
+            var type = (DashColor)values[0];
+            var iro1 = (Brush)values[1];
+            var iro2 = (Brush)values[2];
+            var iro3 = (Brush)values[3];
+            var iro4 = (Brush)values[4];
+            var iro5 = (Brush)values[5];
+            var iro6 = (Brush)values[6];
+            var iro7 = (Brush)values[7];
+            return type switch
+            {
+                DashColor.Transparent => iro1,
+                DashColor.A => iro2,
+                DashColor.B => iro3,
+                DashColor.C => iro4,
+                DashColor.D => iro5,
+                DashColor.E => iro6,
+                DashColor.F => iro7,
+                _ => iro1
+            };
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, System.Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
     }
 
+    public class MyConverterThickness : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+
+            var v = (double)value;
+            return new Thickness(v);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var v = (Thickness)value;
+            return v.Top;
+        }
+    }
+    
 
 }

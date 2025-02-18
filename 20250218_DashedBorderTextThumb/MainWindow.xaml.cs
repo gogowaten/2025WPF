@@ -21,5 +21,6 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         MyCombo.ItemsSource = Enum.GetValues(typeof(DashColor));
+        MyCombo1.ItemsSource = Enum.GetValues(typeof(DashColor));
     }
 }

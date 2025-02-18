@@ -17,11 +17,12 @@
       <local:DashBorder x:Name="MyBorder" Canvas.Left="100" Canvas.Top="20"
                         Width="200" Height="50"
                         MyStrokeDashArray="4 8"
+                        MyBorderThickness="5"
                         />
 
       <local:TextThumb x:Name="MyText" MyLeft="20" MyTop="80"
                        MyText="DashedBorderTextThumb"
-                       BorderThickness="5"
+                       MyBorderThickness="2"
                        />
 
     </Canvas>
@@ -34,6 +35,14 @@
           <ComboBox x:Name="MyCombo" SelectedValue="{Binding MyDashColorType}"/>
         </StackPanel>
       </GroupBox>
+      <GroupBox DataContext="{Binding ElementName=MyText}">
+        <StackPanel>
+          <Slider Value="{Binding MyBorderThickness}" Minimum="0" Maximum="10"
+                  TickFrequency="1" IsSnapToTickEnabled="True"/>
+          <ComboBox x:Name="MyCombo1" SelectedValue="{Binding MyDashColorType}"/>
+        </StackPanel>
+      </GroupBox>
+      
     </StackPanel>
     </Grid>
 </Window>

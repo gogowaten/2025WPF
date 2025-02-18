@@ -15,10 +15,10 @@
           </ControlTemplate.Resources>
           <Grid x:Name="PART_Grid">
             <Border x:Name="lowerLine"
-                    BorderThickness="{TemplateBinding BorderThickness}"
+                    BorderThickness="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyBorderThickness, Converter={StaticResource thickness}, Mode=TwoWay}"
                     BorderBrush="{TemplateBinding MyLowerBrush}"/>
             <Border x:Name="dashLine"
-                    BorderThickness="{TemplateBinding BorderThickness}"
+                    BorderThickness="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyBorderThickness, Converter={StaticResource thickness}, Mode=TwoWay}"
                     >
               <Border.BorderBrush>
                 <VisualBrush>
@@ -28,8 +28,7 @@
                                Height="{TemplateBinding Height}"
                                StrokeThickness="{Binding
                                   RelativeSource={RelativeSource Mode=TemplatedParent},
-                                  Path=BorderThickness,
-                                  Converter={StaticResource thickness}}"
+                                  Path=MyBorderThickness}"
                                StrokeDashArray="{TemplateBinding MyStrokeDashArray}"
                                >
                       <Rectangle.Stroke>
@@ -66,8 +65,8 @@
           <Grid x:Name="PART_Panel">
             <TextBlock Text="{TemplateBinding MyText}"
                        Margin="10"/>
-            <local:DashBorder BorderThickness="{TemplateBinding BorderThickness}"
-                              MyDashColorType="C"
+            <local:DashBorder MyBorderThickness="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyBorderThickness}"
+                              MyDashColorType="{TemplateBinding MyDashColorType}"
                               Width="{Binding ElementName=PART_Panel, Path=ActualWidth}"
                               Height="{Binding ElementName=PART_Panel, Path=ActualHeight}"
                               />
