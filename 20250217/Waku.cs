@@ -30,9 +30,10 @@ namespace _20250217
         public DashBorder()
         {
             DataContext = this;
-            MyStrokeDashArray = [2, 3];
+            //MyStrokeDashArray = [2, 4];
             //SetBinding(MyBorderThicknessProperty, new Binding(nameof(BorderThickness)));
-            SetBinding(BorderThicknessProperty, new Binding(nameof(MyBorderThickness)));
+            //SetBinding(BorderThicknessProperty, new Binding(nameof(MyBorderThickness)));
+            //SetBinding(BorderThicknessProperty, new Binding() { Source = this, Path = new PropertyPath(MyBorderThicknessProperty), Mode = BindingMode.TwoWay });
                         
         }
 
@@ -46,17 +47,17 @@ namespace _20250217
             set { SetValue(MyStrokeDashArrayProperty, value); }
         }
         public static readonly DependencyProperty MyStrokeDashArrayProperty =
-            DependencyProperty.Register(nameof(MyStrokeDashArray), typeof(DoubleCollection), typeof(DashBorder), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(MyStrokeDashArray), typeof(DoubleCollection), typeof(DashBorder), new PropertyMetadata(new DoubleCollection() { 4, 4 }));
 
 
 
-        public Thickness MyBorderThickness
-        {
-            get { return (Thickness)GetValue(MyBorderThicknessProperty); }
-            set { SetValue(MyBorderThicknessProperty, value); }
-        }
-        public static readonly DependencyProperty MyBorderThicknessProperty =
-            DependencyProperty.Register(nameof(MyBorderThickness), typeof(Thickness), typeof(DashBorder), new PropertyMetadata(new Thickness(1.0)));
+        //public Thickness MyBorderThickness
+        //{
+        //    get { return (Thickness)GetValue(MyBorderThicknessProperty); }
+        //    set { SetValue(MyBorderThicknessProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyBorderThicknessProperty =
+        //    DependencyProperty.Register(nameof(MyBorderThickness), typeof(Thickness), typeof(DashBorder), new PropertyMetadata(new Thickness(1.0)));
 
         #region Brashes
 
@@ -157,7 +158,7 @@ namespace _20250217
         }
         public TextThumb()
         {
-
+            
         }
 
 

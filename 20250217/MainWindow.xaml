@@ -26,10 +26,11 @@
                         MyStrokeDashArray="10 3"
                         />
 
-      <local:DashBorder Width="50" Height="50" MyBorderThickness="3" MyDashColorType="B"/>
+      <local:DashBorder Width="50" Height="50" BorderThickness="4" MyDashColorType="B"/>
 
-      <local:TextThumb MyText="AAAAAAA" BorderThickness="2"
+      <local:TextThumb MyText="AAAAAAA"
                        Canvas.Left="120" Canvas.Top="10"
+                       BorderThickness="2"
                        />
     </Canvas>
 

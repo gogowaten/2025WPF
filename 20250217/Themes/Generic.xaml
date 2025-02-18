@@ -69,7 +69,10 @@
                     <Rectangle x:Name="dashRect"
                                Width="{TemplateBinding Width}"
                                Height="{TemplateBinding Height}"
-                               StrokeThickness="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BorderThickness, Converter={StaticResource thickness}}"
+                               StrokeThickness="{Binding
+                                  RelativeSource={RelativeSource Mode=TemplatedParent},
+                                  Path=BorderThickness,
+                                  Converter={StaticResource thickness}}"
                                StrokeDashArray="{TemplateBinding MyStrokeDashArray}"
                                >
                       <Rectangle.Stroke>
@@ -100,8 +103,9 @@
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:TextThumb}">
           <Grid x:Name="PART_Panel">
-            <TextBlock Text="{TemplateBinding MyText}"/>
-            <local:DashBorder BorderThickness="{TemplateBinding BorderThickness}" MyDashColorType="B"
+            <TextBlock Text="{TemplateBinding MyText}" Margin="10"/>
+            <local:DashBorder BorderThickness="{TemplateBinding BorderThickness}"
+                              MyDashColorType="C"
                               Width="{Binding ElementName=PART_Panel, Path=ActualWidth}"
                               Height="{Binding ElementName=PART_Panel, Path=ActualHeight}"
                               />
