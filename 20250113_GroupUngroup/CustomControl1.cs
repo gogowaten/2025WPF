@@ -244,6 +244,7 @@ namespace _20250113_GroupUngroup
         {
             if (sender is RootThumb rt && rt.MyClickedThumb != null)
             {
+                //選択Thumbを方向キーで10ピクセル移動
                 MoveThumb(rt.MySelectedThumbs, e.Key, 10);
                 e.Handled = true;
             }
@@ -256,7 +257,7 @@ namespace _20250113_GroupUngroup
                 MoveThumb(item, key, amount);
             }
         }
-        
+
         private void MoveThumb(KisoThumb kiso, Key key, double amount)
         {
             switch (key)
@@ -338,45 +339,52 @@ namespace _20250113_GroupUngroup
             var sou = e.Source;
             var ori = e.OriginalSource;
 
-            if (e.Source != e.OriginalSource) { return; }
-            //e.Sourceとe.OriginalSourceが一致したときのthisがクリックされたThumbと一致する
-
-            if (GetRootThumb() is RootThumb root)
+            if (e.Source == e.OriginalSource)
             {
-                //クリックされたThumbをRootのClickedThumbプロパティに登録
-                root.MyClickedThumb = this;
-
-                //RootThumbのSelectedThumbsプロパティを更新3
-                if (GetSelectableThumb(this) is KisoThumb current)
-                {
-                    int selectedCount = root.MySelectedThumbs.Count;
-                    bool isContained = root.MySelectedThumbs.Contains(current);
-                    if (selectedCount == 0)
-                    {
-                        //追加
-                        root.AddToSelectedThumbs(current);
-                    }
-                    else if (!isContained && Keyboard.Modifiers == ModifierKeys.Control)
-                    {
-                        //追加
-                        root.AddToSelectedThumbs(current);
-                        //直前追加のフラグ
-                        current.IsPreviewSelected = true;
-                    }
-                    else if (!isContained && Keyboard.Modifiers == ModifierKeys.None)
-                    {
-                        //入れ替え
-                        root.SelectedThumbsClearAndAddThumb(current);
-                    }
-                    else if (selectedCount > 1)
-                    {
-                        //直前追加ではない、のフラグ
-                        current.IsPreviewSelected = false;
-                    }
-                }
+                UpdateSelectedThumbs(this, Keyboard.Modifiers == ModifierKeys.Control);
             }
         }
 
+        /// <summary>
+        /// SelectedThumbsを更新、クリックダウン専用
+        /// </summary>
+        /// <param name="clickedThumb">クリックされたThumb</param>
+        /// <param name="isControlPressed">ctrlキーが押されていた</param>
+        internal void UpdateSelectedThumbs(KisoThumb clickedThumb, bool isControlPressed)
+        {            
+            if (GetRootThumb() is RootThumb root && GetSelectableThumb(clickedThumb) is KisoThumb current)
+            {
+                root.MyClickedThumb = clickedThumb;
+                int selectedCount = root.MySelectedThumbs.Count;
+                bool isContained = root.MySelectedThumbs.Contains(current);
+                if (selectedCount == 0)
+                {
+                    //追加
+                    root.AddToSelectedThumbs(current);
+                }
+                //選択されていない＋ctrlありの場合、直前追加
+                else if (!isContained && isControlPressed)
+                {
+                    //追加
+                    root.AddToSelectedThumbs(current);
+                    //直前追加のフラグ
+                    current.IsPreviewSelected = true;
+                }
+                //選択されていない＋ctrl無しの場合、Selectedをクリアして追加
+                else if (!isContained && !isControlPressed)
+                {
+                    //入れ替え
+                    root.SelectedThumbsClearAndAddThumb(current);
+                }
+                //Selectedが1より多かった場合
+                else if (selectedCount > 1)
+                {
+                    //直前追加ではない、のフラグ
+                    current.IsPreviewSelected = false;
+                }
+            }
+
+        }
 
 
         /// <summary>
