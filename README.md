@@ -1,7 +1,18 @@
+# _20250220_BitmapBrushDashBorder
+2025WPF/20250220_BitmapBrushDashBorder at main · gogowaten/2025WPF<br>
+https://github.com/gogowaten/2025WPF/tree/main/20250220_BitmapBrushDashBorder<br>
+![Animation20250220_152514](https://github.com/user-attachments/assets/a83a3255-4891-416f-8325-613f4533b2ac)<br>
+<br><br><br>
+
+
+
+
+
 # _20250218_DashedBorderTextThumb
 2025WPF/20250218_DashedBorderTextThumb at main · gogowaten/2025WPF<br>
 https://github.com/gogowaten/2025WPF/tree/main/20250218_DashedBorderTextThumb<br>
-![Animation20250218_150410](https://github.com/user-attachments/assets/b7e7d786-7bdf-495a-8d86-e4f68a1838de)<br>
+![Animation20250218![Uploading Animation20250220_152514.gif…]()
+_150410](https://github.com/user-attachments/assets/b7e7d786-7bdf-495a-8d86-e4f68a1838de)<br>
 破線枠表示用のカスタムコントロール<br>
 破れているところの色も指定できる<br>
 <br><br><br>
