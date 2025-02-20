@@ -38,10 +38,7 @@ namespace _20250216_Serialize
             //デザイン画面の設定をItemDataに反映してからバインド設定
             if (MyItemData.MyItemType == ItemType.None)
             {
-                if (MyItemType == ItemType.Text)
-                {
-                    MyItemData.MyItemType = ItemType.Text;
-                }
+                MyItemData.MyItemType = MyItemType;
                 CopyValueToItemData();
                 MyItemDataBind();
             }

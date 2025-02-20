@@ -39,7 +39,7 @@ namespace _20250219
 
 
 
-        public ThumbType MyType { get; internal set; }
+        public ThumbType MyThumbType { get; protected set; }
 
         //親要素の識別用。自身がグループ化されたときに親要素のGroupThumbを入れておく
         public GroupThumb? MyParentThumb { get; internal set; }
@@ -49,13 +49,15 @@ namespace _20250219
         }
         public KisoThumb()
         {
+            MyItemData = new() { MyThumbType = ThumbType.None };
             InitializeWakuBrush();
-            
-            DataContext = this;
+
+            //DataContext = this;
             Focusable = true;
             //Focusable = false;
-            MyType = ThumbType.None;
+            //MyThumbType = ThumbType.None;
 
+            Initialized += KisoThumb_Initialized;
             PreviewMouseDown += KisoThumb_PreviewMouseDownTest;
             PreviewMouseUp += KisoThumb_PreviewMouseUpTest;
             DragStarted += KisoThumb_DragStarted2;
@@ -68,6 +70,81 @@ namespace _20250219
             PreviewKeyDown += KisoThumb_PreviewKeyDown;
 
         }
+
+        private void KisoThumb_Initialized(object? sender, EventArgs e)
+        {
+            //デザイン画面で作成された要素の場合、ItemDataは無いので新規作成後に
+            //デザイン画面の設定をItemDataに反映してからバインド設定
+            if (MyItemData.MyThumbType == ThumbType.None)
+            {
+                //if (MyThumbType == ThumbType.Text)
+                //{
+                //    MyItemData.MyThumbType = ThumbType.Text;
+                //}
+
+                MyItemData.MyThumbType = MyThumbType;
+                CopyValueToItemData();
+                MyItemDataBind();
+            }
+            //ファイルやItemDataから作成された要素の場合、そのままItemDataとバインド
+            else
+            {
+                MyItemDataBind();
+            }
+
+            DataContext = MyItemData; //ここで適用
+        }
+
+
+        //ItemDataなしのコンストラクタで使う
+        //バインドの前に、XAMLからの設定をItemDataにいれる
+        private void CopyValueToItemData()
+        {
+            //XAMLでの設定をItemDataに入れる
+            MyItemData.MyText = MyText;
+            MyItemData.MyFontSize = FontSize;
+
+            Color bc = ((SolidColorBrush)MyForeground).Color;
+            MyItemData.MyForegroundA = bc.A;
+            MyItemData.MyForegroundR = bc.R;
+            MyItemData.MyForegroundG = bc.G;
+            MyItemData.MyForegroundB = bc.B;
+
+            bc = ((SolidColorBrush)MyBackground).Color;
+            MyItemData.MyBackgroundA = bc.A;
+            MyItemData.MyBackgroundR = bc.R;
+            MyItemData.MyBackgroundG = bc.G;
+            MyItemData.MyBackgroundB = bc.B;
+
+        }
+
+
+        //バインド、ItemDataをソース
+        private void MyItemDataBind()
+        {
+            //バインド、ItemDataをソース
+            SetBinding(MyTextProperty, nameof(MyItemData.MyText));
+            SetBinding(MyLeftProperty, nameof(MyItemData.MyLeft));
+            SetBinding(MyTopProperty, nameof(MyItemData.MyTop));
+            SetBinding(FontSizeProperty, nameof(MyItemData.MyFontSize));
+
+            var mb = new MultiBinding() { Converter = new MyConverterARGBtoSolidBrush() };
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyForegroundA)));
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyForegroundR)));
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyForegroundG)));
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyForegroundB)));
+            SetBinding(MyForegroundProperty, mb);
+
+
+            mb = new() { Converter = new MyConverterARGBtoSolidBrush() };
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyBackgroundA)));
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyBackgroundR)));
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyBackgroundG)));
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyBackgroundB)));
+            SetBinding(MyBackgroundProperty, mb);
+
+        }
+
 
         private void InitializeWakuBrush()
         {
@@ -178,7 +255,7 @@ namespace _20250219
         #endregion キーボード
 
         #region マウスクリック
-        
+
         /// <summary>
         /// クリックダウン時、
         /// ClickedThumb更新後、SelectedThumbsを更新
@@ -267,7 +344,7 @@ namespace _20250219
         #endregion マウスクリック
 
         #region マウスドラッグ移動
-        
+
         /// <summary>
         /// ドラッグ移動開始時
         /// アンカーThumbを作成追加、
@@ -369,6 +446,14 @@ namespace _20250219
 
         #region 依存関係プロパティ
 
+        //特殊、フィールドにしたほうがいい？
+        public ItemData MyItemData
+        {
+            get { return (ItemData)GetValue(MyItemDataProperty); }
+            set { SetValue(MyItemDataProperty, value); }
+        }
+        public static readonly DependencyProperty MyItemDataProperty =
+            DependencyProperty.Register(nameof(MyItemData), typeof(ItemData), typeof(KisoThumb), new PropertyMetadata(null));
 
 
         #region 共通
@@ -441,6 +526,15 @@ namespace _20250219
         }
         public static readonly DependencyProperty MyTextProperty =
             DependencyProperty.Register(nameof(MyText), typeof(string), typeof(KisoThumb), new PropertyMetadata(string.Empty));
+
+
+        public Brush MyForeground
+        {
+            get { return (Brush)GetValue(MyForegroundProperty); }
+            set { SetValue(MyForegroundProperty, value); }
+        }
+        public static readonly DependencyProperty MyForegroundProperty =
+            DependencyProperty.Register(nameof(MyForeground), typeof(Brush), typeof(KisoThumb), new PropertyMetadata(Brushes.Black));
 
 
         public Brush MyBackground
@@ -660,7 +754,7 @@ namespace _20250219
 
         #endregion public
 
-        
+
 
 
         #endregion メソッド
@@ -679,7 +773,7 @@ namespace _20250219
         }
         public AnchorThumb()
         {
-            MyType = ThumbType.Anchor;
+            MyThumbType = ThumbType.Anchor;
             Focusable = false;
             DragDelta -= Thumb_DragDelta3;
             DragStarted -= KisoThumb_DragStarted2;
@@ -697,7 +791,7 @@ namespace _20250219
         }
         public TextBlockThumb()
         {
-            MyType = ThumbType.Text;
+            MyThumbType = ThumbType.Text;
         }
     }
 
@@ -709,7 +803,7 @@ namespace _20250219
         }
         public EllipseTextThumb()
         {
-            MyType = ThumbType.Ellipse;
+            MyThumbType = ThumbType.Ellipse;
         }
 
     }
@@ -741,7 +835,7 @@ namespace _20250219
         }
         public GroupThumb()
         {
-            MyType = ThumbType.Group;
+            MyThumbType = ThumbType.Group;
             MyThumbs = [];
             Loaded += GroupThumb_Loaded;
             MyThumbs.CollectionChanged += MyThumbs_CollectionChanged;
@@ -871,7 +965,7 @@ namespace _20250219
             double left = double.MaxValue; double top = double.MaxValue;
             foreach (var item in MyThumbs)
             {
-                if (item.MyType != ThumbType.Anchor)
+                if (item.MyThumbType != ThumbType.Anchor)
                 {
                     if (left > item.MyLeft) { left = item.MyLeft; }
                     if (top > item.MyTop) { top = item.MyTop; }
@@ -884,14 +978,14 @@ namespace _20250219
                 foreach (var item in MyThumbs) { item.MyLeft -= left; }
 
                 //自身がroot以外なら修正
-                if (MyType != ThumbType.Root) { MyLeft += left; }
+                if (MyThumbType != ThumbType.Root) { MyLeft += left; }
             }
 
             if (top != MyTop)
             {
                 foreach (var item in MyThumbs) { item.MyTop -= top; }
 
-                if (MyType != ThumbType.Root) { MyTop += top; }
+                if (MyThumbType != ThumbType.Root) { MyTop += top; }
             }
 
             //ParentThumbがあれば、そこでも再配置処理
@@ -920,7 +1014,7 @@ namespace _20250219
         public RootThumb()
         {
             Focusable = true;
-            MyType = ThumbType.Root;
+            MyThumbType = ThumbType.Root;
             MySelectedThumbs = [];
             DragDelta -= Thumb_DragDelta3;
             DragStarted -= KisoThumb_DragStarted2;
@@ -1345,6 +1439,7 @@ namespace _20250219
 
     }
 
+    #region コンバーター
 
 
     public class MyWakuBrushConverter : IMultiValueConverter
@@ -1371,6 +1466,26 @@ namespace _20250219
         }
     }
 
+    public class MyConverterARGBtoSolidBrush : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var a = (byte)values[0];
+            var r = (byte)values[1];
+            var g = (byte)values[2];
+            var b = (byte)values[3];
+            return new SolidColorBrush(Color.FromArgb(a, r, g, b));
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            var br = (SolidColorBrush)value;
+            return [br.Color.A, br.Color.R, br.Color.G, br.Color.B];
+
+        }
+    }
+
+    #endregion コンバーター
 
     public class ObservableCollectionKisoThumb : ObservableCollection<KisoThumb>
     {

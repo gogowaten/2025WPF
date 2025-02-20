@@ -14,8 +14,8 @@
 
     <Canvas>
       <local:RootThumb>
-      <local:TextBlockThumb x:Name="mythumb" MyLeft="10" MyTop="50"
-                            MyText="textThumb" FontSize="30" MyBackground="MistyRose"/>
+      <!--<local:TextBlockThumb x:Name="mythumb" MyLeft="10" MyTop="50"
+                            MyText="textThumb" FontSize="30" MyBackground="MistyRose"/>-->
       </local:RootThumb>
     </Canvas>
 
