@@ -1,0 +1,30 @@
+﻿<Window x:Class="_20250220_BitmapBrushDashBorder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_20250220_BitmapBrushDashBorder"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="367" Width="602">
+  <Grid UseLayoutRounding="True">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition/>
+    </Grid.ColumnDefinitions>
+    <local:DashBorder x:Name="bo1" Width="105" Height="103"
+                      MyDashThickness="17"
+                      MyDashColor1="Cyan"
+                      MyDashColor2="Blue"
+                      MyMesh="0"
+                      />
+
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=bo1}">
+      <UniformGrid Columns="2">
+        <TextBlock Text="{Binding MyDashThickness, StringFormat=DashThickness 0}"/>
+        <TextBlock Text="{Binding MyMesh, StringFormat=Mesh 0}"/>
+        <Slider Value="{Binding MyDashThickness}" Minimum="0" Maximum="20"/>
+        <Slider Value="{Binding MyMesh}" Minimum="0" Maximum="20"/>
+      </UniformGrid>
+    </StackPanel>
+  </Grid>
+</Window>

@@ -77,11 +77,6 @@ namespace _20250219
             //デザイン画面の設定をItemDataに反映してからバインド設定
             if (MyItemData.MyThumbType == ThumbType.None)
             {
-                //if (MyThumbType == ThumbType.Text)
-                //{
-                //    MyItemData.MyThumbType = ThumbType.Text;
-                //}
-
                 MyItemData.MyThumbType = MyThumbType;
                 CopyValueToItemData();
                 MyItemDataBind();
