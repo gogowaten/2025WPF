@@ -5,6 +5,9 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows;
+using System.Windows.Data;
 
 namespace _20250219
 {
@@ -26,12 +29,19 @@ namespace _20250219
 
         #endregion 必要
 
-        public ItemData() { }
+
+        public ItemData()
+        {
+
+        }
 
 
         [DataMember] public string MyGuid { get; set; } = Guid.NewGuid().ToString();
         private ThumbType _myThumbType;
         [DataMember] public ThumbType MyThumbType { get => _myThumbType; set => SetProperty(ref _myThumbType, value); }
+
+
+
 
         #region 共通
 
@@ -41,6 +51,11 @@ namespace _20250219
 
         private double _myTop;
         [DataMember] public double MyTop { get => _myTop; set => SetProperty(ref _myTop, value); }
+
+        private int _myZIndex;
+        [DataMember] public int MyZIndex { get => _myZIndex; set => SetProperty(ref _myZIndex, value); }
+
+
 
 
         private byte _myForegroundA;
@@ -74,7 +89,6 @@ namespace _20250219
         [DataMember] public double MyFontSize { get => _myFontSize; set => SetProperty(ref _myFontSize, value); }
 
         #endregion テキスト系
-
 
     }
 }

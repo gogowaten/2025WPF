@@ -5,22 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250219"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="450" Width="600">
+  <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
 
     <Canvas>
-      <local:TextBlockThumb x:Name="mythumb" MyLeft="10" MyTop="50"
-                            MyText="textThumb" FontSize="30" MyBackground="MistyRose"/>
-      <local:RootThumb>
+      <local:RootThumb x:Name="MyRoot">
+        <local:TextBlockThumb x:Name="mythumb" MyLeft="10" MyTop="50"
+                              MyText="textThumb" FontSize="30"
+                              MyBackground="MintCream"
+                              MyForeground="Green"/>
+        <!--<local:TextBlockThumb MyText="second" MyLeft="20" MyTop="20"/>-->
+        <local:TextBlockThumb MyText="second" MyLeft="20" MyTop="20" MyBackground="gold" MyForeground="Red"/>
       </local:RootThumb>
     </Canvas>
 
     <StackPanel Grid.Column="1">
-      
+
     </StackPanel>
-    </Grid>
+  </Grid>
 </Window>

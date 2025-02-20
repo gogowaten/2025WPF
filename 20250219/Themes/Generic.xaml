@@ -31,12 +31,15 @@
     <Setter Property="Panel.ZIndex" Value="{Binding MyZIndex, Mode=TwoWay}"/>
   </Style>
 
+  <!--<Style TargetType="{x:Type local:KisoThumb}" BasedOn="{StaticResource kiso}">
+    
+  </Style>-->
 
   <Style TargetType="{x:Type local:AnchorThumb}"
        BasedOn="{StaticResource kiso}">
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate>
+        <ControlTemplate TargetType="{x:Type local:AnchorThumb}">
           <Rectangle/>
         </ControlTemplate>
       </Setter.Value>
@@ -46,12 +49,15 @@
 
   <Style TargetType="{x:Type local:TextBlockThumb}"
          BasedOn="{StaticResource kiso}">
+    <Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyLeft}"/>
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate>
-          <Grid>
+        <ControlTemplate TargetType="{x:Type local:TextBlockThumb}">
+          <Grid DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:TextBlockThumb}}">
             <TextBlock Text="{Binding MyText}"
-                     Background="{Binding MyBackground}"/>
+                       Foreground="{Binding MyForeground}"
+                       Background="{Binding MyBackground}"
+                     />
             <Border Style="{StaticResource waku4}"/>
           </Grid>
         </ControlTemplate>
@@ -89,8 +95,8 @@
          BasedOn="{StaticResource kiso}">
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate>
-          <Grid>
+        <ControlTemplate TargetType="{x:Type local:RootThumb}">
+          <Grid DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:GroupThumb}}">
             <ItemsControl x:Name="PART_ItemsControl"
                         ItemsSource="{Binding MyThumbs}"
                         Background="{TemplateBinding Background}"
@@ -115,7 +121,8 @@
       <Setter.Value>
         <ControlTemplate>
           <ItemsControl x:Name="PART_ItemsControl"
-                        ItemsSource="{Binding MyThumbs}"
+                        DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:RootThumb}}"
+                        ItemsSource="{Binding MyThumbs, RelativeSource={RelativeSource AncestorType=local:RootThumb}}"
                         Background="{TemplateBinding Background}"
                         Focusable="False">
             <ItemsControl.ItemsPanel>

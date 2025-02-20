@@ -31,7 +31,7 @@ namespace _20250219
     /// <summary>
     /// 基礎Thumb、すべてのCustomControlThumbの派生元
     /// </summary>
-    [DebuggerDisplay("{MyType} {MyText}")]
+    [DebuggerDisplay("{MyThumbType} {MyText}")]
     public abstract class KisoThumb : Thumb
     {
         //クリックダウンとドラッグ移動完了時に使う、直前に選択されたものかの判断用
@@ -75,7 +75,13 @@ namespace _20250219
         {
             //デザイン画面で作成された要素の場合、ItemDataは無いので新規作成後に
             //デザイン画面の設定をItemDataに反映してからバインド設定
-            if (MyItemData.MyThumbType == ThumbType.None)
+
+            //Anchorはバインド無し
+            if(MyThumbType == ThumbType.Anchor)
+            {
+                MyItemData.MyThumbType = MyThumbType;
+            }
+            else if (MyItemData.MyThumbType == ThumbType.None)
             {
                 MyItemData.MyThumbType = MyThumbType;
                 CopyValueToItemData();
@@ -96,8 +102,11 @@ namespace _20250219
         private void CopyValueToItemData()
         {
             //XAMLでの設定をItemDataに入れる
+            MyItemData.MyLeft = MyLeft;
+            MyItemData.MyTop = MyTop;
             MyItemData.MyText = MyText;
             MyItemData.MyFontSize = FontSize;
+            MyItemData.MyZIndex = MyZIndex;
 
             Color bc = ((SolidColorBrush)MyForeground).Color;
             MyItemData.MyForegroundA = bc.A;
@@ -118,10 +127,14 @@ namespace _20250219
         private void MyItemDataBind()
         {
             //バインド、ItemDataをソース
-            SetBinding(MyTextProperty, nameof(MyItemData.MyText));
             SetBinding(MyLeftProperty, nameof(MyItemData.MyLeft));
             SetBinding(MyTopProperty, nameof(MyItemData.MyTop));
+            SetBinding(MyZIndexProperty, nameof(MyItemData.MyZIndex));
+            
+
+            SetBinding(MyTextProperty, nameof(MyItemData.MyText));
             SetBinding(FontSizeProperty, nameof(MyItemData.MyFontSize));
+            var neko = MyItemData;
 
             var mb = new MultiBinding() { Converter = new MyConverterARGBtoSolidBrush() };
             mb.Bindings.Add(new Binding(nameof(MyItemData.MyForegroundA)));
@@ -990,6 +1003,8 @@ namespace _20250219
         #endregion publicメソッド
 
     }
+
+
 
     /// <summary>
     /// root用Thumb
