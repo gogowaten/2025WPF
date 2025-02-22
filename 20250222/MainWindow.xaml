@@ -9,16 +9,32 @@
     <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
-      <ColumnDefinition Width="200"/>
+      <ColumnDefinition Width="240"/>
     </Grid.ColumnDefinitions>
     <Canvas x:Name="MyCanvas">
       <TextBlock Text="TestTextBlock" Canvas.Left="50" Canvas.Top="50"
                  FontSize="30" Foreground="Red" Background="MistyRose"
                  />
+      <local:TextThumb x:Name="MyTextThumb" MyLeft="20" MyTop="5"
+                       MyText="MyTextThumb" FontSize="30"
+                       Foreground="DodgerBlue"
+                       Background="Lavender"/>
     </Canvas>
 
-    <StackPanel Grid.Column="1">
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyTextThumb}">
       <Button Content="serialize" Click="Button_Click"/>
+      <UniformGrid Columns="2">
+        <TextBlock Text="{Binding MyForegroundA, StringFormat=MyForegroundA 0}"/>
+        <Slider Value="{Binding MyForegroundA}" Maximum="255"/>
+        <TextBlock Text="{Binding MyForegroundR, StringFormat=MyForegroundR 0}"/>
+        <Slider Value="{Binding MyForegroundR}" Maximum="255"/>
+        <TextBlock Text="{Binding MyForegroundG, StringFormat=MyForegroundG 0}"/>
+        <Slider Value="{Binding MyForegroundG}" Maximum="255"/>
+        <TextBlock Text="{Binding MyForegroundB, StringFormat=MyForegroundB 0}"/>
+        <Slider Value="{Binding MyForegroundB}" Maximum="255"/>
+        
+      </UniformGrid>
+      <TextBlock Text="{Binding Foreground}"/>
     </StackPanel>
     </Grid>
 </Window>

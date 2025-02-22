@@ -88,40 +88,6 @@ namespace _20250222
 
 
     }
-    public class BrushConverter : JsonConverter<Brush>
-    {
-        public override Brush Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            var color = reader.GetString();
-            return (Brush)new BrushConverter().ConvertFromInvariantString(color);
-        }
-
-        public override void Write(Utf8JsonWriter writer, Brush value, JsonSerializerOptions options)
-        {
-            var color = value.ToString();
-            writer.WriteStringValue(color);
-        }
-
-        private Brush ConvertFromInvariantString(string color)
-        {
-            return (Brush)new BrushConverter().ConvertFromInvariantString(color);
-        }
-    }
-
-    public class DateTimeOffsetJsonConverter : JsonConverter<DateTimeOffset>
-    {
-        public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            
-            return DateTimeOffset.ParseExact(reader.GetString()!, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            DateTimeOffset dateTimeValue,
-            JsonSerializerOptions options) =>
-                writer.WriteStringValue(dateTimeValue.ToString(
-                    "MM/dd/yyyy", CultureInfo.InvariantCulture));
-    }
+  
 
 }
