@@ -24,7 +24,7 @@
                             MyForeground="Red" MyBackground="MistyRose"/>
           </local:TextBlockThumb.MyItemData>
         </local:TextBlockThumb>
-        <local:TextBlockThumb x:Name="myTB2">
+        <local:TextBlockThumb x:Name="myTB2" FontFamily="NiseZillion">
           <local:TextBlockThumb.MyItemData>
             <local:ItemData MyText="bbbbbbb" MyLeft="60" MyTop="10" MyFontSize="30"
                             MyForeground="SteelBlue" MyBackground="Red"/>
@@ -68,6 +68,7 @@
           <TextBlock Text="{Binding MyZIndex, StringFormat=ZIndex 0}"/>
         </StackPanel>
       </GroupBox>
+      <Button Content="serialize" Click="Button_Click_3"/>
       
     </StackPanel>
     </Grid>

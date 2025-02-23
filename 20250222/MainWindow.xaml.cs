@@ -30,7 +30,7 @@ public partial class MainWindow : Window
 
     private void IniAAA()
     {
-        MyAAA = new() { MyZIndex=0 };
+        MyAAA = new() { MyZIndex = 0 };
         MyAAA.MyDatas.Add(new AAA() { MyBrush = Brushes.Red });
         MyAAA.MyDatas.Add(new AAA() { MyBrush = Brushes.Blue, MyZIndex = 2 });
         MyAAA.MyDatas.Add(new AAA() { MyBrush = Brushes.Green, MyZIndex = 3 });
@@ -56,5 +56,16 @@ public partial class MainWindow : Window
         var serializedValue = System.Text.Json.JsonSerializer.Serialize(myPropertyValue);
         // シリアル化された値を使用する処理を追加
         MessageBox.Show(serializedValue);
+    }
+
+    private void Button_Click_1(object sender, RoutedEventArgs e)
+    {
+        //MyTextThumb.MyXamlWriter("E:\\20250223.xml");
+        MyTextThumb.MySerialize("E:\\20250223.xml");
+    }
+
+    private void Button_Click_2(object sender, RoutedEventArgs e)
+    {
+        TextThumb? thumb = MyTextThumb.MyDeserialize("E:\\20250223.xml");
     }
 }

@@ -39,6 +39,12 @@ public partial class MainWindow : Window
     {
         myTB2.MyItemData.MyForeground = Brushes.Green;
     }
+
+    private void Button_Click_3(object sender, RoutedEventArgs e)
+    {
+        myTB2.Serialize("E:\\20250223.xml");
+        MyRoot.Serialize("E:\\2025223root.xml");
+    }
 }
 
 public class AAA : TextBlock, INotifyPropertyChanged

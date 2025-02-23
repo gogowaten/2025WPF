@@ -7,12 +7,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Markup;
 using System.Windows.Media;
+using System.Xml;
 
 namespace _20250221
 {
 
-    [DataContract]
+    //[DataContract]
+    [KnownType(typeof(ItemData))]
+    [KnownType(typeof(SolidColorBrush))]
+    [KnownType(typeof(MatrixTransform))]
+    
+    
     public class ItemData : DependencyObject, IExtensibleDataObject, INotifyPropertyChanged
     {
         #region 必要
@@ -31,6 +38,26 @@ namespace _20250221
 
 
         public ItemData()
+        {
+            MyInitBind();
+
+        }
+
+        public void Serialize(string filePath)
+        {
+            DataContractSerializer serializer = new(typeof(ItemData));
+            XmlWriterSettings settings = new()
+            {
+                Indent = true,
+                Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)
+            };
+            using XmlWriter writer = XmlWriter.Create(filePath, settings);
+            serializer.WriteObject(writer, this);
+
+
+        }
+
+        private void MyInitBind()
         {
             var mb = new MultiBinding() { Converter = new MyConverterARGBtoSolidBrush() };
             mb.Bindings.Add(new Binding(nameof(MyForegroundA)) { Source = this });
@@ -53,9 +80,11 @@ namespace _20250221
             mb.Bindings.Add(new Binding(nameof(MyFillB)) { Source = this });
             _ = BindingOperations.SetBinding(this, MyFillProperty, mb);
 
-
         }
 
+
+        private List<ItemData> _myThumbsItemData = [];
+        public List<ItemData> MyThumbsItemData { get => _myThumbsItemData; set => SetProperty(ref _myThumbsItemData, value); }
 
         [DataMember] public string MyGuid { get; set; } = Guid.NewGuid().ToString();
         private ThumbType _myThumbType;
@@ -155,6 +184,7 @@ namespace _20250221
 
         #region テキスト系
 
+        
         private string _myText = string.Empty;
         [DataMember] public string MyText { get => _myText; set => SetProperty(ref _myText, value); }
 

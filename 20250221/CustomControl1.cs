@@ -5,6 +5,8 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace _20250221
 {
@@ -146,6 +149,7 @@ namespace _20250221
             MyItemData.IsFocus = IsFocus;
             MyItemData.IsSelectable = IsSelectable;
             MyItemData.IsSelected = IsSelected;
+
 
             #endregion 枠表示用
         }
@@ -586,7 +590,7 @@ namespace _20250221
 
         #region メソッド
 
-        #region protectedメソッド
+        #region 内部メソッド
 
         /// <summary>
         /// RootThumbを取得
@@ -664,9 +668,19 @@ namespace _20250221
             }
         }
 
-        #endregion protectedメソッド
+        #endregion 内部メソッド
 
         #region public
+
+
+        public void Serialize(string filePath)
+        {
+            DataContractSerializer serializer = new(typeof(ItemData));
+            XmlWriterSettings settings = new() { Indent = true, Encoding = new UTF8Encoding(false) };
+            using var writer = XmlWriter.Create(filePath, settings);
+            serializer.WriteObject(writer, this.MyItemData);
+        }
+
 
         #region ZIndex
 
@@ -892,9 +906,12 @@ namespace _20250221
         /// </summary>
         private void MyThumbs_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems?[0] is KisoThumb ni)
+            if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems?[0] is KisoThumb addItem)
             {
-                ni.MyParentThumb = this;
+                addItem.MyParentThumb = this;
+                //リストにItemDataを追加
+                MyItemData.MyThumbsItemData.Insert(e.NewStartingIndex, addItem.MyItemData);
+
                 //ZIndexをCollectionのIndexに合わせる、
                 //挿入箇所より後ろの要素はすべて変更
                 int index = e.NewStartingIndex;
@@ -904,9 +921,10 @@ namespace _20250221
                 }
 
             }
-            else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems?[0] is KisoThumb ot)
+            else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems?[0] is KisoThumb remItem)
             {
-                //ot.MyParentThumb = null;
+                //リストからItemData削除
+                MyItemData.MyThumbsItemData.Remove(remItem.MyItemData);
 
                 //ZIndexをCollectionのIndexに合わせる、
                 //変更対象条件は、IsSelectedではない＋削除箇所より後ろ
@@ -916,6 +934,7 @@ namespace _20250221
                     if (!MyThumbs[i].IsSelected)
                     {
                         MyThumbs[i].MyItemData.MyZIndex = i;
+
                     }
                 }
             }
@@ -926,10 +945,11 @@ namespace _20250221
 
         #endregion イベントハンドラ
 
-        #region publicメソッド
+        #region 内部メソッド
+
 
         /// <summary>
-        /// ZIndexを再振り当てする、Loadedで使用、専用？
+        /// MyThumbsのZIndexを再振り当てする、Loadedで使用、専用？
         /// </summary>
         private void FixZindex()
         {
@@ -938,6 +958,10 @@ namespace _20250221
                 MyThumbs[i].MyItemData.MyZIndex = i;
             }
         }
+
+        #endregion 内部メソッド
+
+        #region publicメソッド
 
 
         /// <summary>
@@ -1036,7 +1060,7 @@ namespace _20250221
             Loaded += RootThumb_Loaded;
         }
 
-    
+
 
         #region internalメソッド
 

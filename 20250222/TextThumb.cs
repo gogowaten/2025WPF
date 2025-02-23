@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,20 +13,28 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+//using System.Xaml;
+using System.Xml;
 
 namespace _20250222
 {
-
+    [KnownType(typeof(SolidColorBrush))]
+    [KnownType(typeof(MatrixTransform))]
+    [KnownType(typeof(Thumb))]
+    [KnownType(typeof(TextThumb))]
+    [DataContract(IsReference =false)]
     public class TextThumb : Thumb
     {
         static TextThumb()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TextThumb), new FrameworkPropertyMetadata(typeof(TextThumb)));
         }
+    
         public TextThumb()
         {
             DataContext = this;
@@ -72,6 +83,42 @@ namespace _20250222
 
         }
 
+        public void MyXamlWriter(string filePath)
+        {
+            XmlWriterSettings settings = new()
+            {
+                Indent = true,
+                Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)
+            };
+            StringBuilder sb = new();
+            XmlWriter writer = XmlWriter.Create(sb, settings);
+            XamlDesignerSerializationManager manager = new(writer) {XamlWriterMode = XamlWriterMode.Expression};
+            XamlWriter.Save(this, manager);
+            var neko = sb.ToString();    
+        }
+
+        public void MySerialize(string filePath)
+        {
+            DataContractSerializer serializer = new(typeof(TextThumb));
+            XmlWriterSettings settings = new()
+            {
+                Indent = true,
+                Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)
+            };
+            using XmlWriter writer = XmlWriter.Create(filePath, settings);
+            serializer.WriteObject(writer, this);
+        }
+
+        public TextThumb? MyDeserialize(string filePath)
+        {
+            DataContractSerializer serializer = new(typeof(TextThumb));
+            using XmlReader reader = XmlReader.Create(filePath);
+            if (serializer.ReadObject(reader) is TextThumb thumb)
+            {
+                return thumb;
+            }
+            else { return null; }
+        }
 
         public double MyLeft
         {
