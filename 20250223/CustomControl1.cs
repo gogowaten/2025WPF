@@ -1175,57 +1175,13 @@ namespace _20250223
         #region Thumb追加と削除
 
         /// <summary>
-        /// ActiveGroupThumbにThumbを追加、
-        /// 追加場所はFocusThumbがあればそれが基準になる、Z座標では+1
+        /// ActiveGroupThumbにThumbを追加、オフセット位置を指定して追加
+        /// 追加場所はFocusThumbがあればそれが基準になる、Z座標は一番上
         /// 最初の追加要素ならすべて0で配置
-        /// </summary>
-        /// <param name="thumb"></param>
-        /// <param name="insertIndex">挿入先指定</param>
-        //public void AddThumbToActiveGroup(KisoThumb thumb, int insertIndex = -1)
-        //{
-        //    thumb.IsSelectable = true;
-        //    int index = insertIndex == -1 ? MyThumbs.Count : insertIndex;
-        //    if (MyFocusThumb != null)
-        //    {
-        //        thumb.MyItemData.MyLeft += MyFocusThumb.MyItemData.MyLeft;
-        //        thumb.MyItemData.MyTop += MyFocusThumb.MyItemData.MyTop;
-        //        index = MyActiveGroupThumb.MyThumbs.IndexOf(MyFocusThumb) + 1;
-        //    }
-        //    else if (MyActiveGroupThumb.MyThumbs.Count == 0)
-        //    {
-        //        thumb.MyItemData.MyLeft = 0; thumb.MyItemData.MyTop = 0;
-        //    }
-        //    MyActiveGroupThumb.MyThumbs.Insert(index, thumb);
-        //    SelectedThumbsClearAndAddThumb(thumb);
-        //    ReLayout3();
-        //}
-
-        //その場に追加
-        public void AddThumbToActiveGroup2(KisoThumb thumb, int insertIndex = -1)
-        {
-            thumb.IsSelectable = true;
-            int index = insertIndex == -1 ? MyThumbs.Count : insertIndex;
-            if (MyFocusThumb != null)
-            {
-                thumb.MyItemData.MyLeft = MyFocusThumb.MyItemData.MyLeft;
-                thumb.MyItemData.MyTop = MyFocusThumb.MyItemData.MyTop;
-                index = MyActiveGroupThumb.MyThumbs.IndexOf(MyFocusThumb) + 1;
-            }
-            else if (MyActiveGroupThumb.MyThumbs.Count == 0)
-            {
-                thumb.MyItemData.MyLeft = 0; thumb.MyItemData.MyTop = 0;
-            }
-            MyActiveGroupThumb.MyThumbs.Insert(index, thumb);
-            SelectedThumbsClearAndAddThumb(thumb);
-            ReLayout3();
-        }
-        /// <summary>
-        /// オフセット位置を指定して追加
         /// </summary>
         /// <param name="thumb"></param>
         /// <param name="left">基準からの横距離</param>
         /// <param name="top">基準からの縦距離</param>
-        /// <param name="insertIndex"></param>
         public void AddThumbToActiveGroup3(KisoThumb thumb, double left = 0, double top = 0)
         {
             thumb.IsSelectable = true;
@@ -1243,7 +1199,16 @@ namespace _20250223
             ReLayout3();
         }
 
-        public void AddThumbToActiveGroup3(KisoThumb thumb, int insertIndex, double left = 0, double top = 0)
+        /// <summary>
+        /// ActiveGroupThumbにThumbを追加、オフセット位置とZ座標を指定して追加
+        /// 追加場所はFocusThumbがあればそれが基準になる
+        /// 最初の追加要素ならすべて0で配置
+        /// </summary>
+        /// <param name="thumb"></param>
+        /// <param name="insertIndex">挿入先指定</param>
+        /// <param name="left">基準からの横距離</param>
+        /// <param name="top">基準からの縦距離</param>
+        public void AddThumbInsertToActiveGroup(KisoThumb thumb, int insertIndex, double left = 0, double top = 0)
         {
             thumb.IsSelectable = true;
             if (MyFocusThumb != null)
@@ -1319,7 +1284,8 @@ namespace _20250223
             //選択ThumbをActiveGroupThumbから一掃
             RemoveSelectedThumbsFromActiveGroup(false);
 
-            AddThumbToActiveGroup2(group, group.MyItemData.MyZIndex);
+            AddThumbToActiveGroup3(group, group.MyItemData.MyZIndex);
+            //AddThumbToActiveGroup2(group, group.MyItemData.MyZIndex);
             //AddThumbToActiveGroup(group, group.MyItemData.MyZIndex);
         }
 

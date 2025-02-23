@@ -132,6 +132,7 @@ namespace _20250223
         private byte _myFillB;
         [DataMember] public byte MyFillB { get => _myFillB; set => SetProperty(ref _myFillB, value); }
         //オプションでBindsTwoWayByDefault必須、ここ以外ではTwoWayにできない
+        [IgnoreDataMember]
         public Brush MyFill
         {
             get { return (Brush)GetValue(MyFillProperty); }
@@ -154,6 +155,7 @@ namespace _20250223
         private byte _myForegroundB;
         [DataMember] public byte MyForegroundB { get => _myForegroundB; set => SetProperty(ref _myForegroundB, value); }
 
+        [IgnoreDataMember]
         public Brush MyForeground
         {
             get { return (Brush)GetValue(MyForegroundProperty); }
@@ -176,6 +178,7 @@ namespace _20250223
         private byte _myBackgroundB = 255;
         [DataMember] public byte MyBackgroundB { get => _myBackgroundB; set => SetProperty(ref _myBackgroundB, value); }
 
+        [IgnoreDataMember]
         public Brush MyBackground
         {
             get { return (Brush)GetValue(MyBackgroundProperty); }

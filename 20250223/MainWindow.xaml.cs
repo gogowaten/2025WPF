@@ -31,39 +31,38 @@ public partial class MainWindow : Window
     {
         if (ItemData.Deserialize("E:\\20250223.xml") is ItemData data)
         {
-            //var thumb = new EllipseTextThumb(data);
-            var thumb = new TextBlockThumb(data);
             if (MyBuilder.MakeThumb(data) is KisoThumb t)
             {
-                //MyRoot.AddThumbToActiveGroup2(t);
 
-                if (MyRoot.MyFocusThumb?.MyItemData.MyZIndex is int ind)
-                {
-                    MyRoot.AddThumbToActiveGroup3(t, ind + 1, 32, 32);
-                }
 
-                //MyRoot.AddThumbToActiveGroup3(t);
-                //MyRoot.AddThumbToActiveGroup3(t, 32, 32);
-                //  MyRoot.AddThumbToActiveGroup(t);
+                MyRoot.AddThumbToActiveGroup3(t, 32, 32);
+
             }
-            //MyRoot.AddThumbToActiveGroup(thumb);
         }
     }
 
     private void Button_Click_2(object sender, RoutedEventArgs e)
     {
-        var data = new ItemData
+        if (ItemData.Deserialize("E:\\20250223.xml") is ItemData data)
         {
-            MyThumbType = ThumbType.Text,
-            MyText = "AddFromData"
-        };
-        var thumb = MyBuilder.MakeThumb(data);
-        if (thumb != null)
-        {
-            //MyRoot.AddThumbToActiveGroup2(thumb);
-            MyRoot.AddThumbToActiveGroup3(thumb, 32, 32);
-            //MyRoot.AddThumbToActiveGroup(thumb);
+            if (MyBuilder.MakeThumb(data) is KisoThumb t)
+            {
+                if (MyRoot.MyFocusThumb?.MyItemData.MyZIndex is int ind)
+                {
+                    MyRoot.AddThumbInsertToActiveGroup(t, ind + 1, 32, 32);
+                }
+            }
         }
+        //var data = new ItemData
+        //{
+        //    MyThumbType = ThumbType.Text,
+        //    MyText = "AddFromData"
+        //};
+        //var thumb = MyBuilder.MakeThumb(data);
+        //if (thumb != null)
+        //{
+        //    MyRoot.AddThumbToActiveGroup3(thumb, 32, 32);
+        //}
     }
 }
 

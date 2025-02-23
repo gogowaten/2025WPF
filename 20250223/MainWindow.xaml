@@ -34,9 +34,9 @@
     </Canvas>
 
     <StackPanel Grid.Column="1">
-      <Button Content="serialize" Click="Button_Click"/>
-      <Button Content="deserialize" Click="Button_Click_1"/>
-      <Button Content="addFromData" Click="Button_Click_2"/>
+      <Button Content="ファイルに保存" Click="Button_Click"/>
+      <Button Content="ファイルから追加" Click="Button_Click_1"/>
+      <Button Content="ファイルから挿入" Click="Button_Click_2"/>
       <GroupBox DataContext="{Binding ElementName=MyRoot, Path=MyFocusThumb}" Header="FocusThumb">
         <StackPanel>
           <TextBlock Text="{Binding MyThumbType, StringFormat=type {0} }"/>
