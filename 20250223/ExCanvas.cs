@@ -11,15 +11,34 @@ namespace _20250223
 {
 
     /// <summary>
-    /// 子要素に合わせてサイズが変化するCanvas
+    /// 子要素全体が収まるようにサイズが自動変化するCanvas
     /// ただし、子要素のマージンとパディングは考慮していないし
     /// ArrangeOverrideを理解していないので不具合があるかも
     /// </summary>
     public class ExCanvas : Canvas
     {
-        protected override Size ArrangeOverride(Size arrangeSize)
+        private bool isAutoResize = true;
+
+        /// <summary>
+        /// 自動リサイズの切り替えフラグ
+        /// falseからtrueに変更時はInvalidateArrangeを実行してリサイズ
+        /// </summary>
+        public bool IsAutoResize
         {
-            if (double.IsNaN(Width) && double.IsNaN(Height))
+            get => isAutoResize;
+            set
+            {
+                if (isAutoResize != value)
+                {
+                    isAutoResize = value;
+                    if (value) { InvalidateArrange(); }                    
+                }                
+            }
+        }
+
+        protected override Size ArrangeOverride(Size arrangeSize)
+        {            
+            if (double.IsNaN(Width) && double.IsNaN(Height) && IsAutoResize)
             {
                 base.ArrangeOverride(arrangeSize);
                 Size resultSize = new();

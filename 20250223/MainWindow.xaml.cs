@@ -18,7 +18,8 @@ public partial class MainWindow : Window
 {
     public MainWindow()
     {
-        InitializeComponent();
+        InitializeComponent();        
+
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
@@ -29,40 +30,36 @@ public partial class MainWindow : Window
 
     private void Button_Click_1(object sender, RoutedEventArgs e)
     {
-        if (ItemData.Deserialize("E:\\20250223.xml") is ItemData data)
+        if (MyBuilder.MakeThumb("E:\\20250223.xml") is KisoThumb t)
         {
-            if (MyBuilder.MakeThumb(data) is KisoThumb t)
-            {
-
-
-                MyRoot.AddThumbToActiveGroup3(t, 32, 32);
-
-            }
+            MyRoot.AddThumbToActiveGroup3(t, 32, 32);
         }
     }
 
     private void Button_Click_2(object sender, RoutedEventArgs e)
     {
-        if (ItemData.Deserialize("E:\\20250223.xml") is ItemData data)
+        if (MyBuilder.MakeThumb("E:\\20250223.xml") is KisoThumb t)
         {
-            if (MyBuilder.MakeThumb(data) is KisoThumb t)
+            if (MyRoot.MyFocusThumb?.MyItemData.MyZIndex is int ind)
             {
-                if (MyRoot.MyFocusThumb?.MyItemData.MyZIndex is int ind)
-                {
-                    MyRoot.AddThumbInsertToActiveGroup(t, ind + 1, 32, 32);
-                }
+                MyRoot.AddThumbInsertToActiveGroup(t, ind + 1, 32, 32);
             }
         }
-        //var data = new ItemData
-        //{
-        //    MyThumbType = ThumbType.Text,
-        //    MyText = "AddFromData"
-        //};
-        //var thumb = MyBuilder.MakeThumb(data);
-        //if (thumb != null)
-        //{
-        //    MyRoot.AddThumbToActiveGroup3(thumb, 32, 32);
-        //}
+    }
+
+    private void AddGroup_Click(object sender, RoutedEventArgs e)
+    {
+        MyRoot.AddGroupFromSelected();
+    }
+
+    private void Remove_Click(object sender, RoutedEventArgs e)
+    {
+        var inu = MyRoot.MySelectedThumbs[0].MyItemData.MyGuid;
+        var neko1 = MyRoot.MyItemData.MyThumbsItemData[0].MyGuid;
+        var neko2 = MyRoot.MyItemData.MyThumbsItemData[1].MyGuid;
+        var neko3 = MyRoot.MyItemData.MyThumbsItemData[2].MyGuid;
+
+        MyRoot.RemoveSelectedThumbs();
     }
 }
 
@@ -77,6 +74,15 @@ public static class MyBuilder
         else if (data.MyThumbType == ThumbType.Ellipse)
         {
             return new EllipseTextThumb(data);
+        }
+        else { return null; }
+    }
+
+    public static KisoThumb? MakeThumb(string filePath)
+    {
+        if (ItemData.Deserialize(filePath) is ItemData data)
+        {
+            return MakeThumb(data);
         }
         else { return null; }
     }

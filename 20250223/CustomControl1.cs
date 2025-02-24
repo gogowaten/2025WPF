@@ -40,6 +40,7 @@ namespace _20250223
         //クリックダウンとドラッグ移動完了時に使う、直前に選択されたものかの判断用
         bool IsPreviewSelected { get; set; }
 
+
         public ThumbType MyThumbType { get; protected set; }
 
         //親要素の識別用。自身がグループ化されたときに親要素のGroupThumbを入れておく
@@ -57,8 +58,8 @@ namespace _20250223
             InitializeWakuBrush();
 
             DataContext = MyItemData;
-            //DataContext = this;
             Focusable = true;
+            //Focusable = false;
 
             MyThumbType = ThumbType.None;
 
@@ -74,7 +75,9 @@ namespace _20250223
             KeyUp += KisoThumb_KeyUp;
             PreviewKeyDown += KisoThumb_PreviewKeyDown;
 
+
         }
+
         public KisoThumb(ItemData data) : this()
         {
             MyThumbType = data.MyThumbType;
@@ -82,6 +85,9 @@ namespace _20250223
 
         private void KisoThumb_Initialized(object? sender, EventArgs e)
         {
+            var neko = this.MyItemData.MyFontSize;
+            var inu = this.FontSize;
+            var tako = this.MyItemData.MyText;
 
             //デザイン画面で作成された要素の場合、ItemDataは無いので新規作成後に
             //デザイン画面の設定をItemDataに反映してからバインド設定
@@ -94,6 +100,7 @@ namespace _20250223
             else if (MyItemData.MyThumbType == ThumbType.None)
             {
                 MyItemData.MyThumbType = MyThumbType;
+
                 //CopyValueToItemData();
                 //MyItemDataBind();
             }
@@ -285,37 +292,6 @@ namespace _20250223
         }
 
 
-        ///// <summary>
-        ///// 方向キーの方向へ10ピクセル移動
-        ///// </summary>
-        //internal void KisoThumb_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    if (sender is KisoThumb t)
-        //    {
-        //        if (e.Key == Key.Left)
-        //        {
-        //            t.MyLeft -= 10;
-        //            e.Handled = true;
-        //        }
-        //        else if (e.Key == Key.Right)
-        //        {
-        //            t.MyLeft += 10;
-        //            e.Handled = true;
-        //        }
-        //        else if (e.Key == Key.Up)
-        //        {
-        //            t.MyTop -= 10;
-        //            e.Handled = true;
-        //        }
-        //        else if (e.Key == Key.Down)
-        //        {
-        //            t.MyTop += 10;
-        //            e.Handled = true;
-        //        }
-
-        //    }
-        //}
-
         #endregion キーボード
 
         #region マウスクリック
@@ -334,6 +310,7 @@ namespace _20250223
 
             if (e.Source == e.OriginalSource)
             {
+                Focusable = false;
                 UpdateSelectedThumbs(this, Keyboard.Modifiers == ModifierKeys.Control);
             }
         }
@@ -391,9 +368,10 @@ namespace _20250223
             {
                 if (sender is KisoThumb t)
                 {
+                    Focusable = true;
                     //重要、BringIntoViewこれがないとすっ飛んでいく
-
                     //直接クリックしたThumbが対象になる、GroupThumbの中のThumbとか
+
                     t.BringIntoView();
 
                     //直接クリックしたものを含むSelectableなThumbが対象になる
@@ -422,7 +400,11 @@ namespace _20250223
                 {
                     if (current.MyParentThumb is GroupThumb parent)
                     {
-                        parent.AddAnchorThumb(current);
+                        if (parent.MyExCanvas is ExCanvas canvas)
+                        {
+                            canvas.IsAutoResize = false;
+                        }
+                        //parent.AddAnchorThumb(current);
                         //座標を四捨五入で整数にしてぼやけ回避
                         current.MyItemData.MyLeft = (int)(current.MyItemData.MyLeft + 0.5);
                         current.MyItemData.MyTop = (int)(current.MyItemData.MyTop + 0.5);
@@ -493,13 +475,20 @@ namespace _20250223
                         root.MyFocusThumb = root.MySelectedThumbs[myIndex - 1];
                     }
                 }
+
             }
 
             if (e.Source is KisoThumb kiso)
             {
+
                 if (GetSelectableThumb(kiso) is KisoThumb ima)
                 {
-                    ima.MyParentThumb?.RemoveAnchorThumb();
+                    //ima.MyParentThumb?.RemoveAnchorThumb();
+                    if (ima.MyParentThumb?.MyExCanvas is ExCanvas canvas)
+                    {
+                        canvas.IsAutoResize = true;
+                        //canvas.InvalidateArrange();
+                    }
                 }
                 //再レイアウト配置
                 kiso.MyParentThumb?.ReLayout3();
@@ -757,37 +746,37 @@ namespace _20250223
     }
 
 
-    /// <summary>
-    /// 子要素の移動時にスクロール一時固定に使うアンカーThumb
-    /// </summary>
-    public class AnchorThumb : KisoThumb
-    {
-        static AnchorThumb()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(AnchorThumb), new FrameworkPropertyMetadata(typeof(AnchorThumb)));
-        }
-        public AnchorThumb()
-        {
-            MyThumbType = ThumbType.Anchor;
-            Visibility = Visibility.Hidden;
-            Focusable = false;
-            DragDelta -= Thumb_DragDelta3;
-            DragStarted -= KisoThumb_DragStarted2;
-            DragCompleted -= KisoThumb_DragCompleted2;
-        }
-        public AnchorThumb(KisoThumb thumb) : this()
-        {
-            Width = thumb.ActualWidth;
-            Height = thumb.ActualHeight;
-            MyItemData = new()
-            {
-                MyLeft = thumb.MyItemData.MyLeft,
-                MyTop = thumb.MyItemData.MyTop
-            };
+    ///// <summary>
+    ///// 子要素の移動時にスクロール一時固定に使うアンカーThumb
+    ///// </summary>
+    //public class AnchorThumb : KisoThumb
+    //{
+    //    static AnchorThumb()
+    //    {
+    //        DefaultStyleKeyProperty.OverrideMetadata(typeof(AnchorThumb), new FrameworkPropertyMetadata(typeof(AnchorThumb)));
+    //    }
+    //    public AnchorThumb()
+    //    {
+    //        MyThumbType = ThumbType.Anchor;
+    //        Visibility = Visibility.Hidden;
+    //        Focusable = false;
+    //        DragDelta -= Thumb_DragDelta3;
+    //        DragStarted -= KisoThumb_DragStarted2;
+    //        DragCompleted -= KisoThumb_DragCompleted2;
+    //    }
+    //    public AnchorThumb(KisoThumb thumb) : this()
+    //    {
+    //        Width = thumb.ActualWidth;
+    //        Height = thumb.ActualHeight;
+    //        MyItemData = new()
+    //        {
+    //            MyLeft = thumb.MyItemData.MyLeft,
+    //            MyTop = thumb.MyItemData.MyTop
+    //        };
 
-        }
+    //    }
 
-    }
+    //}
 
 
 
@@ -824,6 +813,8 @@ namespace _20250223
     }
 
 
+
+
     [ContentProperty(nameof(MyThumbs))]
     public class GroupThumb : KisoThumb
     {
@@ -852,8 +843,8 @@ namespace _20250223
         #endregion 依存関係プロパティ
 
         //子要素移動時にスクロールバー固定用のアンカー
-        public AnchorThumb? MyAnchorThumb { get; private set; }
-
+        //public AnchorThumb? MyAnchorThumb { get; private set; }
+        public ExCanvas? MyExCanvas { get; private set; }
         #region コンストラクタ
 
         static GroupThumb()
@@ -881,17 +872,17 @@ namespace _20250223
             var temp = GetTemplateChild("PART_ItemsControl");
             if (temp is ItemsControl ic)
             {
-                var canvas = GetExCanvas(ic);
-                if (canvas != null)
+                MyExCanvas = GetExCanvas(ic);
+                if (MyExCanvas != null)
                 {
-                    _ = SetBinding(WidthProperty, new Binding() { Source = canvas, Path = new PropertyPath(ActualWidthProperty) });
-                    _ = SetBinding(HeightProperty, new Binding() { Source = canvas, Path = new PropertyPath(ActualHeightProperty) });
+                    _ = SetBinding(WidthProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualWidthProperty) });
+                    _ = SetBinding(HeightProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualHeightProperty) });
                 }
             }
 
             //ZIndexの再振り当て
             //何故かこれをしないとXAMLでのThumbのZがすべて0になる
-            FixZindex();
+            FixForXamlItemThumbs();
         }
 
         /// <summary>
@@ -912,6 +903,13 @@ namespace _20250223
 
         #region イベントハンドラ
 
+        private void AddItemsData()
+        {
+            for (int i = 0; i < MyThumbs.Count; i++)
+            {
+                MyItemData.MyThumbsItemData.Add(MyThumbs[i].MyItemData);
+            }
+        }
         /// <summary>
         /// 子要素の追加時
         /// 子要素に親要素(自身)を登録
@@ -922,7 +920,10 @@ namespace _20250223
             {
                 addItem.MyParentThumb = this;
                 //リストにItemDataを追加
-                MyItemData.MyThumbsItemData.Insert(e.NewStartingIndex, addItem.MyItemData);
+                if (addItem.MyItemData.MyThumbType != ThumbType.None)
+                {
+                    MyItemData.MyThumbsItemData.Insert(e.NewStartingIndex, addItem.MyItemData);
+                }
 
                 //ZIndexをCollectionのIndexに合わせる、
                 //挿入箇所より後ろの要素はすべて変更
@@ -936,7 +937,10 @@ namespace _20250223
             else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems?[0] is KisoThumb remItem)
             {
                 //リストからItemData削除
-                MyItemData.MyThumbsItemData.Remove(remItem.MyItemData);
+                if (!MyItemData.MyThumbsItemData.Remove(remItem.MyItemData))
+                {
+                    throw new ArgumentException("ItemDataの削除でエラー");
+                }
 
                 //ZIndexをCollectionのIndexに合わせる、
                 //変更対象条件は、IsSelectedではない＋削除箇所より後ろ
@@ -961,13 +965,17 @@ namespace _20250223
 
 
         /// <summary>
+        /// デザイン画面で追加したThumbがある場合に起動直後で使用する
         /// MyThumbsのZIndexを再振り当てする、Loadedで使用、専用？
         /// </summary>
-        private void FixZindex()
+        private void FixForXamlItemThumbs()
         {
             for (int i = 0; i < MyThumbs.Count; i++)
             {
-                MyThumbs[i].MyItemData.MyZIndex = i;
+                var data = MyThumbs[i].MyItemData;
+                //MyThumbs[i].MyItemData.MyZIndex = i;
+                data.MyZIndex = i;
+                MyItemData.MyThumbsItemData.Add(data);
             }
         }
 
@@ -976,28 +984,28 @@ namespace _20250223
         #region publicメソッド
 
 
-        /// <summary>
-        /// アンカーThumbをHiddenで追加
-        /// </summary>
-        public void AddAnchorThumb(KisoThumb thumb)
-        {
-            MyAnchorThumb = new AnchorThumb(thumb);
+        ///// <summary>
+        ///// アンカーThumbをHiddenで追加
+        ///// </summary>
+        //public void AddAnchorThumb(KisoThumb thumb)
+        //{
+        //    MyAnchorThumb = new AnchorThumb(thumb);
 
-            MyThumbs.Add(MyAnchorThumb);
-        }
+        //    MyThumbs.Add(MyAnchorThumb);
+        //}
 
 
-        /// <summary>
-        /// アンカーThumbを削除
-        /// </summary>
-        public void RemoveAnchorThumb()
-        {
-            if (MyAnchorThumb is not null)
-            {
-                MyThumbs.Remove(MyAnchorThumb);
-                MyAnchorThumb = null;
-            }
-        }
+        ///// <summary>
+        ///// アンカーThumbを削除
+        ///// </summary>
+        //public void RemoveAnchorThumb()
+        //{
+        //    if (MyAnchorThumb is not null)
+        //    {
+        //        MyThumbs.Remove(MyAnchorThumb);
+        //        MyAnchorThumb = null;
+        //    }
+        //}
 
         /// <summary>
         /// 再配置、ReLayoutからの改変、余計な処理をなくした。
@@ -1070,7 +1078,21 @@ namespace _20250223
             Loaded += RootThumb_Loaded;
         }
 
+        #region イベントでの処理
 
+
+        private void RootThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            //ActiveGroupThumbの指定
+            MyActiveGroupThumb = this;
+            foreach (var item in MyThumbs)
+            {
+                item.IsSelectable = true;
+            }
+        }
+
+        #endregion イベントでの処理
 
         #region internalメソッド
 
@@ -1174,6 +1196,18 @@ namespace _20250223
 
         #region Thumb追加と削除
 
+        //削除
+        public void RemoveSelectedThumbs()
+        {
+            foreach (var item in MySelectedThumbs)
+            {
+                //var neko = MyItemData.MyThumbsItemData.Remove(item.MyItemData);
+                var inu = MyThumbs.Remove(item);
+            }
+
+            MySelectedThumbs.Clear();
+        }
+
         /// <summary>
         /// ActiveGroupThumbにThumbを追加、オフセット位置を指定して追加
         /// 追加場所はFocusThumbがあればそれが基準になる、Z座標は一番上
@@ -1239,11 +1273,6 @@ namespace _20250223
             {
                 RemoveAll();
             }
-            //else if(targetCount-selectedCount == 1)
-            //{
-            //    //グループ解除
-
-            //}
 
             if (IsSelectedWithParent(MyClickedThumb)) { MyClickedThumb = null; }
             MyFocusThumb = null;
@@ -1284,9 +1313,7 @@ namespace _20250223
             //選択ThumbをActiveGroupThumbから一掃
             RemoveSelectedThumbsFromActiveGroup(false);
 
-            AddThumbToActiveGroup3(group, group.MyItemData.MyZIndex);
-            //AddThumbToActiveGroup2(group, group.MyItemData.MyZIndex);
-            //AddThumbToActiveGroup(group, group.MyItemData.MyZIndex);
+            AddThumbInsertToActiveGroup(group, group.MyItemData.MyZIndex);
         }
 
         /// <summary>
@@ -1386,21 +1413,7 @@ namespace _20250223
 
         #endregion パブリックなメソッド
 
-        #region イベントでの処理
 
-
-        private void RootThumb_Loaded(object sender, RoutedEventArgs e)
-        {
-
-            //ActiveGroupThumbの指定
-            MyActiveGroupThumb = this;
-            foreach (var item in MyThumbs)
-            {
-                item.IsSelectable = true;
-            }
-        }
-
-        #endregion イベントでの処理
 
         #region 依存関係プロパティ
 

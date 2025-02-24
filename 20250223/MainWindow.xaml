@@ -6,47 +6,90 @@
         xmlns:local="clr-namespace:_20250223"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="600">
-    <Grid>
+  <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
-      <ColumnDefinition Width="200"/>
+      <ColumnDefinition Width="240"/>
     </Grid.ColumnDefinitions>
-    <Canvas>
-      <local:RootThumb x:Name="MyRoot">
-        <local:RootThumb.MyItemData>
-          <local:ItemData MyBackground="Beige"/>
-        </local:RootThumb.MyItemData>
-        <local:TextBlockThumb x:Name="MyItem1">
-          <local:TextBlockThumb.MyItemData>
-            <local:ItemData MyText="MyItem1" MyLeft="20" MyTop="10"
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" x:Name="MyScroll"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
+                  VerticalScrollBarVisibility="Auto">
+      <Canvas Width="{Binding ElementName=MyRoot, Path=ActualWidth}"
+            Height="{Binding ElementName=MyRoot, Path=ActualHeight}">
+        <local:RootThumb x:Name="MyRoot">
+          <local:RootThumb.MyItemData>
+            <local:ItemData MyBackground="Beige"/>
+          </local:RootThumb.MyItemData>
+          <local:TextBlockThumb x:Name="MyItem1">
+            <local:TextBlockThumb.MyItemData>
+              <local:ItemData MyText="MyItem1" MyLeft="0" MyTop="0"
                             MyFontSize="30" MyBackground="MistyRose" MyForeground="Crimson"/>
-          </local:TextBlockThumb.MyItemData>
-        </local:TextBlockThumb>
-        
-        <local:TextBlockThumb x:Name="MyItem2">
-          <local:TextBlockThumb.MyItemData>
-            <local:ItemData MyText="MyItem2" MyLeft="150" MyTop="50"
+            </local:TextBlockThumb.MyItemData>
+          </local:TextBlockThumb>
+
+          <local:TextBlockThumb x:Name="MyItem2">
+            <local:TextBlockThumb.MyItemData>
+              <local:ItemData MyText="MyItem2" MyLeft="150" MyTop="50"
                             MyFontSize="30" MyBackground="AliceBlue" MyForeground="DodgerBlue"/>
-          </local:TextBlockThumb.MyItemData>
-        </local:TextBlockThumb>
-        
-      </local:RootThumb>
-    </Canvas>
+            </local:TextBlockThumb.MyItemData>
+          </local:TextBlockThumb>
+
+          <local:TextBlockThumb x:Name="MyItem3">
+            <local:TextBlockThumb.MyItemData>
+              <local:ItemData MyText="MyItem3" MyLeft="250" MyTop="100"
+                            MyFontSize="30" MyBackground="Khaki" MyForeground="Orange"/>
+            </local:TextBlockThumb.MyItemData>
+          </local:TextBlockThumb>
+
+        </local:RootThumb>
+      </Canvas>
+    </ScrollViewer>
 
     <StackPanel Grid.Column="1">
       <Button Content="ファイルに保存" Click="Button_Click"/>
       <Button Content="ファイルから追加" Click="Button_Click_1"/>
       <Button Content="ファイルから挿入" Click="Button_Click_2"/>
+      <Button Content="グループ化" x:Name="AddGroup" Click="AddGroup_Click"/>
+      <Button Content="削除" x:Name="Remove" Click="Remove_Click"/>
       <GroupBox DataContext="{Binding ElementName=MyRoot, Path=MyFocusThumb}" Header="FocusThumb">
         <StackPanel>
-          <TextBlock Text="{Binding MyThumbType, StringFormat=type {0} }"/>
-          <TextBlock Text="{Binding MyItemData.MyText, StringFormat=text {0} }"/>
-          <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=MyLeft {0} }"/>
-          <TextBlock Text="{Binding MyItemData.MyWidth, StringFormat=MyWidth {0} }"/>
-          <TextBlock Text="{Binding MyItemData.MyFontSize, StringFormat=MyFontSize {0} }"/>
-          <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth {0} }"/>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MyThumbType, StringFormat=type {0} }"/>
+            <TextBlock Text="{Binding MyItemData.MyText, StringFormat=text {0} }"/>
+            <TextBox Text="{Binding MyItemData.MyText, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=MyLeft {0} }"/>
+            <TextBlock Text="{Binding MyItemData.MyWidth, StringFormat=MyWidth {0} }"/>
+            <TextBlock Text="{Binding MyItemData.MyFontSize, StringFormat=MyFontSize {0} }"/>
+            <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth {0} }"/>
+            <TextBlock Text="{Binding Focusable, StringFormat=Focusable {0} }"/>
+            <TextBlock Text="{Binding MyItemData.MyZIndex, StringFormat=MyZIndex 0}"/>
+            <TextBlock Text="{Binding (Panel.ZIndex), StringFormat=ZIndex 0}"/>
+          </UniformGrid>
         </StackPanel>
       </GroupBox>
+      
+      <ListBox ItemsSource="{Binding ElementName=MyRoot, Path=MyItemData.MyThumbsItemData}">
+        <ListBox.ItemTemplate>
+          <DataTemplate DataType="local:ItemData">
+            <TextBlock Text="{Binding MyZIndex}"/>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      <TreeView ItemsSource="{Binding ElementName=MyRoot, Path=MySelectedThumbs}">
+        <TreeView.ItemTemplate>
+          <HierarchicalDataTemplate DataType="local:RootThumb" ItemsSource="{Binding MySelectedThumbs}">
+            <StackPanel Orientation="Horizontal">
+              <Rectangle Width="50" Height="50">
+                <Rectangle.Fill>
+                  <VisualBrush Visual="{Binding}" Stretch="Uniform"/>
+                </Rectangle.Fill>
+              </Rectangle>
+              <TextBlock Text="{Binding MyItemData.MyFontSize}"/>
+            </StackPanel>
+          </HierarchicalDataTemplate>
+        </TreeView.ItemTemplate>
+      </TreeView>
     </StackPanel>
-    </Grid>
+  </Grid>
 </Window>

@@ -39,7 +39,7 @@
     
   </Style>-->
 
-  <Style TargetType="{x:Type local:AnchorThumb}"
+  <!--<Style TargetType="{x:Type local:AnchorThumb}"
        BasedOn="{StaticResource kiso}">
     <Setter Property="Template">
       <Setter.Value>
@@ -48,12 +48,11 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </Style>
+  </Style>-->
 
 
   <Style TargetType="{x:Type local:TextBlockThumb}"
          BasedOn="{StaticResource kiso}">
-
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:TextBlockThumb}">
@@ -62,7 +61,7 @@
                        Foreground="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyForeground}"
                        Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyBackground}"
                        FontSize="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyFontSize}"
-                       FontFamily="{TemplateBinding FontFamily}"
+                       
                        />
             <Border Style="{StaticResource waku4}"/>
           </Grid>

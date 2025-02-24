@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -19,7 +20,7 @@ namespace _20250223
     [KnownType(typeof(SolidColorBrush))]
     [KnownType(typeof(MatrixTransform))]
 
-
+    [DebuggerDisplay("{MyThumbType}")]
     public class ItemData : DependencyObject, IExtensibleDataObject, INotifyPropertyChanged
     {
         #region 必要
@@ -40,7 +41,7 @@ namespace _20250223
         public ItemData()
         {
             MyInitBind();
-
+            var neko = 0;
         }
 
         public void Serialize(string filePath)
