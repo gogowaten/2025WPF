@@ -102,10 +102,14 @@
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:GroupThumb}">
           <Grid>
-            <ItemsControl x:Name="PART_ItemsControl"
-                        ItemsSource="{Binding MyThumbs}"
-                        Background="{TemplateBinding Background}"
-                        Focusable="False">
+            <ItemsControl x:Name="PART_ItemsControl" 
+                          ItemsSource="{Binding
+                            RelativeSource={RelativeSource Mode=TemplatedParent},
+                            Path=MyThumbs}"
+                          Background="{Binding
+                            RelativeSource={RelativeSource Mode=TemplatedParent},
+                            Path=MyItemData.MyBackground}"
+                          Focusable="False">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                   <local:ExCanvas/>
@@ -126,10 +130,13 @@
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:RootThumb}">
           <ItemsControl x:Name="PART_ItemsControl"
-                        ItemsSource="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyThumbs}"
-                        
-                        
-                        Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyBackground}"
+                        ItemsSource="{Binding
+                          RelativeSource={RelativeSource Mode=TemplatedParent},
+                          Path=MyThumbs}"
+                        Background="{Binding
+                          RelativeSource={RelativeSource
+                          Mode=TemplatedParent},
+                          Path=MyItemData.MyBackground}"
                         Focusable="False">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>

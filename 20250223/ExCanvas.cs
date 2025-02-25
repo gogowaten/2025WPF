@@ -49,6 +49,7 @@ namespace _20250223
                     if (resultSize.Width < x) resultSize.Width = x;
                     if (resultSize.Height < y) resultSize.Height = y;
                 }
+                //base.ArrangeOverride(resultSize);
                 return resultSize;
             }
             else

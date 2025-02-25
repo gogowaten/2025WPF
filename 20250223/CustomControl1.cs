@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -789,6 +790,7 @@ namespace _20250223
         public TextBlockThumb()
         {
             MyThumbType = ThumbType.Text;
+            MyItemData.MyThumbType = ThumbType.Text;
         }
         public TextBlockThumb(ItemData data) : base(data)
         {
@@ -805,6 +807,7 @@ namespace _20250223
         public EllipseTextThumb()
         {
             MyThumbType = ThumbType.Ellipse;
+            MyItemData.MyThumbType = ThumbType.Ellipse;
         }
         public EllipseTextThumb(ItemData data) : base(data)
         {
@@ -828,6 +831,7 @@ namespace _20250223
         //public static readonly DependencyProperty MyThumbsProperty =
         //    DependencyProperty.Register(nameof(MyThumbs), typeof(ObservableCollection<KisoThumb>), typeof(GroupThumb), new PropertyMetadata(null));
 
+        [Display(Order = 1)]
         public ObservableCollection<KisoThumb> MyThumbs
         {
             get { return (ObservableCollection<KisoThumb>)GetValue(MyThumbsProperty); }
@@ -854,10 +858,21 @@ namespace _20250223
         public GroupThumb()
         {
             MyThumbType = ThumbType.Group;
+            MyItemData.MyThumbType = ThumbType.Group;
             MyThumbs = [];
             Loaded += GroupThumb_Loaded;
             MyThumbs.CollectionChanged += MyThumbs_CollectionChanged;
         }
+        public GroupThumb(ItemData data) : this()
+        {
+            MyItemData = data;
+            foreach (ItemData item in data.MyThumbsItemData)
+            {
+                var thumb = MyBuilder.MakeThumb(item);
+                MyThumbs.Add(thumb);
+            }
+        }
+
 
         #endregion コンストラクタ
 
@@ -883,6 +898,8 @@ namespace _20250223
             //ZIndexの再振り当て
             //何故かこれをしないとXAMLでのThumbのZがすべて0になる
             FixForXamlItemThumbs();
+
+            //BindingOperations.SetBinding(MyItemData, ItemData.MyThumbsItemData2Property, new Binding() { Source = this, Path = new PropertyPath(MyThumbsProperty) ,Converter = new MyConverterItemData()});
         }
 
         /// <summary>
@@ -970,42 +987,20 @@ namespace _20250223
         /// </summary>
         private void FixForXamlItemThumbs()
         {
+            var datas = MyItemData.MyThumbsItemData;
+            MyItemData.MyThumbsItemData.Clear();
             for (int i = 0; i < MyThumbs.Count; i++)
             {
                 var data = MyThumbs[i].MyItemData;
-                //MyThumbs[i].MyItemData.MyZIndex = i;
                 data.MyZIndex = i;
                 MyItemData.MyThumbsItemData.Add(data);
             }
+            var datas2 = MyItemData.MyThumbsItemData;
         }
 
         #endregion 内部メソッド
 
         #region publicメソッド
-
-
-        ///// <summary>
-        ///// アンカーThumbをHiddenで追加
-        ///// </summary>
-        //public void AddAnchorThumb(KisoThumb thumb)
-        //{
-        //    MyAnchorThumb = new AnchorThumb(thumb);
-
-        //    MyThumbs.Add(MyAnchorThumb);
-        //}
-
-
-        ///// <summary>
-        ///// アンカーThumbを削除
-        ///// </summary>
-        //public void RemoveAnchorThumb()
-        //{
-        //    if (MyAnchorThumb is not null)
-        //    {
-        //        MyThumbs.Remove(MyAnchorThumb);
-        //        MyAnchorThumb = null;
-        //    }
-        //}
 
         /// <summary>
         /// 再配置、ReLayoutからの改変、余計な処理をなくした。
@@ -1070,6 +1065,7 @@ namespace _20250223
         {
             Focusable = true;
             MyThumbType = ThumbType.Root;
+            MyItemData.MyThumbType = ThumbType.Root;
             MySelectedThumbs = [];
             DragDelta -= Thumb_DragDelta3;
             DragStarted -= KisoThumb_DragStarted2;
@@ -1269,23 +1265,48 @@ namespace _20250223
             int selectedCount = MySelectedThumbs.Count;
             if (selectedCount == 0) { return; }
             int targetCount = MyActiveGroupThumb.MyThumbs.Count;
+
+            if (IsSelectedWithParent(MyClickedThumb)) { MyClickedThumb = null; }
+            MyFocusThumb = null;
+
+            //全削除
             if (selectedCount == targetCount)
             {
                 RemoveAll();
             }
-
-            if (IsSelectedWithParent(MyClickedThumb)) { MyClickedThumb = null; }
-            MyFocusThumb = null;
 
             foreach (var item in MySelectedThumbs)
             {
                 item.IsSelectable = false;
                 MyActiveGroupThumb.MyThumbs.Remove(item);
             }
-            MySelectedThumbs.Clear();
-
             if (withReLayout) { ReLayout3(); }
         }
+
+        public void RemoveSelectedThumbsFromActiveGroup2(bool withReLayout = true)
+        {
+
+            if (MySelectedThumbs.Count == 0) { return; }
+            //int targetCount = MyActiveGroupThumb.MyThumbs.Count;
+
+            if (IsSelectedWithParent(MyClickedThumb)) { MyClickedThumb = null; }
+            MyFocusThumb = null;
+
+            ////全削除
+            //if (selectedCount == targetCount)
+            //{
+            //    RemoveAll();
+            //}
+
+            foreach (var item in MySelectedThumbs)
+            {
+                item.IsSelectable = false;
+                MyActiveGroupThumb.MyThumbs.Remove(item);
+            }
+            if (withReLayout) { ReLayout3(); }
+        }
+
+
 
         /// <summary>
         /// 全削除
@@ -1303,61 +1324,103 @@ namespace _20250223
         /// <summary>
         /// SelectedThumbsからGroupThumbを生成、追加
         /// </summary>
+        //public void AddGroupFromSelected()
+        //{
+        //    if (MyActiveGroupThumb.MyThumbs.Count == MySelectedThumbs.Count) { return; }
+        //    if (MySelectedThumbs.Count < 2) { return; }
+
+        //    //ActiveGroupに新グループ追加
+
+        //    GroupThumb group = MakeGroupFromSelectedThumbs();
+
+        //    //選択ThumbをActiveGroupThumbから一掃後、選択Thumbもクリア            
+        //    RemoveSelectedThumbsFromActiveGroup(false);
+        //    MySelectedThumbs.Clear();
+
+        //    var thumbdata = group.MyItemData.MyThumbsItemData;
+        //    var thumbs = group.MyThumbs;
+        //    var actthumbs = MyActiveGroupThumb.MyThumbs;
+        //    var selethumbs = MySelectedThumbs;
+
+        //    //ActiveGroupに新グループ追加
+        //    AddThumbInsertToActiveGroup(group, group.MyItemData.MyZIndex);
+        //    var rootthumbs = MyThumbs;
+        //    var rootthumbsitemdata = MyItemData.MyThumbsItemData;
+
+        //}
         public void AddGroupFromSelected()
         {
             if (MyActiveGroupThumb.MyThumbs.Count == MySelectedThumbs.Count) { return; }
             if (MySelectedThumbs.Count < 2) { return; }
 
+            //ActiveGroupから選択Thumbを削除
+            RemoveSelectedThumbsFromActiveGroup2(false);
+
+            //選択Thumbを詰め込んだ新規グループ作成
             GroupThumb group = MakeGroupFromSelectedThumbs();
 
-            //選択ThumbをActiveGroupThumbから一掃
-            RemoveSelectedThumbsFromActiveGroup(false);
+            //選択Thumbクリア
+            MySelectedThumbs.Clear();
+            group.IsSelectable = true;
+            //MyFocusThumb = group;
 
+            //ActiveGroupに新グループ追加
             AddThumbInsertToActiveGroup(group, group.MyItemData.MyZIndex);
+
         }
 
         /// <summary>
         /// SelectedThumbsからGroupThumbを作成
-        /// GroupThumbのZIndexは選択中の最大値-(選択個数 - 1)
+        /// GroupThumbのZIndexは
         /// </summary>
         /// <returns></returns>
         private GroupThumb MakeGroupFromSelectedThumbs()
         {
-            List<KisoThumb> list = GetSortedSelectedThumbs();
-            int minZIndex = MySelectedThumbs.Max(x => x.MyItemData.MyZIndex);
-            minZIndex -= list.Count - 1;
+            int insertZIndex = MySelectedThumbs.Min(x => x.MyItemData.MyZIndex);
+            //insertZIndex -= list.Count - 1;
             double minLeft = MySelectedThumbs.Min(x => x.MyItemData.MyLeft);
             double minTop = MySelectedThumbs.Min(x => x.MyItemData.MyTop);
             GroupThumb group = new();
+
+            //選択ThumbをIndex順に並べたリスト
+            List<KisoThumb> list = MySelectedThumbs.OrderBy(x => x.MyItemData.MyZIndex).Where(x => x.IsSelected).ToList();
+            //Index順にMyThumbsに追加と位置合わせ
             foreach (var item in list)
             {
                 item.MyItemData.MyLeft -= minLeft;
                 item.MyItemData.MyTop -= minTop;
                 group.MyThumbs.Add(item);
             }
-            group.IsSelectable = true;
+            
             group.MyItemData.MyLeft = minLeft;
             group.MyItemData.MyTop = minTop;
-            group.MyItemData.MyZIndex = minZIndex;
+            group.MyItemData.MyZIndex = insertZIndex;
+            
+            group.UpdateLayout();// 重要、これがないとサイズが合わない
             return group;
         }
 
-        /// <summary>
-        /// 選択ThumbをIndex順に並べたリストを返す
-        /// </summary>
-        /// <returns></returns>
-        public List<KisoThumb> GetSortedSelectedThumbs()
-        {
-            List<KisoThumb> result = new();
-            foreach (var item in MyActiveGroupThumb.MyThumbs)
-            {
-                if (item.IsSelected)
-                {
-                    result.Add(item);
-                }
-            }
-            return result;
-        }
+
+
+        ///// <summary>
+        ///// 選択ThumbをIndex順に並べたリストを返す
+        ///// </summary>
+        ///// <returns></returns>
+        //public List<KisoThumb> GetSortedSelectedThumbs()
+        //{
+        //    var ne = MySelectedThumbs.OrderBy(x => x.MyItemData.MyZIndex).ThenBy(x => x.IsSelected).ToList();
+        //    var neko = MySelectedThumbs.Select(x => x.IsSelectable);
+
+        //    List<KisoThumb> result = [];
+        //    foreach (var item in MyActiveGroupThumb.MyThumbs)
+        //    {
+        //        if (item.IsSelected)
+        //        {
+        //            result.Add(item);
+        //        }
+        //    }
+        //    return result;
+        //}
 
         /// <summary>
         /// グループ解除、

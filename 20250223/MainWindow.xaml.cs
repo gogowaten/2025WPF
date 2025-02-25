@@ -75,6 +75,10 @@ public static class MyBuilder
         {
             return new EllipseTextThumb(data);
         }
+        else if(data.MyThumbType== ThumbType.Group)
+        {
+            return new GroupThumb(data);
+        }
         else { return null; }
     }
 

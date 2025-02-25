@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -41,7 +43,6 @@ namespace _20250223
         public ItemData()
         {
             MyInitBind();
-            var neko = 0;
         }
 
         public void Serialize(string filePath)
@@ -95,6 +96,16 @@ namespace _20250223
 
         private List<ItemData> _myThumbsItemData = [];
         public List<ItemData> MyThumbsItemData { get => _myThumbsItemData; set => SetProperty(ref _myThumbsItemData, value); }
+
+
+        //public ObservableCollection<ItemData> MyThumbsItemData2
+        //{
+        //    get { return (ObservableCollection<ItemData>)GetValue(MyThumbsItemData2Property); }
+        //    set { SetValue(MyThumbsItemData2Property, value); }
+        //}
+        //public static readonly DependencyProperty MyThumbsItemData2Property =
+        //    DependencyProperty.Register(nameof(MyThumbsItemData2), typeof(ObservableCollection<ItemData>), typeof(ItemData), new PropertyMetadata(null));
+
 
         [DataMember] public string MyGuid { get; set; } = Guid.NewGuid().ToString();
         private ThumbType _myThumbType;
@@ -230,5 +241,16 @@ namespace _20250223
     }
 
 
+    public class MyConverterItemData : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
 
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

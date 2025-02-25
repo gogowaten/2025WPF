@@ -37,11 +37,10 @@
 
           <local:TextBlockThumb x:Name="MyItem3">
             <local:TextBlockThumb.MyItemData>
-              <local:ItemData MyText="MyItem3" MyLeft="250" MyTop="100"
+              <local:ItemData MyText="MyItem3" MyLeft="220" MyTop="100"
                             MyFontSize="30" MyBackground="Khaki" MyForeground="Orange"/>
             </local:TextBlockThumb.MyItemData>
           </local:TextBlockThumb>
-
         </local:RootThumb>
       </Canvas>
     </ScrollViewer>
@@ -65,11 +64,12 @@
             <TextBlock Text="{Binding Focusable, StringFormat=Focusable {0} }"/>
             <TextBlock Text="{Binding MyItemData.MyZIndex, StringFormat=MyZIndex 0}"/>
             <TextBlock Text="{Binding (Panel.ZIndex), StringFormat=ZIndex 0}"/>
+            <TextBlock Text="{Binding MyItemData.MyThumbsItemData.Count, StringFormat=itemdatacount 0}"/>
           </UniformGrid>
         </StackPanel>
       </GroupBox>
       
-      <ListBox ItemsSource="{Binding ElementName=MyRoot, Path=MyItemData.MyThumbsItemData}">
+      <ListBox ItemsSource="{Binding ElementName=MyRoot, Path=MyItemData}">
         <ListBox.ItemTemplate>
           <DataTemplate DataType="local:ItemData">
             <TextBlock Text="{Binding MyZIndex}"/>
