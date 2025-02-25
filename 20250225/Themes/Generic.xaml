@@ -81,14 +81,22 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:EllipseTextThumb}">
-          <Grid>
-            <Ellipse Width="47"
-                     Height="47"
-                     Fill="Red"/>
-            <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyText}"
-                       Background="{Binding MyBackground}"
+          <Grid Background="Transparent">
+            <Ellipse Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyWidth}"
+                     Height="{Binding
+                        RelativeSource={RelativeSource Mode=TemplatedParent},
+                        Path=MyItemData.MyHeight}"
+                     Fill="{Binding
+                        RelativeSource={RelativeSource Mode=TemplatedParent},
+                        Path=MyItemData.MyFill}"/>
+            <TextBlock Text="{Binding
+                        RelativeSource={RelativeSource Mode=TemplatedParent},
+                        Path=MyItemData.MyText}"
+                       FontSize="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyFontSize}"
+                       Background="Transparent"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
+                       VerticalAlignment="Center"
+                       />
             <Border Style="{StaticResource waku4}"/>
           </Grid>
         </ControlTemplate>

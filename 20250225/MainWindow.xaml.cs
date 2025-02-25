@@ -17,6 +17,9 @@ namespace _20250225;
 public partial class MainWindow : Window
 {
     private readonly RootThumb MyRoot = null!;
+    double OffsetLeft = 32;
+    double OffsetTop = 32;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -29,28 +32,74 @@ public partial class MainWindow : Window
         DataContext = MyRoot;
     }
 
-    private void MyInitialize_Click(object sender, RoutedEventArgs e)
-    {
-        var data = new ItemData(ThumbType.Text)
-        {
-            MyText = "Item1",
-            MyFontSize = 30,
-            MyForegroundR = 255,
-            MyBackground = Brushes.MistyRose,
-        };
-        MyRoot.AddNewThumb(data, MyRoot.MyActiveGroupThumb);
-
-        //if (MyBuilder.MakeThumb(data) is KisoThumb thumb)
-        //{            
-        //    MyRoot.AddThumbToActiveGroup3(thumb);
-        //}
-
-    }
-
     private void MyInitialize2_Click(object sender, RoutedEventArgs e)
     {
         var type = MyRoot.MyThumbType;
         var datatype = MyRoot.MyItemData.MyThumbType;
+    }
+
+    private void AddTextThumb()
+    {
+        var data = new ItemData(ThumbType.Text)
+        {
+            MyText = "TextBlock",
+            MyFontSize = 30,
+            MyForegroundR = 255,
+            MyBackground = Brushes.MistyRose,
+        };
+        data.MyLeft += OffsetLeft;
+        data.MyTop += OffsetTop;
+        MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
+    }
+    private void AddEllipseTextThumb()
+    {
+        var data = new ItemData(ThumbType.Ellipse)
+        {
+            MyText = "Ellipse",
+            MyFontSize = 30,
+            MyForegroundR = 255,
+            MyBackground = Brushes.Gold,
+            MyFill = Brushes.MistyRose,
+            MyWidth = 80,
+            MyHeight = 80
+        };
+        data.MyLeft += OffsetLeft;
+        data.MyTop += OffsetTop;
+        MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
+    }
+
+
+    private void AddTextThumb_Click(object sender, RoutedEventArgs e)
+    {
+        AddTextThumb();
+    }
+
+    private void AddEllipseThumb_Click(object sender, RoutedEventArgs e)
+    {
+        AddEllipseTextThumb();
+    }
+
+    private void SaveToFile_Click(object sender, RoutedEventArgs e)
+    {
+        _ = MyRoot.MyFocusThumb?.MyItemData.Serialize("E:\\20250225.xml");
+    }
+
+    private void ReadToFile_Click(object sender, RoutedEventArgs e)
+    {
+        if (ItemData.Deserialize("E:\\20250225.xml") is ItemData data)
+        {
+            MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
+        }
+    }
+
+    private void AddGroup_Click(object sender, RoutedEventArgs e)
+    {
+        MyRoot.AddGroupFromSelected();
+    }
+
+    private void Ungroup_Click(object sender, RoutedEventArgs e)
+    {
+        MyRoot.UngroupFocusThumb();
     }
 }
 

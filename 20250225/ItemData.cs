@@ -49,7 +49,7 @@ namespace _20250225
             MyThumbType = type;
         }
 
-        public void Serialize(string filePath)
+        public bool Serialize(string filePath)
         {
             DataContractSerializer serializer = new(typeof(ItemData));
             XmlWriterSettings settings = new()
@@ -58,7 +58,16 @@ namespace _20250225
                 Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)
             };
             using XmlWriter writer = XmlWriter.Create(filePath, settings);
-            serializer.WriteObject(writer, this);
+            
+            try
+            {
+                serializer.WriteObject(writer, this);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
 
         public static ItemData? Deserialize(string filePath)
@@ -245,16 +254,4 @@ namespace _20250225
     }
 
 
-    public class MyConverterItemData : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return null;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }

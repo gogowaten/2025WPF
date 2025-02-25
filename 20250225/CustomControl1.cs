@@ -721,17 +721,22 @@ namespace _20250225
         public GroupThumb(ItemData data)
         {
             MyItemData = data;
-            //MyThumbType = ThumbType.Group;
-            //MyItemData.MyThumbType = ThumbType.Group;
             MyThumbs = [];
             Loaded += GroupThumb_Loaded;
             MyThumbs.CollectionChanged += MyThumbs_CollectionChanged;
 
-            MyItemData = data;
+            List<KisoThumb> thumbList = [];
             foreach (ItemData item in data.MyThumbsItemData)
             {
                 var thumb = MyBuilder.MakeThumb(item);
-                MyThumbs.Add(thumb);
+                if (thumb != null)
+                {
+                    thumbList.Add(thumb);
+                }
+            }
+            foreach (var item in thumbList)
+            {
+                MyThumbs.Add(item);
             }
         }
 
@@ -1066,13 +1071,12 @@ namespace _20250225
             MySelectedThumbs.Clear();
         }
 
-        public void AddNewThumb(ItemData data, GroupThumb parent)
+        public void AddNewThumbFromItemData(ItemData data, GroupThumb parent)
         {
             if (MyBuilder.MakeThumb(data) is KisoThumb thumb)
             {
                 if (parent == MyActiveGroupThumb)
                 {
-
                     AddThumbToActiveGroup(thumb, parent);
                 }
                 else
@@ -1212,84 +1216,71 @@ namespace _20250225
         }
 
         /// <summary>
-        /// SelectedThumbsからGroupThumbを生成、追加
+        /// SelectedThumbsからGroupThumbを生成、ActiveThumbに追加
         /// </summary>
-        //public void AddGroupFromSelected()
-        //{
-        //    if (MyActiveGroupThumb.MyThumbs.Count == MySelectedThumbs.Count) { return; }
-        //    if (MySelectedThumbs.Count < 2) { return; }
+        public void AddGroupFromSelected()
+        {
+            if (MyActiveGroupThumb.MyThumbs.Count == MySelectedThumbs.Count) { return; }
+            if (MySelectedThumbs.Count < 2) { return; }
 
-        //    //ActiveGroupから選択Thumbを削除
-        //    RemoveSelectedThumbsFromActiveGroup2(false);
+            //ActiveGroupから選択Thumbを削除(解除離脱)
+            RemoveSelectedThumbsFromActiveGroup2(false);
 
-        //    //選択Thumbを詰め込んだ新規グループ作成
-        //    GroupThumb group = MakeGroupFromSelectedThumbs();
+            //選択Thumbを詰め込んだ新規グループ作成
+            GroupThumb group = MakeGroupFromSelectedThumbs();
 
-        //    //選択Thumbクリア
-        //    MySelectedThumbs.Clear();
-        //    group.IsSelectable = true;
-        //    //MyFocusThumb = group;
+            //選択Thumbクリア
+            MySelectedThumbs.Clear();
+            group.IsSelectable = true;
+            //MyFocusThumb = group;
 
-        //    //ActiveGroupに新グループ追加
-        //    AddThumbInsertToActiveGroup(group, group.MyItemData.MyZIndex);
+            //ActiveGroupに新グループ追加
+            AddThumbInsertToActiveGroup(group, group.MyItemData.MyZIndex);
 
-        //}
+        }
 
         /// <summary>
         /// SelectedThumbsからGroupThumbを作成
-        /// GroupThumbのZIndexは
+        /// GroupThumbのZIndexはSelectedThumbsの一番上と同じようになるようにしている
         /// </summary>
         /// <returns></returns>
-        //private GroupThumb MakeGroupFromSelectedThumbs()
-        //{
-        //    int insertZIndex = MySelectedThumbs.Min(x => x.MyItemData.MyZIndex);
-        //    //insertZIndex -= list.Count - 1;
-        //    double minLeft = MySelectedThumbs.Min(x => x.MyItemData.MyLeft);
-        //    double minTop = MySelectedThumbs.Min(x => x.MyItemData.MyTop);
-        //    GroupThumb group = new();
+        private GroupThumb MakeGroupFromSelectedThumbs()
+        {
 
-        //    //選択ThumbをIndex順に並べたリスト
-        //    List<KisoThumb> list = MySelectedThumbs.OrderBy(x => x.MyItemData.MyZIndex).Where(x => x.IsSelected).ToList();
-        //    //Index順にMyThumbsに追加と位置合わせ
-        //    foreach (var item in list)
-        //    {
-        //        item.MyItemData.MyLeft -= minLeft;
-        //        item.MyItemData.MyTop -= minTop;
-        //        group.MyThumbs.Add(item);
-        //    }
-
-        //    group.MyItemData.MyLeft = minLeft;
-        //    group.MyItemData.MyTop = minTop;
-        //    group.MyItemData.MyZIndex = insertZIndex;
-
-        //    group.UpdateLayout();// 重要、これがないとサイズが合わない
-        //    return group;
-        //}
+            int insertZIndex = MySelectedThumbs.Max(x => x.MyItemData.MyZIndex);
+            insertZIndex -= MySelectedThumbs.Count - 1;
+            double minLeft = MySelectedThumbs.Min(x => x.MyItemData.MyLeft);
+            double minTop = MySelectedThumbs.Min(x => x.MyItemData.MyTop);
+            ItemData data = new(ThumbType.Group)
+            {
+                MyLeft = minLeft,
+                MyTop = minTop,
+                MyZIndex = insertZIndex,
+            };
+            GroupThumb group = new(data);
 
 
+            //選択ThumbをIndex順に並べたリスト
+            List<KisoThumb> list = MySelectedThumbs.OrderBy(x => x.MyItemData.MyZIndex).Where(x => x.IsSelected).ToList();
+            //Index順にMyThumbsに追加と位置合わせ
+            foreach (var item in list)
+            {
+                item.MyItemData.MyLeft -= minLeft;
+                item.MyItemData.MyTop -= minTop;
+                group.MyThumbs.Add(item);
+            }
 
-        ///// <summary>
-        ///// 選択ThumbをIndex順に並べたリストを返す
-        ///// </summary>
-        ///// <returns></returns>
-        //public List<KisoThumb> GetSortedSelectedThumbs()
-        //{
-        //    var ne = MySelectedThumbs.OrderBy(x => x.MyItemData.MyZIndex).ThenBy(x => x.IsSelected).ToList();
-        //    var neko = MySelectedThumbs.Select(x => x.IsSelectable);
+            //group.MyItemData.MyLeft = minLeft;
+            //group.MyItemData.MyTop = minTop;
+            //group.MyItemData.MyZIndex = insertZIndex;
 
-        //    List<KisoThumb> result = [];
-        //    foreach (var item in MyActiveGroupThumb.MyThumbs)
-        //    {
-        //        if (item.IsSelected)
-        //        {
-        //            result.Add(item);
-        //        }
-        //    }
-        //    return result;
-        //}
+            group.UpdateLayout();// 重要、これがないとサイズが合わない
+            return group;
+        }
+
 
         /// <summary>
-        /// グループ解除、
+        /// グループ解除、FocusThumbが対象
         /// 解除後は元グループの要素全てを選択状態にする
         /// </summary>
         public void UngroupFocusThumb()

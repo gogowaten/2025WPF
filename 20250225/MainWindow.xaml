@@ -8,7 +8,7 @@
         d:DataContext="{d:DesignInstance local:RootThumb}"
         Title="MainWindow" Height="450" Width="600">
 
-  <Grid>
+  <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
       <ColumnDefinition Width="240"/>
@@ -22,8 +22,13 @@
     </ScrollViewer>
 
     <StackPanel Grid.Column="1" DataContext="{Binding}">
-      <Button x:Name="MyInitialize" Content="Initialize" Click="MyInitialize_Click"/>
       <Button x:Name="MyInitialize2" Content="Initialize2" Click="MyInitialize2_Click"/>
+      <Button x:Name="AddTextThumb2" Content="AddTextThumb" Click="AddTextThumb_Click"/>
+      <Button x:Name="AddEllipseThumb" Content="AddEllipseThumb" Click="AddEllipseThumb_Click"/>
+      <Button x:Name="AddGroup" Content="グループ化" Click="AddGroup_Click"/>
+      <Button x:Name="Ungroup" Content="グループ解除" Click="Ungroup_Click"/>
+      <Button x:Name="SaveToFile" Content="Focusをファイルに保存" Click="SaveToFile_Click"/>
+      <Button x:Name="ReadToFile" Content="ファイルから追加" Click="ReadToFile_Click"/>
       <UniformGrid Columns="2">
         <TextBlock Text="{Binding MyThumbs.Count, StringFormat=count 0}"/>
         <TextBlock Text="{Binding MyItemData.MyThumbsItemData.Count, StringFormat=itemcount 0}"/>
@@ -32,14 +37,24 @@
         <TextBlock Text="{Binding ActualWidth, StringFormat=actwidth {0:0.0}}"/>
         <TextBlock Text="{Binding ActualHeight, StringFormat=actheight {0:0.0}}"/>
       </UniformGrid>
-      <GroupBox DataContext="{Binding MyFocusThumb.MyItemData}" Header="FocusThumb">
+      
+      <GroupBox DataContext="{Binding MyFocusThumb}" Header="FocusThumb">
         <UniformGrid Columns="2">
-          <TextBlock Text="{Binding MyText, StringFormat=text {0}}"/>
-          <TextBlock Text="{Binding MyLeft, StringFormat=left 0}"/>
+          <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=datatype {0}}"/>
+          <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
+          <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=left 0}"/>
+          <TextBlock Text="{Binding MyItemData.MyGuid, StringFormat=guid {0}}"/>
+          <TextBlock Text="{Binding MyItemData.MyText, StringFormat=text {0}}"/>
+          <TextBox Text="{Binding MyItemData.MyText, UpdateSourceTrigger=PropertyChanged}"
+                   AcceptsReturn="True"
+                   AcceptsTab="True"/>
         </UniformGrid>
       </GroupBox>
+      
       <GroupBox DataContext="{Binding MyActiveGroupThumb}" Header="ActiveGroup">
         <UniformGrid Columns="2">
+          <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=datatype {0}}"/>
+          <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
           <TextBlock Text="{Binding ActualWidth, StringFormat=actwidth 0}"/>
           <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=left 0}"/>
         </UniformGrid>
@@ -47,8 +62,14 @@
 
       <GroupBox DataContext="{Binding MyClickedThumb}" Header="Clicked">
         <UniformGrid Columns="2">
+          <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=datatype {0}}"/>
+          <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
           <TextBlock Text="{Binding ActualWidth, StringFormat=actWidth 0}"/>
+          <TextBlock Text="{Binding MyItemData.MyZIndex, StringFormat=zIndex 0}"/>
           <TextBlock Text="{Binding MyItemData.MyText, StringFormat=text {0}}"/>
+          <TextBox Text="{Binding MyItemData.MyText, UpdateSourceTrigger=PropertyChanged}"
+         AcceptsReturn="True"
+         AcceptsTab="True"/>
         </UniformGrid>
       </GroupBox>
     </StackPanel>
