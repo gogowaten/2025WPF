@@ -622,7 +622,7 @@ namespace _20250225
                 FixZIndex(saki, moto);
             }
         }
-        
+
         /// <summary>
         /// 最背面へ移動
         /// </summary>
@@ -870,7 +870,7 @@ namespace _20250225
         #endregion 内部メソッド
 
         #region publicメソッド
-                
+
 
 
         /// <summary>
@@ -980,7 +980,11 @@ namespace _20250225
         /// <param name="kiso">対象Thumb</param>
         internal void SelectedThumbsClearAndAddThumb(KisoThumb? kiso)
         {
-            if (kiso is null) { return; }
+            if (kiso is null)
+            {
+                MyFocusThumb = null;
+                return;
+            }
             kiso.IsSelectable = true;
             MySelectedThumbs.Clear();
             AddToSelectedThumbs(kiso);
@@ -1092,8 +1096,9 @@ namespace _20250225
                 thumb.MyItemData.MyTop += MyFocusThumb.MyItemData.MyTop + MyItemData.MyOffsetTop;
                 parent.MyThumbs.Add(thumb);
             }
-            MyFocusThumb = thumb;
+
             MySelectedThumbs.Clear();
+            AddToSelectedThumbs(thumb);
         }
         public void AddThumbToActiveGroup(KisoThumb thumb, GroupThumb parent)
         {
@@ -1163,6 +1168,8 @@ namespace _20250225
         //削除
         public void RemoveSelectedThumbs()
         {
+            if(MySelectedThumbs.Count == 0) { return; }
+
             foreach (var item in MySelectedThumbs)
             {
                 MyActiveGroupThumb.MyThumbs.Remove(item);
@@ -1170,8 +1177,20 @@ namespace _20250225
                 //var inu = MyThumbs.Remove(item);
             }
 
+            int index = MySelectedThumbs.Min(x => x.MyItemData.MyZIndex);
             MySelectedThumbs.Clear();
-            MyFocusThumb = null;
+            KisoThumb? nextForcusThumb;
+            if (index > 0)
+            {
+                nextForcusThumb = MyActiveGroupThumb.MyThumbs[index - 1];
+            }
+            else if (MyActiveGroupThumb.MyThumbs.Count > 0)
+            {
+                nextForcusThumb = MyActiveGroupThumb.MyThumbs[index];
+            }
+            else { nextForcusThumb = null; }
+            SelectedThumbsClearAndAddThumb(nextForcusThumb);
+
             MyClickedThumb = null;
         }
 

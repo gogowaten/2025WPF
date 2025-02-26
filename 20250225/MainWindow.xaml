@@ -42,15 +42,17 @@
         <Button x:Name="Bottom" Content="最背面へ" Click="Bottom_Click"/>
         <Button x:Name="SaveRoot" Content="Rootをファイルに保存" Click="SaveRoot_Click"/>
         <Button x:Name="ReadRootFile" Content="Rootファイル読み込み" Click="ReadRootFile_Click"/>
+        <Button x:Name="RemoveAll" Content="全削除" Click="RemoveAll_Click"/>
       </UniformGrid>
       <UniformGrid Columns="2">
-          <TextBlock Text="{Binding MyThumbs.Count, StringFormat=count 0}"/>
-          <TextBlock Text="{Binding MyItemData.MyThumbsItemData.Count, StringFormat=itemcount 0}"/>
-          <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
-          <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=itemtype {0}}"/>
-          <TextBlock Text="{Binding ActualWidth, StringFormat=actwidth {0:0.0}}"/>
-          <TextBlock Text="{Binding ActualHeight, StringFormat=actheight {0:0.0}}"/>
-        
+        <TextBlock Text="{Binding MyThumbs.Count, StringFormat=count 0}"/>
+        <TextBlock Text="{Binding MyItemData.MyThumbsItemData.Count, StringFormat=itemcount 0}"/>
+        <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
+        <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=itemtype {0}}"/>
+        <TextBlock Text="{Binding ActualWidth, StringFormat=actwidth {0:0.0}}"/>
+        <TextBlock Text="{Binding ActualHeight, StringFormat=actheight {0:0.0}}"/>
+        <TextBlock Text="{Binding MySelectedThumbs.Count, StringFormat=selectedCount 0}"/>
+
       </UniformGrid>
 
       <GroupBox DataContext="{Binding MyFocusThumb}" Header="FocusThumb">

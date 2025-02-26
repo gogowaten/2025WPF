@@ -17,13 +17,11 @@ namespace _20250225;
 public partial class MainWindow : Window
 {
     private  RootThumb MyRoot { get; set; } = null!;
-    //double OffsetLeft = 32;
-    //double OffsetTop = 32;
 
     public MainWindow()
     {
         InitializeComponent();
-        ItemData data = new(ThumbType.Root) { MyBackground = Brushes.Khaki };
+        ItemData data = new(ThumbType.Root) { MyBackground = Brushes.SkyBlue };
         if (new RootThumb(data) is RootThumb root)
         {
             MyRoot = root;
@@ -45,11 +43,9 @@ public partial class MainWindow : Window
         {
             MyText = "TextBlock",
             MyFontSize = 30,
-            MyForegroundR = 255,
-            MyBackground = Brushes.MistyRose,
+            MyForeground = Brushes.RosyBrown,
+            MyBackground = Brushes.SeaShell,
         };
-        //data.MyLeft += OffsetLeft;
-        //data.MyTop += OffsetTop;
         MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
     }
     private void AddEllipseTextThumb()
@@ -58,14 +54,11 @@ public partial class MainWindow : Window
         {
             MyText = "Ellipse",
             MyFontSize = 30,
-            MyForegroundR = 255,
-            MyBackground = Brushes.Gold,
-            MyFill = Brushes.MistyRose,
+            MyForeground = Brushes.LightCoral,
+            MyFill = Brushes.Snow,
             MyWidth = 80,
             MyHeight = 80
         };
-        //data.MyLeft += OffsetLeft;
-        //data.MyTop += OffsetTop;
         MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
     }
 
@@ -171,6 +164,11 @@ public partial class MainWindow : Window
                 DataContext = root;
             }
         }
+    }
+
+    private void RemoveAll_Click(object sender, RoutedEventArgs e)
+    {
+        MyRoot.RemoveAll();
     }
 }
 

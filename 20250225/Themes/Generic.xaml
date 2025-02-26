@@ -92,6 +92,7 @@
             <TextBlock Text="{Binding
                         RelativeSource={RelativeSource Mode=TemplatedParent},
                         Path=MyItemData.MyText}"
+                       Foreground="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyForeground}"
                        FontSize="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyFontSize}"
                        Background="Transparent"
                        HorizontalAlignment="Center"
