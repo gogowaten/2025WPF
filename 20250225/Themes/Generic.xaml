@@ -81,7 +81,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:EllipseTextThumb}">
-          <Grid Background="Transparent">
+          <Grid>
             <Ellipse Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyWidth}"
                      Height="{Binding
                         RelativeSource={RelativeSource Mode=TemplatedParent},

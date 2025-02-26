@@ -44,7 +44,7 @@ namespace _20250225
         {
             MyInitBind();
         }
-        public ItemData(ThumbType type):this()
+        public ItemData(ThumbType type) : this()
         {
             MyThumbType = type;
         }
@@ -58,7 +58,7 @@ namespace _20250225
                 Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)
             };
             using XmlWriter writer = XmlWriter.Create(filePath, settings);
-            
+
             try
             {
                 serializer.WriteObject(writer, this);
@@ -83,7 +83,7 @@ namespace _20250225
 
         private void MyInitBind()
         {
-            var mb = new MultiBinding() { Converter = new MyConverterARGBtoSolidBrush()};
+            var mb = new MultiBinding() { Converter = new MyConverterARGBtoSolidBrush() };
             mb.Bindings.Add(new Binding(nameof(MyForegroundA)) { Source = this });
             mb.Bindings.Add(new Binding(nameof(MyForegroundR)) { Source = this });
             mb.Bindings.Add(new Binding(nameof(MyForegroundG)) { Source = this });
@@ -107,20 +107,12 @@ namespace _20250225
         }
 
 
-        private List<ItemData> _myThumbsItemData = [];
-        public List<ItemData> MyThumbsItemData { get => _myThumbsItemData; set => SetProperty(ref _myThumbsItemData, value); }
+        private ObservableCollection<ItemData> _myThumbsItemData = [];
+        public ObservableCollection<ItemData> MyThumbsItemData { get => _myThumbsItemData; set => SetProperty(ref _myThumbsItemData, value); }
 
 
-        //public ObservableCollection<ItemData> MyThumbsItemData2
-        //{
-        //    get { return (ObservableCollection<ItemData>)GetValue(MyThumbsItemData2Property); }
-        //    set { SetValue(MyThumbsItemData2Property, value); }
-        //}
-        //public static readonly DependencyProperty MyThumbsItemData2Property =
-        //    DependencyProperty.Register(nameof(MyThumbsItemData2), typeof(ObservableCollection<ItemData>), typeof(ItemData), new PropertyMetadata(null));
+        [DataMember] public string MyGuid { get; private set; } = Guid.NewGuid().ToString();
 
-
-        [DataMember] public string MyGuid { get; set; } = Guid.NewGuid().ToString();
         private ThumbType _myThumbType;
         [DataMember] public ThumbType MyThumbType { get => _myThumbType; set => SetProperty(ref _myThumbType, value); }
 
@@ -196,11 +188,11 @@ namespace _20250225
 
         private byte _myBackgroundA = 0;
         [DataMember] public byte MyBackgroundA { get => _myBackgroundA; set => SetProperty(ref _myBackgroundA, value); }
-        private byte _myBackgroundR = 255;
+        private byte _myBackgroundR = 0;
         [DataMember] public byte MyBackgroundR { get => _myBackgroundR; set => SetProperty(ref _myBackgroundR, value); }
-        private byte _myBackgroundG = 255;
+        private byte _myBackgroundG = 0;
         [DataMember] public byte MyBackgroundG { get => _myBackgroundG; set => SetProperty(ref _myBackgroundG, value); }
-        private byte _myBackgroundB = 255;
+        private byte _myBackgroundB = 0;
         [DataMember] public byte MyBackgroundB { get => _myBackgroundB; set => SetProperty(ref _myBackgroundB, value); }
 
         [IgnoreDataMember]
@@ -251,6 +243,15 @@ namespace _20250225
 
         #endregion 保存しない系
 
+        #region Root用
+
+        private double _myOffsetLeft = 32;
+        public double MyOffsetLeft { get => _myOffsetLeft; set => SetProperty(ref _myOffsetLeft, value); }
+
+        private double _myOffsetTop = 32;
+        public double MyOffsetTop { get => _myOffsetTop; set => SetProperty(ref _myOffsetTop, value); }
+
+        #endregion Root用
     }
 
 

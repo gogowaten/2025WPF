@@ -610,6 +610,7 @@ namespace _20250225
             }
         }
 
+
         public void ZIndexDown()
         {
             if (MyParentThumb is GroupThumb gt)
@@ -621,7 +622,7 @@ namespace _20250225
                 FixZIndex(saki, moto);
             }
         }
-
+        
         /// <summary>
         /// 最背面へ移動
         /// </summary>
@@ -803,10 +804,11 @@ namespace _20250225
             if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems?[0] is KisoThumb addItem)
             {
                 addItem.MyParentThumb = this;
-                //リストにItemDataを追加
+                //リストにItemDataを追加と、枠表示を親とのバインド
                 if (addItem.MyItemData.MyThumbType != ThumbType.None)
                 {
                     MyItemData.MyThumbsItemData.Insert(e.NewStartingIndex, addItem.MyItemData);
+                    addItem.SetBinding(IsWakuVisibleProperty, new Binding() { Source = this, Path = new PropertyPath(IsWakuVisibleProperty) });
                 }
 
                 //ZIndexをCollectionのIndexに合わせる、
@@ -868,6 +870,8 @@ namespace _20250225
         #endregion 内部メソッド
 
         #region publicメソッド
+                
+
 
         /// <summary>
         /// 再配置、ReLayoutからの改変、余計な処理をなくした。
@@ -1059,17 +1063,7 @@ namespace _20250225
 
         #region Thumb追加と削除
 
-        //削除
-        public void RemoveSelectedThumbs()
-        {
-            foreach (var item in MySelectedThumbs)
-            {
-                //var neko = MyItemData.MyThumbsItemData.Remove(item.MyItemData);
-                var inu = MyThumbs.Remove(item);
-            }
-
-            MySelectedThumbs.Clear();
-        }
+        #region 追加
 
         public void AddNewThumbFromItemData(ItemData data, GroupThumb parent)
         {
@@ -1087,7 +1081,19 @@ namespace _20250225
         }
         public void AddThumb(KisoThumb thumb, GroupThumb parent)
         {
-            parent.MyThumbs.Add(thumb);
+            if (MyFocusThumb is null)
+            {
+                parent.MyThumbs.Add(thumb);
+
+            }
+            if (MyFocusThumb != null)
+            {
+                thumb.MyItemData.MyLeft += MyFocusThumb.MyItemData.MyLeft + MyItemData.MyOffsetLeft;
+                thumb.MyItemData.MyTop += MyFocusThumb.MyItemData.MyTop + MyItemData.MyOffsetTop;
+                parent.MyThumbs.Add(thumb);
+            }
+            MyFocusThumb = thumb;
+            MySelectedThumbs.Clear();
         }
         public void AddThumbToActiveGroup(KisoThumb thumb, GroupThumb parent)
         {
@@ -1149,6 +1155,25 @@ namespace _20250225
             ReLayout3();
         }
 
+        #endregion 追加
+
+
+        #region 削除
+
+        //削除
+        public void RemoveSelectedThumbs()
+        {
+            foreach (var item in MySelectedThumbs)
+            {
+                MyActiveGroupThumb.MyThumbs.Remove(item);
+                //bool neko = MyItemData.MyThumbsItemData.Remove(item.MyItemData);
+                //var inu = MyThumbs.Remove(item);
+            }
+
+            MySelectedThumbs.Clear();
+            MyFocusThumb = null;
+            MyClickedThumb = null;
+        }
 
         /// <summary>
         /// SelectedThumbsの全要素をActiveGroupThumbから削除
@@ -1214,6 +1239,9 @@ namespace _20250225
             MySelectedThumbs.Clear();
             ReLayout3();
         }
+
+        #endregion 削除
+
 
         /// <summary>
         /// SelectedThumbsからGroupThumbを生成、ActiveThumbに追加
@@ -1434,53 +1462,6 @@ namespace _20250225
 
     }
 
-    #region コンバーター
-
-
-    public class MyWakuBrushConverter : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-
-            List<Brush> brushes = (List<Brush>)values[0];
-            bool b1 = (bool)values[1];
-            bool b2 = (bool)values[2];
-            bool b3 = (bool)values[3];
-            bool b4 = (bool)values[4];
-
-            if (b1) { return brushes[1]; }//IsFocus
-            else if (b2) { return brushes[2]; }//IsSelected
-            else if (b3) { return brushes[3]; }//IsEelectable
-            else if (b4) { return brushes[4]; }//IsActiveGroup
-            else { return brushes[0]; }//それ以外
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class MyConverterARGBtoSolidBrush : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            var a = (byte)values[0];
-            var r = (byte)values[1];
-            var g = (byte)values[2];
-            var b = (byte)values[3];
-            return new SolidColorBrush(Color.FromArgb(a, r, g, b));
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            var br = (SolidColorBrush)value;
-            return [br.Color.A, br.Color.R, br.Color.G, br.Color.B];
-
-        }
-    }
-
-    #endregion コンバーター
 
     public class ObservableCollectionKisoThumb : ObservableCollection<KisoThumb>
     {
