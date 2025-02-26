@@ -1,3 +1,19 @@
+2025WPF/20250225 at main · gogowaten/2025WPF<br>
+https://github.com/gogowaten/2025WPF/tree/main/20250225<br>
+![20250226_210528](https://github.com/user-attachments/assets/d3a50394-0b60-45cd-b801-25ca5429519c)<br>
+AnchorThumbの廃止<br>
+ExCanvasの自動リサイズの有無の切り替え<br>
+要素のシリアライズ(ファイルに保存)とデシリアライズ(ファイルからの読み込み)<br>
+Rootの保存と読み込み<br>
+枠表示の切り替え<br>
+
+<br><br><br>
+
+
+
+
+
+
 # _20250220_BitmapBrushDashBorder
 2025WPF/20250220_BitmapBrushDashBorder at main · gogowaten/2025WPF<br>
 https://github.com/gogowaten/2025WPF/tree/main/20250220_BitmapBrushDashBorder<br>
