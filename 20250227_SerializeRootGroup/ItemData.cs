@@ -247,11 +247,11 @@ namespace _20250227_SerializeRootGroup
 
         #region Root用
 
-        private double _myOffsetLeft = 32;
-        public double MyOffsetLeft { get => _myOffsetLeft; set => SetProperty(ref _myOffsetLeft, value); }
+        private double _myAddOffsetLeft = 32;
+        public double MyAddOffsetLeft { get => _myAddOffsetLeft; set => SetProperty(ref _myAddOffsetLeft, value); }
 
-        private double _myOffsetTop = 32;
-        public double MyOffsetTop { get => _myOffsetTop; set => SetProperty(ref _myOffsetTop, value); }
+        private double _myAddOffsetTop = 32;
+        public double MyAddOffsetTop { get => _myAddOffsetTop; set => SetProperty(ref _myAddOffsetTop, value); }
 
         #endregion Root用
     }

@@ -1093,8 +1093,8 @@ namespace _20250227_SerializeRootGroup
             }
             if (MyFocusThumb != null)
             {
-                thumb.MyItemData.MyLeft += MyFocusThumb.MyItemData.MyLeft + MyItemData.MyOffsetLeft;
-                thumb.MyItemData.MyTop += MyFocusThumb.MyItemData.MyTop + MyItemData.MyOffsetTop;
+                thumb.MyItemData.MyLeft += MyFocusThumb.MyItemData.MyLeft + MyItemData.MyAddOffsetLeft;
+                thumb.MyItemData.MyTop += MyFocusThumb.MyItemData.MyTop + MyItemData.MyAddOffsetTop;
                 parent.MyThumbs.Add(thumb);
             }
 
@@ -1196,7 +1196,8 @@ namespace _20250227_SerializeRootGroup
         }
 
         /// <summary>
-        /// SelectedThumbsをすべて削除
+        /// SelectedThumbsをすべて削除、
+        /// 削除処理の基本はこれを使う
         /// </summary>
         public void RemoveThumb()
         {
@@ -1208,15 +1209,20 @@ namespace _20250227_SerializeRootGroup
             }
             else
             {
-                
-
-                //ActiveThumbから削除
+                //ActiveGroupThumbから削除
                 foreach (var item in MySelectedThumbs)
                 {
-                    MyActiveGroupThumb.MyThumbs.Remove(item);                    
+                    MyActiveGroupThumb.MyThumbs.Remove(item);
                 }
 
-                //残ったのが1個ならActiveGroupを削除、ActiveGroupのMyThumbsをクリア、ActiveGroupをParentに変更、残った1個をそこに追加
+                //削除後の処理
+                //削除結果残った要素数が1ならグループにしておく必要がないのでグループ解除する。
+                //最後の要素は1個上のグループに移動させるので位置調整、
+                //ActiveGroupを削除、
+                //ActiveGroupのMyThumbsをクリア、
+                //ActiveGroupを変更、
+                //残った1個をそこに追加(挿入)、
+                //FocusThumbとSelectedThumbsを調整
                 if (MyActiveGroupThumb.MyThumbs.Count == 1)
                 {
                     if (MyActiveGroupThumb.MyParentThumb is GroupThumb parent)
@@ -1231,19 +1237,24 @@ namespace _20250227_SerializeRootGroup
                         MyActiveGroupThumb = parent;
                         MyActiveGroupThumb.MyThumbs.Insert(lastOne.MyItemData.MyZIndex, lastOne);
 
-                        SelectedThumbsClearAndAddThumb(lastOne);                        
+                        SelectedThumbsClearAndAddThumb(lastOne);
                     }
                 }
+                //グループ維持の場合は、
+                //FocusThumbとSelectedThumbsを調整、
+                //FocusThumbはSelectedThumbsの下層のThumbにする、無ければ上層
                 else
                 {
                     int nextIndex = MySelectedThumbs.Min(x => x.MyItemData.MyZIndex);
                     if (nextIndex > 0) { nextIndex--; }
                     SelectedThumbsClearAndAddThumb(MyActiveGroupThumb.MyThumbs[nextIndex]);
                 }
-                    MyActiveGroupThumb.ReLayout3();
+                MyActiveGroupThumb.ReLayout3();
             }
         }
 
+        //基本的には使わない、
+        //FocusThumb以外のThumbを削除するとき用
         public void RemoveThumb(KisoThumb? thumb, bool withRelayout = true)
         {
             //ParentがRootの場合
@@ -1318,91 +1329,76 @@ namespace _20250227_SerializeRootGroup
             //else { return false; }
         }
 
-        //削除、選択Thumbをすべて削除
-        public void RemoveSelectedThumbs()
-        {
-            if (MySelectedThumbs.Count == 0) { return; }
-
-            //ActiveGroupのすべての要素が選択されていた場合
-            //ActiveGroup自体を削除
-            if (MyActiveGroupThumb.MyThumbs.Count == MySelectedThumbs.Count)
-            {
-                if (MyActiveGroupThumb.MyParentThumb is GroupThumb parentGroup)
-                {
-
-                }
-            }
-        }
 
 
-        public void RemoveSelectedThumbs2()
-        {
-            if (MySelectedThumbs.Count == 0) { return; }
+        //public void RemoveSelectedThumbs2()
+        //{
+        //    if (MySelectedThumbs.Count == 0) { return; }
 
-            //ActiveGroupから選択Thumbを削除
-            foreach (var item in MySelectedThumbs)
-            {
-                MyActiveGroupThumb.MyThumbs.Remove(item);
-            }
+        //    //ActiveGroupから選択Thumbを削除
+        //    foreach (var item in MySelectedThumbs)
+        //    {
+        //        MyActiveGroupThumb.MyThumbs.Remove(item);
+        //    }
 
-            //残った要素が1個だけならGroupを解除
-            if (MyActiveGroupThumb.MyThumbs.Count == 1)
-            {
-                if (MyActiveGroupThumb.MyParentThumb is GroupThumb newGroup)
-                {
-                    ChangeActiveGroupThumb(newGroup);
-                }
+        //    //残った要素が1個だけならGroupを解除
+        //    if (MyActiveGroupThumb.MyThumbs.Count == 1)
+        //    {
+        //        if (MyActiveGroupThumb.MyParentThumb is GroupThumb newGroup)
+        //        {
+        //            ChangeActiveGroupThumb(newGroup);
+        //        }
 
-                MyFocusThumb = MyActiveGroupThumb;
-                UngroupFocusThumb();
-                return;
-            }
+        //        MyFocusThumb = MyActiveGroupThumb;
+        //        UngroupFocusThumb();
+        //        return;
+        //    }
 
-            //新たなFocusThumbの選定
-            //基本は削除群の最小Index-1が対象、これが無ければ最小Index
-            int index = MySelectedThumbs.Min(x => x.MyItemData.MyZIndex);
-            MySelectedThumbs.Clear();
-            KisoThumb? nextForcusThumb;
-            if (index > 0)
-            {
-                nextForcusThumb = MyActiveGroupThumb.MyThumbs[index - 1];
-            }
-            else if (MyActiveGroupThumb.MyThumbs.Count > 0)
-            {
-                nextForcusThumb = MyActiveGroupThumb.MyThumbs[index];
-            }
-            else { nextForcusThumb = null; }
-            SelectedThumbsClearAndAddThumb(nextForcusThumb);
+        //    //新たなFocusThumbの選定
+        //    //基本は削除群の最小Index-1が対象、これが無ければ最小Index
+        //    int index = MySelectedThumbs.Min(x => x.MyItemData.MyZIndex);
+        //    MySelectedThumbs.Clear();
+        //    KisoThumb? nextForcusThumb;
+        //    if (index > 0)
+        //    {
+        //        nextForcusThumb = MyActiveGroupThumb.MyThumbs[index - 1];
+        //    }
+        //    else if (MyActiveGroupThumb.MyThumbs.Count > 0)
+        //    {
+        //        nextForcusThumb = MyActiveGroupThumb.MyThumbs[index];
+        //    }
+        //    else { nextForcusThumb = null; }
+        //    SelectedThumbsClearAndAddThumb(nextForcusThumb);
 
-            MyClickedThumb = null;
-        }
+        //    MyClickedThumb = null;
+        //}
 
-        /// <summary>
-        /// SelectedThumbsの全要素をActiveGroupThumbから削除
-        /// </summary>
-        /// <param name="withReLayout">削除後に再配置処理をするならtrue</param>
-        public void RemoveSelectedThumbsFromActiveGroup(bool withReLayout = true)
-        {
-            int selectedCount = MySelectedThumbs.Count;
-            if (selectedCount == 0) { return; }
-            int targetCount = MyActiveGroupThumb.MyThumbs.Count;
+        ///// <summary>
+        ///// SelectedThumbsの全要素をActiveGroupThumbから削除
+        ///// </summary>
+        ///// <param name="withReLayout">削除後に再配置処理をするならtrue</param>
+        //public void RemoveSelectedThumbsFromActiveGroup(bool withReLayout = true)
+        //{
+        //    int selectedCount = MySelectedThumbs.Count;
+        //    if (selectedCount == 0) { return; }
+        //    int targetCount = MyActiveGroupThumb.MyThumbs.Count;
 
-            if (IsSelectedWithParent(MyClickedThumb)) { MyClickedThumb = null; }
-            MyFocusThumb = null;
+        //    if (IsSelectedWithParent(MyClickedThumb)) { MyClickedThumb = null; }
+        //    MyFocusThumb = null;
 
-            //全削除
-            if (selectedCount == targetCount)
-            {
-                RemoveAll();
-            }
+        //    //全削除
+        //    if (selectedCount == targetCount)
+        //    {
+        //        RemoveAll();
+        //    }
 
-            foreach (var item in MySelectedThumbs)
-            {
-                item.IsSelectable = false;
-                MyActiveGroupThumb.MyThumbs.Remove(item);
-            }
-            if (withReLayout) { ReLayout3(); }
-        }
+        //    foreach (var item in MySelectedThumbs)
+        //    {
+        //        item.IsSelectable = false;
+        //        MyActiveGroupThumb.MyThumbs.Remove(item);
+        //    }
+        //    if (withReLayout) { ReLayout3(); }
+        //}
 
         public void RemoveSelectedThumbsFromActiveGroup2(bool withReLayout = true)
         {
@@ -1444,14 +1440,19 @@ namespace _20250227_SerializeRootGroup
 
         #endregion 削除
 
+        #region グループ化
 
         /// <summary>
         /// SelectedThumbsからGroupThumbを生成、ActiveThumbに追加
         /// </summary>
         public void AddGroupFromSelected()
         {
-            if (MyActiveGroupThumb.MyThumbs.Count == MySelectedThumbs.Count) { return; }
+            //グループ化しない、
+            //要素数が2個未満のとき、
+            //すべての子要素が選択されているとき、ただしRootThumb上を除く
             if (MySelectedThumbs.Count < 2) { return; }
+            if (MyActiveGroupThumb.MyThumbs.Count == MySelectedThumbs.Count &&
+                this.MyThumbType != ThumbType.Root) { return; }
 
             //ActiveGroupから選択Thumbを削除(解除離脱)
             RemoveSelectedThumbsFromActiveGroup2(false);
@@ -1476,7 +1477,6 @@ namespace _20250227_SerializeRootGroup
         /// <returns></returns>
         private GroupThumb MakeGroupFromSelectedThumbs()
         {
-
             int insertZIndex = MySelectedThumbs.Max(x => x.MyItemData.MyZIndex);
             insertZIndex -= MySelectedThumbs.Count - 1;
             double minLeft = MySelectedThumbs.Min(x => x.MyItemData.MyLeft);
@@ -1500,11 +1500,15 @@ namespace _20250227_SerializeRootGroup
                 group.MyThumbs.Add(item);
             }
 
-
             group.UpdateLayout();// 重要、これがないとサイズが合わない
             return group;
         }
 
+        #endregion グループ化
+
+        #region グループ解除
+
+        //基本的には使わない、FocusThumb以外のグループ解除用
         public void Ungroup(GroupThumb ungroup)
         {
             if (ungroup is RootThumb) { return; }
@@ -1551,52 +1555,6 @@ namespace _20250227_SerializeRootGroup
         }
 
 
-
-        public void UngroupOld(GroupThumb ungroup)
-        {
-            if (ungroup.MyParentThumb is GroupThumb parentGroup)
-            {
-                if (parentGroup.MyThumbs.Remove(ungroup))
-                {
-                    var children = MakeFixXYZDataCildren(ungroup);
-                    ungroup.MyThumbs.Clear();
-                    MySelectedThumbs.Clear();
-
-                    foreach (var item in children)
-                    {
-                        item.IsSelectable = true;
-                        parentGroup.MyThumbs.Insert(item.MyItemData.MyZIndex, item);
-                    }
-
-                    //FocusThumbの選定、Clickedが含まれていたらそれ、なければ先頭要素
-                    if (GetSelectableThumb(MyClickedThumb) is KisoThumb nextFocus)
-                    {
-                        MyFocusThumb = nextFocus;
-                    }
-                    else
-                    {
-                        MyFocusThumb = MySelectedThumbs[0];
-                    }
-
-                    ReLayout3();
-                }
-
-            }
-
-            static List<KisoThumb> MakeFixXYZDataCildren(GroupThumb group)
-            {
-                List<KisoThumb> result = [];
-                foreach (var item in group.MyThumbs)
-                {
-                    item.MyItemData.MyLeft += group.MyItemData.MyLeft;
-                    item.MyItemData.MyTop += group.MyItemData.MyTop;
-                    item.MyItemData.MyZIndex += group.MyItemData.MyZIndex;
-                    result.Add(item);
-                }
-                return result;
-            }
-        }
-
         /// <summary>
         /// グループ解除、FocusThumbが対象
         /// 解除後は元グループの要素全てを選択状態にする
@@ -1607,7 +1565,7 @@ namespace _20250227_SerializeRootGroup
                 group.MyParentThumb is GroupThumb parent)
             {
                 MyFocusThumb = null;
-                var list = MakeUngroupList(group);
+                List<KisoThumb> list = MakeUngroupList(group);
                 group.MyThumbs.Clear();
                 parent.MyThumbs.Remove(group);
                 MySelectedThumbs.Clear();
@@ -1646,6 +1604,7 @@ namespace _20250227_SerializeRootGroup
                 return result;
             }
         }
+        #endregion グループ解除
 
         #endregion Thumb追加と削除
 
@@ -1664,25 +1623,33 @@ namespace _20250227_SerializeRootGroup
         public static readonly DependencyProperty MySelectedThumbsProperty =
             DependencyProperty.Register(nameof(MySelectedThumbs), typeof(ObservableCollectionKisoThumb), typeof(RootThumb), new PropertyMetadata(null));
 
+        //public KisoThumb? MyClickedThumb
+        //{
+        //    get { return (KisoThumb)GetValue(MyClickedThumbProperty); }
+        //    set { SetValue(MyClickedThumbProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyClickedThumbProperty =
+        //    DependencyProperty.Register(nameof(MyClickedThumb), typeof(KisoThumb), typeof(RootThumb), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnMyClickedThumbChanged)));
+
+        //private static void OnMyClickedThumbChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    ////FocusThumbの更新
+        //    //if (d is RootThumb rt)
+        //    //{
+        //    //    if (e.NewValue is KisoThumb n && n.IsSelectable)
+        //    //    {
+        //    //        rt.MyFocusThumb = n;
+        //    //    }
+        //    //}
+        //}
+
         public KisoThumb? MyClickedThumb
         {
-            get { return (KisoThumb)GetValue(MyClickedThumbProperty); }
+            get { return (KisoThumb?)GetValue(MyClickedThumbProperty); }
             set { SetValue(MyClickedThumbProperty, value); }
         }
         public static readonly DependencyProperty MyClickedThumbProperty =
-            DependencyProperty.Register(nameof(MyClickedThumb), typeof(KisoThumb), typeof(RootThumb), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnMyClickedThumbChanged)));
-
-        private static void OnMyClickedThumbChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ////FocusThumbの更新
-            //if (d is RootThumb rt)
-            //{
-            //    if (e.NewValue is KisoThumb n && n.IsSelectable)
-            //    {
-            //        rt.MyFocusThumb = n;
-            //    }
-            //}
-        }
+            DependencyProperty.Register(nameof(MyClickedThumb), typeof(KisoThumb), typeof(RootThumb), new PropertyMetadata(null));
 
         public GroupThumb MyActiveGroupThumb
         {

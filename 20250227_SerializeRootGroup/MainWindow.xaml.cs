@@ -56,7 +56,7 @@ public partial class MainWindow : Window
             MyText = "Ellipse",
             MyFontSize = 30,
             MyForeground = Brushes.LightCoral,
-            MyFill = Brushes.Snow,
+            MyFill = Brushes.MistyRose,
             MyWidth = 80,
             MyHeight = 80
         };

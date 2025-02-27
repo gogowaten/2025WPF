@@ -11,7 +11,7 @@
   <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
-      <ColumnDefinition Width="240"/>
+      <ColumnDefinition Width="260"/>
     </Grid.ColumnDefinitions>
     <ScrollViewer x:Name="MyScrollViewer"
                   HorizontalScrollBarVisibility="Auto"
@@ -25,24 +25,34 @@
 
     <StackPanel Grid.Column="1" DataContext="{Binding}">
       <UniformGrid Columns="2">
-        <Button x:Name="MyInitialize2" Content="Initialize2" Click="MyInitialize2_Click"/>
         <Button x:Name="AddTextThumb2" Content="AddTextThumb" Click="AddTextThumb_Click"/>
         <Button x:Name="AddEllipseThumb" Content="AddEllipseThumb" Click="AddEllipseThumb_Click"/>
+        <UniformGrid Columns="2">
         <Button x:Name="AddGroup" Content="グループ化" Click="AddGroup_Click"/>
-        <Button x:Name="Ungroup" Content="グループ解除" Click="Ungroup_Click"/>
+          <Button x:Name="Ungroup" Content="グループ解除" Click="Ungroup_Click"/>
+        </UniformGrid>
         <Button x:Name="SaveToFile" Content="Focusをファイルに保存" Click="SaveToFile_Click"/>
         <Button x:Name="ReadToFile" Content="ファイルから追加" Click="ReadToFile_Click"/>
-        <Button x:Name="Remove" Content="削除" Click="Remove_Click"/>
+        <UniformGrid Columns="2">
+          <Button x:Name="Remove" Content="削除" Click="Remove_Click"/>
+          <Button x:Name="RemoveAll" Content="全削除" Click="RemoveAll_Click"/>
+        </UniformGrid>
         <Button x:Name="WakuVisible" Content="枠の表示切り替え" Click="WakuVisible_Click"/>
-        <Button x:Name="In" Content="In" Click="In_Click"/>
-        <Button x:Name="Out" Content="Out" Click="Out_Click"/>
+        <UniformGrid Columns="2">
+          <Button x:Name="In" Content="In" Click="In_Click"/>
+          <Button x:Name="Out" Content="Out" Click="Out_Click"/>
+        </UniformGrid>
+        <UniformGrid Columns="2">
         <Button x:Name="Up" Content="前面へ" Click="Up_Click"/>
-        <Button x:Name="Down" Content="背面へ" Click="Down_Click"/>
+          <Button x:Name="Down" Content="背面へ" Click="Down_Click"/>
+        </UniformGrid>
+        <UniformGrid Columns="2">
         <Button x:Name="ToTop" Content="最前面へ" Click="Top_Click"/>
-        <Button x:Name="Bottom" Content="最背面へ" Click="Bottom_Click"/>
+          <Button x:Name="Bottom" Content="最背面へ" Click="Bottom_Click"/>
+        </UniformGrid>
         <Button x:Name="SaveRoot" Content="Rootをファイルに保存" Click="SaveRoot_Click"/>
-        <Button x:Name="ReadRootFile" Content="Rootファイル読み込み" Click="ReadRootFile_Click"/>
-        <Button x:Name="RemoveAll" Content="全削除" Click="RemoveAll_Click"/>
+        <Button x:Name="ReadRootFile" Content="Rootファイル読み込み" Click="ReadRootFile_Click"/>        
+        <Button x:Name="MyInitialize2" Content="Initialize2" Click="MyInitialize2_Click"/>
       </UniformGrid>
       <UniformGrid Columns="2">
         <TextBlock Text="{Binding MyThumbs.Count, StringFormat=count 0}"/>
@@ -51,9 +61,9 @@
         <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=itemtype {0}}"/>
         <TextBlock Text="{Binding ActualWidth, StringFormat=actwidth {0:0.0}}"/>
         <TextBlock Text="{Binding ActualHeight, StringFormat=actheight {0:0.0}}"/>
-        <Slider Value="{Binding MyItemData.MyOffsetLeft}" Minimum="0" Maximum="64"
+        <Slider Value="{Binding MyItemData.MyAddOffsetLeft}" Minimum="0" Maximum="64"
                 TickFrequency="8" IsSnapToTickEnabled="True"/>
-        <TextBlock Text="{Binding MyItemData.MyOffsetLeft, StringFormat=AddOffsetLeft 0}"/>
+        <TextBlock Text="{Binding MyItemData.MyAddOffsetLeft, StringFormat=AddOffsetLeft 0}"/>
         <TextBlock Text="{Binding MySelectedThumbs.Count, StringFormat=selectedCount 0}"/>
       </UniformGrid>
 
@@ -91,6 +101,10 @@
           <TextBox Text="{Binding MyItemData.MyText, UpdateSourceTrigger=PropertyChanged}"
          AcceptsReturn="True"
          AcceptsTab="True"/>
+          <UniformGrid Columns="2">
+          <Slider Value="{Binding MyItemData.MyBackgroundB}" Minimum="0" Maximum="255"/>
+            <TextBlock Text="{Binding MyItemData.MyBackgroundB, StringFormat=BGBlue 000}"/>
+          </UniformGrid>
         </UniformGrid>
       </GroupBox>
     </StackPanel>
