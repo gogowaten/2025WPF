@@ -1,3 +1,10 @@
+# 2025WPF/20250227_SerializeRootGroup at main · gogowaten/2025WPF
+https://github.com/gogowaten/2025WPF/tree/main/20250227_SerializeRootGroup<br>
+![Animation20250228_092012](https://github.com/user-attachments/assets/cf9dd508-5d19-4d1d-80db-253e7d99a479)<br>
+
+
+
+
 2025WPF/20250113_GroupUngroup at main · gogowaten/2025WPF<br>
 https://github.com/gogowaten/2025WPF/tree/main/20250113_GroupUngroup<br>
 を改変したもの<br>
