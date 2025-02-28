@@ -78,6 +78,7 @@ namespace _20250227_SerializeRootGroup
             using XmlReader reader = XmlReader.Create(filePath);
             if (serializer.ReadObject(reader) is ItemData data)
             {
+                data.MyGuid = Guid.NewGuid().ToString();
                 return data;
             }
             else { return null; }
@@ -113,7 +114,7 @@ namespace _20250227_SerializeRootGroup
         public ObservableCollection<ItemData> MyThumbsItemData { get => _myThumbsItemData; set => SetProperty(ref _myThumbsItemData, value); }
 
 
-        [DataMember] public string MyGuid { get; private set; } = Guid.NewGuid().ToString();
+        [DataMember] public string MyGuid { get; set; } = Guid.NewGuid().ToString();
 
         private ThumbType _myThumbType;
         [DataMember] public ThumbType MyThumbType { get => _myThumbType; set => SetProperty(ref _myThumbType, value); }
