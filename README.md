@@ -1,6 +1,9 @@
 # 2025WPF/20250227_SerializeRootGroup at main · gogowaten/2025WPF
 https://github.com/gogowaten/2025WPF/tree/main/20250227_SerializeRootGroup<br>
 ![Animation20250228_092012](https://github.com/user-attachments/assets/cf9dd508-5d19-4d1d-80db-253e7d99a479)<br>
+WPF、要素をファイルに保存と復元テスト - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/02/28/130209<br>
+<br><br><br>
 
 
 
