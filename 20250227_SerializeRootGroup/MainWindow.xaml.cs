@@ -1,19 +1,10 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
+﻿using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+//WPF、要素をファイルに保存と復元テスト - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/02/28/130209
 
 namespace _20250227_SerializeRootGroup;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow : Window
 {
     private RootThumb MyRoot { get; set; } = null!;
@@ -28,7 +19,6 @@ public partial class MainWindow : Window
         }
         MyScrollViewer.Content = MyRoot;
         DataContext = MyRoot;
-
     }
 
     private void MyInitialize2_Click(object sender, RoutedEventArgs e)

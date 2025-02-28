@@ -150,7 +150,7 @@ namespace _20250227_SerializeRootGroup
         [DataMember] public byte MyFillG { get => _myFillG; set => SetProperty(ref _myFillG, value); }
         private byte _myFillB;
         [DataMember] public byte MyFillB { get => _myFillB; set => SetProperty(ref _myFillB, value); }
-        //オプションでBindsTwoWayByDefault必須、ここ以外ではTwoWayにできない
+        //オプションでBindsTwoWayByDefault必須、Binding時にはTwoWayに設定しても反映されないので、ここで指定
         [IgnoreDataMember]
         public Brush MyFill
         {

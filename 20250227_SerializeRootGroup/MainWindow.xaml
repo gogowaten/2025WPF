@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250227_SerializeRootGroup"
         mc:Ignorable="d"
-           d:DataContext="{d:DesignInstance local:RootThumb}"
-        Title="MainWindow" Height="550" Width="600">
+        d:DataContext="{d:DesignInstance local:RootThumb}"
+        Title="MainWindow" Height="567" Width="602">
 
   <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
@@ -20,7 +20,6 @@
                   VerticalScrollBarVisibility="Auto"
                   
                   >
-
     </ScrollViewer>
 
     <StackPanel Grid.Column="1" DataContext="{Binding}">
@@ -102,8 +101,8 @@
          AcceptsReturn="True"
          AcceptsTab="True"/>
           <UniformGrid Columns="2">
-          <Slider Value="{Binding MyItemData.MyBackgroundB}" Minimum="0" Maximum="255"/>
-            <TextBlock Text="{Binding MyItemData.MyBackgroundB, StringFormat=BGBlue 000}"/>
+          <Slider Value="{Binding MyItemData.MyForegroundR}" Minimum="0" Maximum="255"/>
+            <TextBlock Text="{Binding MyItemData.MyForegroundR, StringFormat=赤 {0:000}}"/>
           </UniformGrid>
         </UniformGrid>
       </GroupBox>
