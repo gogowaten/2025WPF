@@ -17,7 +17,7 @@ namespace _20250228
 {
     public class EzLine : Shape
     {
-
+        public EzLineThumb? MyParentKisoThumb { get; private set; }
         protected override Geometry DefiningGeometry
         {
             get
@@ -58,6 +58,10 @@ namespace _20250228
             MyPenBind();
             MyRenderTransformBind();
             MyOffsetBind();
+        }
+        public void SetParentEzLineThumb(EzLineThumb thumb)
+        {
+            MyParentKisoThumb = thumb;
         }
 
 
@@ -299,6 +303,14 @@ namespace _20250228
         #endregion 依存関係プロパティ
 
 
+        public void ParentThumbReLayout()
+        {
+            if (MyParentKisoThumb is EzLineThumb thumb)
+            {
+                thumb.GetRootThumb()?.ReLayout3();
+            }
+        }
+
 
     }
 
@@ -493,27 +505,42 @@ namespace _20250228
             };
             anchor.DragDelta += MyThumb_DragDelta;
             //anchor.DragStarted += Anchor_DragStarted;
-            //anchor.DragCompleted += Anchor_DragCompleted;
+            anchor.DragCompleted += Anchor_DragCompleted;
             MyAnchorList.Insert(id, anchor);
             MyCanvas.Children.Insert(id, anchor);
             return anchor;
         }
 
+        #region ドラッグ移動
+
         private void Anchor_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            MyTarget.MyIsOffset = true;
+            var boundsleft = MyTarget.MyBounds4.Left;
+            var left = MyTarget.MyParentKisoThumb?.MyItemData.MyLeft;
+            var offsetleft = MyTarget.MyParentKisoThumb?.MyOffsetLeft;
+            var actwidth = MyTarget.ActualWidth;
+            var width = MyTarget.Width;
+            var points = MyTarget.MyParentKisoThumb?.MyItemData.MyPoints;
+            var bou = MyTarget.MyBounds4;
+            //if (MyTarget.MyParentKisoThumb?.MyItemData is ItemData data)
+            //{
+            //    data.MyLeft += bou.Left;
+            //    data.MyTop += bou.Top;
+            //}
+            
+            if (points != null)
+            {
+                for (int i = 0; i < points.Count; i++)
+                {
+                    Point p = points[i];
+                }
+            }
+            MyTarget.ParentThumbReLayout();
         }
 
         private void Anchor_DragStarted(object sender, DragStartedEventArgs e)
         {
-            MyTarget.MyIsOffset = false;
-            //var offLeft = MyTarget.MyBounds4.Left;
-            //var offTop = MyTarget.MyBounds4.Top;
-            //for (int i = 0; i < MyTarget.MyPoints.Count; i++)
-            //{
-            //    Point motoPoint = MyTarget.MyPoints[i];
-            //    MyTarget.MyPoints[i] = new Point(motoPoint.X - offLeft, motoPoint.Y - offTop);
-            //}
+
         }
 
         private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -533,23 +560,8 @@ namespace _20250228
                 e.Handled = true;
             }
         }
-        //private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
-        //{
-        //    if (sender is AnchorEllipseThumb t)
-        //    {
-        //        int id = (int)t.Tag;
-        //        Point po = MyTarget.MyPoints[id];
-        //        double left = po.X + e.HorizontalChange;
-        //        double top = po.Y + e.VerticalChange;
 
-        //        Point npo = new(left, top);
-        //        MyTarget.MyPoints[id] = npo;
-
-        //        Canvas.SetLeft(t, left - AnchorSize / 2.0);
-        //        Canvas.SetTop(t, top - AnchorSize / 2.0);
-        //        e.Handled = true;
-        //    }
-        //}
+        #endregion ドラッグ移動
 
 
         public double AnchorSize

@@ -71,6 +71,12 @@
           <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=datatype {0}}"/>
           <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
           <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=left 0}"/>
+          <TextBlock Text="{Binding MyItemData.MyTop, StringFormat=top 0}"/>
+          <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth 0}"/>
+          <TextBlock Text="{Binding ActualHeight, StringFormat=ActualHeight 0}"/>
+          <TextBlock Text="{Binding MyOffsetLeft, StringFormat=offsetLeft {0:0} }"/>
+          <TextBlock Text="{Binding MyOffsetTop, StringFormat=offsetTop {0:0} }"/>
+          <TextBlock Text="{Binding MyEzLine.MyBounds4, StringFormat= 0 }"/>
           <TextBlock Text="{Binding MyItemData.MyGuid, StringFormat=guid {0}}"/>
           <TextBlock Text="{Binding MyItemData.MyText, StringFormat=text {0}}"/>
           <TextBlock Text="{Binding MyParentThumb.MyThumbType, StringFormat=parentType {0}}"/>

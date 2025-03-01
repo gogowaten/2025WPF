@@ -489,25 +489,6 @@ namespace _20250228
 
         #region 内部メソッド
 
-        /// <summary>
-        /// RootThumbを取得
-        /// </summary>
-        /// <returns></returns>
-        protected RootThumb? GetRootThumb()
-        {
-            if (this is RootThumb rt)
-            {
-                return rt;
-            }
-            else if (MyParentThumb is not null)
-            {
-                return MyParentThumb.GetRootThumb();
-            }
-            else
-            {
-                return null;
-            }
-        }
 
         /// <summary>
         /// SelectableなThumbをParentを辿って取得する
@@ -569,6 +550,25 @@ namespace _20250228
 
         #region public
 
+        /// <summary>
+        /// RootThumbを取得
+        /// </summary>
+        /// <returns></returns>
+        public RootThumb? GetRootThumb()
+        {
+            if (this is RootThumb rt)
+            {
+                return rt;
+            }
+            else if (MyParentThumb is not null)
+            {
+                return MyParentThumb.GetRootThumb();
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         public void Serialize(string filePath)
         {
@@ -1821,7 +1821,6 @@ namespace _20250228
 
     public class EzLineThumb : KisoThumb
     {
-        //public ObservableCollection<Thumb> MyAnchors { get; private set; } = [];
         static EzLineThumb()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(EzLineThumb), new FrameworkPropertyMetadata(typeof(EzLineThumb)));
@@ -1830,6 +1829,8 @@ namespace _20250228
         {
             MyItemData = data;
         }
+
+        
 
 
         #region 頂点移動用のThumb表示用のAdorner
@@ -1887,43 +1888,71 @@ namespace _20250228
             if (GetTemplateChild("ez") is EzLine ez)
             {
                 MyEzLine = ez;
+                MyEzLine.SetParentEzLineThumb(this);
 
                 if (MyItemData.MyPoints != null)
                 {
                     MyEzLine.MyPoints = MyItemData.MyPoints;
                 }
-                ////オフセット位置のバインド
-                ////このタイミングじゃないとバインドできないし、XAMLでもできない。
-                ////ソースにEzLineを使っているから、取得後じゃないとできないみたい
-                //MultiBinding mb = new() { Converter = new MyConverterOffsetX() };
-                //mb.Bindings.Add(MakeOneWayBind(MyLeftProperty));
-                //mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
-                //SetBinding(MyOffsetLeftProperty, mb);
-
-                //mb = new() { Converter = new MyConverterOffsetY() };
-                //mb.Bindings.Add(MakeOneWayBind(MyTopProperty));
-                //mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
-                //SetBinding(MyOffsetTopProperty, mb);
-
-                SetBind();
+                //SetBindOld();
+                //SetBind3();
+                SetBind2();
+                //SetBind();
             }
 
 
         }
 
-        private void SetBind()
+        //private void SetBindOld()
+        //{
+        //    //オフセット位置のバインド
+        //    //このタイミングじゃないとバインドできないし、XAMLでもできない。
+        //    //ソースにEzLineを使っているから、取得後じゃないとできないみたい
+        //    MultiBinding mb = new() { Converter = new MyConverterOffsetX() };
+        //    mb.Bindings.Add(MakeOneWayBind(MyLeftProperty));
+        //    mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
+        //    SetBinding(MyOffsetLeftProperty, mb);
+
+        //    mb = new() { Converter = new MyConverterOffsetY() };
+        //    mb.Bindings.Add(MakeOneWayBind(MyTopProperty));
+        //    mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
+        //    SetBinding(MyOffsetTopProperty, mb);
+        //}
+        private void SetBind3()
         {
+            
+           SetBinding(MyOffsetLeftProperty, new Binding(nameof(MyItemData.MyLeft)) { Source = MyItemData });
+           SetBinding(MyOffsetTopProperty, new Binding(nameof(MyItemData.MyTop)) { Source = MyItemData });
+        }
+        private void SetBind2()
+        {
+            //オフセット位置のバインド
+            //このタイミングじゃないとバインドできないし、XAMLでもできない。
+            //ソースにEzLineを使っているから、取得後じゃないとできないみたい
             MultiBinding mb = new() { Converter = new MyConverterOffsetX() };
-            mb.Bindings.Add(new Binding(nameof(ItemData.MyLeft)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyLeft)) { Source = MyItemData });
             mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
             SetBinding(MyOffsetLeftProperty, mb);
 
             mb = new() { Converter = new MyConverterOffsetY() };
-            mb.Bindings.Add(new Binding(nameof(ItemData.MyTop)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyTop)) { Source = MyItemData });
             mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
             SetBinding(MyOffsetTopProperty, mb);
-
         }
+
+        //private void SetBind()
+        //{
+        //    MultiBinding mb = new() { Converter = new MyConverterOffsetX() };
+        //    mb.Bindings.Add(new Binding(nameof(ItemData.MyLeft)) { Source = MyItemData });
+        //    mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
+        //    SetBinding(MyOffsetLeftProperty, mb);
+
+        //    mb = new() { Converter = new MyConverterOffsetY() };
+        //    mb.Bindings.Add(new Binding(nameof(ItemData.MyTop)) { Source = MyItemData });
+        //    mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
+        //    SetBinding(MyOffsetTopProperty, mb);
+
+        //}
 
         /// <summary>
         /// Binding生成。ソースはthis固定、ModeはOneWay固定
@@ -1951,7 +1980,7 @@ namespace _20250228
             set { SetValue(MyOffsetLeftProperty, value); }
         }
         public static readonly DependencyProperty MyOffsetLeftProperty =
-            DependencyProperty.Register(nameof(MyOffsetLeft), typeof(double), typeof(EzLine), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(MyOffsetLeft), typeof(double), typeof(EzLineThumb), new PropertyMetadata(0.0));
 
         public double MyOffsetTop
         {
@@ -1959,7 +1988,7 @@ namespace _20250228
             set { SetValue(MyOffsetTopProperty, value); }
         }
         public static readonly DependencyProperty MyOffsetTopProperty =
-            DependencyProperty.Register(nameof(MyOffsetTop), typeof(double), typeof(EzLine), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(MyOffsetTop), typeof(double), typeof(EzLineThumb), new PropertyMetadata(0.0));
 
 
         /// <summary>
@@ -2014,7 +2043,7 @@ namespace _20250228
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             var y = (double)values[0];
-            var r = (Rect)values[1];
+            var r = (Rect)values[1];            
             return y + r.Top;
         }
 

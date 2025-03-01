@@ -33,7 +33,7 @@ public partial class MainWindow : Window
         var data = new ItemData(ThumbType.Line)
         {
             MyText = "Line",
-            MyPoints = [new Point(), new Point(100, 30),new Point(10,150)],
+            MyPoints = [new Point(), new Point(100, 0)],
             MyStrokeThickness= 20,
             MyStroke=Brushes.Pink,
             MyBackground=Brushes.RosyBrown,
