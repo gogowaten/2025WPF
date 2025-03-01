@@ -246,6 +246,8 @@ namespace _20250228
         private double _myStrokeThickness = 1.0;
         public double MyStrokeThickness { get => _myStrokeThickness; set => SetProperty(ref _myStrokeThickness, value); }
 
+        #region ブラシ
+        
 
         public Brush MyStroke
         {
@@ -254,7 +256,6 @@ namespace _20250228
         }
         public static readonly DependencyProperty MyStrokeProperty =
             DependencyProperty.Register(nameof(MyStroke), typeof(Brush), typeof(ItemData), new PropertyMetadata(Brushes.Red));
-
         private byte _myStrokeA;
         [DataMember] public byte MyStrokeA { get => _myStrokeA; set => SetProperty(ref _myStrokeA, value); }
         private byte _myStrokeR;
@@ -263,7 +264,8 @@ namespace _20250228
         [DataMember] public byte MyStrokeG { get => _myStrokeG; set => SetProperty(ref _myStrokeG, value); }
         private byte _myStrokeB;
         [DataMember] public byte MyStrokeB { get => _myStrokeB; set => SetProperty(ref _myStrokeB, value); }
-        
+
+        #endregion ブラシ
 
         private bool _myIsFill = true;
         public bool MyIsFill { get => _myIsFill; set => SetProperty(ref _myIsFill, value); }
@@ -306,7 +308,7 @@ namespace _20250228
         private PenLineCap _myStrokeStartLineCap = PenLineCap.Flat;
         public PenLineCap MyStrokeStartLineCap { get => _myStrokeStartLineCap; set => SetProperty(ref _myStrokeStartLineCap, value); }
 
-        private double _myStrokeMiterLimit;
+        private double _myStrokeMiterLimit = 10;
         public double MyStrokeMiterLimit { get => _myStrokeMiterLimit; set => SetProperty(ref _myStrokeMiterLimit, value); }
 
 

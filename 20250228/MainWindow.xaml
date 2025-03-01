@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250228"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:RootThumb}"
         Title="MainWindow" Height="567" Width="602">
 
   <Grid UseLayoutRounding="True">
@@ -18,8 +19,8 @@
                   VerticalAlignment="Top"
                   VerticalScrollBarVisibility="Auto"                  
                   >
+      
     </ScrollViewer>
-    
     <StackPanel Grid.Column="1" DataContext="{Binding}">
       <UniformGrid Columns="2">
         <Button x:Name="AddTextThumb2" Content="AddTextThumb" Click="AddTextThumb_Click"/>
@@ -50,6 +51,7 @@
         <Button x:Name="SaveRoot" Content="Rootをファイルに保存" Click="SaveRoot_Click"/>
         <Button x:Name="ReadRootFile" Content="Rootファイル読み込み" Click="ReadRootFile_Click"/>
         <Button x:Name="MyInitialize2" Content="Initialize2" Click="MyInitialize2_Click"/>
+        <Button x:Name="Adorner" Content="頂点" Click="Adorner_Click"/>
       </UniformGrid>
       <UniformGrid Columns="2">
         <TextBlock Text="{Binding MyThumbs.Count, StringFormat=count 0}"/>
@@ -75,6 +77,8 @@
           <TextBox Text="{Binding MyItemData.MyText, UpdateSourceTrigger=PropertyChanged}"
                    AcceptsReturn="True"
                    AcceptsTab="True"/>
+          <TextBlock Text="{Binding MyItemData.MyPoints}"/>
+          <Slider Value="{Binding MyItemData.MyAngle}" Minimum="0" Maximum="360"/>
         </UniformGrid>
       </GroupBox>
 

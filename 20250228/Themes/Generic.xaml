@@ -174,19 +174,17 @@
 
 
   <Style TargetType="{x:Type local:EzLineThumb}" BasedOn="{StaticResource kiso}">
-    <Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetLeft}"/>
-    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetTop}"/>
+    <!--<Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetLeft}"/>
+    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetTop}"/>-->
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:EzLineThumb}">
-          <Canvas x:Name="PART_Canvas" Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyBackground}"
-                  Width="{Binding ElementName=ez, Path=MyBounds4.Width}"
-                  Height="{Binding ElementName=ez, Path=MyBounds4.Height}"
+          <Grid>
+            <Canvas x:Name="PART_Canvas" Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyBackground}"
                   >
-            <local:EzLine
+              <local:EzLine
                 x:Name="ez"
                 MyIsOffset="True"
-                MyPoints="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyPoints}"
                 Stroke="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyStroke}"
                 StrokeThickness="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyStrokeThickness}"
                 MyAngle="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyAngle}"
@@ -203,8 +201,13 @@
                 StrokeStartLineCap="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyStrokeStartLineCap}"
                 StrokeMiterLimit="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyStrokeMiterLimit}"
                 StrokeLineJoin="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyPenLineJoin}">
-            </local:EzLine>
-          </Canvas>
+              </local:EzLine>
+            </Canvas>
+            <Border Style="{StaticResource waku4}"
+                    Width="{Binding ElementName=ez, Path=MyBounds4.Width}"
+                    Height="{Binding ElementName=ez, Path=MyBounds4.Height}"
+                    />
+          </Grid>
         </ControlTemplate>
       </Setter.Value>
     </Setter>

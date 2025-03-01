@@ -47,7 +47,13 @@ namespace _20250228
         public EzLine()
         {
             DataContext = this;
-            SetBinding(MySegmentPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterSegmentPoints() });
+            SetBinding(MySegmentPointsProperty, new Binding()
+            {
+                Source = this,
+                Path = new PropertyPath(MyPointsProperty),
+                Mode = BindingMode.OneWay,
+                Converter = new MyConverterSegmentPoints()
+            });
 
             MyPenBind();
             MyRenderTransformBind();
@@ -87,24 +93,6 @@ namespace _20250228
         {
             SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyAngleProperty), Converter = new MyConverterRotateTransform() });
         }
-
-
-        ////図形の中心を回転軸にした場合のRenderTransformとのバインド、
-        ////これでMyAngle変更時にもBoundsが更新される
-        //private void MyRenderTransformBind()
-        //{
-        //    //中心軸座標、Penでの描画Boundsの中心にしているけど、それ以外にも試したい
-        //    //三角形なら重心、四角形ならそのまま、それ以上なら平均座標とか
-        //    SetBinding(MyCenterXProperty, new Binding() { Source = this, Path = new PropertyPath(MyBounds2Property), Converter = new MyConverterCenterX(), Mode = BindingMode.OneWay });
-        //    SetBinding(MyCenterYProperty, new Binding() { Source = this, Path = new PropertyPath(MyBounds2Property), Converter = new MyConverterCenterY(), Mode = BindingMode.OneWay });
-
-        //    //RenderTransformとのバインド、RenderTransformはRotateTransformに決め打ちしている
-        //    MultiBinding mb = new() { Converter = new MyConverterRenderTransform() };
-        //    mb.Bindings.Add(MakeOneWayBind(MyAngleProperty));
-        //    mb.Bindings.Add(MakeOneWayBind(MyCenterXProperty));
-        //    mb.Bindings.Add(MakeOneWayBind(MyCenterYProperty));
-        //    SetBinding(RenderTransformProperty, mb);
-        //}
 
 
 
@@ -147,29 +135,29 @@ namespace _20250228
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public double MyCenterX
-        {
-            get { return (double)GetValue(MyCenterXProperty); }
-            set { SetValue(MyCenterXProperty, value); }
-        }
-        public static readonly DependencyProperty MyCenterXProperty =
-            DependencyProperty.Register(nameof(MyCenterX), typeof(double), typeof(EzLine),
-                new FrameworkPropertyMetadata(0.0,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        //public double MyCenterX
+        //{
+        //    get { return (double)GetValue(MyCenterXProperty); }
+        //    set { SetValue(MyCenterXProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyCenterXProperty =
+        //    DependencyProperty.Register(nameof(MyCenterX), typeof(double), typeof(EzLine),
+        //        new FrameworkPropertyMetadata(0.0,
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public double MyCenterY
-        {
-            get { return (double)GetValue(MyCenterYProperty); }
-            set { SetValue(MyCenterYProperty, value); }
-        }
-        public static readonly DependencyProperty MyCenterYProperty =
-            DependencyProperty.Register(nameof(MyCenterY), typeof(double), typeof(EzLine),
-                new FrameworkPropertyMetadata(0.0,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        //public double MyCenterY
+        //{
+        //    get { return (double)GetValue(MyCenterYProperty); }
+        //    set { SetValue(MyCenterYProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyCenterYProperty =
+        //    DependencyProperty.Register(nameof(MyCenterY), typeof(double), typeof(EzLine),
+        //        new FrameworkPropertyMetadata(0.0,
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         #endregion 回転
 
         public FillRule MyFillRule
@@ -504,11 +492,29 @@ namespace _20250228
                 Tag = id
             };
             anchor.DragDelta += MyThumb_DragDelta;
+            //anchor.DragStarted += Anchor_DragStarted;
+            //anchor.DragCompleted += Anchor_DragCompleted;
             MyAnchorList.Insert(id, anchor);
             MyCanvas.Children.Insert(id, anchor);
             return anchor;
         }
 
+        private void Anchor_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            MyTarget.MyIsOffset = true;
+        }
+
+        private void Anchor_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            MyTarget.MyIsOffset = false;
+            //var offLeft = MyTarget.MyBounds4.Left;
+            //var offTop = MyTarget.MyBounds4.Top;
+            //for (int i = 0; i < MyTarget.MyPoints.Count; i++)
+            //{
+            //    Point motoPoint = MyTarget.MyPoints[i];
+            //    MyTarget.MyPoints[i] = new Point(motoPoint.X - offLeft, motoPoint.Y - offTop);
+            //}
+        }
 
         private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
@@ -527,6 +533,23 @@ namespace _20250228
                 e.Handled = true;
             }
         }
+        //private void MyThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        //{
+        //    if (sender is AnchorEllipseThumb t)
+        //    {
+        //        int id = (int)t.Tag;
+        //        Point po = MyTarget.MyPoints[id];
+        //        double left = po.X + e.HorizontalChange;
+        //        double top = po.Y + e.VerticalChange;
+
+        //        Point npo = new(left, top);
+        //        MyTarget.MyPoints[id] = npo;
+
+        //        Canvas.SetLeft(t, left - AnchorSize / 2.0);
+        //        Canvas.SetTop(t, top - AnchorSize / 2.0);
+        //        e.Handled = true;
+        //    }
+        //}
 
 
         public double AnchorSize

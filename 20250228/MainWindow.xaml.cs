@@ -33,10 +33,10 @@ public partial class MainWindow : Window
         var data = new ItemData(ThumbType.Line)
         {
             MyText = "Line",
-            MyPoints = [new Point(), new Point(100, 30)],
-            MyStrokeThickness= 5,
-            MyStroke=Brushes.Green,
-            MyBackground=Brushes.YellowGreen,
+            MyPoints = [new Point(), new Point(100, 30),new Point(10,150)],
+            MyStrokeThickness= 20,
+            MyStroke=Brushes.Pink,
+            MyBackground=Brushes.RosyBrown,
 
         };
         MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
@@ -80,12 +80,12 @@ public partial class MainWindow : Window
 
     private void SaveToFile_Click(object sender, RoutedEventArgs e)
     {
-        _ = MyRoot.MyFocusThumb?.MyItemData.Serialize("E:\\20250227.xml");
+        _ = MyRoot.MyFocusThumb?.MyItemData.Serialize("E:\\20250228.xml");
     }
 
     private void ReadToFile_Click(object sender, RoutedEventArgs e)
     {
-        if (ItemData.Deserialize("E:\\20250227.xml") is ItemData data)
+        if (ItemData.Deserialize("E:\\20250228.xml") is ItemData data)
         {
             //ファイルから追加するときは0座標にしないと離れた位置に追加される
             data.MyLeft = 0;
@@ -156,12 +156,12 @@ public partial class MainWindow : Window
 
     private void SaveRoot_Click(object sender, RoutedEventArgs e)
     {
-        _ = MyRoot.MyItemData.Serialize("E:\\20250227Root.xml");
+        _ = MyRoot.MyItemData.Serialize("E:\\20250228Root.xml");
     }
 
     private void ReadRootFile_Click(object sender, RoutedEventArgs e)
     {
-        if (ItemData.Deserialize("E:\\20250227Root.xml") is ItemData data)
+        if (ItemData.Deserialize("E:\\20250228Root.xml") is ItemData data)
         {
             if (new RootThumb(data) is RootThumb root)
             {
@@ -175,5 +175,18 @@ public partial class MainWindow : Window
     private void RemoveAll_Click(object sender, RoutedEventArgs e)
     {
         MyRoot.RemoveAll();
+    }
+
+    private void Adorner_Click(object sender, RoutedEventArgs e)
+    {
+        if(MyRoot.MyFocusThumb is EzLineThumb line)
+        {
+            var wid = line.MyEzLine.ActualWidth;
+            var boundwid = line.MyEzLine.MyBounds4.Width;
+            //line.MyEzLine.Width = boundwid;
+
+            line.AnchorOn();
+
+        }
     }
 }

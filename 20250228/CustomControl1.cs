@@ -1888,6 +1888,10 @@ namespace _20250228
             {
                 MyEzLine = ez;
 
+                if (MyItemData.MyPoints != null)
+                {
+                    MyEzLine.MyPoints = MyItemData.MyPoints;
+                }
                 ////オフセット位置のバインド
                 ////このタイミングじゃないとバインドできないし、XAMLでもできない。
                 ////ソースにEzLineを使っているから、取得後じゃないとできないみたい
@@ -1910,7 +1914,7 @@ namespace _20250228
         private void SetBind()
         {
             MultiBinding mb = new() { Converter = new MyConverterOffsetX() };
-            mb.Bindings.Add(new Binding(nameof(ItemData.MyLeft)){ Source = MyItemData });
+            mb.Bindings.Add(new Binding(nameof(ItemData.MyLeft)) { Source = MyItemData });
             mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
             SetBinding(MyOffsetLeftProperty, mb);
 
@@ -2086,7 +2090,7 @@ namespace _20250228
             {
                 return new RootThumb(data);
             }
-            else if(data.MyThumbType== ThumbType.Line)
+            else if (data.MyThumbType == ThumbType.Line)
             {
                 return new EzLineThumb(data);
             }
