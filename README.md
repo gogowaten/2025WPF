@@ -2,6 +2,8 @@
 https://github.com/gogowaten/2025WPF/tree/main/20250302_RangeThumb2<br>
 ![Animation20250302_122254](https://github.com/user-attachments/assets/cee0bd4f-6371-433b-9121-b0193cca8885)<br>
 前回よりさらに簡易なコードで作成してみた<br>
+前回のコード<br>
+https://github.com/gogowaten/2025WPF/tree/main/20250115_RangeThumbSimple<br>
 <br><br><br>
 
 
