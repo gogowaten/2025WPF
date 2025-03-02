@@ -57,76 +57,102 @@ namespace _20250302
         }
     }
 
-    public class RangeThumb : Thumb
+
+    public class LineThumb : Thumb
     {
-        private readonly Thumb MyThumb;
-        private const double MinimumSize = 1;
-        private const double MinimumLocate = 0;
-        private const double ThumbSize = 20;
-        static RangeThumb()
+        //public EzLine MyEzLine { get; set; } =null!;
+        static LineThumb()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(RangeThumb), new FrameworkPropertyMetadata(typeof(RangeThumb)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(LineThumb), new FrameworkPropertyMetadata(typeof(LineThumb)));
         }
-        public RangeThumb()
+        public LineThumb()
         {
-            MyThumb = new()
-            {
-                Width = ThumbSize,
-                Height = ThumbSize,
-                Cursor = Cursors.SizeNWSE
-            };
-            MyThumb.DragDelta += Thumb_DragDelta;
-            DragDelta += RangeThumb_DragDelta;
-            SetInitialPosition();
+
+            DragDelta += LineThumb_DragDelta;
+            Loaded += LineThumb_Loaded;
         }
 
-        //最小座標未満にならないように自身の移動
-        private void RangeThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void LineThumb_Loaded(object sender, RoutedEventArgs e)
         {
-            if (sender is Thumb t)
-            {
-                Canvas.SetLeft(t, Math.Max(MinimumLocate, Canvas.GetLeft(t) + e.HorizontalChange));
-                Canvas.SetTop(t, Math.Max(MinimumLocate, Canvas.GetTop(t) + e.VerticalChange));
-                e.Handled = true;
-            }
-        }
-
-        private void SetInitialPosition()
-        {
-            Canvas.SetLeft(MyThumb, MinimumLocate);
-            Canvas.SetTop(MyThumb, MinimumLocate);
-            Canvas.SetLeft(this, MinimumLocate);
-            Canvas.SetTop(this, MinimumLocate);
-        }
-
-        //最小サイズ未満にならないようにThumbの移動
-        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            if (sender is Thumb t)
-            {
-                Canvas.SetLeft(t, Math.Max(MinimumSize, Canvas.GetLeft(t) + e.HorizontalChange));
-                Canvas.SetTop(t, Math.Max(MinimumSize, Canvas.GetTop(t) + e.VerticalChange));
-                e.Handled = true;
-            }
+            //this.Width = MyEzLine.MyBounds4.Width;
+            //this.Height = MyEzLine.MyBounds4.Height;
+            //Canvas.SetLeft(MyEzLine, Canvas.GetLeft(MyEzLine) - MyEzLine.MyBounds4.Left);
+            //Canvas.SetTop(MyEzLine, Canvas.GetTop(MyEzLine) - MyEzLine.MyBounds4.Top);
         }
 
         public override void OnApplyTemplate()
         {
-            //Templateの中のCanvasを取得してMyThumbを追加とBinding処理
             base.OnApplyTemplate();
-            if (GetTemplateChild("PART_Canvas") is Canvas panel)
+            if (GetTemplateChild("handle") is Thumb handle)
             {
-                panel.Children.Add(MyThumb);
-
-                //バインド
-                //自身のサイズをソースにMyThumbの座標をバインド
-                MyThumb.DataContext = this;
-                _ = MyThumb.SetBinding(Canvas.LeftProperty,
-                    new Binding(nameof(Width)) { Mode = BindingMode.TwoWay });
-                _ = MyThumb.SetBinding(Canvas.TopProperty,
-                    new Binding(nameof(Height)) { Mode = BindingMode.TwoWay });
+                handle.DragDelta += Handle_DragDelta;
             }
+            if (GetTemplateChild("line") is EzLine line)
+            {
+                MyEzLine = line;
+                if(MyPoints is null)
+                {
+                    MyPoints = MyEzLine.MyPoints;
+                }
+                else
+                {
+                    MyEzLine.MyPoints = MyPoints;
+                }
+            }
+            
+        }
+        
+        private void LineThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            Canvas.SetLeft(this, Canvas.GetLeft(this) + e.HorizontalChange);
+            Canvas.SetTop(this, Canvas.GetTop(this) + e.VerticalChange);
+            e.Handled = true;
+        }
+        
+        //ハンドルの移動でCanvasのサイズを変更
+        private void Handle_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            Width = Math.Max(1, Width + e.HorizontalChange);
+            Height = Math.Max(1, Height + e.VerticalChange);
+            e.Handled = true;
         }
 
+
+
+        public EzLine MyEzLine
+        {
+            get { return (EzLine)GetValue(MyEzLineProperty); }
+            set { SetValue(MyEzLineProperty, value); }
+        }
+        public static readonly DependencyProperty MyEzLineProperty =
+            DependencyProperty.Register(nameof(MyEzLine), typeof(EzLine), typeof(LineThumb), new PropertyMetadata(null));
+
+        public PointCollection MyPoints
+        {
+            get { return (PointCollection)GetValue(MyPointsProperty); }
+            set { SetValue(MyPointsProperty, value); }
+        }
+        public static readonly DependencyProperty MyPointsProperty =
+            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(LineThumb), new PropertyMetadata(null));
+
+
+
+        public void Relayout()
+        {
+            var r4 = MyEzLine.MyBounds4;
+            this.Width = r4.Width;
+            this.Height = r4.Height;
+            double imaLeft = Canvas.GetLeft(MyEzLine);
+            double imaTop = Canvas.GetTop(MyEzLine);
+            double tasLeft = imaLeft + r4.Left;            
+            double tasTop = imaTop + r4.Top;
+
+            
+            Canvas.SetLeft(MyEzLine, -r4.Left);
+            Canvas.SetTop(MyEzLine, -r4.Top);
+            Canvas.SetLeft(this, Canvas.GetLeft(this) + tasLeft);
+            Canvas.SetTop(this, Canvas.GetTop(this) + tasTop );
+        }
     }
+
 }

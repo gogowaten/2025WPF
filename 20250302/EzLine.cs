@@ -47,7 +47,7 @@ namespace _20250302
 
             MyPoints = [new Point(), new Point(100, 100)];
             Stroke = Brushes.Red;
-            StrokeThickness = 20.0;
+            StrokeThickness = 40.0;
 
             SetBinding(MySegmentPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterSegmentPoints() });
 

@@ -20,4 +20,17 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
+
+    private void Anchor_Click(object sender, RoutedEventArgs e)
+    {
+        if(AdornerLayer.GetAdornerLayer(MyLine) is AdornerLayer layer)
+        {
+            layer.Add(new EzLineAdorner(MyLine.MyEzLine));
+        }
+    }
+
+    private void Relayout_Click(object sender, RoutedEventArgs e)
+    {
+        MyLine.Relayout();
+    }
 }

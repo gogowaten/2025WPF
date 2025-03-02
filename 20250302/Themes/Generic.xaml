@@ -5,21 +5,6 @@
 
 
 
-  <Style TargetType="{x:Type local:RangeThumb}">
-    <Setter Property="Canvas.Left" Value="0"/>
-    <Setter Property="Canvas.Top" Value="0"/>
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="{x:Type local:RangeThumb}">
-          <Canvas x:Name="PART_Canvas"
-                  Width="{TemplateBinding Width}"
-                  Height="{TemplateBinding Height}"
-                  Background="{TemplateBinding Background}">
-          </Canvas>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
 
   <Style TargetType="{x:Type local:RangeThumb2}">
     <Setter Property="Canvas.Left" Value="0"/>
@@ -43,7 +28,36 @@
   </Style>
 
 
+  
 
+  <Style TargetType="{x:Type local:LineThumb}">
+    <Setter Property="Canvas.Left" Value="0"/>
+    <Setter Property="Canvas.Top" Value="0"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:LineThumb}">
+          <Grid>
+            <Canvas x:Name="PART_Canvas"
+                    Background="{TemplateBinding Background}">
+              <local:EzLine x:Name="line" StrokeThickness="40"
+                            Canvas.Left="0"
+                            Canvas.Top="0"/>
+              <Thumb x:Name="handle"
+                     Width="20" Height="20"
+                     Canvas.Left="{Binding ElementName=PART_Canvas, Path=ActualWidth}"
+                     Canvas.Top="{Binding ElementName=PART_Canvas, Path=ActualHeight}"
+                     />
+            </Canvas>
+            <Rectangle x:Name="waku"
+                       Stroke="Red" StrokeThickness="1.0"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  
+  
 
 
 </ResourceDictionary>

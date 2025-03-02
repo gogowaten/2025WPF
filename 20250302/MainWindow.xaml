@@ -6,15 +6,42 @@
         xmlns:local="clr-namespace:_20250302"
         mc:Ignorable="d"
         Title="MainWindow" Height="367" Width="602">
-  <Grid>
+  <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
       <ColumnDefinition Width="200"/>
+      <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
+    
     <Canvas>
-      <local:RangeThumb2 Width="200" Height="100" Background="MistyRose"/>
+      <local:LineThumb x:Name="MyLine" Background="MistyRose"
+                       MyPoints="0,0 100,100"/>
     </Canvas>
-    <StackPanel Grid.Column="1">
+    
+    
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyLine}">
+      <Button x:Name="Anchor"  Content="anchor" Click="Anchor_Click"/>
+      <Button x:Name="Relayout" Content="relayout" Click="Relayout_Click"/>
+      <TextBlock Text="{Binding Path=MyEzLine.MyBounds1, StringFormat=bounds1 {0:0.0 }}"/>
+      <TextBlock Text="{Binding Path=MyEzLine.MyBounds2, StringFormat=bounds2 {0:0.0 }}"/>
+      <TextBlock Text="{Binding Path=MyEzLine.MyBounds3, StringFormat=bounds3 {0:0.0 }}"/>
+      <TextBlock Text="{Binding Path=MyEzLine.MyBounds4, StringFormat=bounds4 {0:0.0 }}"/>
+      <TextBlock Text="{Binding (Canvas.Left), StringFormat=Left 0.0}"/>
+      <TextBlock Text="{Binding (Canvas.Top), StringFormat=Top 0.0}"/>
+      <TextBlock Text="{Binding Path=MyEzLine.MyPoints, StringFormat=points {0:0 }}"/>
+      <TextBlock Text="{Binding Path=MyPoints, StringFormat=points {0:0 }}"/>
+      
     </StackPanel>
+
+    <StackPanel Grid.Column="2" DataContext="{Binding ElementName=MyLine, Path=MyEzLine}">
+      <GroupBox Header="{Binding Name}">
+        <StackPanel>
+          <TextBlock Text="{Binding (Canvas.Left), StringFormat=Left 0.0}"/>
+          <TextBlock Text="{Binding (Canvas.Top), StringFormat=Top 0.0}"/>
+        </StackPanel>
+      </GroupBox>
+      
+    </StackPanel>
+    
   </Grid>
 </Window>
