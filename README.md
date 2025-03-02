@@ -1,4 +1,14 @@
-# 2025WPF/20250227_SerializeRootGroup at main · gogowaten/2025WPF
+# 20250302_RangeThumb2
+https://github.com/gogowaten/2025WPF/tree/main/20250302_RangeThumb2<br>
+![Animation20250302_122254](https://github.com/user-attachments/assets/cee0bd4f-6371-433b-9121-b0193cca8885)<br>
+前回よりさらに簡易なコードで作成してみた<br>
+前回のコード<br>
+https://github.com/gogowaten/2025WPF/tree/main/20250115_RangeThumbSimple<br>
+<br><br><br>
+
+
+
+# 20250227_SerializeRootGroup
 https://github.com/gogowaten/2025WPF/tree/main/20250227_SerializeRootGroup<br>
 ![Animation20250228_092012](https://github.com/user-attachments/assets/cf9dd508-5d19-4d1d-80db-253e7d99a479)<br>
 WPF、要素をファイルに保存と復元テスト - 午後わてんのブログ<br>
