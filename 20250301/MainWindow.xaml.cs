@@ -55,14 +55,24 @@ public partial class MainWindow : Window
         //MyEz.ZeroFix();
         var data = new ItemData(ThumbType.Line)
         {
-            MyPoints = [new Point(), new Point(100, 20)],
+            MyPoints = [new Point(), new Point(100, 0)],
             MyStroke = Brushes.Red,
-            MyStrokeThickness = 30,
-            MyBackground=Brushes.MistyRose,
+            MyStrokeThickness = 40,
+            MyBackground = Brushes.MistyRose,
 
         };
         MyLine2 = new EzLineThumb2(data);
         MyCanvas.Children.Add(MyLine2);
 
+    }
+
+    private void Button_Click_5(object sender, RoutedEventArgs e)
+    {
+        var line = MyLine2;
+        if (MyLine2 != null)
+        {
+            var offsettto = MyLine2.MyOffsetTop;
+            var bounds = MyLine2.MyEzLine.MyBounds4;
+        }
     }
 }

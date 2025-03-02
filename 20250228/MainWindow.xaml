@@ -52,7 +52,10 @@
         <Button x:Name="ReadRootFile" Content="Rootファイル読み込み" Click="ReadRootFile_Click"/>
         <Button x:Name="MyInitialize2" Content="Initialize2" Click="MyInitialize2_Click"/>
         <Button x:Name="Adorner" Content="頂点" Click="Adorner_Click"/>
+        <Button x:Name="kakuninn" Content="kakuninn" Click="kakuninn_Click"/>
       </UniformGrid>
+      
+      
       <UniformGrid Columns="2">
         <TextBlock Text="{Binding MyThumbs.Count, StringFormat=count 0}"/>
         <TextBlock Text="{Binding MyItemData.MyThumbsItemData.Count, StringFormat=itemcount 0}"/>

@@ -174,14 +174,20 @@
 
 
   <Style TargetType="{x:Type local:EzLineThumb}" BasedOn="{StaticResource kiso}">
-    <Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetLeft}"/>
-    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetTop}"/>
+    <!--<Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetLeft}"/>
+    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetTop}"/>-->
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:EzLineThumb}">
           <Grid>
-            <Canvas x:Name="PART_Canvas" Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyBackground}"
-                  >
+            <Canvas x:Name="PART_Canvas"
+                    Background="{Binding
+                      RelativeSource={RelativeSource Mode=TemplatedParent},
+                      Path=MyItemData.MyBackground}"
+                    Width="{Binding ElementName=ez, Path=MyBounds4.Width}"
+                    Height="{Binding ElementName=ez, Path=MyBounds4.Height}"
+                    
+                    >
               <local:EzLine
                 x:Name="ez"
                 MyIsOffset="True"
@@ -204,8 +210,7 @@
               </local:EzLine>
             </Canvas>
             <Border Style="{StaticResource waku4}"
-                    Width="{Binding ElementName=ez, Path=MyBounds4.Width}"
-                    Height="{Binding ElementName=ez, Path=MyBounds4.Height}"
+                    
                     />
           </Grid>
         </ControlTemplate>

@@ -189,4 +189,9 @@ public partial class MainWindow : Window
 
         }
     }
+
+    private void kakuninn_Click(object sender, RoutedEventArgs e)
+    {
+        MyRoot.ReLayout3();
+    }
 }

@@ -423,6 +423,7 @@ namespace _20250228
         public static readonly DependencyProperty MyThumbTypeProperty =
             DependencyProperty.Register(nameof(MyThumbType), typeof(ThumbType), typeof(KisoThumb), new PropertyMetadata(ThumbType.None));
 
+
         #region 共通
 
 
@@ -1830,7 +1831,7 @@ namespace _20250228
             MyItemData = data;
         }
 
-        
+
 
 
         #region 頂点移動用のThumb表示用のAdorner
@@ -1898,6 +1899,7 @@ namespace _20250228
                 //SetBind3();
                 SetBind2();
                 //SetBind();
+                
             }
 
 
@@ -1918,24 +1920,19 @@ namespace _20250228
         //    mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
         //    SetBinding(MyOffsetTopProperty, mb);
         //}
-        private void SetBind3()
-        {
-            
-           SetBinding(MyOffsetLeftProperty, new Binding(nameof(MyItemData.MyLeft)) { Source = MyItemData });
-           SetBinding(MyOffsetTopProperty, new Binding(nameof(MyItemData.MyTop)) { Source = MyItemData });
-        }
+
         private void SetBind2()
         {
             //オフセット位置のバインド
             //このタイミングじゃないとバインドできないし、XAMLでもできない。
             //ソースにEzLineを使っているから、取得後じゃないとできないみたい
             MultiBinding mb = new() { Converter = new MyConverterOffsetX() };
-            mb.Bindings.Add(new Binding(nameof(MyItemData.MyLeft)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyLeft)) { Source = MyItemData, Mode = BindingMode.OneWay });
             mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
             SetBinding(MyOffsetLeftProperty, mb);
 
             mb = new() { Converter = new MyConverterOffsetY() };
-            mb.Bindings.Add(new Binding(nameof(MyItemData.MyTop)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding(nameof(MyItemData.MyTop)) { Source = MyItemData, Mode = BindingMode.OneWay });
             mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
             SetBinding(MyOffsetTopProperty, mb);
         }
@@ -2043,7 +2040,7 @@ namespace _20250228
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             var y = (double)values[0];
-            var r = (Rect)values[1];            
+            var r = (Rect)values[1];
             return y + r.Top;
         }
 
