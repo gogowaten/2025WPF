@@ -8,6 +8,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace _20250303
 {
@@ -52,7 +53,6 @@ namespace _20250303
             SetBinding(MySegmentPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterSegmentPoints() });
 
             MyPenBind();
-            //MyRenderTransformBind();
         }
 
         //Penのバインド、Penは図形のBoundsを計測するために必要
@@ -235,6 +235,30 @@ namespace _20250303
 
 
     }
+
+
+
+    public class EzLineOffsetDraw : EzLine
+    {
+        public EzLineOffsetDraw()
+        {
+            SetBinding(Canvas.LeftProperty, new Binding() {
+                Source = this,
+                Path = new PropertyPath(MyBounds4Property),
+                Converter = new MyConverterNegativeRectLeft(),
+                Mode = BindingMode.OneWay
+            });
+            SetBinding(Canvas.TopProperty, new Binding()
+            {
+                Source = this,
+                Path = new PropertyPath(MyBounds4Property),
+                Converter = new MyConverterNegativeRectTop(),
+                Mode = BindingMode.OneWay
+            });
+        }
+    }
+
+
 
 
     #region コンバーター

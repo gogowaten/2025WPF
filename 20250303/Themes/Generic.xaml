@@ -7,22 +7,33 @@
 
 
   <Style TargetType="{x:Type local:LineThumb}">
-    <Setter Property="Canvas.Left" Value="0"/>
-    <Setter Property="Canvas.Top" Value="0"/>
+    <Style.Resources>
+      <local:MyConvRectWidth x:Key="rWidth"/>
+      <local:MyConvRectHeight x:Key="rHeight"/>
+    </Style.Resources>
+    <!--<Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetLeft}"/>
+    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetTop}"/>-->
+
+    <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyEzLine.MyBounds4.Width}"/>
+    <Setter Property="Background" Value="Blue"/>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:LineThumb}">
           <Grid>
             <Canvas x:Name="PART_Canvas"
-                    Background="{TemplateBinding Background}">
+                    Background="{TemplateBinding Background}"
+                    Width="{Binding ElementName=line, Path=MyBounds4, Converter={StaticResource rWidth}}"
+                    Height="{Binding ElementName=line, Path=MyBounds4, Converter={StaticResource rHeight}}"
+                    >
               <local:EzLine x:Name="line"
                             StrokeThickness="40"
                             Canvas.Left="0"
-                            Canvas.Top="0"/>
+                            Canvas.Top="0"                            
+                            />
               <Thumb x:Name="handle"
                      Width="20" Height="20"
-                     Canvas.Left="{Binding ElementName=PART_Canvas, Path=ActualWidth}"
-                     Canvas.Top="{Binding ElementName=PART_Canvas, Path=ActualHeight}"
+                     Canvas.Left="{Binding ElementName=PART_Canvas, Path=Width}"
+                     Canvas.Top="{Binding ElementName=PART_Canvas, Path=Height}"
                      />
             </Canvas>
             <Rectangle x:Name="waku"

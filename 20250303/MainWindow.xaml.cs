@@ -20,4 +20,19 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
+
+    private void Anchor_Click(object sender, RoutedEventArgs e)
+    {
+        MyLine.AdornerSwitch();
+    }
+
+    private void Relayout_Click(object sender, RoutedEventArgs e)
+    {
+        MyLine.Relayout();
+    }
+
+    private void test_Click(object sender, RoutedEventArgs e)
+    {
+        MyLine.MyPoints[0] = new Point(250, 0);
+    }
 }

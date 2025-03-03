@@ -66,7 +66,7 @@ namespace _20250303_LineThumbManualRelayout
             e.Handled = true;
         }
 
-        //ハンドルの移動でCanvasのサイズを変更
+        //ハンドルの移動で自身のサイズを変更
         private void Handle_DragDelta(object sender, DragDeltaEventArgs e)
         {
             Width = Math.Max(1, Width + e.HorizontalChange);
