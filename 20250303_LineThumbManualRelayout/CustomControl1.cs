@@ -94,22 +94,29 @@ namespace _20250303_LineThumbManualRelayout
 
 
 
+        /// <summary>
+        /// 再描画
+        /// </summary>
         public void Relayout()
         {
             var r4 = MyEzLine.MyBounds4;
+            //自身のサイズを変更
             this.Width = r4.Width;
             this.Height = r4.Height;
+
             double imaLeft = Canvas.GetLeft(MyEzLine);
             double imaTop = Canvas.GetTop(MyEzLine);
             double tasLeft = imaLeft + r4.Left;
             double tasTop = imaTop + r4.Top;
 
-
+            //図形の位置を移動
             Canvas.SetLeft(MyEzLine, -r4.Left);
             Canvas.SetTop(MyEzLine, -r4.Top);
+            //自身の位置を移動
             Canvas.SetLeft(this, Canvas.GetLeft(this) + tasLeft);
             Canvas.SetTop(this, Canvas.GetTop(this) + tasTop);
         }
+
 
         /// <summary>
         /// アンカーハンドルの表示切替
