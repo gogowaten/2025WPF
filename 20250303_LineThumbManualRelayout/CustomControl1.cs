@@ -40,10 +40,10 @@ namespace _20250303_LineThumbManualRelayout
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            if (GetTemplateChild("handle") is Thumb handle)
-            {
-                handle.DragDelta += Handle_DragDelta;
-            }
+            //if (GetTemplateChild("handle") is Thumb handle)
+            //{
+            //    handle.DragDelta += Handle_DragDelta;
+            //}
             if (GetTemplateChild("line") is EzLine line)
             {
                 MyEzLine = line;
@@ -66,13 +66,13 @@ namespace _20250303_LineThumbManualRelayout
             e.Handled = true;
         }
 
-        //ハンドルの移動で自身のサイズを変更
-        private void Handle_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            Width = Math.Max(1, Width + e.HorizontalChange);
-            Height = Math.Max(1, Height + e.VerticalChange);
-            e.Handled = true;
-        }
+        ////ハンドルの移動で自身のサイズを変更
+        //private void Handle_DragDelta(object sender, DragDeltaEventArgs e)
+        //{
+        //    Width = Math.Max(1, Width + e.HorizontalChange);
+        //    Height = Math.Max(1, Height + e.VerticalChange);
+        //    e.Handled = true;
+        //}
 
 
 
@@ -104,17 +104,18 @@ namespace _20250303_LineThumbManualRelayout
             this.Width = r4.Width;
             this.Height = r4.Height;
 
-            double imaLeft = Canvas.GetLeft(MyEzLine);
-            double imaTop = Canvas.GetTop(MyEzLine);
-            double tasLeft = imaLeft + r4.Left;
-            double tasTop = imaTop + r4.Top;
+            //変更する前の位置を使って計算しておく、タイミング重要
+            double tasLeft = Canvas.GetLeft(MyEzLine) + Canvas.GetLeft(this) + r4.Left;
+            double tasTop = Canvas.GetTop(MyEzLine) + Canvas.GetTop(this) + r4.Top;
 
-            //図形の位置を移動
+            //図形の位置を変更、オフセット
             Canvas.SetLeft(MyEzLine, -r4.Left);
             Canvas.SetTop(MyEzLine, -r4.Top);
-            //自身の位置を移動
-            Canvas.SetLeft(this, Canvas.GetLeft(this) + tasLeft);
-            Canvas.SetTop(this, Canvas.GetTop(this) + tasTop);
+
+            //自身の位置を変更、図形の位置に合わせる
+            Canvas.SetLeft(this, tasLeft);
+            Canvas.SetTop(this, tasTop);
+
         }
 
 

@@ -14,7 +14,11 @@
     <!--<Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetLeft}"/>
     <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetTop}"/>-->
 
-    <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyEzLine.MyBounds4.Width}"/>
+    <Setter Property="Canvas.Left" Value="0"/>
+    <Setter Property="Canvas.Top" Value="0"/>
+
+    <!--<Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyEzLine.MyBounds4.Width}"/>-->
+    
     <Setter Property="Background" Value="Blue"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -22,8 +26,6 @@
           <Grid>
             <Canvas x:Name="PART_Canvas"
                     Background="{TemplateBinding Background}"
-                    Width="{Binding ElementName=line, Path=MyBounds4, Converter={StaticResource rWidth}}"
-                    Height="{Binding ElementName=line, Path=MyBounds4, Converter={StaticResource rHeight}}"
                     >
               <local:EzLine x:Name="line"
                             StrokeThickness="40"
@@ -32,8 +34,8 @@
                             />
               <Thumb x:Name="handle"
                      Width="20" Height="20"
-                     Canvas.Left="{Binding ElementName=PART_Canvas, Path=Width}"
-                     Canvas.Top="{Binding ElementName=PART_Canvas, Path=Height}"
+                     Canvas.Left="{TemplateBinding Width}"
+                     Canvas.Top="{TemplateBinding Height}"
                      />
             </Canvas>
             <Rectangle x:Name="waku"

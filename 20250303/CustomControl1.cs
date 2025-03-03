@@ -36,7 +36,7 @@ namespace _20250303
 
         private void LineThumb_Loaded(object sender, RoutedEventArgs e)
         {
-            //Relayout();
+            Relayout();
             //MyBind();
             //MyBind2();
             //MyLeftは指定用
@@ -115,8 +115,11 @@ namespace _20250303
         //ハンドルの移動でCanvasのサイズを変更
         private void Handle_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            MyCanvas.Width = Math.Max(1, MyCanvas.Width + e.HorizontalChange);
-            MyCanvas.Height = Math.Max(1, MyCanvas.Height + e.VerticalChange);
+            Width = Math.Max(1, Width + e.HorizontalChange);
+            Height = Math.Max(1, Height + e.VerticalChange);
+            //MyCanvas.Width = Math.Max(1, MyCanvas.Width + e.HorizontalChange);
+            //MyCanvas.Height = Math.Max(1, MyCanvas.Height + e.VerticalChange);
+         
             e.Handled = true;
         }
 
