@@ -1,3 +1,15 @@
+# 20250303_LineThumbManualRelayout
+https://github.com/gogowaten/2025WPF/tree/main/20250303_LineThumbManualRelayout<br>
+![Animation20250303_111746](https://github.com/user-attachments/assets/b5158341-e8b0-4cd7-8d22-299c6c888fca)<br>
+アンカーハンドルの表示切替<br>
+LineThumbのサイズと位置の手動再描画、EzLineのサイズと位置に合わせる<br>
+LineThumbのサイズ変更は前回のRangeThumb2から<br>
+<br><br><br>
+
+
+
+
+
 # 20250302_RangeThumb2
 https://github.com/gogowaten/2025WPF/tree/main/20250302_RangeThumb2<br>
 ![Animation20250302_122254](https://github.com/user-attachments/assets/cee0bd4f-6371-433b-9121-b0193cca8885)<br>
