@@ -7,19 +7,10 @@
 
 
   <Style TargetType="{x:Type local:LineThumb}">
-    <Style.Resources>
-      <local:MyConvRectWidth x:Key="rWidth"/>
-      <local:MyConvRectHeight x:Key="rHeight"/>
-    </Style.Resources>
-    <!--<Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetLeft}"/>
-    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyOffsetTop}"/>-->
 
     <Setter Property="Canvas.Left" Value="0"/>
     <Setter Property="Canvas.Top" Value="0"/>
 
-    <!--<Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyEzLine.MyBounds4.Width}"/>-->
-    
-    <Setter Property="Background" Value="Blue"/>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:LineThumb}">
@@ -30,13 +21,8 @@
               <local:EzLine x:Name="line"
                             StrokeThickness="40"
                             Canvas.Left="0"
-                            Canvas.Top="0"                            
+                            Canvas.Top="0"
                             />
-              <Thumb x:Name="handle"
-                     Width="20" Height="20"
-                     Canvas.Left="{TemplateBinding Width}"
-                     Canvas.Top="{TemplateBinding Height}"
-                     />
             </Canvas>
             <Rectangle x:Name="waku"
                        Stroke="Red" StrokeThickness="1.0"/>
@@ -48,5 +34,29 @@
 
 
 
+  <Style TargetType="{x:Type local:EzShapeThumb}" x:Key="ezshape">
+    <Setter Property="Canvas.Left" Value="0"/>
+    <Setter Property="Canvas.Top" Value="0"/>
+  </Style>
+
+  <Style TargetType="{x:Type local:EzBezierThumb}" BasedOn="{StaticResource ezshape}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:EzBezierThumb}">
+          <Grid>
+            <Canvas x:Name="PART_Canvas"
+                    Background="{TemplateBinding Background}">
+              <local:EzBezier x:Name="bezi"
+                              Canvas.Left="0"
+                              Canvas.Top="0"
+                />
+              <Rectangle x:Name="waku"
+                         Stroke="DodgerBlue" StrokeThickness="1.0"/>
+            </Canvas>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 
 </ResourceDictionary>

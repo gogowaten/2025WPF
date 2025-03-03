@@ -24,15 +24,23 @@ public partial class MainWindow : Window
     private void Anchor_Click(object sender, RoutedEventArgs e)
     {
         MyLine.AdornerSwitch();
+        MyBezier.AdornerSwitch();
     }
 
     private void Relayout_Click(object sender, RoutedEventArgs e)
     {
         MyLine.Relayout();
+        MyBezier.Relayout3();
     }
 
     private void test_Click(object sender, RoutedEventArgs e)
     {
         MyLine.MyPoints[0] = new Point(250, 0);
+    }
+
+    private void pointZero_Click(object sender, RoutedEventArgs e)
+    {
+        MyBezier.FixPointsZero();
+        MyBezier.FixAdornerLocate();
     }
 }

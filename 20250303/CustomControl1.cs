@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -37,44 +38,6 @@ namespace _20250303
         private void LineThumb_Loaded(object sender, RoutedEventArgs e)
         {
             Relayout();
-            //MyBind();
-            //MyBind2();
-            //MyLeftは指定用
-            //MyOffsetLeftは実際の表示位置なのでCanvas．Leftとバインドする、計算はEzLineの位置とMyLeftからする
-            //SetBinding(WidthProperty, new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Converter = new MyConvRectWidth() });
-
-
-        }
-
-        private void MyBind()
-        {
-
-            //var mb = new MultiBinding() { Converter = new MyConverterLeftRectLeft() };
-            //mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyLeftProperty), Mode = BindingMode.OneWay });
-            //mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
-            //SetBinding(MyOffsetLeftProperty, mb);
-
-            //mb = new MultiBinding() { Converter = new MyConverterTopRectTop() };
-            //mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyTopProperty), Mode = BindingMode.OneWay });
-            //mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property), Mode = BindingMode.OneWay });
-            //SetBinding(MyOffsetTopProperty, mb);
-
-            //SetBinding(Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyOffsetLeftProperty) });
-            //SetBinding(Canvas.TopProperty, new Binding() { Source = this, Path = new PropertyPath(MyOffsetTopProperty) });
-
-        }
-
-        private void MyBind2()
-        {
-            var mb = new MultiBinding() { Converter = new MyConverterLeftRectLeft() };
-            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(Canvas.LeftProperty) });
-            mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property) });
-            SetBinding(MyOffsetLeftProperty, mb);
-
-            mb = new MultiBinding() { Converter = new MyConverterTopRectTop() };
-            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(Canvas.TopProperty) });
-            mb.Bindings.Add(new Binding() { Source = MyEzLine, Path = new PropertyPath(EzLine.MyBounds4Property) });
-            SetBinding(MyOffsetTopProperty, mb);
 
         }
 
@@ -82,10 +45,7 @@ namespace _20250303
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            if (GetTemplateChild("handle") is Thumb handle)
-            {
-                handle.DragDelta += Handle_DragDelta;
-            }
+
             if (GetTemplateChild("line") is EzLine line)
             {
                 MyEzLine = line;
@@ -112,16 +72,7 @@ namespace _20250303
             e.Handled = true;
         }
 
-        //ハンドルの移動でCanvasのサイズを変更
-        private void Handle_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            Width = Math.Max(1, Width + e.HorizontalChange);
-            Height = Math.Max(1, Height + e.VerticalChange);
-            //MyCanvas.Width = Math.Max(1, MyCanvas.Width + e.HorizontalChange);
-            //MyCanvas.Height = Math.Max(1, MyCanvas.Height + e.VerticalChange);
-         
-            e.Handled = true;
-        }
+
 
         #region 依存関係プロパティ
 
@@ -232,10 +183,12 @@ namespace _20250303
                 }
             }
         }
+
+
     }
 
     #region コンバーター
-    
+
     public class MyConvRectWidth : IValueConverter
     {
 
@@ -326,5 +279,304 @@ namespace _20250303
 
     #endregion コンバーター
 
+
+    public abstract class EzShapeThumb : Thumb
+    {
+        static EzShapeThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(EzShapeThumb), new FrameworkPropertyMetadata(typeof(EzShapeThumb)));
+        }
+        public EzShapeThumb()
+        {
+            DragDelta += EzShapeThumb_DragDelta;
+            Loaded += EzShapeThumb_Loaded;
+            Canvas.SetLeft(this, 0);
+        }
+
+        private void EzShapeThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            //Relayout();
+        }
+
+        private void EzShapeThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            Canvas.SetLeft(this, Canvas.GetLeft(this) + e.HorizontalChange);
+            Canvas.SetTop(this, Canvas.GetTop(this) + e.VerticalChange);
+            e.Handled = true;
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            if (GetTemplateChild("PART_Canvas") is Canvas panel)
+            {
+                if (GetChildEzShape(panel) is EzShape shape)
+                {
+                    MyEzShape = shape;
+                    if (MyPoints is null)
+                    {
+                        MyPoints = MyEzShape.MyPoints;
+                    }
+                    else
+                    {
+                        MyEzShape.MyPoints = MyPoints;
+                    }
+                }
+            }
+        }
+
+        private static EzShape? GetChildEzShape(FrameworkElement element)
+        {
+            var count = VisualTreeHelper.GetChildrenCount(element);
+            for (int i = 0; i < count; i++)
+            {
+                if (VisualTreeHelper.GetChild(element, i) is EzShape shape)
+                {
+                    return shape;
+                }
+            }
+            return null;
+        }
+
+        #region 依存関係プロパティ
+
+
+
+        public PointCollection MyPoints
+        {
+            get { return (PointCollection)GetValue(MyPointsProperty); }
+            set { SetValue(MyPointsProperty, value); }
+        }
+        public static readonly DependencyProperty MyPointsProperty =
+            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(EzShapeThumb), new PropertyMetadata(null));
+
+
+        public EzShape MyEzShape
+        {
+            get { return (EzShape)GetValue(MyEzShapeProperty); }
+            set { SetValue(MyEzShapeProperty, value); }
+        }
+        public static readonly DependencyProperty MyEzShapeProperty =
+            DependencyProperty.Register(nameof(MyEzShape), typeof(EzShape), typeof(EzShapeThumb), new PropertyMetadata(null));
+        #endregion 依存関係プロパティ
+
+
+        /// <summary>
+        /// 再描画
+        /// </summary>
+        public void Relayout()
+        {
+            if (MyEzShape != null)
+            {
+                var myrect = GetRect();
+                var r4 = MyEzShape.MyBounds4;
+                //自身のサイズを変更
+                this.Width = r4.Width;
+                this.Height = r4.Height;
+
+                //変更する前の位置を使って計算しておく、タイミング重要
+                double tasLeft = Canvas.GetLeft(MyEzShape) + Canvas.GetLeft(this) + r4.Left;
+                double tasTop = Canvas.GetTop(MyEzShape) + Canvas.GetTop(this) + r4.Top;
+
+                //図形の位置を変更、オフセット
+                Canvas.SetLeft(MyEzShape, -r4.Left);
+                Canvas.SetTop(MyEzShape, -r4.Top);
+
+                //自身の位置を変更、図形の位置に合わせる
+                Canvas.SetLeft(this, tasLeft);
+                Canvas.SetTop(this, tasTop);
+            }
+        }
+        public void Relayout2()
+        {
+            if (MyEzShape != null)
+            {
+                var myrect = GetRect();
+                var adorect = MyEzShape.MyAdornerRect;
+                var r4 = MyEzShape.MyBounds4;
+                double w = Math.Max(adorect.Width, r4.Width);
+                double h = Math.Max(adorect.Height, r4.Height);
+                //自身のサイズを変更
+                Width = myrect.Width;
+                Height = myrect.Height;
+
+                //変更する前の位置を使って計算しておく、タイミング重要
+
+
+                double minLeft = r4.Left;
+                if (Math.Abs(adorect.Left) > Math.Abs(r4.Left))
+                {
+                    minLeft = adorect.Left;
+                }
+
+                double minTop = r4.Top;
+                if (Math.Abs(adorect.Top) > Math.Abs(r4.Top))
+                {
+                    minTop = adorect.Top;
+                }
+                //double minLeft = Math.Min(adorect.Left, r4.Left);
+                //double minTop = Math.Min(adorect.Top, r4.Top);
+
+                double tasLeft = Canvas.GetLeft(MyEzShape) + Canvas.GetLeft(this) + minLeft;
+                double tasTop = Canvas.GetTop(MyEzShape) + Canvas.GetTop(this) + minTop;
+
+
+                //図形の位置を変更、オフセット
+                Canvas.SetLeft(MyEzShape, -minLeft);
+                Canvas.SetTop(MyEzShape, -minTop);
+
+
+                //自身の位置を変更、図形の位置に合わせる
+                Canvas.SetLeft(this, tasLeft);
+                Canvas.SetTop(this, tasTop);
+            }
+        }
+        public void Relayout3()
+        {
+            if (MyEzShape != null)
+            {
+                var myrect = GetRect();
+                var myrect2 = GetRect2();
+
+                //var adorect = MyEzShape.MyAdornerRect;
+                var r4 = MyEzShape.MyBounds4;
+                //自身のサイズを変更
+                //サイズはこれであっている気がする
+                Width = myrect.Width;
+                Height = myrect.Height;
+
+                //変更する前の位置を使って計算しておく、タイミング重要
+                double ezleft = Canvas.GetLeft(MyEzShape);
+                double eztop = Canvas.GetTop(MyEzShape);
+                double myleft = Canvas.GetLeft(this);
+                double mytop = Canvas.GetTop(this);
+                double tasLeft = myrect.Width - r4.Width + r4.Left;
+                double tasTop = myrect.Height - r4.Height + r4.Height;
+
+
+                //オフセットはPointsのゼロfix分をすれば良さそう
+
+                ////図形の位置を変更、オフセット
+                //Canvas.SetLeft(MyEzShape, -myrect2.Left);
+                //Canvas.SetTop(MyEzShape, -myrect2.Top);
+
+
+                ////自身の位置を変更、図形の位置に合わせる
+                //Canvas.SetLeft(this, tasLeft);
+                //Canvas.SetTop(this, tasTop);
+            }
+        }
+
+
+
+        /// <summary>
+        /// アンカーハンドルの表示切替
+        /// </summary>
+        public void AdornerSwitch()
+        {
+            if (AdornerLayer.GetAdornerLayer(MyEzShape) is AdornerLayer layer)
+            {
+                Adorner[] ados = layer.GetAdorners(MyEzShape);
+                //無ければ追加(表示)
+                if (ados is null)
+                {
+                    layer.Add(new EzShapeAdorner(MyEzShape));
+                }
+                //在れば削除
+                else
+                {
+                    foreach (var item in ados.OfType<EzShapeAdorner>())
+                    {
+                        layer.Remove(item);
+                    }
+                }
+            }
+        }
+
+        public void FixAdornerLocate()
+        {
+            if (AdornerLayer.GetAdornerLayer(MyEzShape) is AdornerLayer layer)
+            {
+                Adorner[] ados = layer.GetAdorners(MyEzShape);
+                if (ados != null)
+                {
+                    foreach (var item in ados)
+                    {
+                        if (item is EzShapeAdorner shapeado)
+                        {
+                            shapeado.ResetAnchorLocate();
+                        }
+                    }
+                }
+            }
+        }
+
+        public void FixPointsZero()
+        {
+            double left = double.MaxValue; double top = double.MaxValue;
+            foreach (var item in MyPoints)
+            {
+                if (left > item.X) { left = item.X; }
+                if (top > item.Y) { top = item.Y; }
+            }
+
+            for (int i = 0; i < MyPoints.Count; i++)
+            {
+                Point p = MyPoints[i];
+                MyPoints[i] = new Point(p.X - left, p.Y - top);
+            }
+        }
+
+
+        private Rect GetRect()
+        {
+            Rect r = new();
+            double left = double.MaxValue; double top = double.MaxValue;
+            foreach (var item in MyPoints)
+            {
+                if (left > item.X) { left = item.X; }
+                if (top > item.Y) { top = item.Y; }
+            }
+
+            PointCollection pc = [];
+            foreach (var item in MyPoints)
+            {
+                pc.Add(new Point(item.X - left, item.Y - top));
+            }
+
+            foreach (var item in pc)
+            {
+                Rect pr = new(item.X - 20, item.Y - 20, 40, 40);
+                r.Union(pr);
+            }
+            return r;
+        }
+
+        private Rect GetRect2()
+        {
+            Rect r = new();
+            foreach (var item in MyPoints)
+            {
+                Rect pr = new(item.X - 0, item.Y - 0, 40, 40);
+                r.Union(pr);
+            }
+            return r;
+        }
+
+
+    }
+
+
+    public class EzBezierThumb : EzShapeThumb
+    {
+        static EzBezierThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(EzBezierThumb), new FrameworkPropertyMetadata(typeof(EzBezierThumb)));
+        }
+        public EzBezierThumb()
+        {
+
+        }
+    }
 
 }

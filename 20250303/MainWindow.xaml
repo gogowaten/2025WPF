@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250303"
         mc:Ignorable="d"
-        Title="MainWindow" Height="367" Width="602">
+        Title="MainWindow" Height="367" Width="702">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -18,13 +18,17 @@
                        MyPoints="0,0,100,100"
                        Background="MistyRose"
                        />
-
+      <local:EzBezierThumb x:Name="MyBezier"
+                           Background="Violet"
+                      />
+      
     </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyLine}">
       <Button x:Name="Anchor"  Content="アンカーハンドルの表示切替" Click="Anchor_Click"/>
       <Button x:Name="Relayout" Content="再描画" Click="Relayout_Click"/>
       <Button x:Name="test" Content="test" Click="test_Click"/>
+      <Button x:Name="pointZero" Content="zero" Click="pointZero_Click"/>
       <TextBlock Text="{Binding Path=MyEzLine.MyBounds1, StringFormat=bounds1 {0:0.0 }}"/>
       <TextBlock Text="{Binding Path=MyEzLine.MyBounds2, StringFormat=bounds2 {0:0.0 }}"/>
       <TextBlock Text="{Binding Path=MyEzLine.MyBounds3, StringFormat=bounds3 {0:0.0 }}"/>
@@ -60,6 +64,35 @@
           </StackPanel>
         </GroupBox>
       </StackPanel>
+      
+      <StackPanel DataContext="{Binding ElementName=MyBezier}">
+        <GroupBox Header="{Binding Name}">
+          <StackPanel>
+            <TextBlock Text="{Binding (Canvas.Left), StringFormat=Left {0:0.0}}"/>
+            <TextBlock Text="{Binding (Canvas.Top), StringFormat=Top {0:0.0}}"/>
+            <TextBlock Text="{Binding MyPoints, StringFormat=Po {0:0 }}"/>
+            <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth {0:0.0}}"/>
+            <TextBlock Text="{Binding Width, StringFormat=Width {0:0.0}}"/>
+          </StackPanel>
+        </GroupBox>
+      </StackPanel>
+      
+      <StackPanel DataContext="{Binding ElementName=MyBezier, Path=MyEzShape}">
+        <GroupBox Header="{Binding Name}">
+          <StackPanel>
+            <TextBlock Text="{Binding (Canvas.Left), StringFormat=Left {0:0.0}}"/>
+            <TextBlock Text="{Binding (Canvas.Top), StringFormat=Top {0:0.0}}"/>
+            <TextBlock Text="{Binding MyPoints, StringFormat=po {0:0}}"/>
+            <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth {0:0.0}}"/>
+            <TextBlock Text="{Binding Width, StringFormat=Width {0:0.0}}"/>
+          </StackPanel>
+        </GroupBox>
+      </StackPanel>
+      
+      
+      
+      
+      
     </StackPanel>
 
   </Grid>
