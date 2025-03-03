@@ -67,21 +67,6 @@ namespace _20250302
             SetBinding(MyPenProperty, mb);
         }
 
-        ////RenderTransformとのバインド、これでMyAngle変更時にもBoundsが更新される
-        //private void MyRenderTransformBind()
-        //{
-        //    //中心軸座標、Penでの描画Boundsの中心にしているけど、それ以外にも試したい
-        //    //三角形なら重心、四角形ならそのまま、それ以上なら平均座標とか
-        //    SetBinding(MyCenterXProperty, new Binding() { Source = this, Path = new PropertyPath(MyBounds2Property), Converter = new MyConverterCenterX(), Mode = BindingMode.OneWay });
-        //    SetBinding(MyCenterYProperty, new Binding() { Source = this, Path = new PropertyPath(MyBounds2Property), Converter = new MyConverterCenterY(), Mode = BindingMode.OneWay });
-
-        //    //RenderTransformとのバインド、RenderTransformはRotateTransformに決め打ちしている
-        //    MultiBinding mb = new() { Converter = new MyConverterRenderTransform() };
-        //    mb.Bindings.Add(MakeOneWayBind(MyAngleProperty));
-        //    mb.Bindings.Add(MakeOneWayBind(MyCenterXProperty));
-        //    mb.Bindings.Add(MakeOneWayBind(MyCenterYProperty));
-        //    SetBinding(RenderTransformProperty, mb);
-        //}
 
         private Binding MakeOneWayBind(DependencyProperty property)
         {
@@ -107,29 +92,7 @@ namespace _20250302
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        //public double MyCenterX
-        //{
-        //    get { return (double)GetValue(MyCenterXProperty); }
-        //    set { SetValue(MyCenterXProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyCenterXProperty =
-        //    DependencyProperty.Register(nameof(MyCenterX), typeof(double), typeof(EzLine),
-        //        new FrameworkPropertyMetadata(0.0,
-        //            FrameworkPropertyMetadataOptions.AffectsRender |
-        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
-        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        //public double MyCenterY
-        //{
-        //    get { return (double)GetValue(MyCenterYProperty); }
-        //    set { SetValue(MyCenterYProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyCenterYProperty =
-        //    DependencyProperty.Register(nameof(MyCenterY), typeof(double), typeof(EzLine),
-        //        new FrameworkPropertyMetadata(0.0,
-        //            FrameworkPropertyMetadataOptions.AffectsRender |
-        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
-        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         #endregion 回転
 
         public FillRule MyFillRule
@@ -262,8 +225,6 @@ namespace _20250302
             get { return (PointCollection)GetValue(MySegmentPointsProperty); }
             private set { SetValue(MySegmentPointsProperty, value); }
         }
-
-
         public static readonly DependencyProperty MySegmentPointsProperty =
             DependencyProperty.Register(nameof(MySegmentPoints), typeof(PointCollection), typeof(EzLine), new PropertyMetadata(null));
 

@@ -16,7 +16,6 @@ namespace _20250302
 {
     public class EzLineAdorner : Adorner
     {
-        //readonly Thumb MyThumb;//サイズ変更用つまみ
         private readonly List<Thumb> MyAnchorList;
         private readonly Canvas MyCanvas;
         readonly VisualCollection MyVisualChildren;//表示したい要素を管理する用？
@@ -35,23 +34,8 @@ namespace _20250302
             }
 
             ResetAnchorLocate();
-            //Loaded += EzLineAdorner_Loaded;
         }
 
-        //private void EzLineAdorner_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    MyBind();
-        //}
-
-        //private void MyBind()
-        //{
-        //    Binding bind = new() { Source = this, Path = new PropertyPath(AnchorSizeProperty) };
-        //    foreach (var item in MyAnchorList)
-        //    {
-        //        item.SetBinding(AnchorThumb.MyOutSizeProperty, bind);
-        //        item.SetBinding(AnchorThumb.MyInSizeProperty, bind);
-        //    }
-        //}
         private void ResetAnchorLocate()
         {
             for (int i = 0; i < MyTarget.MyPoints.Count; i++)

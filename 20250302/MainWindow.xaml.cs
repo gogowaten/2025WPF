@@ -23,10 +23,11 @@ public partial class MainWindow : Window
 
     private void Anchor_Click(object sender, RoutedEventArgs e)
     {
-        if(AdornerLayer.GetAdornerLayer(MyLine) is AdornerLayer layer)
-        {
-            layer.Add(new EzLineAdorner(MyLine.MyEzLine));
-        }
+        MyLine.AdornerSwitch();
+        //if(AdornerLayer.GetAdornerLayer(MyLine) is AdornerLayer layer)
+        //{
+        //    layer.Add(new EzLineAdorner(MyLine.MyEzLine));
+        //}
     }
 
     private void Relayout_Click(object sender, RoutedEventArgs e)
