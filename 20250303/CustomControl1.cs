@@ -450,8 +450,8 @@ namespace _20250303
                 double eztop = Canvas.GetTop(MyEzShape);
                 double myleft = Canvas.GetLeft(this);
                 double mytop = Canvas.GetTop(this);
-                double tasLeft = myrect.Width - r4.Width + r4.Left;
-                double tasTop = myrect.Height - r4.Height + r4.Height;
+                double tasLeft = myrect.Width - r4.Width + myrect.Left;
+                double tasTop = myrect.Height - r4.Height + myrect.Height;
 
 
                 //オフセットはPointsのゼロfix分をすれば良さそう
@@ -464,10 +464,59 @@ namespace _20250303
                 ////自身の位置を変更、図形の位置に合わせる
                 //Canvas.SetLeft(this, tasLeft);
                 //Canvas.SetTop(this, tasTop);
+
             }
         }
+        public void Relayout4()
+        {
+            //FixPointsZero();
+            //FixAdornerLocate();
 
+            var myrect = GetRect();
+            Width = myrect.Width;
+            Height = myrect.Height;
 
+            double ezleft = Canvas.GetLeft(MyEzShape);
+            double eztop = Canvas.GetTop(MyEzShape);
+            double myleft = Canvas.GetLeft(this);
+            double mytop = Canvas.GetTop(this);
+
+            //SetLocate(MyEzShape, -myrect.Left, -myrect.Top);
+
+            var r4 = MyEzShape.MyBounds4;
+            var (left, top) = GetTopLeftFromPoints();
+            double tasLeft = myleft + left;
+            double tasTop = mytop + top;
+            SetLocate(this, tasLeft, tasTop);
+        }
+        public void FixPointsLocateAndSize()
+        {
+            var (left, top) = GetTopLeftFromPoints();
+            FixPointsZero();
+            FixAdornerLocate();
+            var r = GetRect();
+            Width = r.Width;
+            Height = r.Height;
+
+            OffsetLocate(this, left, top);
+        }
+
+        private void OffsetLocate(FrameworkElement element ,double left,double top)
+        {
+            Canvas.SetLeft(element, Canvas.GetLeft(element) + left);
+            Canvas.SetTop(element, Canvas.GetTop(element) + top);
+        }
+
+        private void SetLocate(FrameworkElement element, double left, double top)
+        {
+            Canvas.SetLeft(element, left);
+            Canvas.SetTop(element, top);
+        }
+        private void SetLocate(FrameworkElement element, Point locate)
+        {
+            Canvas.SetLeft(element, locate.X);
+            Canvas.SetTop(element, locate.Y);
+        }
 
         /// <summary>
         /// アンカーハンドルの表示切替
@@ -511,15 +560,12 @@ namespace _20250303
             }
         }
 
+        /// <summary>
+        /// Points全体のリセット、左上に寄せる、TopLeftを0にする
+        /// </summary>
         public void FixPointsZero()
         {
-            double left = double.MaxValue; double top = double.MaxValue;
-            foreach (var item in MyPoints)
-            {
-                if (left > item.X) { left = item.X; }
-                if (top > item.Y) { top = item.Y; }
-            }
-
+            var (left, top) = GetTopLeftFromPoints();
             for (int i = 0; i < MyPoints.Count; i++)
             {
                 Point p = MyPoints[i];
@@ -527,6 +573,17 @@ namespace _20250303
             }
         }
 
+        private (double left, double top) GetTopLeftFromPoints()
+        {
+            double left = double.MaxValue;
+            double top = double.MaxValue;
+            foreach (var item in MyPoints)
+            {
+                if (left > item.X) { left = item.X; }
+                if (top > item.Y) { top = item.Y; }
+            }
+            return (left, top);
+        }
 
         private Rect GetRect()
         {
