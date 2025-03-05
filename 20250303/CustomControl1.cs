@@ -493,31 +493,35 @@ namespace _20250303
         //サイズ測定、Pointsを左上に移動、サイズ変更
         public void FixPointsLocateAndSize()
         {
-
+            var rr4 = MyEzShape.MyBounds4;
             var (left, top) = GetTopLeftFromPoints();
             FixPointsZero();
             FixAdornerLocate();
             UpdateLayout();
 
-            var ImaShapeLeft = Canvas.GetLeft(MyEzShape);
-            var ImaShapeTop = Canvas.GetTop(MyEzShape);
+
+            var ImaShapeLeft = Canvas.GetLeft(MyEzShape); var ImaShapeTop = Canvas.GetTop(MyEzShape);
+            var ImaThumbLeft = Canvas.GetLeft(this); var ImaThumbTop = Canvas.GetTop(this);
             var pointsRect = GetRect();
             var r4 = MyEzShape.MyBounds4;
+            var diffLeftPointR_R4 = pointsRect.Left - r4.Left;
+            var left2 = 0.0;
+            if (pointsRect.Left != r4.Left) { left2 = left - diffLeftPointR_R4; }
             var unionR = new Rect();
             unionR.Union(pointsRect);
             unionR.Union(r4);
-            var pointRect_r4Heiht = pointsRect.Height - r4.Height;
-            var pointRect_r4Width = pointsRect.Width - r4.Width;
-
-            SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
-
             Width = unionR.Width;
             Height = unionR.Height;
-            var thumbWidht = Width;var thumbHeight = Height;
-            var r4Width = r4.Width;var r4Height = r4.Height;
-            var pointsWidth = pointsRect.Width;var pointsHeight = pointsRect.Height;
+            SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
+            if (unionR.Left + ImaShapeLeft != 0 || unionR.Top + ImaShapeTop != 0)
+            {
+                OffsetLocate(this, left + unionR.Left, top + unionR.Top);
+                //OffsetLocate(this, left, top);
+            }
 
-            OffsetLocate(this, left, top);
+
+
+
         }
 
         //サイズ測定、Pointsを左上に移動、サイズ変更

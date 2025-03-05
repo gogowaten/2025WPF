@@ -269,7 +269,7 @@ namespace _20250303
             DataContext = this;
             MyPoints = [new Point(), new Point(100, 0), new Point(100, 100), new Point(0, 100)];
             Stroke = Brushes.DodgerBlue;
-            StrokeThickness = 40.0;
+            StrokeThickness = 60.0;
 
 
         }

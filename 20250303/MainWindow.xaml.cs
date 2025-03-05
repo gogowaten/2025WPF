@@ -40,6 +40,11 @@ public partial class MainWindow : Window
 
     private void pointZero_Click(object sender, RoutedEventArgs e)
     {
-        MyBezier.FixPointsLocateAndSize2();
+        //MyBezier.FixPointsLocateAndSize2();
+        MyBezier.MyPoints[3] = new Point(200, 100);
+        MyBezier.MyPoints[1] = new Point(0, 100);
+        MyBezier.FixAdornerLocate();
+
+
     }
 }
