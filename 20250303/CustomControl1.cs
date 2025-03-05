@@ -495,9 +495,9 @@ namespace _20250303
         {
             var rr4 = MyEzShape.MyBounds4;
             var (left, top) = GetTopLeftFromPoints();
-            FixPointsZero();
-            FixAdornerLocate();
-            UpdateLayout();
+            FixPointsZero();// PointsのゼロFix移動
+            FixAdornerLocate();// AdornerをPointsに合わせる
+            UpdateLayout();// 要る？
 
 
             var ImaShapeLeft = Canvas.GetLeft(MyEzShape); var ImaShapeTop = Canvas.GetTop(MyEzShape);
@@ -513,14 +513,23 @@ namespace _20250303
             Width = unionR.Width;
             Height = unionR.Height;
             SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
-            if (unionR.Left + ImaShapeLeft != 0 || unionR.Top + ImaShapeTop != 0)
+            //if (unionR.Left + ImaShapeLeft != 0 || unionR.Top + ImaShapeTop != 0)
             {
-                OffsetLocate(this, left + unionR.Left, top + unionR.Top);
+                //var ll = r4.Left;
+                //var tt = r4.Top;
+                //図形の移動前後の位置の差＋PointsのゼロFix移動距離がThumbの位置になる、みたい
+                var ll = ImaShapeLeft + unionR.Left+left;
+                var tt = ImaShapeTop + unionR.Top+top;
+
+                //if (ll > -10) { ll = -10; }
+                //if (tt > -10) { tt = -10; }
+                //var ll = r4.Left - pointsRect.Left;
+                //var tt = r4.Top - pointsRect.Top;
+
+                OffsetLocate(this, ll, tt);
                 //OffsetLocate(this, left, top);
+                //Canvas.SetLeft(this, Canvas.GetLeft(this)-30);
             }
-
-
-
 
         }
 
