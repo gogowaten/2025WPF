@@ -489,19 +489,54 @@ namespace _20250303
             double tasTop = mytop + top;
             SetLocate(this, tasLeft, tasTop);
         }
+
+        //サイズ測定、Pointsを左上に移動、サイズ変更
         public void FixPointsLocateAndSize()
         {
+
             var (left, top) = GetTopLeftFromPoints();
             FixPointsZero();
             FixAdornerLocate();
-            var r = GetRect();
-            Width = r.Width;
-            Height = r.Height;
+            UpdateLayout();
+
+            var ImaShapeLeft = Canvas.GetLeft(MyEzShape);
+            var ImaShapeTop = Canvas.GetTop(MyEzShape);
+            var pointsRect = GetRect();
+            var r4 = MyEzShape.MyBounds4;
+            var unionR = new Rect();
+            unionR.Union(pointsRect);
+            unionR.Union(r4);
+            var pointRect_r4Heiht = pointsRect.Height - r4.Height;
+            var pointRect_r4Width = pointsRect.Width - r4.Width;
+
+            SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
+
+            Width = unionR.Width;
+            Height = unionR.Height;
+            var thumbWidht = Width;var thumbHeight = Height;
+            var r4Width = r4.Width;var r4Height = r4.Height;
+            var pointsWidth = pointsRect.Width;var pointsHeight = pointsRect.Height;
 
             OffsetLocate(this, left, top);
         }
 
-        private void OffsetLocate(FrameworkElement element ,double left,double top)
+        //サイズ測定、Pointsを左上に移動、サイズ変更
+        public void FixPointsLocateAndSize2()
+        {
+            var r4 = MyEzShape.MyBounds4;
+            var (left, top) = GetTopLeftFromPoints();
+            FixPointsZero();
+            FixAdornerLocate();
+            var rPointsAndAnchor = GetRect();
+            Width = rPointsAndAnchor.Width;
+            Height = rPointsAndAnchor.Height;
+            var l2 = Math.Min(r4.Left, left);
+            var t2 = Math.Min(r4.Top, top);
+
+            OffsetLocate(this, l2, t2);
+        }
+
+        private void OffsetLocate(FrameworkElement element, double left, double top)
         {
             Canvas.SetLeft(element, Canvas.GetLeft(element) + left);
             Canvas.SetTop(element, Canvas.GetTop(element) + top);
@@ -603,7 +638,7 @@ namespace _20250303
 
             foreach (var item in pc)
             {
-                Rect pr = new(item.X - 20, item.Y - 20, 40, 40);
+                Rect pr = new(item.X - 10, item.Y - 10, 20, 20);
                 r.Union(pr);
             }
             return r;

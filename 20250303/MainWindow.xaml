@@ -17,6 +17,7 @@
       <local:LineThumb x:Name="MyLine" Canvas.Left="10" Canvas.Top="50"
                        MyPoints="0,0,100,100"
                        Background="MistyRose"
+                       Visibility="Hidden"
                        />
       <local:EzBezierThumb x:Name="MyBezier"
                            Background="Violet"

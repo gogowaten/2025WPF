@@ -192,7 +192,7 @@ namespace _20250303
             set { SetValue(AnchorSizeProperty, value); }
         }
         public static readonly DependencyProperty AnchorSizeProperty =
-            DependencyProperty.Register(nameof(AnchorSize), typeof(double), typeof(EzShapeAdorner), new PropertyMetadata(40.0));
+            DependencyProperty.Register(nameof(AnchorSize), typeof(double), typeof(EzShapeAdorner), new PropertyMetadata(20.0));
 
 
         protected override Size ArrangeOverride(Size finalSize)

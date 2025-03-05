@@ -23,7 +23,7 @@ public partial class MainWindow : Window
 
     private void Anchor_Click(object sender, RoutedEventArgs e)
     {
-        MyLine.AdornerSwitch();
+        //MyLine.AdornerSwitch();
         MyBezier.AdornerSwitch();
     }
 
@@ -35,11 +35,11 @@ public partial class MainWindow : Window
 
     private void test_Click(object sender, RoutedEventArgs e)
     {
-        
+        MyBezier.FixPointsLocateAndSize();
     }
 
     private void pointZero_Click(object sender, RoutedEventArgs e)
     {
-        MyBezier.FixPointsLocateAndSize();
+        MyBezier.FixPointsLocateAndSize2();
     }
 }
