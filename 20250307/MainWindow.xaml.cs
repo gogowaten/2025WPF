@@ -37,7 +37,7 @@ public partial class MainWindow : Window
 
     private void test_Click(object sender, RoutedEventArgs e)
     {
-        MyBezierThumb.UpdatePointsAndSizeWithoutZeroFixTest();
+        MyBezierThumb.UpdatePointsAndSizeWithoutZeroFix();
     }
 
     private void pointZero_Click(object sender, RoutedEventArgs e)

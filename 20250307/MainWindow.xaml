@@ -41,7 +41,7 @@
       <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth 0.0}"/>
       <TextBlock Text="{Binding Width, StringFormat=Width {0:0.0}}"/>
       <TextBlock Text="{Binding ActualHeight, StringFormat=ActualHeight 0.0}"/>
-
+      <TextBlock Text="{Binding MyShapeWithAnchorBounds, StringFormat=unionBounds {0:0.0}}"/>
     </StackPanel>
 
     <StackPanel Grid.Column="2">

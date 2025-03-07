@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +39,9 @@ namespace _20250307
 
         private void EzShapeThumb_Loaded(object sender, RoutedEventArgs e)
         {
+            //SetMyBind();
             //Relayout();
+            UpdatePointsAndSizeWithoutZeroFix();
         }
 
         private void EzShapeThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -82,9 +85,28 @@ namespace _20250307
             }
             return null;
         }
+
+        //private void SetMyBind()
+        //{
+        //    var mb = new MultiBinding() { Converter = new MyConvShapeAndAnchorBounds() };
+        //    mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyEzShapeAdornerProperty) });
+        //    mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty) });
+        //    mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyEzShapeProperty) });
+        //    SetBinding(MyShapeWithAnchorBoundsProperty, mb);
+        //}
         #endregion 起動時
 
         #region 依存関係プロパティ
+
+
+        public Rect MyShapeWithAnchorBounds
+        {
+            get { return (Rect)GetValue(MyShapeWithAnchorBoundsProperty); }
+            set { SetValue(MyShapeWithAnchorBoundsProperty, value); }
+        }
+        public static readonly DependencyProperty MyShapeWithAnchorBoundsProperty =
+            DependencyProperty.Register(nameof(MyShapeWithAnchorBounds), typeof(Rect), typeof(EzShapeThumb), new PropertyMetadata(Rect.Empty));
+
 
         //内部図形のアンカーポイント表示用のAdorner
         public EzShapeAdorner? MyEzShapeAdorner
@@ -186,7 +208,7 @@ namespace _20250307
             SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
             SetLocate(this, ll, tt);
         }
-        
+
         //MyPointsのゼロFixなしでのサイズと位置更新
         public void UpdatePointsAndSizeWithoutZeroFix()
         {
@@ -206,7 +228,7 @@ namespace _20250307
             SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
             SetLocate(this, ll, tt);
         }
-        
+
         public void UpdatePointsAndSizeWithoutZeroFixTest()
         {
             var pointsRect = GetBoundsFromAnchorThumb();
@@ -215,34 +237,31 @@ namespace _20250307
             unionR.Union(pointsRect);
             unionR.Union(r4);
             var maeShapeLeft = Canvas.GetLeft(MyEzShape);
+            var maeShapeTo = Canvas.GetTop(MyEzShape);
             SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
             var atoShapeLeft = Canvas.GetLeft(MyEzShape);
+            var atoShapeTop = Canvas.GetTop(MyEzShape);
             var maeatoLeft = maeShapeLeft - atoShapeLeft;
             Width = unionR.Width;
             Height = unionR.Height;
             //内部図形の位置の変更する前に今の位置を取得しておく
-            var ll = unionR.Left +maeatoLeft;
-            var tt =  unionR.Top;
+            var ll = unionR.Left + maeatoLeft;
+            var tt = unionR.Top;
             ll += Canvas.GetLeft(this);
             tt += Canvas.GetTop(this);
-
+            var lll = Canvas.GetLeft(this);
+            Canvas.SetLeft(this, lll + maeatoLeft);
+            Canvas.SetTop(this, Canvas.GetTop(this) + maeShapeTo - atoShapeTop);
             //SetLocate(this, ll, tt);
         }
 
-  
-
-        //private void OffsetLocate(FrameworkElement element, double left, double top)
-        //{
-        //    Canvas.SetLeft(element, Canvas.GetLeft(element) + left);
-        //    Canvas.SetTop(element, Canvas.GetTop(element) + top);
-        //}
 
         private void SetLocate(FrameworkElement element, double left, double top)
         {
             Canvas.SetLeft(element, left);
             Canvas.SetTop(element, top);
         }
-      
+
         /// <summary>
         /// アンカーハンドルの表示切替
         /// </summary>
@@ -380,7 +399,49 @@ namespace _20250307
     }
 
 
+    #region コンバーター
+    public class MyConvShapeAndAnchorBounds : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var ador = (EzShapeAdorner)values[0];
+            var points = (PointCollection)values[1];
+            var shape = (EzShape)values[2];
+            Rect bounds = new();
+            if (points == null) { return bounds; }
+            double anchorSize = 0;
+            double halfSize = 0;
 
+            if (ador != null)
+            {
+                anchorSize = ador.AnchorSize;
+                halfSize = anchorSize / 2.0;
+            }
+            //PointCollection tempPC = [];
+            //double left = double.MaxValue;
+            //double top = double.MaxValue;
+            //foreach (var item in points)
+            //{
+            //    left = Math.Min(left, item.X);
+            //    if (top > item.Y) { top = item.Y; }
+            //}
+
+            foreach (var item in points)
+            {
+                //Rect temp = new(item.X - halfSize - left, item.Y - halfSize - top, anchorSize, anchorSize);
+                Rect temp = new(item.X - halfSize, item.Y - halfSize, anchorSize, anchorSize);
+                bounds.Union(temp);
+            }
+            bounds.Union(shape.MyBounds4);
+            return bounds;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    #endregion コンバーター
 
 
 
