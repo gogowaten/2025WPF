@@ -31,13 +31,13 @@ public partial class MainWindow : Window
 
     private void Relayout_Click(object sender, RoutedEventArgs e)
     {
-
-        MyBezierThumb.Relayout();
+        MyBezierThumb.UpdatePointAndSize();
+        //MyBezierThumb.Relayout();
     }
 
     private void test_Click(object sender, RoutedEventArgs e)
     {
-        MyBezierThumb.FixPointsLocateAndSize();
+        MyBezierThumb.UpdatePointsAndSizeWithoutZeroFixTest();
     }
 
     private void pointZero_Click(object sender, RoutedEventArgs e)

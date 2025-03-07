@@ -152,10 +152,16 @@ namespace _20250307
             }
         }
 
-
-        //サイズ測定、Pointsを左上に移動、サイズ変更
-        //これが正解
-        public void FixPointsLocateAndSize()
+        //頂点移動後に実行
+        //Thumbのサイズと位置を更新する、アンカーポイント表示の有無で変化する
+        //処理の順番は
+        //MyPointsのBoundsが0,0になるように全体を移動、
+        //アンカーポイントも移動、
+        //Layout更新、
+        //Thumbサイズ更新、
+        //内部図形の移動、
+        //Thumbの移動
+        public void UpdatePointAndSize()
         {
             var (left, top) = GetTopLeftFromPoints();
             FixPointsZero(left, top);// PointsのゼロFix移動
@@ -163,7 +169,6 @@ namespace _20250307
             UpdateLayout();// 要る？→必要            
 
             var pointsRect = GetBoundsFromAnchorThumb();
-            //var pointsRect = GetRect();
             var r4 = MyEzShape.MyBounds4;
             var unionR = new Rect();
             unionR.Union(pointsRect);
@@ -173,23 +178,64 @@ namespace _20250307
             //内部図形の位置の変更する前に今の位置を取得しておく
             var ImaShapeLeft = Canvas.GetLeft(MyEzShape);
             var ImaShapeTop = Canvas.GetTop(MyEzShape);
-            var ll = ImaShapeLeft + unionR.Left + left;
-            var tt = ImaShapeTop + unionR.Top + top;
+            var ll = Canvas.GetLeft(MyEzShape) + unionR.Left + left;
+            var tt = Canvas.GetTop(MyEzShape) + unionR.Top + top;
+            ll += Canvas.GetLeft(this);
+            tt += Canvas.GetTop(this);
 
             SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
+            SetLocate(this, ll, tt);
+        }
+        
+        //MyPointsのゼロFixなしでのサイズと位置更新
+        public void UpdatePointsAndSizeWithoutZeroFix()
+        {
+            var pointsRect = GetBoundsFromAnchorThumb();
+            var r4 = MyEzShape.MyBounds4;
+            var unionR = new Rect();
+            unionR.Union(pointsRect);
+            unionR.Union(r4);
+            Width = unionR.Width;
+            Height = unionR.Height;
+            //内部図形の位置の変更する前に今の位置を取得しておく
+            var ll = Canvas.GetLeft(MyEzShape) + unionR.Left;
+            var tt = Canvas.GetTop(MyEzShape) + unionR.Top;
+            ll += Canvas.GetLeft(this);
+            tt += Canvas.GetTop(this);
 
-            //図形の移動前後の位置の差＋PointsのゼロFix移動距離がThumbの位置になる、みたい
+            SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
+            SetLocate(this, ll, tt);
+        }
+        
+        public void UpdatePointsAndSizeWithoutZeroFixTest()
+        {
+            var pointsRect = GetBoundsFromAnchorThumb();
+            var r4 = MyEzShape.MyBounds4;
+            var unionR = new Rect();
+            unionR.Union(pointsRect);
+            unionR.Union(r4);
+            var maeShapeLeft = Canvas.GetLeft(MyEzShape);
+            SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
+            var atoShapeLeft = Canvas.GetLeft(MyEzShape);
+            var maeatoLeft = maeShapeLeft - atoShapeLeft;
+            Width = unionR.Width;
+            Height = unionR.Height;
+            //内部図形の位置の変更する前に今の位置を取得しておく
+            var ll = unionR.Left +maeatoLeft;
+            var tt =  unionR.Top;
+            ll += Canvas.GetLeft(this);
+            tt += Canvas.GetTop(this);
 
-            OffsetLocate(this, ll, tt);
+            //SetLocate(this, ll, tt);
         }
 
   
 
-        private void OffsetLocate(FrameworkElement element, double left, double top)
-        {
-            Canvas.SetLeft(element, Canvas.GetLeft(element) + left);
-            Canvas.SetTop(element, Canvas.GetTop(element) + top);
-        }
+        //private void OffsetLocate(FrameworkElement element, double left, double top)
+        //{
+        //    Canvas.SetLeft(element, Canvas.GetLeft(element) + left);
+        //    Canvas.SetTop(element, Canvas.GetTop(element) + top);
+        //}
 
         private void SetLocate(FrameworkElement element, double left, double top)
         {
