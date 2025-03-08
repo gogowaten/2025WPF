@@ -37,14 +37,16 @@ public partial class MainWindow : Window
 
     private void test_Click(object sender, RoutedEventArgs e)
     {
-        MyBezierThumb.UpdatePointsAndSizeWithoutZeroFix();
+        MyBezierThumb.UpdatePointsAndSizeWithoutZeroFixTest();
     }
 
     private void pointZero_Click(object sender, RoutedEventArgs e)
     {
         //MyBezier.FixPointsLocateAndSize2();
-        MyBezierThumb.MyPoints[3] = new Point(200, 100);
-        MyBezierThumb.MyPoints[1] = new Point(0, 100);
+        MyBezierThumb.MyPoints[0] = new Point(2, 178);
+        MyBezierThumb.MyPoints[1] = new Point(0, 79);
+        MyBezierThumb.MyPoints[2] = new Point(154, 0);
+        MyBezierThumb.MyPoints[3] = new Point(121, 219);
         MyBezierThumb.FixAdornerLocate();
 
 

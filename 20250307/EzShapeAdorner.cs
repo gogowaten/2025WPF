@@ -15,7 +15,7 @@ namespace _20250307
 
     public class EzShapeAdorner : Adorner
     {
-        private readonly List<Thumb> MyAnchorThumbsList;
+        public readonly List<Thumb> MyAnchorThumbsList;
         private readonly Canvas MyCanvas;
         readonly VisualCollection MyVisualCollection;
         readonly EzShape MyTarget;
@@ -32,14 +32,9 @@ namespace _20250307
             //アンカーハンドルの位置をMyPointsに合わせる
             ResetAnchorLocate();
 
-            Loaded += EzShapeAdorner_Loaded;
         }
 
-        private void EzShapeAdorner_Loaded(object sender, RoutedEventArgs e)
-        {
-            MyTarget.AAA(GetChildrenRect());
-        }
-
+      
         private void InitAnchorThumbs()
         {
             for (int i = 0; i < MyTarget.MyPoints.Count; i++)
@@ -53,37 +48,12 @@ namespace _20250307
                     Background = Brushes.Red,
                     Tag = i
                 };
-                anchor.DragDelta += Anchor_DragDelta;
-                anchor.DragCompleted += Anchor_DragCompleted;
                 MyAnchorThumbsList.Insert(i, anchor);
                 MyCanvas.Children.Insert(i, anchor);
 
             }
         }
 
-        private void Anchor_DragCompleted(object sender, DragCompletedEventArgs e)
-        {
-            MyTarget.AAA(GetChildrenRect());
-        }
-
-        private void Anchor_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            if (sender is Thumb t)
-            {
-                int id = (int)t.Tag;
-                Point po = MyTarget.MyPoints[id];
-                double left = po.X + e.HorizontalChange;
-                double top = po.Y + e.VerticalChange;
-
-                Point npo = new(left, top);
-                MyTarget.MyPoints[id] = npo;
-
-                Canvas.SetLeft(t, left - AnchorSize / 2.0);
-                Canvas.SetTop(t, top - AnchorSize / 2.0);
-
-                e.Handled = true;
-            }
-        }
 
 
         public double AnchorSize
@@ -101,18 +71,7 @@ namespace _20250307
             return base.ArrangeOverride(finalSize);
         }
 
-        private Rect GetChildrenRect()
-        {
-            Rect rr = new();
-            foreach (var item in MyAnchorThumbsList)
-            {
-                //Rect r = new(Canvas.GetLeft(item)-item.Width/2.0, Canvas.GetTop(item)-item.Height/2.0, item.Width, item.Height);
-                Rect r = new(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
-                rr.Union(r);
-            }
-            return rr;
-        }
-
+ 
         #region VisualCollectionで必要        
         protected override int VisualChildrenCount => MyVisualCollection.Count;
 

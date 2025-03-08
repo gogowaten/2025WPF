@@ -86,26 +86,11 @@ namespace _20250307
             return null;
         }
 
-        //private void SetMyBind()
-        //{
-        //    var mb = new MultiBinding() { Converter = new MyConvShapeAndAnchorBounds() };
-        //    mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyEzShapeAdornerProperty) });
-        //    mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty) });
-        //    mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyEzShapeProperty) });
-        //    SetBinding(MyShapeWithAnchorBoundsProperty, mb);
-        //}
         #endregion 起動時
 
         #region 依存関係プロパティ
 
 
-        public Rect MyShapeWithAnchorBounds
-        {
-            get { return (Rect)GetValue(MyShapeWithAnchorBoundsProperty); }
-            set { SetValue(MyShapeWithAnchorBoundsProperty, value); }
-        }
-        public static readonly DependencyProperty MyShapeWithAnchorBoundsProperty =
-            DependencyProperty.Register(nameof(MyShapeWithAnchorBounds), typeof(Rect), typeof(EzShapeThumb), new PropertyMetadata(Rect.Empty));
 
 
         //内部図形のアンカーポイント表示用のAdorner
@@ -148,7 +133,7 @@ namespace _20250307
 
 
         /// <summary>
-        /// 再描画
+        /// 再描画、不完全
         /// </summary>
         public void Relayout()
         {
@@ -174,15 +159,18 @@ namespace _20250307
             }
         }
 
-        //頂点移動後に実行
-        //Thumbのサイズと位置を更新する、アンカーポイント表示の有無で変化する
-        //処理の順番は
-        //MyPointsのBoundsが0,0になるように全体を移動、
-        //アンカーポイントも移動、
-        //Layout更新、
-        //Thumbサイズ更新、
-        //内部図形の移動、
-        //Thumbの移動
+        //
+        /// <summary>
+        ///頂点移動後に実行
+        ///Thumbのサイズと位置を更新する、アンカーポイント表示の有無で変化する
+        ///処理の順番は
+        ///MyPointsのBoundsが0,0になるように全体を移動、
+        ///アンカーポイントも移動、
+        ///Layout更新、
+        ///Thumbサイズ更新、
+        ///内部図形の移動、
+        ///Thumbの移動 
+        /// </summary>
         public void UpdatePointAndSize()
         {
             var (left, top) = GetTopLeftFromPoints();
@@ -191,15 +179,15 @@ namespace _20250307
             UpdateLayout();// 要る？→必要            
 
             var pointsRect = GetBoundsFromAnchorThumb();
-            var r4 = MyEzShape.MyBounds4;
-            var unionR = new Rect();
-            unionR.Union(pointsRect);
-            unionR.Union(r4);
+            //var r4 = MyEzShape.MyBounds4;//確認用
+            var unionR = MyEzShape.MyBounds4;
+            if (MyEzShapeAdorner != null)
+            {
+                unionR.Union(pointsRect);
+            }
             Width = unionR.Width;
             Height = unionR.Height;
             //内部図形の位置の変更する前に今の位置を取得しておく
-            var ImaShapeLeft = Canvas.GetLeft(MyEzShape);
-            var ImaShapeTop = Canvas.GetTop(MyEzShape);
             var ll = Canvas.GetLeft(MyEzShape) + unionR.Left + left;
             var tt = Canvas.GetTop(MyEzShape) + unionR.Top + top;
             ll += Canvas.GetLeft(this);
@@ -209,7 +197,7 @@ namespace _20250307
             SetLocate(this, ll, tt);
         }
 
-        //MyPointsのゼロFixなしでのサイズと位置更新
+        //MyPointsのゼロFixなしでのサイズと位置更新、不完全
         public void UpdatePointsAndSizeWithoutZeroFix()
         {
             var pointsRect = GetBoundsFromAnchorThumb();
@@ -231,28 +219,30 @@ namespace _20250307
 
         public void UpdatePointsAndSizeWithoutZeroFixTest()
         {
+            var (left, top) = GetTopLeftFromPoints();
+            FixPointsZero(left, top);// PointsのゼロFix移動
+            FixAdornerLocate();// AdornerをPointsの表示位置に合わせる
+            UpdateLayout();// 要る？→必要            
+
             var pointsRect = GetBoundsFromAnchorThumb();
             var r4 = MyEzShape.MyBounds4;
-            var unionR = new Rect();
-            unionR.Union(pointsRect);
-            unionR.Union(r4);
-            var maeShapeLeft = Canvas.GetLeft(MyEzShape);
-            var maeShapeTo = Canvas.GetTop(MyEzShape);
-            SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
-            var atoShapeLeft = Canvas.GetLeft(MyEzShape);
-            var atoShapeTop = Canvas.GetTop(MyEzShape);
-            var maeatoLeft = maeShapeLeft - atoShapeLeft;
+            var unionR = MyEzShape.MyBounds4;
+            if(MyEzShapeAdorner != null)
+            {
+                unionR.Union(pointsRect);
+            }
             Width = unionR.Width;
             Height = unionR.Height;
             //内部図形の位置の変更する前に今の位置を取得しておく
-            var ll = unionR.Left + maeatoLeft;
-            var tt = unionR.Top;
+            var ImaShapeLeft = Canvas.GetLeft(MyEzShape);
+            var ImaShapeTop = Canvas.GetTop(MyEzShape);
+            var ll = Canvas.GetLeft(MyEzShape) + unionR.Left + left;
+            var tt = Canvas.GetTop(MyEzShape) + unionR.Top + top;
             ll += Canvas.GetLeft(this);
             tt += Canvas.GetTop(this);
-            var lll = Canvas.GetLeft(this);
-            Canvas.SetLeft(this, lll + maeatoLeft);
-            Canvas.SetTop(this, Canvas.GetTop(this) + maeShapeTo - atoShapeTop);
-            //SetLocate(this, ll, tt);
+
+            SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
+            SetLocate(this, ll, tt);
         }
 
 
@@ -275,6 +265,12 @@ namespace _20250307
                     EzShapeAdorner adorner = new(MyEzShape);
                     layer.Add(adorner);
                     MyEzShapeAdorner = adorner;
+
+                    foreach (var item in MyEzShapeAdorner.MyAnchorThumbsList)
+                    {
+                        item.DragDelta += EzShapeAnchor_DragDelta;
+                        item.DragCompleted += EzShapeAnchor_DragCompleted;
+                    }
                 }
                 //在れば削除
                 else
@@ -285,6 +281,36 @@ namespace _20250307
             }
         }
 
+        private void EzShapeAnchor_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            UpdatePointAndSize();
+        }
+
+        /// <summary>
+        /// アンカーのドラッグ移動時の処理
+        /// 対応Pointを更新、アンカーの移動
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EzShapeAnchor_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is Thumb t && MyEzShapeAdorner != null)
+            {
+                int id = (int)t.Tag;
+                Point po = MyPoints[id];
+                double left = po.X + e.HorizontalChange;
+                double top = po.Y + e.VerticalChange;
+
+                //Pointの更新
+                MyPoints[id] = new(left,top);
+
+                //アンカーの移動
+                Canvas.SetLeft(t, left - MyEzShapeAdorner.AnchorSize / 2.0);
+                Canvas.SetTop(t, top - MyEzShapeAdorner.AnchorSize / 2.0);
+
+                e.Handled = true;
+            }
+        }
 
         public void FixAdornerLocate()
         {
@@ -399,49 +425,6 @@ namespace _20250307
     }
 
 
-    #region コンバーター
-    public class MyConvShapeAndAnchorBounds : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            var ador = (EzShapeAdorner)values[0];
-            var points = (PointCollection)values[1];
-            var shape = (EzShape)values[2];
-            Rect bounds = new();
-            if (points == null) { return bounds; }
-            double anchorSize = 0;
-            double halfSize = 0;
-
-            if (ador != null)
-            {
-                anchorSize = ador.AnchorSize;
-                halfSize = anchorSize / 2.0;
-            }
-            //PointCollection tempPC = [];
-            //double left = double.MaxValue;
-            //double top = double.MaxValue;
-            //foreach (var item in points)
-            //{
-            //    left = Math.Min(left, item.X);
-            //    if (top > item.Y) { top = item.Y; }
-            //}
-
-            foreach (var item in points)
-            {
-                //Rect temp = new(item.X - halfSize - left, item.Y - halfSize - top, anchorSize, anchorSize);
-                Rect temp = new(item.X - halfSize, item.Y - halfSize, anchorSize, anchorSize);
-                bounds.Union(temp);
-            }
-            bounds.Union(shape.MyBounds4);
-            return bounds;
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-    #endregion コンバーター
 
 
 

@@ -40,11 +40,7 @@ namespace _20250307
             return new Binding() { Source = this, Path = new PropertyPath(property), Mode = BindingMode.OneWay };
         }
 
-        public Rect MyAdornerRect { get; private set; }
-        public void AAA(Rect adorner)
-        {
-            MyAdornerRect = adorner;
-        }
+
 
         #region 依存関係プロパティ
 
