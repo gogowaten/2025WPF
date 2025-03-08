@@ -25,4 +25,9 @@ public partial class MainWindow : Window
     {
         MyBeziThumb.AnchorOnOffSwitch();
     }
+
+    private void test_Click(object sender, RoutedEventArgs e)
+    {
+        MyBeziThumb.UpdatePointsAndSizeWithTransform();
+    }
 }

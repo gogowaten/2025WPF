@@ -12,9 +12,10 @@
       <ColumnDefinition Width="260"/>
     </Grid.ColumnDefinitions>
 
-    <Canvas>
+    <Canvas UseLayoutRounding="True">
       <local:EzBezierThumb x:Name="MyBeziThumb"
                            Background="MistyRose"
+                           MyShapeAngle="0"
                            />
 
       <!--<Path Stroke="Cyan" StrokeThickness="2">
@@ -42,7 +43,12 @@
 
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyBeziThumb}">
       <Button x:Name="AnchorOnOff" Content="アンカー表示切替" Click="AnchorOnOff_Click"/>
+      <Button x:Name="test" Content="test" Click="test_Click"/>
       <TextBlock Text="{Binding MyPoints, StringFormat=pos {0:0.0 }}"/>
+      <TextBlock Text="{Binding MyShapeAngle, StringFormat=angle {0:0.0 }}"/>
+      <Slider Value="{Binding MyShapeAngle}" Minimum="0" Maximum="360"/>
+      <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth {0:0.0}}"/>
+      <TextBlock Text="{Binding ActualHeight, StringFormat=ActualHeight {0:0.0}}"/>
     </StackPanel>
   </Grid>
 </Window>
