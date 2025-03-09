@@ -30,4 +30,9 @@ public partial class MainWindow : Window
     {
         MyBeziThumb.UpdatePointsAndSizeWithTransform();
     }
+
+    private void AddPoint_Click(object sender, RoutedEventArgs e)
+    {
+        MyBeziThumb.AddPoint(new Point(200, 20));
+    }
 }

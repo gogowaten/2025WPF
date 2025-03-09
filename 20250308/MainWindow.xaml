@@ -44,6 +44,7 @@
     <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyBeziThumb}">
       <Button x:Name="AnchorOnOff" Content="アンカー表示切替" Click="AnchorOnOff_Click"/>
       <Button x:Name="test" Content="test" Click="test_Click"/>
+      <Button x:Name="AddPoint" Content="AddPoint" Click="AddPoint_Click"/>
       <TextBlock Text="{Binding MyPoints, StringFormat=pos {0:0.0 }}"/>
       <TextBlock Text="{Binding MyShapeAngle, StringFormat=angle {0:0.0 }}"/>
       <Slider Value="{Binding MyShapeAngle}" Minimum="0" Maximum="360"/>

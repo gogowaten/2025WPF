@@ -152,6 +152,9 @@ namespace _20250308
         #endregion 依存関係プロパティ
 
 
+        public abstract void AddPoint(Point point);
+
+
         /// <summary>
         /// 再描画、不完全
         /// </summary>
@@ -481,6 +484,12 @@ namespace _20250308
         public EzBezierThumb()
         {
 
+        }
+
+        public override void AddPoint(Point point)
+        {
+            MyEzShape.AddPoint(point);
+            //MyEzShapeAdorner?.ResetAnchorLocate();
         }
     }
 

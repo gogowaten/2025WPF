@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Security.Cryptography.Xml;
 
 
 namespace _20250308
@@ -25,8 +26,9 @@ namespace _20250308
             MyPenBind();
         }
 
+        public abstract void AddPoint(Point point);
 
-        
+
         private void MyPenBind()
         {
             //Penのバインド、Penは図形のBoundsを計測するために必要
@@ -50,6 +52,14 @@ namespace _20250308
 
         #region 依存関係プロパティ
 
+        ////図形のアンカーハンドルThumb表示用のAdorner
+        //public EzShapeAdorner? MyEzShapeAdorner
+        //{
+        //    get { return (EzShapeAdorner)GetValue(MyEzShapeAdornerProperty); }
+        //    protected set { SetValue(MyEzShapeAdornerProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyEzShapeAdornerProperty =
+        //    DependencyProperty.Register(nameof(MyEzShapeAdorner), typeof(EzShapeAdorner), typeof(EzShape), new PropertyMetadata(null));
 
         #region 通常
 
@@ -276,8 +286,13 @@ namespace _20250308
 
         }
 
+        public override void AddPoint(Point point)
+        {
+            MyPoints.Add(MyPoints[^1]);
+            MyPoints.Add(point);
+            MyPoints.Add(point);
 
-
+        }
     }
 
 
@@ -290,6 +305,13 @@ namespace _20250308
         private readonly Canvas MyCanvas;
         private readonly VisualCollection MyVisualCollection;
         private readonly EzShape MyTarget;//装飾ターゲット
+
+        #region VisualCollectionで必要        
+        protected override int VisualChildrenCount => MyVisualCollection.Count;
+
+        protected override Visual GetVisualChild(int index) => MyVisualCollection[index];
+        #endregion VisualCollectionで必要
+
         public EzShapeAdorner(EzShape adornedElement) : base(adornedElement)
         {
             MyCanvas = new();
@@ -308,7 +330,7 @@ namespace _20250308
             InitAnchorThumbs();
 
             //アンカーハンドルの位置をMyPointsに合わせる
-            ResetAnchorLocate();
+            //ResetAnchorLocate();
 
         }
 
@@ -317,22 +339,47 @@ namespace _20250308
         {
             for (int i = 0; i < MyTarget.MyPoints.Count; i++)
             {
-                Thumb anchor = new()
-                {
-                    Cursor = Cursors.Hand,
-                    Height = AnchorSize,
-                    Width = AnchorSize,
-                    Opacity = 0.3,
-                    Background = Brushes.Red,
-                    Tag = i
-                };
-                MyAnchorThumbsList.Insert(i, anchor);
-                MyCanvas.Children.Insert(i, anchor);
-
+                AddAnchorThumb(MyTarget.MyPoints[i], i);
             }
         }
+        private void AddAnchorThumb(Point point, int id)
+        {
+            Thumb anchor = new()
+            {
+                Cursor = Cursors.Hand,
+                Height = AnchorSize,
+                Width = AnchorSize,
+                Opacity = 0.3,
+                Background = Brushes.Red,
+                Tag = id
+            };
+            Canvas.SetLeft(anchor, point.X - AnchorSize / 2.0);
+            Canvas.SetTop(anchor, point.Y - AnchorSize / 2.0);
+            MyAnchorThumbsList.Insert(id, anchor);
+            MyCanvas.Children.Insert(id, anchor);
+        }
 
-
+        //アンカーハンドルの位置をMyPointsに合わせる
+        public void ResetAnchorLocate()
+        {
+            if (MyTarget.MyPoints.Count == MyAnchorThumbsList.Count)
+            {
+                for (int i = 0; i < MyTarget.MyPoints.Count; i++)
+                {
+                    Point p = MyTarget.MyPoints[i];
+                    Canvas.SetLeft(MyAnchorThumbsList[i], p.X - AnchorSize / 2.0);
+                    Canvas.SetTop(MyAnchorThumbsList[i], p.Y - AnchorSize / 2.0);
+                }
+            }
+            else
+            {
+                MyAnchorThumbsList.Clear();
+                for (int i = 0; i < MyTarget.MyPoints.Count; i++)
+                {
+                    AddAnchorThumb(MyTarget.MyPoints[i], i);
+                }
+            }
+        }
 
         public double AnchorSize
         {
@@ -350,22 +397,28 @@ namespace _20250308
         }
 
 
-        #region VisualCollectionで必要        
-        protected override int VisualChildrenCount => MyVisualCollection.Count;
 
-        protected override Visual GetVisualChild(int index) => MyVisualCollection[index];
-        #endregion VisualCollectionで必要
-
-
-
-        public void ResetAnchorLocate()
+        public Rect GetAnchorThumbBounds()
         {
-            for (int i = 0; i < MyTarget.MyPoints.Count; i++)
+            //Pointsを変形
+            PointCollection tempPc = [];
+            foreach (var item in MyTarget.MyPoints)
             {
-                Point p = MyTarget.MyPoints[i];
-                Canvas.SetLeft(MyAnchorThumbsList[i], p.X - AnchorSize / 2.0);
-                Canvas.SetTop(MyAnchorThumbsList[i], p.Y - AnchorSize / 2.0);
+                tempPc.Add(MyTarget.RenderTransform.Transform(item));
             }
+
+            //各アンカーハンドルのRectを作成して
+            //RectのUnionメソッドを利用すれば、
+            //すべてのアンカーハンドルが収まるRectが作成できる
+            double halfHandle = AnchorSize / 2.0;//アンカーポイントの中心位置
+            Point p = tempPc[0];
+            Rect r = new(p.X - halfHandle, p.Y - halfHandle, AnchorSize, AnchorSize);
+            foreach (var item in tempPc)
+            {
+                Rect pr = new(item.X - halfHandle, item.Y - halfHandle, AnchorSize, AnchorSize);
+                r.Union(pr);
+            }
+            return r;
         }
     }
 
@@ -495,7 +548,7 @@ namespace _20250308
             var brush = (SolidColorBrush)values[0];
             var thickness = (double)values[1];
             var dashArray = (DoubleCollection)values[2];
-            Pen pen = new(brush, thickness);            
+            Pen pen = new(brush, thickness);
             DashStyle dash = new()
             {
                 Offset = dashArray[0],
