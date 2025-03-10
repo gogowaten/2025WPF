@@ -176,4 +176,16 @@ public partial class MainWindow : Window
     {
         MyRoot.RemoveAll();
     }
+
+    private void AddBeziThumb_Click(object sender, RoutedEventArgs e)
+    {
+        var data = new ItemData(ThumbType.Bezier)
+        {
+            MyText = "Bezier",
+            MyPoints = [new Point(), new Point(100, 0), new Point(100, 100), new Point(0, 100)],
+            MyForeground = Brushes.RosyBrown,
+            MyBackground = Brushes.SeaShell,
+        };
+        MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
+    }
 }

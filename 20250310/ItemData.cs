@@ -16,7 +16,7 @@ namespace _20250310
 {
 
     //Thumbの種類の識別用
-    public enum ThumbType { None = 0, Root, Group, Text, Ellipse, Rect }
+    public enum ThumbType { None = 0, Root, Group, Text, Ellipse, Rect ,Bezier}
 
     //[DataContract]
     [KnownType(typeof(ItemData))]
@@ -49,6 +49,9 @@ namespace _20250310
         {
             MyThumbType = type;
         }
+
+        #region シリアライズ
+        
 
         public bool Serialize(string filePath)
         {
@@ -87,6 +90,12 @@ namespace _20250310
             else { return null; }
         }
 
+        #endregion シリアライズ
+
+
+        #region 初期設定
+        
+
         private void MyInitBind()
         {
             var mb = new MultiBinding() { Converter = new MyConverterARGBtoSolidBrush() };
@@ -112,6 +121,11 @@ namespace _20250310
 
         }
 
+        #endregion 初期設定
+
+
+        #region 特殊
+        
 
         private ObservableCollection<ItemData> _myThumbsItemData = [];
         public ObservableCollection<ItemData> MyThumbsItemData { get => _myThumbsItemData; set => SetProperty(ref _myThumbsItemData, value); }
@@ -123,9 +137,28 @@ namespace _20250310
         [DataMember] public ThumbType MyThumbType { get => _myThumbType; set => SetProperty(ref _myThumbType, value); }
 
 
+        #endregion 特殊
+
+        #region 図形Geometry系
+
+        //アンカーポイント群
+        //通知プロパティだとリアルタイムで動作確認できないので依存関係プロパティにしている
+        public PointCollection MyPoints
+        {
+            get { return (PointCollection)GetValue(MyPointsProperty); }
+            set { SetValue(MyPointsProperty, value); }
+        }
+        public static readonly DependencyProperty MyPointsProperty =
+            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(ItemData), new PropertyMetadata(null));
+
+
+        #endregion 図形Geometry系
 
 
         #region 共通
+
+        private double _myAngle;
+        public double MyAngle { get => _myAngle; set => SetProperty(ref _myAngle, value); }
 
 
         private double _myLeft = 0.0;
@@ -166,7 +199,7 @@ namespace _20250310
                 new FrameworkPropertyMetadata(null,
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));// TwoWay
 
 
         private byte _myForegroundA = 255;

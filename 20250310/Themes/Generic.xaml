@@ -29,29 +29,15 @@
 
   <Style x:Key="kiso" TargetType="{x:Type local:KisoThumb}">
     <Setter Property="MyThumbType" Value="{Binding
-      RelativeSource={RelativeSource Mode=Self}, Path=MyItemData.MyThumbType}"/>
+      RelativeSource={RelativeSource Mode=Self}, Mode=TwoWay, Path=MyItemData.MyThumbType}"/>
     <Setter Property="Canvas.Left" Value="{Binding
-      RelativeSource={RelativeSource Mode=Self}, Path=MyItemData.MyLeft}"/>
+      RelativeSource={RelativeSource Mode=Self}, Mode=TwoWay, Path=MyItemData.MyLeft}"/>
     <Setter Property="Canvas.Top" Value="{Binding
-      RelativeSource={RelativeSource Mode=Self}, Path=MyItemData.MyTop}"/>
+      RelativeSource={RelativeSource Mode=Self}, Mode=TwoWay, Path=MyItemData.MyTop}"/>
     <Setter Property="Panel.ZIndex" Value="{Binding Mode=TwoWay,
       RelativeSource={RelativeSource Mode=Self}, Path=MyItemData.MyZIndex}"/>
   </Style>
 
-  <!--<Style TargetType="{x:Type local:KisoThumb}" BasedOn="{StaticResource kiso}">
-    
-  </Style>-->
-
-  <!--<Style TargetType="{x:Type local:AnchorThumb}"
-       BasedOn="{StaticResource kiso}">
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="{x:Type local:AnchorThumb}">
-          <Rectangle/>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>-->
 
 
   <Style TargetType="{x:Type local:TextBlockThumb}"
@@ -104,6 +90,31 @@
       </Setter.Value>
     </Setter>
   </Style>
+
+
+
+  <Style TargetType="{x:Type local:EzBezierThumb}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:EzBezierThumb}">
+          <Grid>
+            <Canvas x:Name="PART_Canvas"
+                    Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyBackground}">
+              <local:EzBezier x:Name="bezi"
+                              Canvas.Left="0"
+                              Canvas.Top="0"
+                              MyAngle="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyAngle}"
+                              MyPoints="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyPoints, Mode=TwoWay}"
+                              
+                />
+              <Border Style="{StaticResource waku4}"/>
+            </Canvas>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
 
 
 
