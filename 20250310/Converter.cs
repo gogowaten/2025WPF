@@ -5,6 +5,9 @@ using System.Windows;
 
 namespace _20250310
 {
+
+
+
     public class MyConvRectToOffsetLeft : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

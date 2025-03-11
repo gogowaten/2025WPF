@@ -70,10 +70,12 @@
       </UniformGrid>
 
       <GroupBox DataContext="{Binding MyFocusThumb}" Header="FocusThumb">
+        <StackPanel>
         <UniformGrid Columns="2">
           <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=datatype {0}}"/>
           <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
           <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=left 0}"/>
+          <TextBlock Text="{Binding MyItemData.MyTop, StringFormat=top 0}"/>
           <TextBlock Text="{Binding MyItemData.MyGuid, StringFormat=guid {0}}"/>
           <TextBlock Text="{Binding MyItemData.MyText, StringFormat=text {0}}"/>
           <TextBlock Text="{Binding MyParentThumb.MyThumbType, StringFormat=parentType {0}}"/>
@@ -82,7 +84,9 @@
                    AcceptsTab="True"/>
           <Slider Value="{Binding MyItemData.MyAngle}" Minimum="0" Maximum="360"/>
           <TextBlock Text="{Binding MyItemData.MyAngle, StringFormat=angle 0}"/>
-        </UniformGrid>
+          </UniformGrid>
+          <TextBlock Text="{Binding MyItemData.MyPoints, StringFormat=pos {0:0.0}}"/>
+        </StackPanel>
       </GroupBox>
 
       <GroupBox DataContext="{Binding MyActiveGroupThumb}" Header="ActiveGroup">

@@ -39,7 +39,7 @@ public partial class MainWindow : Window
 
     private void MyTest2_Click(object sender, RoutedEventArgs e)
     {
-       var bounds = MyRoot.MyFocusThumb?.GetInsideElementBounds();
+       
 
     }
 

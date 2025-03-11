@@ -91,6 +91,7 @@ namespace _20250310
                 mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(RenderTransformProperty) });
                 SetBinding(MyInsideElementBoundsProperty, mb);
 
+                //内部表示要素のオフセット表示に使う
                 SetBinding(MyInsideElementOffsetLeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementBoundsProperty), Converter = new MyConvRectToOffsetLeft() });
                 SetBinding(MyInsideElementOffsetTopProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementBoundsProperty), Converter = new MyConvRectToOffsetTop() });
 
@@ -407,11 +408,11 @@ namespace _20250310
 
         #region 依存関係プロパティ
 
-
+        //内部表示要素のオフセット表示に使う
         public double MyInsideElementOffsetTop
         {
             get { return (double)GetValue(MyInsideElementOffsetTopProperty); }
-            set { SetValue(MyInsideElementOffsetTopProperty, value); }
+            protected set { SetValue(MyInsideElementOffsetTopProperty, value); }
         }
         public static readonly DependencyProperty MyInsideElementOffsetTopProperty =
             DependencyProperty.Register(nameof(MyInsideElementOffsetTop), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
@@ -419,7 +420,7 @@ namespace _20250310
         public double MyInsideElementOffsetLeft
         {
             get { return (double)GetValue(MyInsideElementOffsetLeftProperty); }
-            set { SetValue(MyInsideElementOffsetLeftProperty, value); }
+            protected set { SetValue(MyInsideElementOffsetLeftProperty, value); }
         }
         public static readonly DependencyProperty MyInsideElementOffsetLeftProperty =
             DependencyProperty.Register(nameof(MyInsideElementOffsetLeft), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
@@ -429,7 +430,7 @@ namespace _20250310
         public Rect MyInsideElementBounds
         {
             get { return (Rect)GetValue(MyInsideElementBoundsProperty); }
-            set { SetValue(MyInsideElementBoundsProperty, value); }
+            protected set { SetValue(MyInsideElementBoundsProperty, value); }
         }
         public static readonly DependencyProperty MyInsideElementBoundsProperty =
             DependencyProperty.Register(nameof(MyInsideElementBounds), typeof(Rect), typeof(KisoThumb), new PropertyMetadata(null));
@@ -438,7 +439,7 @@ namespace _20250310
         public FrameworkElement MyInsideElement
         {
             get { return (FrameworkElement)GetValue(MyInsideElementProperty); }
-            set { SetValue(MyInsideElementProperty, value); }
+            protected set { SetValue(MyInsideElementProperty, value); }
         }
         public static readonly DependencyProperty MyInsideElementProperty =
             DependencyProperty.Register(nameof(MyInsideElement), typeof(FrameworkElement), typeof(KisoThumb), new PropertyMetadata(null));
@@ -617,16 +618,16 @@ namespace _20250310
 
         #region public
 
-        public Rect GetInsideElementBounds()
-        {
-            if (MyInsideElement is FrameworkElement elem)
-            {
-                var tf = elem.RenderTransform;
-                var r = tf.TransformBounds(new Rect(0, 0, elem.ActualWidth, elem.ActualHeight));
-                return r;
-            }
-            else { return Rect.Empty; }
-        }
+        //public Rect GetInsideElementBounds()
+        //{
+        //    if (MyInsideElement is FrameworkElement elem)
+        //    {
+        //        var tf = elem.RenderTransform;
+        //        var r = tf.TransformBounds(new Rect(0, 0, elem.ActualWidth, elem.ActualHeight));
+        //        return r;
+        //    }
+        //    else { return Rect.Empty; }
+        //}
 
         //public void Serialize(string filePath)
         //{
@@ -759,24 +760,24 @@ namespace _20250310
         public EzShapeThumb(ItemData data) : base()
         {
             MyItemData = data;
-            //Loaded += EzShapeThumb_Loaded;
+            Loaded += EzShapeThumb_Loaded;
 
         }
 
         #region 起動時
 
-        //private void EzShapeThumb_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    //UpdatePointsAndSizeWithoutZeroFix();
-        //    //UpdatePointsAndSizeWithTransform();
-        //}
+        private void EzShapeThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            //起動時だけ位置がずれるので応急処置
+            var neko = MyItemData.MyLeft;
+            var inu = MyItemData.MyTop;
+            //UpdatePointsAndSizeWithoutZeroFix();
+            UpdatePointsAndSizeWithTransform();
+            //UpdatePointsAndSizeWithTransform();
+            MyItemData.MyLeft = neko;
+            MyItemData.MyTop = inu;
+        }
 
-        //private void EzShapeThumb_DragDelta(object sender, DragDeltaEventArgs e)
-        //{
-        //    MyItemData.MyLeft += e.HorizontalChange;
-        //    MyItemData.MyTop += e.VerticalChange;
-        //    e.Handled = true;
-        //}
 
         //起動時、Templateの中からCanvasとEzShapeを取得
         public override void OnApplyTemplate()
@@ -788,7 +789,11 @@ namespace _20250310
                 if (GetChildEzShape(panel) is EzShape shape)
                 {
                     MyEzShape = shape;
-
+                    //MyEzShape.MyParentShapeThumb = this;
+                }
+                else
+                {
+                    MessageBox.Show("内部表示要素の図形が見つからない");
                 }
             }
         }
@@ -873,8 +878,8 @@ namespace _20250310
                 MyItemData.MyPoints[id] = new(left, top);
 
                 //アンカーの移動
-                Canvas.SetLeft(t, left - MyEzShapeAdorner.AnchorHandleSize / 2.0);
-                Canvas.SetTop(t, top - MyEzShapeAdorner.AnchorHandleSize / 2.0);
+                Canvas.SetLeft(t, left - MyEzShapeAdorner.MyAnchorHandleSize / 2.0);
+                Canvas.SetTop(t, top - MyEzShapeAdorner.MyAnchorHandleSize / 2.0);
 
                 e.Handled = true;
             }
@@ -888,33 +893,33 @@ namespace _20250310
 
         public abstract void AddPoint(Point point);
 
+        #region 使わない？
+        ///// <summary>
+        ///// 再描画、不完全
+        ///// </summary>
+        //public void Relayout()
+        //{
+        //    if (MyEzShape != null)
+        //    {
+        //        var myrect = GetBoundsFromPointsAndAnchorThumb();
+        //        var r4 = MyEzShape.MyBounds4;
+        //        //自身のサイズを変更
+        //        this.Width = r4.Width;
+        //        this.Height = r4.Height;
 
-        /// <summary>
-        /// 再描画、不完全
-        /// </summary>
-        public void Relayout()
-        {
-            if (MyEzShape != null)
-            {
-                var myrect = GetBoundsFromPointsAndAnchorThumb();
-                var r4 = MyEzShape.MyBounds4;
-                //自身のサイズを変更
-                this.Width = r4.Width;
-                this.Height = r4.Height;
+        //        //変更する前の位置を使って計算しておく、タイミング重要
+        //        double tasLeft = Canvas.GetLeft(MyEzShape) + Canvas.GetLeft(this) + r4.Left;
+        //        double tasTop = Canvas.GetTop(MyEzShape) + Canvas.GetTop(this) + r4.Top;
 
-                //変更する前の位置を使って計算しておく、タイミング重要
-                double tasLeft = Canvas.GetLeft(MyEzShape) + Canvas.GetLeft(this) + r4.Left;
-                double tasTop = Canvas.GetTop(MyEzShape) + Canvas.GetTop(this) + r4.Top;
+        //        //図形の位置を変更、オフセット
+        //        Canvas.SetLeft(MyEzShape, -r4.Left);
+        //        Canvas.SetTop(MyEzShape, -r4.Top);
 
-                //図形の位置を変更、オフセット
-                Canvas.SetLeft(MyEzShape, -r4.Left);
-                Canvas.SetTop(MyEzShape, -r4.Top);
-
-                //自身の位置を変更、図形の位置に合わせる
-                Canvas.SetLeft(this, tasLeft);
-                Canvas.SetTop(this, tasTop);
-            }
-        }
+        //        //自身の位置を変更、図形の位置に合わせる
+        //        Canvas.SetLeft(this, tasLeft);
+        //        Canvas.SetTop(this, tasTop);
+        //    }
+        //}
 
         //必要ないかも、UpdatePointsAndSizeWithTransformへ移行
         /// <summary>
@@ -975,6 +980,8 @@ namespace _20250310
             SetLocate(this, ll, tt);
         }
 
+        #endregion 使わない？
+
         /// <summary>
         /// 回転対応！！！！！！！！！！！！！！！！！！
         /// </summary>
@@ -993,7 +1000,11 @@ namespace _20250310
             if (MyEzShapeAdorner != null)
             {
                 //アンカーハンドルThumbすべてが収まるRect取得して、図形だけのRectと合成(union)
-                unionR.Union(MyEzShapeAdorner.GetAnchorHandleThumbBounds());
+                //unionR.Union(MyEzShape.MyAnchorHandleThumbsBounds);
+                //unionR.Union(MyEzShapeAdorner.GetAnchorHandleThumbBounds());
+                //unionR.Union(GetBoundsFromAnchorThumb());
+                unionR.Union(GetBoundsFromAnchorThumbRotate(MyEzShape.RenderTransform, MyEzShape.MyPoints, MyEzShapeAdorner.MyAnchorHandleSize));
+
             }
             //自身のサイズ変更
             Width = unionR.Width;
@@ -1001,13 +1012,49 @@ namespace _20250310
             //自身の移動先を計算は、内部図形の位置の変更する前に行う
             var goLeft = Canvas.GetLeft(MyEzShape) + unionR.Left + rotatePoint.X;
             var goTop = Canvas.GetTop(MyEzShape) + unionR.Top + rotatePoint.Y;
-            goLeft += Canvas.GetLeft(this);
-            goTop += Canvas.GetTop(this);
+            goLeft += MyItemData.MyLeft;
+            goTop += MyItemData.MyTop;
 
             //図形と自身(ShapeThumb)の位置を変更
             SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
-            SetLocate(this, goLeft, goTop);
+            MyItemData.MyLeft = goLeft;
+            MyItemData.MyTop = goTop;
         }
+        //public void UpdatePointsAndSizeWithTransformTest()
+        //{
+        //    var (left, top) = GetTopLeftFromPoints(MyItemData.MyPoints);
+        //    var topLeft = new Point(left, top);
+        //    Point rotatePoint = MyEzShape.RenderTransform.Transform(topLeft);
+        //    FixPointsZero(left, top);// PointsのゼロFix移動
+        //    MyEzShape.MyAnchorHandleAdorner?.ResetAnchorLocate(); // AdornerをPointsの表示位置に合わせる
+        //    UpdateLayout();// 要る？→必要            
+
+        //    //図形だけのRect取得
+        //    Rect unionR = MyEzShape.MyBounds4;
+        //    //アンカーハンドルが表示されている場合
+        //    if(MyEzShape.MyAnchorHandleAdorner !=null)
+        //    //if (MyEzShapeAdorner != null)
+        //    {
+        //        var neko = MyEzShape.MyAnchorHandleThumbsBounds;
+        //        var inu = MyEzShape.MyAnchorHandleAdorner.GetAnchorHandleThumbBounds();
+        //        //アンカーハンドルThumbすべてが収まるRect取得して、図形だけのRectと合成(union)
+        //        unionR.Union(MyEzShape.MyAnchorHandleThumbsBounds);
+        //        //unionR.Union(MyEzShapeAdorner.GetAnchorHandleThumbBounds());
+        //    }
+        //    //自身のサイズ変更
+        //    Width = unionR.Width;
+        //    Height = unionR.Height;
+        //    //自身の移動先を計算は、内部図形の位置の変更する前に行う
+        //    var goLeft = Canvas.GetLeft(MyEzShape) + unionR.Left + rotatePoint.X;
+        //    var goTop = Canvas.GetTop(MyEzShape) + unionR.Top + rotatePoint.Y;
+        //    goLeft += MyItemData.MyLeft;
+        //    goTop += MyItemData.MyTop;
+
+        //    //図形と自身(ShapeThumb)の位置を変更
+        //    SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
+        //    MyItemData.MyLeft = goLeft;
+        //    MyItemData.MyTop = goTop;
+        //}
 
 
         private void SetLocate(FrameworkElement element, double left, double top)
@@ -1029,7 +1076,6 @@ namespace _20250310
                     EzShapeAdorner adorner = new(MyEzShape);
                     layer.Add(adorner);
                     MyEzShapeAdorner = adorner;
-                    //UpdatePointAndSize();
                     UpdatePointsAndSizeWithTransform();
 
                     foreach (var item in MyEzShapeAdorner.MyAnchorHandleThumbsList)
@@ -1047,14 +1093,6 @@ namespace _20250310
                 }
             }
         }
-
-
-
-        //public void FixAdornerLocate()
-        //{
-        //    MyEzShapeAdorner?.ResetAnchorLocate();
-        //}
-
 
 
 
@@ -1092,33 +1130,6 @@ namespace _20250310
             return (left, top);
         }
 
-        /// <summary>
-        /// Pointsとアンカーポイントが収まるRect
-        /// </summary>
-        /// <returns></returns>
-        private Rect GetBoundsFromPointsAndAnchorThumb()
-        {
-            Rect r = new();
-            double left = double.MaxValue; double top = double.MaxValue;
-            foreach (var item in MyItemData.MyPoints)
-            {
-                if (left > item.X) { left = item.X; }
-                if (top > item.Y) { top = item.Y; }
-            }
-
-            PointCollection pc = [];
-            foreach (var item in MyItemData.MyPoints)
-            {
-                pc.Add(new Point(item.X - left, item.Y - top));
-            }
-
-            foreach (var item in pc)
-            {
-                Rect pr = new(item.X - 10, item.Y - 10, 20, 20);
-                r.Union(pr);
-            }
-            return r;
-        }
 
         /// <summary>
         /// 全部のアンカーポイントが収まるRectを返す
@@ -1129,7 +1140,7 @@ namespace _20250310
         {
             if (MyEzShapeAdorner != null)
             {
-                double anchorSize = MyEzShapeAdorner.AnchorHandleSize;
+                double anchorSize = MyEzShapeAdorner.MyAnchorHandleSize;
                 double anchorSizeHalf = anchorSize / 2.0;//アンカーポイントの中心位置
                 Rect r = new();
                 foreach (var item in MyItemData.MyPoints)
@@ -1145,36 +1156,36 @@ namespace _20250310
             }
         }
 
-        ///// <summary>
-        ///// すべてのアンカーハンドルThumbを含んだ回転後(Transform)のRectを返す
-        ///// けど、ハンドル自体は回転しないで計算しているので多少の誤差がある
-        ///// </summary>
-        ///// <param name="transform">RenderTransform</param>
-        ///// <param name="points"></param>
-        ///// <param name="handleSize">アンカーハンドルThumbのサイズ</param>
-        ///// <returns></returns>
-        //private Rect GetBoundsFromAnchorThumbRotate(Transform transform, PointCollection points, double handleSize)
-        //{
-        //    //Pointsを変形
-        //    PointCollection tempPc = [];
-        //    foreach (var item in points)
-        //    {
-        //        tempPc.Add(transform.Transform(item));
-        //    }
+        /// <summary>
+        /// すべてのアンカーハンドルThumbを含んだ回転後(Transform)のRectを返す
+        /// けど、ハンドル自体は回転しないで計算しているので多少の誤差がある
+        /// </summary>
+        /// <param name="transform">RenderTransform</param>
+        /// <param name="points"></param>
+        /// <param name="handleSize">アンカーハンドルThumbのサイズ</param>
+        /// <returns></returns>
+        private Rect GetBoundsFromAnchorThumbRotate(Transform transform, PointCollection points, double handleSize)
+        {
+            //Pointsを変形
+            PointCollection tempPc = [];
+            foreach (var item in points)
+            {
+                tempPc.Add(transform.Transform(item));
+            }
 
-        //    //各アンカーハンドルのRectを作成して
-        //    //RectのUnionメソッドを利用すれば、
-        //    //すべてのアンカーハンドルが収まるRectが作成できる
-        //    double halfHandle = handleSize / 2.0;//アンカーポイントの中心位置
-        //    Point p = tempPc[0];
-        //    Rect r = new(p.X - halfHandle, p.Y - halfHandle, handleSize, handleSize);
-        //    foreach (var item in tempPc)
-        //    {
-        //        Rect pr = new(item.X - halfHandle, item.Y - halfHandle, handleSize, handleSize);
-        //        r.Union(pr);
-        //    }
-        //    return r;
-        //}
+            //各アンカーハンドルのRectを作成して
+            //RectのUnionメソッドを利用すれば、
+            //すべてのアンカーハンドルが収まるRectが作成できる
+            double halfHandle = handleSize / 2.0;//アンカーポイントの中心位置
+            Point p = tempPc[0];
+            Rect r = new(p.X - halfHandle, p.Y - halfHandle, handleSize, handleSize);
+            foreach (var item in tempPc)
+            {
+                Rect pr = new(item.X - halfHandle, item.Y - halfHandle, handleSize, handleSize);
+                r.Union(pr);
+            }
+            return r;
+        }
 
 
 
@@ -1192,18 +1203,17 @@ namespace _20250310
 
         public EzBezierThumb(ItemData data) : base(data)
         {
-            Loaded += EzBezierThumb_Loaded;
+            //Loaded += EzBezierThumb_Loaded;
         }
 
-        private void EzBezierThumb_Loaded(object sender, RoutedEventArgs e)
-        {
-            UpdatePointsAndSizeWithTransform();
-        }
+        //private void EzBezierThumb_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    //UpdatePointsAndSizeWithTransform();
+        //}
 
         public override void AddPoint(Point point)
         {
             MyEzShape.AddPoint(point);
-            //MyEzShapeAdorner?.ResetAnchorLocate();
         }
     }
 
