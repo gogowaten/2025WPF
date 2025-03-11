@@ -106,7 +106,10 @@
         <ControlTemplate TargetType="{x:Type local:EllipseTextThumb}">
           <Grid>
             <Canvas>
-              <Grid x:Name="element">
+              <Grid x:Name="element"
+                    Canvas.Left="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementOffsetLeft}"
+                    Canvas.Top="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementOffsetTop}"
+                    >
                 <Grid.RenderTransform>
                   <RotateTransform x:Name="angle" Angle="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyAngle}"/>
                 </Grid.RenderTransform>
