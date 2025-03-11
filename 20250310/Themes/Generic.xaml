@@ -7,6 +7,30 @@
 
 
 
+  <Style TargetType="local:AnchorHandleThumb">
+    <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MySize}"/>
+    <Setter Property="Height" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MySize}"/>
+
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:AnchorHandleThumb}">
+          <Grid Background="Transparent">
+            <Rectangle Width="4" Height="4" Fill="White"/>
+            <Rectangle Width="2" Height="2" Fill="Blue"/>
+            <Ellipse x:Name="rect"
+                     Stroke="Blue"
+                     StrokeThickness="1.0"
+                     StrokeDashArray="3"
+                     />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+
+
   <Style x:Key="waku4" TargetType="Border">
     <Style.Resources>
       <local:MyWakuBrushConverter x:Key="wakuConvert2"/>
@@ -36,21 +60,34 @@
       RelativeSource={RelativeSource Mode=Self}, Mode=TwoWay, Path=MyItemData.MyTop}"/>
     <Setter Property="Panel.ZIndex" Value="{Binding Mode=TwoWay,
       RelativeSource={RelativeSource Mode=Self}, Path=MyItemData.MyZIndex}"/>
+    <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyInsideElementBounds.Width}"/>
+    <Setter Property="Height" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyInsideElementBounds.Height}"/>
+
   </Style>
 
 
 
   <Style TargetType="{x:Type local:TextBlockThumb}"
          BasedOn="{StaticResource kiso}">
+
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:TextBlockThumb}">
           <Grid>
-            <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyText}"
-                       Foreground="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyForeground}"
-                       Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyBackground}"
-                       FontSize="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyFontSize}"
-                       />
+            <Canvas>
+              <TextBlock x:Name="element"
+                         Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyText}"
+                         Foreground="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyForeground}"
+                         Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyBackground}"
+                         FontSize="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyFontSize}"
+                         Canvas.Left="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementOffsetLeft}"
+                         Canvas.Top="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementOffsetTop}"
+                         >
+                <TextBlock.RenderTransform>
+                  <RotateTransform x:Name="angle" Angle="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyAngle}"/>
+                </TextBlock.RenderTransform>
+              </TextBlock>
+            </Canvas>
             <Border Style="{StaticResource waku4}"/>
           </Grid>
         </ControlTemplate>
@@ -68,14 +105,19 @@
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:EllipseTextThumb}">
           <Grid>
-            <Ellipse Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyWidth}"
+            <Canvas>
+              <Grid x:Name="element">
+                <Grid.RenderTransform>
+                  <RotateTransform x:Name="angle" Angle="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyAngle}"/>
+                </Grid.RenderTransform>
+                <Ellipse Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyWidth}"
                      Height="{Binding
                         RelativeSource={RelativeSource Mode=TemplatedParent},
                         Path=MyItemData.MyHeight}"
                      Fill="{Binding
                         RelativeSource={RelativeSource Mode=TemplatedParent},
                         Path=MyItemData.MyFill}"/>
-            <TextBlock Text="{Binding
+                <TextBlock Text="{Binding
                         RelativeSource={RelativeSource Mode=TemplatedParent},
                         Path=MyItemData.MyText}"
                        Foreground="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyForeground}"
@@ -84,6 +126,8 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        />
+              </Grid>
+            </Canvas>
             <Border Style="{StaticResource waku4}"/>
           </Grid>
         </ControlTemplate>
@@ -99,16 +143,22 @@
         <ControlTemplate TargetType="{x:Type local:EzBezierThumb}">
           <Grid>
             <Canvas x:Name="PART_Canvas"
-                    Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyBackground}">
+                    Background="{Binding
+                      RelativeSource={RelativeSource Mode=TemplatedParent},
+                      Path=MyItemData.MyBackground}">
               <local:EzBezier x:Name="bezi"
                               Canvas.Left="0"
                               Canvas.Top="0"
-                              MyAngle="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyAngle}"
-                              MyPoints="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyPoints, Mode=TwoWay}"
+                              MyAngle="{Binding
+                                RelativeSource={RelativeSource Mode=TemplatedParent},
+                                Path=MyItemData.MyAngle}"
+                              MyPoints="{Binding
+                                RelativeSource={RelativeSource Mode=TemplatedParent},
+                                Path=MyItemData.MyPoints, Mode=TwoWay}"
                               
                 />
-              <Border Style="{StaticResource waku4}"/>
             </Canvas>
+            <Border Style="{StaticResource waku4}"/>
           </Grid>
         </ControlTemplate>
       </Setter.Value>

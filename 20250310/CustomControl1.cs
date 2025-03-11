@@ -59,6 +59,7 @@ namespace _20250310
             //MyThumbType = ThumbType.None;
 
             Initialized += KisoThumb_Initialized;
+            Loaded += KisoThumb_Loaded;
 
             PreviewMouseDown += KisoThumb_PreviewMouseDownTest;
             PreviewMouseUp += KisoThumb_PreviewMouseUpTest;
@@ -73,37 +74,55 @@ namespace _20250310
 
         }
 
+        private void KisoThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            MyBind();
+        }
+
+
+        private void MyBind()
+        {
+            if (MyInsideElement != null)
+            {
+                //内部表示要素のTransformBounds(回転後のサイズと位置)
+                var mb = new MultiBinding() { Converter = new MyConvRenderBounds() };
+                mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualWidthProperty) });
+                mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualHeightProperty) });
+                mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(RenderTransformProperty) });
+                SetBinding(MyInsideElementBoundsProperty, mb);
+
+                SetBinding(MyInsideElementOffsetLeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementBoundsProperty), Converter = new MyConvRectToOffsetLeft() });
+                SetBinding(MyInsideElementOffsetTopProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementBoundsProperty), Converter = new MyConvRectToOffsetTop() });
+
+            }
+        }
+
+
         public KisoThumb(ItemData data) : this()
         {
             //MyThumbType = data.MyThumbType;
             MyItemData = data;
+            //MyItemData.PropertyChanged += MyItemData_PropertyChanged;
+
         }
 
         private void KisoThumb_Initialized(object? sender, EventArgs e)
         {
-            var neko = this.MyItemData.MyFontSize;
-            var inu = this.FontSize;
-            var tako = this.MyItemData.MyText;
-
-            //デザイン画面で作成された要素の場合、ItemDataは無いので新規作成後に
-            //デザイン画面の設定をItemDataに反映してからバインド設定
-
             if (MyItemData.MyThumbType == ThumbType.None)
             {
                 MyItemData.MyThumbType = MyThumbType;
-
-                //CopyValueToItemData();
-                //MyItemDataBind();
             }
-            //ファイルやItemDataから作成された要素の場合、そのままItemDataとバインド
-            else
-            {
-                //MyItemDataBind();
-            }
-
-            //DataContext = MyItemData; //ここで適用
         }
 
+        //内部の表示要素を取得
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            if (GetTemplateChild("element") is FrameworkElement elem)
+            {
+                MyInsideElement = elem;
+            }
+        }
 
 
         private void InitializeWakuBrush()
@@ -319,9 +338,6 @@ namespace _20250310
                     {
                         item.MyItemData.MyLeft += (int)(e.HorizontalChange + 0.5);
                         item.MyItemData.MyTop += (int)(e.VerticalChange + 0.5);
-                        //item.MyLeft += (int)(e.HorizontalChange + 0.5);
-                        //item.MyTop += (int)(e.VerticalChange + 0.5);
-
                     }
                     e.Handled = true;
                 }
@@ -390,6 +406,43 @@ namespace _20250310
         #endregion イベントハンドラ
 
         #region 依存関係プロパティ
+
+
+        public double MyInsideElementOffsetTop
+        {
+            get { return (double)GetValue(MyInsideElementOffsetTopProperty); }
+            set { SetValue(MyInsideElementOffsetTopProperty, value); }
+        }
+        public static readonly DependencyProperty MyInsideElementOffsetTopProperty =
+            DependencyProperty.Register(nameof(MyInsideElementOffsetTop), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
+
+        public double MyInsideElementOffsetLeft
+        {
+            get { return (double)GetValue(MyInsideElementOffsetLeftProperty); }
+            set { SetValue(MyInsideElementOffsetLeftProperty, value); }
+        }
+        public static readonly DependencyProperty MyInsideElementOffsetLeftProperty =
+            DependencyProperty.Register(nameof(MyInsideElementOffsetLeft), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
+
+
+        //表示している要素のBounds、TextBlockThumbならTextBlock
+        public Rect MyInsideElementBounds
+        {
+            get { return (Rect)GetValue(MyInsideElementBoundsProperty); }
+            set { SetValue(MyInsideElementBoundsProperty, value); }
+        }
+        public static readonly DependencyProperty MyInsideElementBoundsProperty =
+            DependencyProperty.Register(nameof(MyInsideElementBounds), typeof(Rect), typeof(KisoThumb), new PropertyMetadata(null));
+
+        //表示している要素、TextBlockThumbならTextBlock
+        public FrameworkElement MyInsideElement
+        {
+            get { return (FrameworkElement)GetValue(MyInsideElementProperty); }
+            set { SetValue(MyInsideElementProperty, value); }
+        }
+        public static readonly DependencyProperty MyInsideElementProperty =
+            DependencyProperty.Register(nameof(MyInsideElement), typeof(FrameworkElement), typeof(KisoThumb), new PropertyMetadata(null));
+
 
         //特殊、フィールドにしたほうがいい？
         public ItemData MyItemData
@@ -564,14 +617,24 @@ namespace _20250310
 
         #region public
 
-
-        public void Serialize(string filePath)
+        public Rect GetInsideElementBounds()
         {
-            DataContractSerializer serializer = new(typeof(ItemData));
-            XmlWriterSettings settings = new() { Indent = true, Encoding = new UTF8Encoding(false) };
-            using var writer = XmlWriter.Create(filePath, settings);
-            serializer.WriteObject(writer, this.MyItemData);
+            if (MyInsideElement is FrameworkElement elem)
+            {
+                var tf = elem.RenderTransform;
+                var r = tf.TransformBounds(new Rect(0, 0, elem.ActualWidth, elem.ActualHeight));
+                return r;
+            }
+            else { return Rect.Empty; }
         }
+
+        //public void Serialize(string filePath)
+        //{
+        //    DataContractSerializer serializer = new(typeof(ItemData));
+        //    XmlWriterSettings settings = new() { Indent = true, Encoding = new UTF8Encoding(false) };
+        //    using var writer = XmlWriter.Create(filePath, settings);
+        //    serializer.WriteObject(writer, this.MyItemData);
+        //}
 
 
         #region ZIndex
@@ -697,7 +760,7 @@ namespace _20250310
         {
             MyItemData = data;
             //Loaded += EzShapeThumb_Loaded;
-            
+
         }
 
         #region 起動時
@@ -725,6 +788,7 @@ namespace _20250310
                 if (GetChildEzShape(panel) is EzShape shape)
                 {
                     MyEzShape = shape;
+
                 }
             }
         }
@@ -782,8 +846,12 @@ namespace _20250310
 
         private void EzShapeAnchor_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            //UpdatePointAndSize();
-            UpdatePointsAndSizeWithTransform();
+            if (sender is AnchorHandleThumb handle)
+            {
+                UpdatePointsAndSizeWithTransform();
+                this.MyParentThumb?.ReLayout3();
+            }
+
         }
 
         /// <summary>
@@ -805,8 +873,8 @@ namespace _20250310
                 MyItemData.MyPoints[id] = new(left, top);
 
                 //アンカーの移動
-                Canvas.SetLeft(t, left - MyEzShapeAdorner.AnchorSize / 2.0);
-                Canvas.SetTop(t, top - MyEzShapeAdorner.AnchorSize / 2.0);
+                Canvas.SetLeft(t, left - MyEzShapeAdorner.AnchorHandleSize / 2.0);
+                Canvas.SetTop(t, top - MyEzShapeAdorner.AnchorHandleSize / 2.0);
 
                 e.Handled = true;
             }
@@ -848,7 +916,7 @@ namespace _20250310
             }
         }
 
-        //
+        //必要ないかも、UpdatePointsAndSizeWithTransformへ移行
         /// <summary>
         ///頂点移動後に実行
         ///Thumbのサイズと位置を更新する、アンカーポイント表示の有無で変化する
@@ -865,7 +933,7 @@ namespace _20250310
             var (left, top) = GetTopLeftFromPoints(MyItemData.MyPoints);
             var topLeft = new Point(left, top);
             FixPointsZero(left, top);// PointsのゼロFix移動
-            FixAdornerLocate();// AdornerをPointsの表示位置に合わせる
+            MyEzShapeAdorner?.ResetAnchorLocate();// AdornerをPointsの表示位置に合わせる
             UpdateLayout();// 要る？→必要            
 
             var pointsRect = GetBoundsFromAnchorThumb();
@@ -916,7 +984,7 @@ namespace _20250310
             var topLeft = new Point(left, top);
             Point rotatePoint = MyEzShape.RenderTransform.Transform(topLeft);
             FixPointsZero(left, top);// PointsのゼロFix移動
-            FixAdornerLocate();// AdornerをPointsの表示位置に合わせる
+            MyEzShapeAdorner?.ResetAnchorLocate();// AdornerをPointsの表示位置に合わせる
             UpdateLayout();// 要る？→必要            
 
             //図形だけのRect取得
@@ -924,21 +992,21 @@ namespace _20250310
             //アンカーハンドルが表示されている場合
             if (MyEzShapeAdorner != null)
             {
-                //Thumbすべてが収まるRect取得して、図形だけのRectと合成(union)
-                unionR.Union(GetBoundsFromAnchorThumbRotate(MyEzShape.RenderTransform, MyItemData.MyPoints, MyEzShapeAdorner.AnchorSize));
+                //アンカーハンドルThumbすべてが収まるRect取得して、図形だけのRectと合成(union)
+                unionR.Union(MyEzShapeAdorner.GetAnchorHandleThumbBounds());
             }
-            //サイズ変更
+            //自身のサイズ変更
             Width = unionR.Width;
             Height = unionR.Height;
-            //内部図形の位置の変更する前に今の位置を取得しておく
-            var ll = Canvas.GetLeft(MyEzShape) + unionR.Left + rotatePoint.X;
-            var tt = Canvas.GetTop(MyEzShape) + unionR.Top + rotatePoint.Y;
-            ll += Canvas.GetLeft(this);
-            tt += Canvas.GetTop(this);
+            //自身の移動先を計算は、内部図形の位置の変更する前に行う
+            var goLeft = Canvas.GetLeft(MyEzShape) + unionR.Left + rotatePoint.X;
+            var goTop = Canvas.GetTop(MyEzShape) + unionR.Top + rotatePoint.Y;
+            goLeft += Canvas.GetLeft(this);
+            goTop += Canvas.GetTop(this);
 
             //図形と自身(ShapeThumb)の位置を変更
             SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
-            SetLocate(this, ll, tt);
+            SetLocate(this, goLeft, goTop);
         }
 
 
@@ -964,7 +1032,7 @@ namespace _20250310
                     //UpdatePointAndSize();
                     UpdatePointsAndSizeWithTransform();
 
-                    foreach (var item in MyEzShapeAdorner.MyAnchorThumbsList)
+                    foreach (var item in MyEzShapeAdorner.MyAnchorHandleThumbsList)
                     {
                         item.DragDelta += EzShapeAnchor_DragDelta;
                         item.DragCompleted += EzShapeAnchor_DragCompleted;
@@ -979,13 +1047,13 @@ namespace _20250310
                 }
             }
         }
-        
 
 
-        public void FixAdornerLocate()
-        {
-            MyEzShapeAdorner?.ResetAnchorLocate();
-        }
+
+        //public void FixAdornerLocate()
+        //{
+        //    MyEzShapeAdorner?.ResetAnchorLocate();
+        //}
 
 
 
@@ -1061,7 +1129,7 @@ namespace _20250310
         {
             if (MyEzShapeAdorner != null)
             {
-                double anchorSize = MyEzShapeAdorner.AnchorSize;
+                double anchorSize = MyEzShapeAdorner.AnchorHandleSize;
                 double anchorSizeHalf = anchorSize / 2.0;//アンカーポイントの中心位置
                 Rect r = new();
                 foreach (var item in MyItemData.MyPoints)
@@ -1077,36 +1145,39 @@ namespace _20250310
             }
         }
 
-        /// <summary>
-        /// すべてのアンカーハンドルThumbを含んだ回転後(Transform)のRectを返す
-        /// けど、ハンドル自体は回転しないで計算しているので多少の誤差がある
-        /// </summary>
-        /// <param name="transform">RenderTransform</param>
-        /// <param name="points"></param>
-        /// <param name="handleSize">アンカーハンドルThumbのサイズ</param>
-        /// <returns></returns>
-        private Rect GetBoundsFromAnchorThumbRotate(Transform transform, PointCollection points, double handleSize)
-        {
-            //Pointsを変形
-            PointCollection tempPc = [];
-            foreach (var item in points)
-            {
-                tempPc.Add(transform.Transform(item));
-            }
+        ///// <summary>
+        ///// すべてのアンカーハンドルThumbを含んだ回転後(Transform)のRectを返す
+        ///// けど、ハンドル自体は回転しないで計算しているので多少の誤差がある
+        ///// </summary>
+        ///// <param name="transform">RenderTransform</param>
+        ///// <param name="points"></param>
+        ///// <param name="handleSize">アンカーハンドルThumbのサイズ</param>
+        ///// <returns></returns>
+        //private Rect GetBoundsFromAnchorThumbRotate(Transform transform, PointCollection points, double handleSize)
+        //{
+        //    //Pointsを変形
+        //    PointCollection tempPc = [];
+        //    foreach (var item in points)
+        //    {
+        //        tempPc.Add(transform.Transform(item));
+        //    }
 
-            //各アンカーハンドルのRectを作成して
-            //RectのUnionメソッドを利用すれば、
-            //すべてのアンカーハンドルが収まるRectが作成できる
-            double halfHandle = handleSize / 2.0;//アンカーポイントの中心位置
-            Point p = tempPc[0];
-            Rect r = new(p.X - halfHandle, p.Y - halfHandle, handleSize, handleSize);
-            foreach (var item in tempPc)
-            {
-                Rect pr = new(item.X - halfHandle, item.Y - halfHandle, handleSize, handleSize);
-                r.Union(pr);
-            }
-            return r;
-        }
+        //    //各アンカーハンドルのRectを作成して
+        //    //RectのUnionメソッドを利用すれば、
+        //    //すべてのアンカーハンドルが収まるRectが作成できる
+        //    double halfHandle = handleSize / 2.0;//アンカーポイントの中心位置
+        //    Point p = tempPc[0];
+        //    Rect r = new(p.X - halfHandle, p.Y - halfHandle, handleSize, handleSize);
+        //    foreach (var item in tempPc)
+        //    {
+        //        Rect pr = new(item.X - halfHandle, item.Y - halfHandle, handleSize, handleSize);
+        //        r.Union(pr);
+        //    }
+        //    return r;
+        //}
+
+
+
         #endregion メソッド
 
     }
@@ -2176,6 +2247,33 @@ namespace _20250310
     }
 
 
+
+    public class AnchorHandleThumb : Thumb
+    {
+        static AnchorHandleThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(AnchorHandleThumb), new FrameworkPropertyMetadata(typeof(AnchorHandleThumb)));
+        }
+        public AnchorHandleThumb()
+        {
+
+        }
+
+        #region 依存関係プロパティ
+
+        public double MySize
+        {
+            get { return (double)GetValue(MySizeProperty); }
+            set { SetValue(MySizeProperty, value); }
+        }
+        public static readonly DependencyProperty MySizeProperty =
+            DependencyProperty.Register(nameof(MySize), typeof(double), typeof(AnchorHandleThumb), new PropertyMetadata(20.0));
+
+        #endregion 依存関係プロパティ
+
+    }
+
+
     public class ObservableCollectionKisoThumb : ObservableCollection<KisoThumb>
     {
         protected override void ClearItems()
@@ -2224,7 +2322,7 @@ namespace _20250310
             {
                 return new RootThumb(data);
             }
-            else if(data.MyThumbType== ThumbType.Bezier)
+            else if (data.MyThumbType == ThumbType.Bezier)
             {
                 return new EzBezierThumb(data);
             }

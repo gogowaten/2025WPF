@@ -28,7 +28,7 @@ namespace _20250310
 
         public abstract void AddPoint(Point point);
 
-
+        
         private void MyPenBind()
         {
             //Penのバインド、Penは図形のBoundsを計測するために必要
@@ -52,14 +52,14 @@ namespace _20250310
 
         #region 依存関係プロパティ
 
-        ////図形のアンカーハンドルThumb表示用のAdorner
-        //public EzShapeAdorner? MyEzShapeAdorner
-        //{
-        //    get { return (EzShapeAdorner)GetValue(MyEzShapeAdornerProperty); }
-        //    protected set { SetValue(MyEzShapeAdornerProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyEzShapeAdornerProperty =
-        //    DependencyProperty.Register(nameof(MyEzShapeAdorner), typeof(EzShapeAdorner), typeof(EzShape), new PropertyMetadata(null));
+        //図形のアンカーハンドルThumb表示用のAdorner
+        public EzShapeAdorner? MyEzShapeAdorner
+        {
+            get { return (EzShapeAdorner)GetValue(MyEzShapeAdornerProperty); }
+            protected set { SetValue(MyEzShapeAdornerProperty, value); }
+        }
+        public static readonly DependencyProperty MyEzShapeAdornerProperty =
+            DependencyProperty.Register(nameof(MyEzShapeAdorner), typeof(EzShapeAdorner), typeof(EzShape), new PropertyMetadata(null));
 
         #region 必須
 
@@ -223,30 +223,33 @@ namespace _20250310
 
         #endregion 依存関係プロパティ
 
+
         /// <summary>
         /// アンカーハンドルの表示切替
         /// </summary>
-        public void AdornerSwitch()
+        public void AnchorHandlThumbSwitch()
         {
+
             if (AdornerLayer.GetAdornerLayer(this) is AdornerLayer layer)
             {
-                Adorner[] ados = layer.GetAdorners(this);
                 //無ければ追加(表示)
-                if (ados is null)
+                if (MyEzShapeAdorner is null)
                 {
-                    layer.Add(new EzShapeAdorner(this));
+                    var adorner = new EzShapeAdorner(this);
+                    layer.Add(adorner);
+                    MyEzShapeAdorner = adorner;
                 }
+
                 //在れば削除
                 else
                 {
-                    foreach (var item in ados.OfType<EzShapeAdorner>())
-                    {
-                        layer.Remove(item);
-                    }
+                    layer.Remove(MyEzShapeAdorner);
+                    MyEzShapeAdorner = null;
                 }
             }
         }
 
+       
 
     }
 
@@ -301,12 +304,17 @@ namespace _20250310
     }
 
 
+
+
+
+
+
     #region 専用Adorner
 
     public class EzShapeAdorner : Adorner
     {
         private readonly TwoColorDashLine MyControlLine;//制御線
-        public readonly List<Thumb> MyAnchorThumbsList;//アンカーハンドルThumb
+        public readonly List<AnchorHandleThumb> MyAnchorHandleThumbsList;//アンカーハンドルThumb
         private readonly Canvas MyCanvas;
         private readonly VisualCollection MyVisualCollection;
         private readonly EzShape MyTarget;//装飾ターゲット
@@ -320,9 +328,10 @@ namespace _20250310
         public EzShapeAdorner(EzShape adornedElement) : base(adornedElement)
         {
             MyCanvas = new();
-            MyAnchorThumbsList = [];
+            MyAnchorHandleThumbsList = [];
             MyTarget = adornedElement;
             MyVisualCollection = new(this) { MyCanvas };
+
             //制御線追加、アンカーハンドルより下側に表示したいのでzindexを-1指定
             MyControlLine = new()
             {
@@ -349,36 +358,36 @@ namespace _20250310
         }
         private void AddAnchorThumb(Point point, int id)
         {
-            Thumb anchor = new()
+            AnchorHandleThumb anchor = new()
             {
                 Cursor = Cursors.Hand,
-                Height = AnchorSize,
-                Width = AnchorSize,
-                Opacity = 0.3,
-                Background = Brushes.Red,
+                Height = AnchorHandleSize,
+                Width = AnchorHandleSize,
                 Tag = id
             };
-            Canvas.SetLeft(anchor, point.X - AnchorSize / 2.0);
-            Canvas.SetTop(anchor, point.Y - AnchorSize / 2.0);
-            MyAnchorThumbsList.Insert(id, anchor);
+            Canvas.SetLeft(anchor, point.X - AnchorHandleSize / 2.0);
+            Canvas.SetTop(anchor, point.Y - AnchorHandleSize / 2.0);
+            MyAnchorHandleThumbsList.Insert(id, anchor);
             MyCanvas.Children.Insert(id, anchor);
+
         }
+
 
         //アンカーハンドルの位置をMyPointsに合わせる
         public void ResetAnchorLocate()
         {
-            if (MyTarget.MyPoints.Count == MyAnchorThumbsList.Count)
+            if (MyTarget.MyPoints.Count == MyAnchorHandleThumbsList.Count)
             {
                 for (int i = 0; i < MyTarget.MyPoints.Count; i++)
                 {
                     Point p = MyTarget.MyPoints[i];
-                    Canvas.SetLeft(MyAnchorThumbsList[i], p.X - AnchorSize / 2.0);
-                    Canvas.SetTop(MyAnchorThumbsList[i], p.Y - AnchorSize / 2.0);
+                    Canvas.SetLeft(MyAnchorHandleThumbsList[i], p.X - AnchorHandleSize / 2.0);
+                    Canvas.SetTop(MyAnchorHandleThumbsList[i], p.Y - AnchorHandleSize / 2.0);
                 }
             }
             else
             {
-                MyAnchorThumbsList.Clear();
+                MyAnchorHandleThumbsList.Clear();
                 for (int i = 0; i < MyTarget.MyPoints.Count; i++)
                 {
                     AddAnchorThumb(MyTarget.MyPoints[i], i);
@@ -386,13 +395,13 @@ namespace _20250310
             }
         }
 
-        public double AnchorSize
+        public double AnchorHandleSize
         {
-            get { return (double)GetValue(AnchorSizeProperty); }
-            set { SetValue(AnchorSizeProperty, value); }
+            get { return (double)GetValue(AnchorHandleSizeProperty); }
+            set { SetValue(AnchorHandleSizeProperty, value); }
         }
-        public static readonly DependencyProperty AnchorSizeProperty =
-            DependencyProperty.Register(nameof(AnchorSize), typeof(double), typeof(EzShapeAdorner), new PropertyMetadata(20.0));
+        public static readonly DependencyProperty AnchorHandleSizeProperty =
+            DependencyProperty.Register(nameof(AnchorHandleSize), typeof(double), typeof(EzShapeAdorner), new PropertyMetadata(40.0));
 
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -402,8 +411,13 @@ namespace _20250310
         }
 
 
-
-        public Rect GetAnchorThumbBounds()
+        /// <summary>
+        /// すべてのアンカーハンドルThumbを含んだ回転後(Transform)のRectを返す
+        /// けど、ハンドル自体は回転しないで計算しているので
+        /// ハンドルの形状が円以外だと多少の誤差がある
+        /// </summary>
+        /// <returns></returns>
+        public Rect GetAnchorHandleThumbBounds()
         {
             //Pointsを変形
             PointCollection tempPc = [];
@@ -415,12 +429,12 @@ namespace _20250310
             //各アンカーハンドルのRectを作成して
             //RectのUnionメソッドを利用すれば、
             //すべてのアンカーハンドルが収まるRectが作成できる
-            double halfHandle = AnchorSize / 2.0;//アンカーポイントの中心位置
+            double halfHandle = AnchorHandleSize / 2.0;//アンカーポイントの中心位置
             Point p = tempPc[0];
-            Rect r = new(p.X - halfHandle, p.Y - halfHandle, AnchorSize, AnchorSize);
+            Rect r = new(p.X - halfHandle, p.Y - halfHandle, AnchorHandleSize, AnchorHandleSize);
             foreach (var item in tempPc)
             {
-                Rect pr = new(item.X - halfHandle, item.Y - halfHandle, AnchorSize, AnchorSize);
+                Rect pr = new(item.X - halfHandle, item.Y - halfHandle, AnchorHandleSize, AnchorHandleSize);
                 r.Union(pr);
             }
             return r;
@@ -431,6 +445,9 @@ namespace _20250310
 
 
     #endregion 専用Adorner
+
+
+
 
 
     //[028722]ベジエ曲線の各部の名称

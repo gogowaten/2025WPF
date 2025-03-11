@@ -1,9 +1,54 @@
 ﻿using System.Windows.Media;
 using System.Windows.Data;
 using System.Globalization;
+using System.Windows;
 
 namespace _20250310
 {
+    public class MyConvRectToOffsetLeft : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var r = (Rect)value;
+            return -r.Left;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    
+    public class MyConvRectToOffsetTop : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var r = (Rect)value;
+            return -r.Top;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyConvRenderBounds : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var width = (double)values[0];
+            var height = (double)values[1];
+            var tf = (Transform)values[2];
+            return tf.TransformBounds(new Rect(0, 0, width, height));
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 
     public class MyWakuBrushConverter : IMultiValueConverter
     {

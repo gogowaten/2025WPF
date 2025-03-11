@@ -21,6 +21,8 @@ namespace _20250310;
 public partial class MainWindow : Window
 {
     private RootThumb MyRoot { get; set; } = null!;
+    string SaveFileName = "E:\\" + DateTime.Now.ToString("yyyyMMdd")+".xml";
+    string SaveRootFileName = "E:\\" + DateTime.Now.ToString("yyyyMMdd")+"Root.xml";
 
     public MainWindow()
     {
@@ -35,11 +37,10 @@ public partial class MainWindow : Window
         DataContext = MyRoot;
     }
 
-    private void MyInitialize2_Click(object sender, RoutedEventArgs e)
+    private void MyTest2_Click(object sender, RoutedEventArgs e)
     {
+       var bounds = MyRoot.MyFocusThumb?.GetInsideElementBounds();
 
-        //var gg = MyRoot.MyFocusThumb.Background;
-        //var gb = MyRoot.MyFocusThumb.MyItemData.MyBackground;
     }
 
     private void AddTextThumb()
@@ -80,12 +81,15 @@ public partial class MainWindow : Window
 
     private void SaveToFile_Click(object sender, RoutedEventArgs e)
     {
-        _ = MyRoot.MyFocusThumb?.MyItemData.Serialize("E:\\20250227.xml");
+        
+        _ = MyRoot.MyFocusThumb?.MyItemData.Serialize(SaveFileName);
+        //_ = MyRoot.MyFocusThumb?.MyItemData.Serialize("E:\\20250227.xml");
     }
 
     private void ReadToFile_Click(object sender, RoutedEventArgs e)
-    {
-        if (ItemData.Deserialize("E:\\20250227.xml") is ItemData data)
+    {        
+        if (ItemData.Deserialize(SaveFileName) is ItemData data)
+        //if (ItemData.Deserialize("E:\\20250227.xml") is ItemData data)
         {
             //ファイルから追加するときは0座標にしないと離れた位置に追加される
             data.MyLeft = 0;
@@ -156,12 +160,12 @@ public partial class MainWindow : Window
 
     private void SaveRoot_Click(object sender, RoutedEventArgs e)
     {
-        _ = MyRoot.MyItemData.Serialize("E:\\20250227Root.xml");
+        _ = MyRoot.MyItemData.Serialize(SaveRootFileName);
     }
 
     private void ReadRootFile_Click(object sender, RoutedEventArgs e)
     {
-        if (ItemData.Deserialize("E:\\20250227Root.xml") is ItemData data)
+        if (ItemData.Deserialize(SaveRootFileName) is ItemData data)
         {
             if (new RootThumb(data) is RootThumb root)
             {
@@ -187,5 +191,13 @@ public partial class MainWindow : Window
             MyBackground = Brushes.SeaShell,
         };
         MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
+    }
+
+    private void AnchorSwitch_Click(object sender, RoutedEventArgs e)
+    {
+        if (MyRoot.MyFocusThumb is EzBezierThumb bezi)
+        {
+            bezi.AnchorOnOffSwitch();
+        }
     }
 }
