@@ -86,6 +86,7 @@
           <TextBlock Text="{Binding MyItemData.MyAngle, StringFormat=angle 0}"/>
           </UniformGrid>
           <TextBlock Text="{Binding MyItemData.MyPoints, StringFormat=pos {0:0.0}}"/>
+          <TextBlock Text="{Binding MyInsideElementBounds, StringFormat=insideB {0:0}}"/>
         </StackPanel>
       </GroupBox>
 

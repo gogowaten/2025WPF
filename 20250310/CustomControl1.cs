@@ -745,6 +745,9 @@ namespace _20250310
     }
 
 
+
+
+
     public abstract class EzShapeThumb : KisoThumb
     {
         static EzShapeThumb()
@@ -1217,7 +1220,17 @@ namespace _20250310
         }
     }
 
+    public class EzBezierThumbTest : EzBezierThumb
+    {
+        static EzBezierThumbTest()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(EzBezierThumbTest), new FrameworkPropertyMetadata(typeof(EzBezierThumbTest)));
+        }
+        public EzBezierThumbTest(ItemData data) : base(data)
+        {
 
+        }
+    }
 
 
 

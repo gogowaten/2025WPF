@@ -171,6 +171,37 @@
 
 
 
+  <Style TargetType="{x:Type local:EzBezierThumbTest}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:EzBezierThumbTest}">
+          <Grid>
+            <Canvas x:Name="PART_Canvas"
+                    Background="{Binding
+                      RelativeSource={RelativeSource Mode=TemplatedParent},
+                      Path=MyItemData.MyBackground}">
+              <local:EzBezier x:Name="element"
+                              Canvas.Left="0"
+                              Canvas.Top="0"
+                              MyAngle="{Binding
+                                RelativeSource={RelativeSource Mode=TemplatedParent},
+                                Path=MyItemData.MyAngle}"
+                              MyPoints="{Binding
+                                RelativeSource={RelativeSource Mode=TemplatedParent},
+                                Path=MyItemData.MyPoints, Mode=TwoWay}"
+                              
+                />
+            </Canvas>
+            <Border Style="{StaticResource waku4}"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+
+
   <Style TargetType="{x:Type local:GroupThumb}"
          BasedOn="{StaticResource kiso}">
     <Setter Property="Template">
