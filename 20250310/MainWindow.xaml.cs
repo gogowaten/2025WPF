@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Drawing;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,8 +22,8 @@ namespace _20250310;
 public partial class MainWindow : Window
 {
     private RootThumb MyRoot { get; set; } = null!;
-    string SaveFileName = "E:\\" + DateTime.Now.ToString("yyyyMMdd")+".xml";
-    string SaveRootFileName = "E:\\" + DateTime.Now.ToString("yyyyMMdd")+"Root.xml";
+    string SaveFileName = "E:\\" + DateTime.Now.ToString("yyyyMMdd") + ".xml";
+    string SaveRootFileName = "E:\\" + DateTime.Now.ToString("yyyyMMdd") + "Root.xml";
 
     public MainWindow()
     {
@@ -39,7 +40,16 @@ public partial class MainWindow : Window
 
     private void MyTest2_Click(object sender, RoutedEventArgs e)
     {
-       
+        if (MyRoot.MyFocusThumb is EzShapeThumb shape)
+        {
+            var p = new System.Windows.Point(100, 150);
+            var maeP = shape.MyItemData.MyPoints[^1];
+
+            shape.AddPoint(maeP);
+            shape.AddPoint(p);
+            shape.AddPoint(p);
+            
+        }
 
     }
 
@@ -81,13 +91,13 @@ public partial class MainWindow : Window
 
     private void SaveToFile_Click(object sender, RoutedEventArgs e)
     {
-        
+
         _ = MyRoot.MyFocusThumb?.MyItemData.Serialize(SaveFileName);
         //_ = MyRoot.MyFocusThumb?.MyItemData.Serialize("E:\\20250227.xml");
     }
 
     private void ReadToFile_Click(object sender, RoutedEventArgs e)
-    {        
+    {
         if (ItemData.Deserialize(SaveFileName) is ItemData data)
         //if (ItemData.Deserialize("E:\\20250227.xml") is ItemData data)
         {
@@ -186,9 +196,11 @@ public partial class MainWindow : Window
         var data = new ItemData(ThumbType.Bezier)
         {
             MyText = "Bezier",
-            MyPoints = [new Point(), new Point(100, 0), new Point(100, 100), new Point(0, 100)],
+            MyPoints = [new System.Windows. Point(), new System.Windows.Point(100, 0), new System.Windows.Point(100, 100), new System.Windows.Point(0, 100)],
             MyForeground = Brushes.RosyBrown,
             MyBackground = Brushes.SeaShell,
+            MyStroke= Brushes.Tomato,
+            MyStrokeThickness = 10.0,
         };
         MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
     }

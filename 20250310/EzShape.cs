@@ -20,11 +20,11 @@ namespace _20250310
     {
         public EzShape()
         {
-            DataContext = this;
+            //DataContext = this;
             SetBinding(MySegmentPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Converter = new MyConverterSegmentPoints() });
             MyPenBind();
             //Loaded += EzShape_Loaded;
-            
+
         }
 
         //private void EzShape_Loaded(object sender, RoutedEventArgs e)
@@ -49,7 +49,7 @@ namespace _20250310
             //回転、RotateTransform
             SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyAngleProperty), Converter = new MyConvRotateTransform() });
 
-            
+
         }
         private Binding MakeOneWayBind(DependencyProperty property)
         {
@@ -345,19 +345,24 @@ namespace _20250310
 
         public EzBezier()
         {
-            DataContext = this;
+            //DataContext = this;
             //MyPoints = [new Point(), new Point(100, 0), new Point(100, 100), new Point(0, 100)];
-            Stroke = Brushes.DodgerBlue;
-            StrokeThickness = 60.0;
+            //Stroke = Brushes.DodgerBlue;
+            //StrokeThickness = 60.0;
 
 
         }
 
         public override void AddPoint(Point point)
         {
-            MyPoints.Add(MyPoints[^1]);
-            MyPoints.Add(point);
-            MyPoints.Add(point);
+            var neko = MyPoints;
+            //var mae = MyPoints[^1];
+            //var ima = point;
+            //var ato = point;
+
+            //MyPoints.Add(mae);
+            //MyPoints.Add(ima);
+            //MyPoints.Add(ato);
 
         }
     }
@@ -427,7 +432,12 @@ namespace _20250310
             }
         }
 
-        private void AddAnchorThumb(Point point, int id)
+        /// <summary>
+        /// アンカーハンドルのThumbを追加
+        /// </summary>
+        /// <param name="point">座標</param>
+        /// <param name="id">挿入Index</param>
+        public AnchorHandleThumb AddAnchorThumb(Point point, int id)
         {
             AnchorHandleThumb anchor = new()
             {
@@ -440,13 +450,20 @@ namespace _20250310
             Canvas.SetTop(anchor, point.Y - MyAnchorHandleSize / 2.0);
             MyAnchorHandleThumbsList.Insert(id, anchor);
             MyCanvas.Children.Insert(id, anchor);
-
+            return anchor;
+        }
+        public AnchorHandleThumb AddAnchorThumb(Point point)
+        {
+            int id = MyAnchorHandleThumbsList.Count;
+            return AddAnchorThumb(point, id);
         }
 
 
         //アンカーハンドルの位置をMyPointsに合わせる
         public void ResetAnchorLocate()
         {
+
+            //ポイントの数とハンドルの数が同じなら
             if (MyTarget.MyPoints.Count == MyAnchorHandleThumbsList.Count)
             {
                 for (int i = 0; i < MyTarget.MyPoints.Count; i++)
@@ -456,14 +473,8 @@ namespace _20250310
                     Canvas.SetTop(MyAnchorHandleThumbsList[i], p.Y - MyAnchorHandleSize / 2.0);
                 }
             }
-            else
-            {
-                MyAnchorHandleThumbsList.Clear();
-                for (int i = 0; i < MyTarget.MyPoints.Count; i++)
-                {
-                    AddAnchorThumb(MyTarget.MyPoints[i], i);
-                }
-            }
+            //違っていたら？
+
         }
 
 

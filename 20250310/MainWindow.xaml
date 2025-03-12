@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:_20250310"
         mc:Ignorable="d"
            d:DataContext="{d:DesignInstance local:RootThumb}"
-        Title="MainWindow" Height="567" Width="602">
+        Title="MainWindow" Height="467" Width="602">
 
   <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
@@ -54,7 +54,7 @@
         <Button x:Name="SaveRoot" Content="Rootをファイルに保存" Click="SaveRoot_Click"/>
         <Button x:Name="ReadRootFile" Content="Rootファイル読み込み" Click="ReadRootFile_Click"/>
         <Button x:Name="AnchorSwitch" Content="AnchorSwitch" Click="AnchorSwitch_Click"/>
-        <Button x:Name="MyTest2" Content="Test2" Click="MyTest2_Click"/>
+        <Button x:Name="MyTest2" Content="Test2AddPoint(100, 150)" Click="MyTest2_Click"/>
       </UniformGrid>
       <UniformGrid Columns="2">
         <TextBlock Text="{Binding MyThumbs.Count, StringFormat=count 0}"/>
@@ -84,8 +84,10 @@
                    AcceptsTab="True"/>
           <Slider Value="{Binding MyItemData.MyAngle}" Minimum="0" Maximum="360"/>
           <TextBlock Text="{Binding MyItemData.MyAngle, StringFormat=angle 0}"/>
+          <Slider Value="{Binding MyItemData.MyStrokeThickness}" Minimum="1.0" Maximum="60"/>
+          <TextBlock Text="{Binding MyItemData.MyStrokeThickness, StringFormat=strokethickness 0}"/>
           </UniformGrid>
-          <TextBlock Text="{Binding MyItemData.MyPoints, StringFormat=pos {0:0.0}}"/>
+          <TextBlock Text="{Binding MyItemData.MyPoints, StringFormat=pos {0:0}}"/>
           <TextBlock Text="{Binding MyInsideElementBounds, StringFormat=insideB {0:0}}"/>
         </StackPanel>
       </GroupBox>

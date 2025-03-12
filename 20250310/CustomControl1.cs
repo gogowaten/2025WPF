@@ -763,6 +763,7 @@ namespace _20250310
         public EzShapeThumb(ItemData data) : base()
         {
             MyItemData = data;
+            //DataContext = MyItemData;
             Loaded += EzShapeThumb_Loaded;
 
         }
@@ -894,7 +895,19 @@ namespace _20250310
         #region メソッド
 
 
-        public abstract void AddPoint(Point point);
+
+        public void AddPoint(Point point)
+        {
+            //MyEzShape.AddPoint(point);
+            MyItemData.MyPoints.Add(point);
+            if (MyEzShapeAdorner?.AddAnchorThumb(point) is AnchorHandleThumb anchor)
+            {
+                AnchorHandleThumbAddDragHandler(anchor);
+            }
+            UpdatePointsAndSizeWithTransform();
+            MyParentThumb?.ReLayout3();
+        }
+
 
         #region 使わない？
         ///// <summary>
@@ -1071,6 +1084,7 @@ namespace _20250310
         /// </summary>
         public void AnchorOnOffSwitch()
         {
+            //レイヤー取得
             if (AdornerLayer.GetAdornerLayer(MyEzShape) is AdornerLayer layer)
             {
                 //無ければ追加(表示)
@@ -1083,8 +1097,7 @@ namespace _20250310
 
                     foreach (var item in MyEzShapeAdorner.MyAnchorHandleThumbsList)
                     {
-                        item.DragDelta += EzShapeAnchor_DragDelta;
-                        item.DragCompleted += EzShapeAnchor_DragCompleted;
+                        AnchorHandleThumbAddDragHandler(item);
                     }
                 }
                 //在れば削除
@@ -1097,7 +1110,12 @@ namespace _20250310
             }
         }
 
-
+        //アンカーハンドルにドラッグイベントハンドラー追加
+        protected void AnchorHandleThumbAddDragHandler(AnchorHandleThumb item)
+        {
+            item.DragDelta += EzShapeAnchor_DragDelta;
+            item.DragCompleted += EzShapeAnchor_DragCompleted;
+        }
 
 
         /// <summary>
@@ -1206,6 +1224,7 @@ namespace _20250310
 
         public EzBezierThumb(ItemData data) : base(data)
         {
+            
             //Loaded += EzBezierThumb_Loaded;
         }
 
@@ -1214,23 +1233,19 @@ namespace _20250310
         //    //UpdatePointsAndSizeWithTransform();
         //}
 
-        public override void AddPoint(Point point)
-        {
-            MyEzShape.AddPoint(point);
-        }
     }
 
-    public class EzBezierThumbTest : EzBezierThumb
-    {
-        static EzBezierThumbTest()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(EzBezierThumbTest), new FrameworkPropertyMetadata(typeof(EzBezierThumbTest)));
-        }
-        public EzBezierThumbTest(ItemData data) : base(data)
-        {
+    //public class EzBezierThumbTest : EzBezierThumb
+    //{
+    //    static EzBezierThumbTest()
+    //    {
+    //        DefaultStyleKeyProperty.OverrideMetadata(typeof(EzBezierThumbTest), new FrameworkPropertyMetadata(typeof(EzBezierThumbTest)));
+    //    }
+    //    public EzBezierThumbTest(ItemData data) : base(data)
+    //    {
 
-        }
-    }
+    //    }
+    //}
 
 
 

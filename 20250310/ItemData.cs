@@ -16,7 +16,7 @@ namespace _20250310
 {
 
     //Thumbの種類の識別用
-    public enum ThumbType { None = 0, Root, Group, Text, Ellipse, Rect ,Bezier}
+    public enum ThumbType { None = 0, Root, Group, Text, Ellipse, Rect, Bezier }
 
     //[DataContract]
     [KnownType(typeof(ItemData))]
@@ -51,7 +51,7 @@ namespace _20250310
         }
 
         #region シリアライズ
-        
+
 
         public bool Serialize(string filePath)
         {
@@ -94,7 +94,7 @@ namespace _20250310
 
 
         #region 初期設定
-        
+
 
         private void MyInitBind()
         {
@@ -119,13 +119,20 @@ namespace _20250310
             mb.Bindings.Add(new Binding(nameof(MyFillB)) { Source = this });
             _ = BindingOperations.SetBinding(this, MyFillProperty, mb);
 
+            mb = new MultiBinding() { Converter = new MyConverterARGBtoSolidBrush() };
+            mb.Bindings.Add(new Binding(nameof(MyStrokeA)) { Source = this });
+            mb.Bindings.Add(new Binding(nameof(MyStrokeR)) { Source = this });
+            mb.Bindings.Add(new Binding(nameof(MyStrokeG)) { Source = this });
+            mb.Bindings.Add(new Binding(nameof(MyStrokeB)) { Source = this });
+            _ = BindingOperations.SetBinding(this, MyStrokeProperty, mb);
+
         }
 
         #endregion 初期設定
 
 
         #region 特殊
-        
+
 
         private ObservableCollection<ItemData> _myThumbsItemData = [];
         public ObservableCollection<ItemData> MyThumbsItemData { get => _myThumbsItemData; set => SetProperty(ref _myThumbsItemData, value); }
@@ -141,8 +148,18 @@ namespace _20250310
 
         #region 図形Geometry系
 
+        private double _myStrokeThickness = 10.0;
+        public double MyStrokeThickness { get => _myStrokeThickness; set => SetProperty(ref _myStrokeThickness, value); }
+
+
+        private int prop;
+        public int Prop { get => prop; set => SetProperty(ref prop, value); }
+
+
+
         //アンカーポイント群
         //通知プロパティだとリアルタイムで動作確認できないので依存関係プロパティにしている
+        [DataMember]
         public PointCollection MyPoints
         {
             get { return (PointCollection)GetValue(MyPointsProperty); }
@@ -176,6 +193,9 @@ namespace _20250310
 
         private double _myHeight;
         [DataMember] public double MyHeight { get => _myHeight; set => SetProperty(ref _myHeight, value); }
+
+
+        #endregion 共通
 
         #region ブラシ
 
@@ -246,9 +266,31 @@ namespace _20250310
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-        #endregion ブラシ
 
-        #endregion 共通
+        private byte _myStrokeA;
+        [DataMember] public byte MyStrokeA { get => _myStrokeA; set => SetProperty(ref _myStrokeA, value); }
+        private byte _myStrokeR;
+        [DataMember] public byte MyStrokeR { get => _myStrokeR; set => SetProperty(ref _myStrokeR, value); }
+        private byte _myStrokeG;
+        [DataMember] public byte MyStrokeG { get => _myStrokeG; set => SetProperty(ref _myStrokeG, value); }
+        private byte _myStrokeB;
+        [DataMember] public byte MyStrokeB { get => _myStrokeB; set => SetProperty(ref _myStrokeB, value); }
+
+        [IgnoreDataMember]
+        public Brush MyStroke
+        {
+            get { return (Brush)GetValue(MyStrokeProperty); }
+            set { SetValue(MyStrokeProperty, value); }
+        }
+        public static readonly DependencyProperty MyStrokeProperty =
+            DependencyProperty.Register(nameof(MyStroke), typeof(Brush), typeof(ItemData),
+                new FrameworkPropertyMetadata(Brushes.Red,
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+
+
+
+        #endregion ブラシ
 
         #region テキスト系
 
