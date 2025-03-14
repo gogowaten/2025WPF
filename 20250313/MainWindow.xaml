@@ -20,8 +20,11 @@
                   VerticalScrollBarVisibility="Auto"
                   
                   >
+      <!--<local:GeoShape MyPoints="0,0,100,0" Stroke="Red" StrokeThickness="10"/>-->
     </ScrollViewer>
-
+    <Canvas x:Name="MyCanvas">
+      
+    </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding}">
       <UniformGrid Columns="2">
@@ -54,7 +57,7 @@
         <Button x:Name="SaveRoot" Content="Rootをファイルに保存" Click="SaveRoot_Click"/>
         <Button x:Name="ReadRootFile" Content="Rootファイル読み込み" Click="ReadRootFile_Click"/>
         <Button x:Name="AnchorSwitch" Content="AnchorSwitch" Click="AnchorSwitch_Click"/>
-        <Button x:Name="MyTest2" Content="Test2AddPoint(100, 150)" Click="MyTest2_Click"/>
+        <Button x:Name="MyTest2" Content="Test2" Click="MyTest2_Click"/>
       </UniformGrid>
       <UniformGrid Columns="2">
         <TextBlock Text="{Binding MyThumbs.Count, StringFormat=count 0}"/>

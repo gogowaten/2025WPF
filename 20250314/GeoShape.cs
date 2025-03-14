@@ -14,7 +14,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Security.Cryptography.Xml;
 
-namespace _20250313
+namespace _20250314
 {
     public enum HeadType { None = 0, Arrow, }
     public enum ShapeType { Line = 0, Bezier, }
@@ -27,7 +27,7 @@ namespace _20250313
             {
                 if (MyPoints.Count == 0) { return Geometry.Empty; }
 
-                if(MyHeadBeginType != HeadType.None || MyHeadEndType!= HeadType.None)
+                if (MyHeadBeginType != HeadType.None || MyHeadEndType != HeadType.None)
                 {
                     Fill = Stroke;
                 }
@@ -96,7 +96,9 @@ namespace _20250313
 
         #region 依存関係プロパティ
 
-
+        #region 読み取り用
+        
+        //サイズと位置
         public Rect MyRenderBounds
         {
             get { return (Rect)GetValue(MyRenderBoundsProperty); }
@@ -105,6 +107,7 @@ namespace _20250313
         public static readonly DependencyProperty MyRenderBoundsProperty =
             DependencyProperty.Register(nameof(MyRenderBounds), typeof(Rect), typeof(GeoShape), new PropertyMetadata(new Rect()));
 
+        //サイズと位置の計算に使う
         public Pen MyPen
         {
             get { return (Pen)GetValue(MyPenProperty); }
@@ -113,6 +116,22 @@ namespace _20250313
         public static readonly DependencyProperty MyPenProperty =
             DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(GeoShape), new PropertyMetadata(new Pen()));
 
+        //MyPointsから作成
+        public PointCollection MySegmentPoints
+        {
+            get { return (PointCollection)GetValue(MySegmentPointsProperty); }
+            set { SetValue(MySegmentPointsProperty, value); }
+        }
+        public static readonly DependencyProperty MySegmentPointsProperty =
+            DependencyProperty.Register(nameof(MySegmentPoints), typeof(PointCollection), typeof(GeoShape), new PropertyMetadata(null));
+
+
+        #endregion 読み取り用
+
+
+
+        #region 通常
+        
 
         public bool MyIsClosed
         {
@@ -208,13 +227,6 @@ namespace _20250313
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public PointCollection MyMySegmentPoints
-        {
-            get { return (PointCollection)GetValue(MyMySegmentPointsProperty); }
-            set { SetValue(MyMySegmentPointsProperty, value); }
-        }
-        public static readonly DependencyProperty MyMySegmentPointsProperty =
-            DependencyProperty.Register(nameof(MyMySegmentPoints), typeof(PointCollection), typeof(GeoShape), new PropertyMetadata(null));
 
         public PointCollection MyPoints
         {
@@ -230,6 +242,8 @@ namespace _20250313
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        #endregion 通常
 
         #endregion 依存関係プロパティ
 

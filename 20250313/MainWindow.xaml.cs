@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using Microsoft.Win32.SafeHandles;
+using System.Drawing;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -40,16 +41,25 @@ public partial class MainWindow : Window
 
     private void MyTest2_Click(object sender, RoutedEventArgs e)
     {
-        if (MyRoot.MyFocusThumb is EzShapeThumb shape)
-        {
-            var p = new System.Windows.Point(100, 150);
-            var maeP = shape.MyItemData.MyPoints[^1];
+        //if (MyRoot.MyFocusThumb is EzShapeThumb shape)
+        //{
+        //    var p = new System.Windows.Point(100, 150);
+        //    var maeP = shape.MyItemData.MyPoints[^1];
 
-            shape.AddPoint(maeP);
-            shape.AddPoint(p);
-            shape.AddPoint(p);
+        //    shape.AddPoint(maeP);
+        //    shape.AddPoint(p);
+        //    shape.AddPoint(p);
 
-        }
+        //}
+        var shape = new GeoShape();
+        PointCollection pc = [new System.Windows.Point(),new System.Windows.Point(100,0),
+       new System.Windows.Point(0,100),new System.Windows.Point(100,100)];
+        shape.MyPoints = pc;
+        shape.MyShapeType = ShapeType.Bezier;
+        shape.MyHeadBeginType = HeadType.Arrow;
+        shape.Stroke = Brushes.Red;
+        shape.StrokeThickness = 10;
+        MyCanvas.Children.Add(shape);
 
     }
 
