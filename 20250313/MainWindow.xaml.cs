@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Point = System.Windows.Point;
 
 //WPF、要素をファイルに保存と復元テスト - 午後わてんのブログ
 //https://gogowaten.hatenablog.com/entry/2025/02/28/130209
@@ -52,7 +53,7 @@ public partial class MainWindow : Window
 
         //}
         var shape = new GeoShape();
-        PointCollection pc = [new System.Windows.Point(),new System.Windows.Point(100,0),
+        PointCollection pc = [new Point(),new Point(100,0),
        new System.Windows.Point(0,100),new System.Windows.Point(100,100)];
         shape.MyPoints = pc;
         shape.MyShapeType = ShapeType.Bezier;

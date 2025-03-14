@@ -11,13 +11,21 @@ using System.Windows.Shapes;
 
 namespace _20250314;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow : Window
 {
     public MainWindow()
     {
         InitializeComponent();
+        Loaded += MainWindow_Loaded;
+        
+    }
+
+    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (AdornerLayer.GetAdornerLayer(MyButton) is AdornerLayer layer)
+        {
+            layer.Add(new ResizeAdorner(MyButton));
+        }
+
     }
 }
