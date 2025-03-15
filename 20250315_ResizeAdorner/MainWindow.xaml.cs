@@ -4,6 +4,9 @@ using System.Windows.Media;
 
 namespace _20250315_ResizeAdorner;
 
+//WPF、要素をリサイズするときのハンドルThumbをAdornerで作ってみた.mp5 - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/03/15/144756
+
 public partial class MainWindow : Window
 {
     public MainWindow()
