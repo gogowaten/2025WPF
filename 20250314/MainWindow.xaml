@@ -9,27 +9,31 @@
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
-      <ColumnDefinition Width="200"/>
+      <ColumnDefinition Width="300"/>
     </Grid.ColumnDefinitions>
     <Canvas>
       <local:ResizeCanvasThumb
         x:Name="MyResize"
         Width="110" Height="100"
-        MyLeft="50" MyTop="70"
-        
+        MyLeft="50" MyTop="70"        
         />
-
+      <Button x:Name="MyButtonOnCanvas" Content="Canvas上のボタン"
+              Canvas.Left="200" Canvas.Top="30"/>
     </Canvas>
-    <StackPanel>      
-    
+    <StackPanel>
+
     </StackPanel>
     <StackPanel Grid.Column="1">
-      <GroupBox DataContext="{Binding ElementName=MyResize}" Header="{Binding Name}">
-        <StackPanel>
+      <GroupBox x:Name="MyGroup" Margin="20"
+                DataContext="{Binding ElementName=MyResize}" Header="{Binding Name}">
+        <StackPanel Margin="20">
           <TextBlock Text="{Binding Width, StringFormat=Width {0:0 }}"/>
           <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth {0:0 }}"/>
-          <Button x:Name="MyButton" Content="button"
-          Canvas.Left="250" Canvas.Top="50"/>
+          <TextBlock Text="{Binding Height, StringFormat=Height {0:0 }}"/>
+          <TextBlock Text="{Binding ActualHeight, StringFormat=ActualHeight {0:0 }}"/>
+          <Button x:Name="MyButton" Content="StackPanelの中のボタン" Click="MyButton_Click"/>
+          <TextBlock Text="{Binding MyLeft, StringFormat=MyLeft 0}"/>
+          <TextBlock Text="{Binding MyTop, StringFormat=MyTop 0}"/>
           <Slider Value="{Binding MyAdornerHandleSize}" Minimum="10" Maximum="50"/>
           <TextBlock Text="{Binding MyAdornerHandleSize, StringFormat=handleSize 0}"/>
         </StackPanel>

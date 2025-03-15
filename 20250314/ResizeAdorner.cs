@@ -26,15 +26,15 @@ namespace _20250314
 
         private readonly List<Handle> MyHandles = [];
         private readonly Canvas MyCanvas = new();
-        readonly FrameworkElement MyTarget;
-        Handle Top = new();
-        Handle Left = new();
-        Handle Right = new();
-        Handle Bottom = new();
-        Handle TopLeft = new();
-        Handle TopRight = new();
-        Handle BottomLeft = new();
-        Handle BottomRight = new();
+        private readonly FrameworkElement MyTarget;
+        private readonly Handle Top = new();
+        private readonly Handle Left = new();
+        private readonly Handle Right = new();
+        private readonly Handle Bottom = new();
+        private readonly Handle TopLeft = new();
+        private readonly Handle TopRight = new();
+        private readonly Handle BottomLeft = new();
+        private readonly Handle BottomRight = new();
 
         public ResizeAdorner(FrameworkElement adornedElement) : base(adornedElement)
         {
@@ -99,6 +99,7 @@ namespace _20250314
             MyBindHandleSize(Top, Handle.MyTopProperty);
             MyBindHandleSize(Left, Handle.MyLeftProperty);
             MyBindHandleSize(TopLeft, Handle.MyTopProperty);
+            MyBindHandleSize(TopLeft, Handle.MyLeftProperty);
             MyBindHandleSize(TopRight, Handle.MyTopProperty);
             MyBindHandleSize(BottomLeft, Handle.MyLeftProperty);
 

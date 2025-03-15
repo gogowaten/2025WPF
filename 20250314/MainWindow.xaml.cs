@@ -16,16 +16,32 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        Loaded += MainWindow_Loaded;
-        
     }
 
-    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-    {
-        if (AdornerLayer.GetAdornerLayer(MyButton) is AdornerLayer layer)
-        {
-            layer.Add(new ResizeAdorner(MyButton));
-        }
 
+    private void MyButton_Click(object sender, RoutedEventArgs e)
+    {
+        SwitchAdorner(MyButton);
+        SwitchAdorner(MyGroup);
+        SwitchAdorner(MyButtonOnCanvas);
+    }
+
+    private void SwitchAdorner(FrameworkElement elem)
+    {
+        if (AdornerLayer.GetAdornerLayer(elem) is AdornerLayer layer)
+        {
+            var items = layer.GetAdorners(elem);
+            if (items != null)
+            {
+                foreach (var item in items.OfType<ResizeAdorner>())
+                {
+                    layer.Remove(item);
+                }
+            }
+            else
+            {
+                layer.Add(new ResizeAdorner(elem));
+            }
+        }
     }
 }
