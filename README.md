@@ -1,3 +1,12 @@
+# 20250315_ResizeAdorner
+https://github.com/gogowaten/2025WPF/tree/main/20250315_ResizeAdorner<br>
+![Animation20250315_125847](https://github.com/user-attachments/assets/20af3c07-9bce-47fa-b5ac-6f48458ae7a2)<br>
+WPF、要素をリサイズするときのハンドルThumbをAdornerで作ってみた.mp5 - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/03/15/144756<br>
+<br><br><br>
+
+
+
 # 20250310
 https://github.com/gogowaten/2025WPF/tree/main/20250310<br>
 ![Animation20250312_231731](https://github.com/user-attachments/assets/1e994af7-4999-4feb-b5ca-4ca309c33057)<br>
