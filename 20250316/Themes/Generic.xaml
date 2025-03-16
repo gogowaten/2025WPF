@@ -89,7 +89,7 @@
                   Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}"
                   Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"
                   >
-            <local:GeoShapeThumb x:Name="shape"/>
+            <local:GeoShapeThumb x:Name="shapeThumb"/>
             <Rectangle Stroke="DodgerBlue"
                        Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}"
                        Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"

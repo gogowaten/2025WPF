@@ -121,6 +121,7 @@ namespace _20250316
         public GeoShapeThumb()
         {
             DragDelta += GeoShapeThumb_DragDelta;
+            
         }
 
 
@@ -142,6 +143,7 @@ namespace _20250316
                 {
                     SetBinding(MyPointsProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyPointsProperty), Mode = BindingMode.TwoWay });
                 }
+
                 //if (MyPoints != null)
                 //{
                 //    MyGeoShape.MyPoints = MyPoints;
@@ -271,7 +273,7 @@ namespace _20250316
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoShapeTThumb), new FrameworkPropertyMetadata(typeof(GeoShapeTThumb)));
         }
-        public GeoShapeTThumb() { }
+        //public GeoShapeTThumb() { }
         public GeoShapeTThumb(ItemData data)
         {
             MyItemData = data;
@@ -289,10 +291,21 @@ namespace _20250316
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            if (GetTemplateChild("shape") is GeoShapeThumb shape)
+            if (GetTemplateChild("shapeThumb") is GeoShapeThumb shape)
             {
                 MyShapeThumb = shape;
+                if (MyItemData.MyPoints == null)
+                {
+                    MyItemData.MyPoints = [new Point(0, 0),new Point(200,100)];
+                }
+                MyBind();
+            }
+
+            void MyBind()
+            {
                 MyShapeThumb.SetBinding(GeoShapeThumb.MyStrokeThicknessProperty, new Binding(nameof(ItemData.MyStrokeThickness)));
+
+                MyShapeThumb.SetBinding(GeoShapeThumb.MyPointsProperty, new Binding() { Source = MyItemData, Path = new PropertyPath(ItemData.MyPointsProperty), Mode = BindingMode.TwoWay });
             }
         }
 
@@ -305,6 +318,9 @@ namespace _20250316
 
 
 
+        #region 依存関係プロパティ
+
+        #region 図形とのバインド用
 
         public GeoShapeThumb MyShapeThumb
         {
@@ -313,7 +329,9 @@ namespace _20250316
         }
         public static readonly DependencyProperty MyShapeThumbProperty =
             DependencyProperty.Register(nameof(MyShapeThumb), typeof(GeoShapeThumb), typeof(GeoShapeTThumb), new PropertyMetadata(null));
+        #endregion 図形とのバインド用
 
+        #region 自身用
 
         public ItemData MyItemData
         {
@@ -347,8 +365,49 @@ namespace _20250316
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-    }
+        #endregion 自身用
 
+        #endregion 依存関係プロパティ
+
+        #region メソッド
+
+        public void AnchorHandleSwitch()
+        {
+            MyShapeThumb?.AnchorSwitch();
+        }
+
+
+        /// <summary>
+        /// リサイズハンドルの表示切替、Adornerの付け外し
+        /// </summary>
+        /// <returns>装飾</returns>
+        public ResizeHandleAdorner? ResizeHandleSwitch()
+        {
+            //図形のAdornerLayerを調べて装飾が在れば削除、なければ作成、追加する
+            if (AdornerLayer.GetAdornerLayer(this) is AdornerLayer layer)
+            {
+                var items = layer.GetAdorners(this);
+                if (items != null)
+                {
+                    foreach (var item in items.OfType<ResizeHandleAdorner>())
+                    {
+                        layer.Remove(item);
+                    }
+                    return null;
+                }
+                else
+                {
+                    var adorner = new ResizeHandleAdorner(this);
+                    layer.Add(adorner);
+                    return adorner;
+                }
+            }
+            return null;
+        }
+        #endregion メソッド
+
+
+    }
 
 
 }

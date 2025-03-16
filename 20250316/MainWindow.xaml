@@ -11,7 +11,7 @@
       <ColumnDefinition/>
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
-    <Canvas>
+    <Canvas x:Name="MyCanvas" UseLayoutRounding="True">
       <local:GeoShapeThumb x:Name="MyShape" MyStrokeThickness="30"
                            MyPoints="0,0,200,0,200,100,0,100"
                       />
@@ -21,6 +21,7 @@
       <TextBlock Text="{Binding MyPoints, StringFormat=poi {0:0}}"/>
       <TextBlock Text="{Binding MyGeoShape.MyPoints, StringFormat=shapePoi {0:0}}"/>
       <Button Content="test" Click="Button_Click"/>
+      <Button x:Name="AnchorSwitch" Content="AnchorSwitch" Click="AnchorSwitch_Click"/>
     </StackPanel>
   </Grid>
 </Window>
