@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,9 @@ using System.Windows.Shapes;
 namespace _20250316
 {
 
-
+    /// <summary>
+    /// GeoShape用のアンカーハンドルThumb
+    /// </summary>
     public class AnchorHandleThumb : Thumb
     {
         static AnchorHandleThumb()
@@ -69,6 +72,9 @@ namespace _20250316
     }
 
 
+    /// <summary>
+    /// リサイズ用のハンドルThumb
+    /// </summary>
     public class HandleThumb : Thumb
     {
         static HandleThumb()
@@ -101,6 +107,11 @@ namespace _20250316
 
     }
 
+
+
+    /// <summary>
+    /// アンカーハンドルの表示切替とドラッグ移動できるGeoShape
+    /// </summary>
     public class GeoShapeThumb : Thumb
     {
         static GeoShapeThumb()
@@ -120,6 +131,22 @@ namespace _20250316
             {
                 MyGeoShape = shape;
                 MyGeoShape.SetBinding(GeoShape.StrokeThicknessProperty, new Binding() { Source = this, Path = new PropertyPath(MyStrokeThicknessProperty) });
+                //MyPointsのバインド、自身のMyPointsが
+                //nullなら図形のMyPointsをソースにする、
+                //nullじゃなければ自身をソースにする
+                if (MyPoints != null)
+                {
+                    MyGeoShape.SetBinding(GeoShape.MyPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.TwoWay });
+                }
+                else
+                {
+                    SetBinding(MyPointsProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyPointsProperty), Mode = BindingMode.TwoWay });
+                }
+                //if (MyPoints != null)
+                //{
+                //    MyGeoShape.MyPoints = MyPoints;
+                //}
+                //else { MyPoints = MyGeoShape.MyPoints; }
             }
             else
             {
@@ -136,6 +163,19 @@ namespace _20250316
             e.Handled = true;
         }
 
+        #region 依存関係プロパティ
+
+        public PointCollection MyPoints
+        {
+            get { return (PointCollection)GetValue(MyPointsProperty); }
+            set { SetValue(MyPointsProperty, value); }
+        }
+        public static readonly DependencyProperty MyPointsProperty =
+            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(GeoShapeThumb), new FrameworkPropertyMetadata(null,
+                FrameworkPropertyMetadataOptions.AffectsRender |
+                FrameworkPropertyMetadataOptions.AffectsMeasure |
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
 
         public double MyStrokeThickness
         {
@@ -144,7 +184,7 @@ namespace _20250316
         }
         public static readonly DependencyProperty MyStrokeThicknessProperty =
             DependencyProperty.Register(nameof(MyStrokeThickness), typeof(double), typeof(GeoShapeThumb),
-                new FrameworkPropertyMetadata(1.0,
+                new FrameworkPropertyMetadata(10.0,
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
@@ -153,7 +193,7 @@ namespace _20250316
         public GeoShape MyGeoShape
         {
             get { return (GeoShape)GetValue(MyGeoShapeProperty); }
-            set { SetValue(MyGeoShapeProperty, value); }
+            protected set { SetValue(MyGeoShapeProperty, value); }
         }
         public static readonly DependencyProperty MyGeoShapeProperty =
             DependencyProperty.Register(nameof(MyGeoShape), typeof(GeoShape), typeof(GeoShapeThumb), new PropertyMetadata(null));
@@ -181,12 +221,50 @@ namespace _20250316
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        #endregion 依存関係プロパティ
+
+
+        #region メソッド
+        /// <summary>
+        /// アンカーハンドルの表示切替、Adornerの付け外し
+        /// </summary>
+        /// <returns>装飾</returns>
+        public AncorHandleAdorner? AnchorSwitch()
+        {
+            //図形のAdornerLayerを調べて装飾が在れば削除、なければ作成、追加する
+            if (AdornerLayer.GetAdornerLayer(MyGeoShape) is AdornerLayer layer)
+            {
+                var items = layer.GetAdorners(MyGeoShape);
+                if (items != null)
+                {
+                    foreach (var item in items.OfType<AncorHandleAdorner>())
+                    {
+                        layer.Remove(item);
+                    }
+                    return null;
+                }
+                else
+                {
+                    var adorner = new AncorHandleAdorner(MyGeoShape);
+                    layer.Add(adorner);
+                    return adorner;
+                }
+            }
+            return null;
+        }
+        #endregion メソッド
 
     }
 
 
 
-
+    /// <summary>
+    /// Canvasの中にGeoShapeThumbを配置したThumb
+    /// 作成にはItemDataが必要
+    /// 図形のアンカーハンドルの表示切替
+    /// 自身のリサイズ用のハンドルの表示切替
+    /// 図形の移動と自身の移動
+    /// </summary>
     public class GeoShapeTThumb : Thumb
     {
         static GeoShapeTThumb()

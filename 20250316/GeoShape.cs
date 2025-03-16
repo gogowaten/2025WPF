@@ -25,7 +25,7 @@ namespace _20250316
         {
             get
             {
-                if (MyPoints.Count == 0) { return Geometry.Empty; }
+                if (MyPoints is null || MyPoints.Count == 0) { return Geometry.Empty; }
 
                 if (MyHeadBeginType != HeadType.None || MyHeadEndType != HeadType.None)
                 {

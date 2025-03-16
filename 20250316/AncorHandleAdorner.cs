@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Controls.Primitives;
 
 namespace _20250316
 {
@@ -186,7 +187,22 @@ namespace _20250316
             };
             thumb.SetBinding(AnchorHandleThumb.MySizeProperty, new Binding() { Source = this, Path = new PropertyPath(MyAnchorHandleSizeProperty), Mode = BindingMode.TwoWay });
             MyAnchorHandleThumbsList.Add(thumb);
+            thumb.DragDelta += Thumb_DragDelta;
             return thumb;
+        }
+
+        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            if (sender is AnchorHandleThumb thumb)
+            {
+                int id = (int)thumb.Tag;
+                Point poi = MyTarget.MyPoints[id];
+                MyTarget.MyPoints[id] = new Point(poi.X + e.HorizontalChange, poi.Y + e.VerticalChange);
+                thumb.MyLeft += e.HorizontalChange;
+                thumb.MyTop += e.VerticalChange;
+                e.Handled = true;
+            }
+
         }
 
         #region 依存関係プロパティ

@@ -5,8 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250316"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="367" Width="602">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
+    <Canvas>
+      <local:GeoShapeThumb x:Name="MyShape" MyStrokeThickness="30"
+                           MyPoints="0,0,200,0,200,100,0,100"
+                      />
+    </Canvas>
 
-    </Grid>
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyShape}">
+      <TextBlock Text="{Binding MyPoints, StringFormat=poi {0:0}}"/>
+      <TextBlock Text="{Binding MyGeoShape.MyPoints, StringFormat=shapePoi {0:0}}"/>
+      <Button Content="test" Click="Button_Click"/>
+    </StackPanel>
+  </Grid>
 </Window>
