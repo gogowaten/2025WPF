@@ -1,3 +1,12 @@
+# 20250315
+https://github.com/gogowaten/2025WPF/tree/main/20250315<br>
+![Animation20250316_152158](https://github.com/user-attachments/assets/9928d1a6-fbd5-4afc-bec0-a7d355279c6d)
+<br><br><br>
+
+
+
+
+
 # 20250315_ResizeAdorner
 https://github.com/gogowaten/2025WPF/tree/main/20250315_ResizeAdorner<br>
 ![Animation20250315_125847](https://github.com/user-attachments/assets/20af3c07-9bce-47fa-b5ac-6f48458ae7a2)<br>
