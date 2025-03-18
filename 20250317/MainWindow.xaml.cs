@@ -10,6 +10,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+//WPF、矢印図形のアンカーハンドルポイントの表示と操作、Pointの追加と削除テスト - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/03/18/130628
+
 namespace _20250317;
 
 /// <summary>
@@ -30,13 +33,13 @@ public partial class MainWindow : Window
     private void AddAtTop_Click(object sender, RoutedEventArgs e)
     {
         Random r = new();
-        MyThumb.AddPoint(0, new Point(r.Next(300), r.Next(300)));
+        MyThumb.AddPoint(0, new Point(r.Next(300), r.Next(200)));
     }
 
     private void AddAtEnd_Click(object sender, RoutedEventArgs e)
     {
         Random r = new();
-        MyThumb.AddPoint(MyThumb.MyPoints.Count, new Point(r.Next(300), r.Next(300)));
+        MyThumb.AddPoint(MyThumb.MyPoints.Count, new Point(r.Next(300), r.Next(200)));
     }
 
 
@@ -47,7 +50,7 @@ public partial class MainWindow : Window
     {
         Random r = new();
         int id = r.Next(MyThumb.MyPoints.Count);
-        MyThumb.AddPoint(id, new Point(r.Next(200), r.Next(200)));
+        MyThumb.AddPoint(id, new Point(r.Next(300), r.Next(200)));
 
     }
 

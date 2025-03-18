@@ -11,22 +11,40 @@
       <ColumnDefinition/>
       <ColumnDefinition Width="240"/>
     </Grid.ColumnDefinitions>
-    
+
     <Canvas x:Name="MyCanvas">
       <local:GeoShapeThumb x:Name="MyThumb"/>
     </Canvas>
 
     <StackPanel Grid.Column="1">
-      <Button x:Name="Anchor" Content="ハンドル表示切替" Click="Anchor_Click"/>
-      <Button x:Name="AddToTop" Content="先頭に追加" Click="AddAtTop_Click"/>
-      <Button x:Name="AddToEnd" Content="末尾に追加" Click="AddAtEnd_Click"/>
-      <Button x:Name="AddRandomPoint" Content="高度の柔軟性を維持しつつ臨機応変に追加" Click="AddRandomPoint_Click"/>
-      <Button x:Name="RemoveTopPoint" Content="先頭を削除" Click="RemoveTopPoint_Click"/>
-      <Button x:Name="RemoveEndPoint" Content="末尾を削除" Click="RemoveEndPoint_Click"/>
-      <Button x:Name="RemoveRandomPoint" Content="高度の柔軟性を維持しつつ臨機応変に削除" Click="RemoveRandomPoint_Click"/>
+      <GroupBox Header="Point削除">
+        <StackPanel>
+          <UniformGrid Columns="2">
+            <Button x:Name="RemoveTopPoint" Content="先頭を削除" Click="RemoveTopPoint_Click"/>
+            <Button x:Name="RemoveEndPoint" Content="末尾を削除" Click="RemoveEndPoint_Click"/>
+          </UniformGrid>
+          <Button x:Name="RemoveRandomPoint" Content="高度の柔軟性を維持しつつ臨機応変に削除" Click="RemoveRandomPoint_Click"/>
+        </StackPanel>
+      </GroupBox>
       <Button x:Name="ResetPoint" Content="リセット" Click="ResetPoint_Click"/>
+      <Button x:Name="Anchor" Content="ハンドル表示切替" Click="Anchor_Click"/>
       <Button x:Name="ChangeType" Content="直線とベジェ曲線の切り替え" Click="ChangeType_Click"/>
-      <Slider Value="{Binding ElementName=MyThumb, Path=MyStrokeThickness}" Minimum="0" Maximum="50"/>
+      <GroupBox Header="Point追加">
+        <StackPanel>
+          <UniformGrid Columns="2">
+            <Button x:Name="AddToTop" Content="先頭に追加" Click="AddAtTop_Click"/>
+            <Button x:Name="AddToEnd" Content="末尾に追加" Click="AddAtEnd_Click"/>
+          </UniformGrid>
+          <Button x:Name="AddRandomPoint" Content="高度の柔軟性を維持しつつ臨機応変に追加" Click="AddRandomPoint_Click"/>
+        </StackPanel>
+      </GroupBox>
+      <GroupBox DataContext="{Binding ElementName=MyThumb}" Header="MyThumb">
+        <StackPanel>
+          <Slider Value="{Binding ElementName=MyThumb, Path=MyStrokeThickness}" Minimum="0" Maximum="50"/>
+          <TextBlock Text="{Binding MyStrokeThickness, StringFormat=MyStrokeThickness 0}"/>
+          <TextBlock Text="{Binding MyPoints, StringFormat=MyPoints {0:0 }}" TextWrapping="Wrap"/>
+        </StackPanel>
+      </GroupBox>
     </StackPanel>
   </Grid>
 </Window>

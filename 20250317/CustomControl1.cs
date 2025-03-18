@@ -1,5 +1,4 @@
-﻿using _20250317;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -81,10 +80,18 @@ namespace _20250317
     /// </summary>
     public class GeoShapeThumb : Thumb
     {
+        #region フィールド
 
+        //アンカーハンドルを表示する装飾
         public AnchorHandleAdorner? MyShapesAnchorHandleAdorner { get; private set; }
+
+        //装飾のLayer
         public AdornerLayer MyShapesAdornerLayer { get; private set; } = null!;
+
+        //中に表示している図形
         private GeoShape MyGeoShape { get; set; } = null!;
+        #endregion フィールド
+
 
         static GeoShapeThumb()
         {
@@ -92,12 +99,10 @@ namespace _20250317
         }
         public GeoShapeThumb()
         {
-
             DragDelta += GeoShapeThumb_DragDelta;
-
         }
 
-
+        //起動時、Templateの中から図形を取り出してバインド設定
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -108,7 +113,7 @@ namespace _20250317
                 MyShapesAdornerLayer = AdornerLayer.GetAdornerLayer(MyGeoShape);
                 //MyPointsのバインド、自身のMyPointsが
                 //nullなら図形のMyPointsをソースにする、
-                //nullじゃなければ自身をソースにする
+                //nullじゃなければ自身のMyPointsをソースにする
                 if (MyPoints != null)
                 {
                     MyGeoShape.SetBinding(GeoShape.MyPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.TwoWay });
@@ -126,7 +131,7 @@ namespace _20250317
         }
 
 
-
+        //自身のドラッグ移動
         private void GeoShapeThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             MyLeft += e.HorizontalChange;
@@ -135,6 +140,7 @@ namespace _20250317
         }
 
         #region 依存関係プロパティ
+        #region 図形とのバインド用
 
         public PointCollection MyPoints
         {
@@ -159,15 +165,8 @@ namespace _20250317
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        #endregion 図形とのバインド用
 
-
-        //public GeoShape MyGeoShape
-        //{
-        //    get { return (GeoShape)GetValue(MyGeoShapeProperty); }
-        //    protected set { SetValue(MyGeoShapeProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyGeoShapeProperty =
-        //    DependencyProperty.Register(nameof(MyGeoShape), typeof(GeoShape), typeof(GeoShapeThumb), new PropertyMetadata(null));
 
         public double MyLeft
         {
@@ -199,15 +198,15 @@ namespace _20250317
         /// </summary>
         public void ChangeShapeType()
         {
-            if(MyGeoShape.MyShapeType == ShapeType.Line)
+            if (MyGeoShape.MyShapeType == ShapeType.Line)
             {
                 MyShapesAnchorHandleAdorner?.AddControlLine();
                 MyGeoShape.MyShapeType = ShapeType.Bezier;
             }
-            else if (MyGeoShape.MyShapeType== ShapeType.Bezier)
+            else if (MyGeoShape.MyShapeType == ShapeType.Bezier)
             {
                 MyShapesAnchorHandleAdorner?.RemoveControlLine();
-                MyGeoShape.MyShapeType= ShapeType.Line;
+                MyGeoShape.MyShapeType = ShapeType.Line;
             }
         }
 
@@ -221,7 +220,7 @@ namespace _20250317
         {
             MyPoints.Insert(index, poi);
             //図形に装飾が在れば、装飾の更新
-            MyShapesAnchorHandleAdorner?.AddAnchorThumb(index, poi);
+            MyShapesAnchorHandleAdorner?.AddAnchorHandleThumb(index, poi);
         }
 
         /// <summary>
@@ -244,7 +243,7 @@ namespace _20250317
             if (MyPoints.Count > 2)
             {
                 MyPoints.RemoveAt(index);
-                MyShapesAnchorHandleAdorner?.RemoveAnchorThumb(index);
+                MyShapesAnchorHandleAdorner?.RemoveAnchorHandleThumb(index);
             }
         }
 

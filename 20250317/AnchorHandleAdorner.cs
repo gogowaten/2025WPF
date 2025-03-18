@@ -18,14 +18,11 @@ namespace _20250317
 
     /// <summary>
     /// ベジェ曲線の方向線表示用、2色破線
+    /// PointCollectionと連携させる
     /// OnRenderで直線描画、その上にDefiningGeometryで破線描画
     /// </summary>
-
-    class TwoColorDashLine : Shape
+    public class ControlLine : Shape
     {
-
-
-
         //[028722]ベジエ曲線の各部の名称
         //https://support.justsystems.com/faq/1032/app/servlet/qadoc?QID=028722
 
@@ -34,7 +31,7 @@ namespace _20250317
         //WPF、ベジェ曲線で直線表示、アンカー点の追加と削除 - 午後わてんのブログ
         //https://gogowaten.hatenablog.com/entry/2022/06/14/132217
 
-        public TwoColorDashLine()
+        public ControlLine()
         {
             Stroke = Brushes.White;
             StrokeThickness = 1.0;
@@ -97,7 +94,7 @@ namespace _20250317
             set { SetValue(MyPenProperty, value); }
         }
         public static readonly DependencyProperty MyPenProperty =
-            DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(TwoColorDashLine), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(ControlLine), new PropertyMetadata(null));
 
         //AffectRender必須
         public PointCollection MyPoints
@@ -106,7 +103,7 @@ namespace _20250317
             set { SetValue(MyPointsProperty, value); }
         }
         public static readonly DependencyProperty MyPointsProperty =
-            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(TwoColorDashLine),
+            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(ControlLine),
                 new FrameworkPropertyMetadata(null,
                     FrameworkPropertyMetadataOptions.AffectsRender |
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
@@ -119,7 +116,7 @@ namespace _20250317
             set { SetValue(MyStrokeBaseProperty, value); }
         }
         public static readonly DependencyProperty MyStrokeBaseProperty =
-            DependencyProperty.Register(nameof(MyStrokeBase), typeof(SolidColorBrush), typeof(TwoColorDashLine), new PropertyMetadata(Brushes.Black));
+            DependencyProperty.Register(nameof(MyStrokeBase), typeof(SolidColorBrush), typeof(ControlLine), new PropertyMetadata(Brushes.Black));
         #endregion 依存関係プロパティ
 
     }
@@ -134,7 +131,7 @@ namespace _20250317
         protected override Visual GetVisualChild(int index) => MyVisualCollection[index];
         #endregion VisualCollectionで必要
 
-        private readonly TwoColorDashLine MyControlLine;//制御線
+        private readonly ControlLine MyControlLine;//制御線
         public readonly List<AnchorHandleThumb> MyAnchorHandleThumbsList = [];//アンカーハンドルThumb
         private readonly Canvas MyCanvas = new();
         private readonly VisualCollection MyVisualCollection;
@@ -144,6 +141,7 @@ namespace _20250317
         {
             MyVisualCollection = new(this) { MyCanvas };
             MyTarget = adornedElement;
+
             //制御線
             MyControlLine = new()
             {
@@ -153,6 +151,7 @@ namespace _20250317
             Panel.SetZIndex(MyControlLine, -1);
             MySetControlLine();
 
+            //アンカーハンドルを追加
             AddAnchorThumb();
         }
 
@@ -170,14 +169,19 @@ namespace _20250317
                 AddControlLine();
             }
         }
+
+        //制御線の追加(表示)
         public void AddControlLine()
-        {   
+        {
             MyCanvas.Children.Add(MyControlLine);
         }
+
+        //制御線の削除(非表示)
         public void RemoveControlLine()
         {
             MyCanvas.Children.Remove(MyControlLine);
         }
+
         private void AddAnchorThumb()
         {
             for (int i = 0; i < MyTarget.MyPoints.Count; i++)
@@ -193,7 +197,7 @@ namespace _20250317
         /// </summary>
         /// <param name="index"></param>
         /// <param name="poi"></param>
-        public void AddAnchorThumb(int index, Point poi)
+        public void AddAnchorHandleThumb(int index, Point poi)
         {
             var thumb = MakeAnchorHandleThumb(index, poi);
             MyCanvas.Children.Insert(index, thumb);
@@ -205,7 +209,8 @@ namespace _20250317
             }
         }
 
-        public bool RemoveAnchorThumb(int index)
+        //削除
+        public bool RemoveAnchorHandleThumb(int index)
         {
             if (index <= MyAnchorHandleThumbsList.Count - 1)
             {
@@ -230,11 +235,18 @@ namespace _20250317
                 MyLeft = poi.X - MyAnchorHandleSize / 2.0,
                 MyTop = poi.Y - MyAnchorHandleSize / 2.0
             };
-            thumb.SetBinding(AnchorHandleThumb.MySizeProperty, new Binding() { Source = this, Path = new PropertyPath(MyAnchorHandleSizeProperty), Mode = BindingMode.TwoWay });
+            thumb.SetBinding(AnchorHandleThumb.MySizeProperty,
+                new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(MyAnchorHandleSizeProperty),
+                    Mode = BindingMode.TwoWay
+                });
             thumb.DragDelta += Thumb_DragDelta;
             return thumb;
         }
 
+        //ハンドルThumbのマウスドラッグ移動、対応するPointも更新する
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             if (sender is AnchorHandleThumb thumb)
