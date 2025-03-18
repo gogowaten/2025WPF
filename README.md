@@ -1,3 +1,13 @@
+
+# 20250317
+https://github.com/gogowaten/2025WPF/tree/main/20250317<br>
+![Animation20250318_115747](https://github.com/user-attachments/assets/61d19882-57c8-4c86-abed-3fe42fd72dc0)<br>
+WPF、矢印図形のアンカーハンドルポイントの表示と操作、Pointの追加と削除テスト - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/03/18/130628<br>
+<br><br><br>
+
+
+
 # 20250315
 https://github.com/gogowaten/2025WPF/tree/main/20250315<br>
 ![Animation20250316_152158](https://github.com/user-attachments/assets/9928d1a6-fbd5-4afc-bec0-a7d355279c6d)
