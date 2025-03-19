@@ -255,10 +255,26 @@ namespace _20250318
         }
 
 
+
+
         /// <summary>
         /// 直線とベジェ曲線の切り替え
         /// </summary>
         public void ChangeShapeType()
+        {
+            if (MyShapeType == ShapeType.Line) { ChangeToBezier(); }
+            else { ChangeToLine(); }
+        }
+        public void ChangeToLine()
+        {
+            if (MyShapeType == ShapeType.Bezier)
+            {
+                MyShapeType = ShapeType.Line;
+                MyShapesAnchorHandleAdorner?.RemoveControlLine();
+                MyGeoShape.MyShapeType = ShapeType.Line;
+            }
+        }
+        public void ChangeToBezier()
         {
             if (MyShapeType == ShapeType.Line)
             {
@@ -266,29 +282,11 @@ namespace _20250318
                 MyShapesAnchorHandleAdorner?.AddControlLine();
                 MyGeoShape.MyShapeType = ShapeType.Bezier;
             }
-            else
-            {
-                MyShapeType = ShapeType.Line;
-                MyShapesAnchorHandleAdorner?.RemoveControlLine();
-                MyGeoShape.MyShapeType = ShapeType.Line;
-            }
         }
-        //public void ChangeShapeType()
-        //{
-        //    if (MyGeoShape.MyShapeType == ShapeType.Line)
-        //    {
-        //        MyShapesAnchorHandleAdorner?.AddControlLine();
-        //        MyGeoShape.MyShapeType = ShapeType.Bezier;
-        //    }
-        //    else if (MyGeoShape.MyShapeType == ShapeType.Bezier)
-        //    {
-        //        MyShapesAnchorHandleAdorner?.RemoveControlLine();
-        //        MyGeoShape.MyShapeType = ShapeType.Line;
-        //    }
-        //}
 
         #region Pointの追加と削除
-        
+        //ItemDataのMyPointsは操作しないで、ShapeThumbのメソッドを利用する
+
         /// <summary>
         /// Pointの追加
         /// </summary>
@@ -452,7 +450,7 @@ namespace _20250318
         public ItemData MyItemData
         {
             get { return (ItemData)GetValue(MyItemDataProperty); }
-            set { SetValue(MyItemDataProperty, value); }
+            protected set { SetValue(MyItemDataProperty, value); }
         }
         public static readonly DependencyProperty MyItemDataProperty =
             DependencyProperty.Register(nameof(MyItemData), typeof(ItemData), typeof(GeoShapeTThumb), new PropertyMetadata(null));
@@ -487,9 +485,86 @@ namespace _20250318
 
         #region メソッド
 
+        #region Pointの追加と削除
+
+        /// <summary>
+        /// Pointの追加
+        /// </summary>
+        /// <param name="index">挿入箇所Index</param>
+        /// <param name="poi">Point</param>
+        public void AddPoint(int index, Point poi)
+        {
+            MyShapeThumb.AddPoint(index, poi);
+        }
+
+        /// <summary>
+        /// Pointを末尾に追加
+        /// </summary>
+        /// <param name="poi"></param>
+        public void AddPoint(Point poi)
+        {
+            int id = MyItemData.MyPoints.Count;
+            AddPoint(id, poi);
+        }
+
+        /// <summary>
+        /// 指定IndexのPointを削除
+        /// </summary>
+        /// <param name="index"></param>
+        public void RemovePoint(int index)
+        {
+            //最低2個は残して削除処理
+            if (MyItemData.MyPoints.Count > 2)
+            {
+                //MyItemData.MyPoints.RemoveAt(index);
+                MyShapeThumb.RemovePoint(index);
+            }
+        }
+
+        /// <summary>
+        /// 先頭のPointを削除
+        /// </summary>
+        public void RemovePointTop()
+        {
+            RemovePoint(0);
+        }
+        /// <summary>
+        /// 末尾のPointを削除
+        /// </summary>
+        public void RemovePointEnd()
+        {
+            RemovePoint(MyItemData.MyPoints.Count - 1);
+        }
+        #endregion Pointの追加と削除
+
+
+
+        //直線とベジェ曲線の切り替え
+        public void ChangeShapeType()
+        {
+            MyShapeThumb.ChangeShapeType();
+        }
+        public void ChangeToLine()
+        {
+            MyShapeThumb.ChangeToLine();
+        }
+        public void ChangeToBezier()
+        {
+            MyShapeThumb.ChangeToBezier();
+        }
+
+
+        public void FitSizeAndPosAdorner()
+        {
+
+        }
+
+        /// <summary>
+        /// 自身のサイズと位置を図形に合わせる
+        /// </summary>
         public void FitSizeAndPos()
         {
-            var myBounds = new Rect(MyLeft, MyTop, Width, Height);
+            //var myBounds = new Rect(MyLeft, MyTop, Width, Height);
             var unionBouns = new Rect(MyLeft, MyTop, Width, Height);
             var shapeBounds = MyShapeThumb.GetShapeRenderBounds();
             unionBouns.Union(shapeBounds);

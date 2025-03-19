@@ -21,7 +21,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         var data = new ItemData();
-        data.MyPoints = [new Point(),new Point(200,0),new Point(200,100),new Point(0,100)];
+        data.MyPoints = [new Point(), new Point(200, 0), new Point(200, 100), new Point(0, 100)];
         data.MyShapeType = ShapeType.Bezier;
         data.MyStrokeThickness = 10;
 
@@ -36,7 +36,6 @@ public partial class MainWindow : Window
         //{
         //    layer.Add(new ResizeHandleAdorner(MyRect));
         //}
-        //MyThumb.MyShapeThumb.AddPoint()
         
     }
 
@@ -48,11 +47,33 @@ public partial class MainWindow : Window
 
     private void ShapTypeSwitch_Click(object sender, RoutedEventArgs e)
     {
-        MyThumb.MyShapeThumb.ChangeShapeType();
+        //MyThumb.MyShapeThumb.ChangeShapeType();
+        MyThumb.ChangeShapeType();
     }
 
     private void FitSizeAndPos_Click(object sender, RoutedEventArgs e)
     {
         MyThumb.FitSizeAndPos();
+    }
+
+    private void Line_Click(object sender, RoutedEventArgs e)
+    {        
+        MyThumb.ChangeToLine();
+    }
+
+    private void Bezier_Click(object sender, RoutedEventArgs e)
+    {
+        MyThumb.ChangeToBezier();
+    }
+
+    private void AddPointToEnd_Click(object sender, RoutedEventArgs e)
+    {
+        Random r = new();
+        MyThumb.AddPoint(new Point(r.Next(300), r.Next(200)));
+    }
+
+    private void RemovePointEnd_Click(object sender, RoutedEventArgs e)
+    {
+        MyThumb.RemovePointEnd();
     }
 }
