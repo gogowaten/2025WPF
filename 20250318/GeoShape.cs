@@ -21,6 +21,36 @@ namespace _20250318
 
     public class GeoShape : Shape
     {
+        public GeoShape()
+        {
+            MyInitializeBind();
+
+        }
+
+        #region 初期処理
+
+        private void MyInitializeBind()
+        {
+            //Pointsの先頭を外したPointCollection
+            _ = SetBinding(MySegmentPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterSegmentPoints() });
+
+            //Penのバインド、Penは図形のBoundsを計測するために必要
+            MultiBinding mb = new() { Converter = new MyConverterPen() };
+            mb.Bindings.Add(MakeOneWayBind(StrokeThicknessProperty));
+            mb.Bindings.Add(MakeOneWayBind(StrokeMiterLimitProperty));
+            mb.Bindings.Add(MakeOneWayBind(StrokeEndLineCapProperty));
+            mb.Bindings.Add(MakeOneWayBind(StrokeStartLineCapProperty));
+            mb.Bindings.Add(MakeOneWayBind(StrokeLineJoinProperty));
+            _ = SetBinding(MyPenProperty, mb);
+        }
+
+        private Binding MakeOneWayBind(DependencyProperty property)
+        {
+            return new Binding() { Source = this, Path = new PropertyPath(property), Mode = BindingMode.OneWay };
+        }
+        #endregion 初期処理
+
+
         protected override Geometry DefiningGeometry
         {
             get
@@ -228,6 +258,7 @@ namespace _20250318
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
+
         public PointCollection MyPoints
         {
             get { return (PointCollection)GetValue(MyPointsProperty); }
@@ -259,9 +290,11 @@ namespace _20250318
         private void DrawBezier(StreamGeometryContext context, Point begin, Point end, bool isFill, bool isClose, bool isSmoothJoin)
         {
             context.BeginFigure(begin, isFill, isClose);
-            List<Point> bezier = MyPoints.Skip(1).Take(MyPoints.Count - 2).ToList();
+            var bezier = MySegmentPoints.Clone();
+            //            List<Point> bezier = MyPoints.Skip(1).Take(MyPoints.Count - 2).ToList();
             bezier.Add(end);
             context.PolyBezierTo(bezier, true, isSmoothJoin);
+
         }
 
 
@@ -277,7 +310,8 @@ namespace _20250318
         private void DrawLine(StreamGeometryContext context, Point begin, Point end, bool isFill, bool isClosed, bool isSmoothJoin)
         {
             context.BeginFigure(begin, isFill, isClosed);
-            context.PolyLineTo(MyPoints.Skip(1).Take(MyPoints.Count - 2).ToList(), true, isSmoothJoin);
+            context.PolyLineTo(MySegmentPoints, true, isSmoothJoin);
+            //context.PolyLineTo(MyPoints.Skip(1).Take(MyPoints.Count - 2).ToList(), true, isSmoothJoin);
             context.LineTo(end, true, isSmoothJoin);
         }
 

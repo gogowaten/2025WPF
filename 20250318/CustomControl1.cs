@@ -146,8 +146,8 @@ namespace _20250318
             if (GetTemplateChild("shape") is GeoShape shape)
             {
                 MyGeoShape = shape;
-                MyGeoShape.SetBinding(GeoShape.StrokeThicknessProperty, new Binding() { Source = this, Path = new PropertyPath(MyStrokeThicknessProperty) });
                 MyShapesAdornerLayer = AdornerLayer.GetAdornerLayer(MyGeoShape);
+
                 //MyPointsのバインド、自身のMyPointsが
                 //nullなら図形のMyPointsをソースにする、
                 //nullじゃなければ自身のMyPointsをソースにする
@@ -159,13 +159,13 @@ namespace _20250318
                 {
                     SetBinding(MyPointsProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyPointsProperty), Mode = BindingMode.TwoWay });
                 }
-
             }
             else
             {
                 throw new ArgumentNullException("Templateの中に図形が見つからない");
             }
         }
+
 
 
         //自身のドラッグ移動
@@ -182,6 +182,18 @@ namespace _20250318
 
         #region 依存関係プロパティ
         #region 図形とのバインド用
+
+        public ShapeType MyShapeType
+        {
+            get { return (ShapeType)GetValue(MyShapeTypeProperty); }
+            set { SetValue(MyShapeTypeProperty, value); }
+        }
+        public static readonly DependencyProperty MyShapeTypeProperty =
+            DependencyProperty.Register(nameof(MyShapeType), typeof(ShapeType), typeof(GeoShapeThumb),
+                new FrameworkPropertyMetadata(ShapeType.Line,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public PointCollection MyPoints
         {
@@ -237,23 +249,46 @@ namespace _20250318
 
         #region メソッド
 
+        public Rect GetShapeRenderBounds()
+        {
+            return MyGeoShape.MyRenderBounds;
+        }
+
+
         /// <summary>
         /// 直線とベジェ曲線の切り替え
         /// </summary>
         public void ChangeShapeType()
         {
-            if (MyGeoShape.MyShapeType == ShapeType.Line)
+            if (MyShapeType == ShapeType.Line)
             {
+                MyShapeType = ShapeType.Bezier;
                 MyShapesAnchorHandleAdorner?.AddControlLine();
                 MyGeoShape.MyShapeType = ShapeType.Bezier;
             }
-            else if (MyGeoShape.MyShapeType == ShapeType.Bezier)
+            else
             {
+                MyShapeType = ShapeType.Line;
                 MyShapesAnchorHandleAdorner?.RemoveControlLine();
                 MyGeoShape.MyShapeType = ShapeType.Line;
             }
         }
+        //public void ChangeShapeType()
+        //{
+        //    if (MyGeoShape.MyShapeType == ShapeType.Line)
+        //    {
+        //        MyShapesAnchorHandleAdorner?.AddControlLine();
+        //        MyGeoShape.MyShapeType = ShapeType.Bezier;
+        //    }
+        //    else if (MyGeoShape.MyShapeType == ShapeType.Bezier)
+        //    {
+        //        MyShapesAnchorHandleAdorner?.RemoveControlLine();
+        //        MyGeoShape.MyShapeType = ShapeType.Line;
+        //    }
+        //}
 
+        #region Pointの追加と削除
+        
         /// <summary>
         /// Pointの追加
         /// </summary>
@@ -290,6 +325,8 @@ namespace _20250318
             }
         }
 
+        #endregion Pointの追加と削除
+
         /// <summary>
         /// アンカーハンドルの表示切替、Adornerの付け外し
         /// </summary>
@@ -310,26 +347,6 @@ namespace _20250318
                 return null;
             }
 
-
-            //if (AdornerLayer.GetAdornerLayer(MyGeoShape) is AdornerLayer layer)
-            //{
-            //    var items = layer.GetAdorners(MyGeoShape);
-            //    if (items != null)
-            //    {
-            //        foreach (var item in items.OfType<AnchorHandleAdorner>())
-            //        {
-            //            layer.Remove(item);
-            //        }
-            //        return null;
-            //    }
-            //    else
-            //    {
-            //        var adorner = new AnchorHandleAdorner(MyGeoShape);
-            //        layer.Add(adorner);
-            //        return adorner;
-            //    }
-            //}
-            //return null;
         }
         #endregion メソッド
 
@@ -349,12 +366,12 @@ namespace _20250318
     /// </summary>
     public class GeoShapeTThumb : Thumb
     {
-        public AdornerLayer MyAdornerLayer { get; private set; } = null!;
+        private AdornerLayer MyAdornerLayer { get; set; } = null!;
         static GeoShapeTThumb()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoShapeTThumb), new FrameworkPropertyMetadata(typeof(GeoShapeTThumb)));
         }
-        //public GeoShapeTThumb() { }
+        public GeoShapeTThumb() { }
         public GeoShapeTThumb(ItemData data)
         {
             MyItemData = data;
@@ -397,9 +414,9 @@ namespace _20250318
 
             void MyBind()
             {
-                MyShapeThumb.SetBinding(GeoShapeThumb.MyStrokeThicknessProperty, new Binding(nameof(ItemData.MyStrokeThickness)));
+                //MyShapeThumb.SetBinding(GeoShapeThumb.MyStrokeThicknessProperty, new Binding(nameof(ItemData.MyStrokeThickness)));
 
-                MyShapeThumb.SetBinding(GeoShapeThumb.MyPointsProperty, new Binding() { Source = MyItemData, Path = new PropertyPath(ItemData.MyPointsProperty), Mode = BindingMode.TwoWay });
+                //MyShapeThumb.SetBinding(GeoShapeThumb.MyPointsProperty, new Binding() { Source = MyItemData, Path = new PropertyPath(ItemData.MyPointsProperty), Mode = BindingMode.TwoWay });
             }
         }
 
@@ -412,7 +429,7 @@ namespace _20250318
         public ResizeHandleAdorner MyResizeHandleAdorner
         {
             get { return (ResizeHandleAdorner)GetValue(MyResizeHandleAdornerProperty); }
-            set { SetValue(MyResizeHandleAdornerProperty, value); }
+            protected set { SetValue(MyResizeHandleAdornerProperty, value); }
         }
         public static readonly DependencyProperty MyResizeHandleAdornerProperty =
             DependencyProperty.Register(nameof(MyResizeHandleAdorner), typeof(ResizeHandleAdorner), typeof(GeoShapeTThumb), new PropertyMetadata(null));
@@ -470,51 +487,88 @@ namespace _20250318
 
         #region メソッド
 
+        public void FitSizeAndPos()
+        {
+            var myBounds = new Rect(MyLeft, MyTop, Width, Height);
+            var unionBouns = new Rect(MyLeft, MyTop, Width, Height);
+            var shapeBounds = MyShapeThumb.GetShapeRenderBounds();
+            unionBouns.Union(shapeBounds);
+
+            var shapeLeft = MyShapeThumb.MyLeft;
+            var offsetLeft = shapeLeft + shapeBounds.Left;
+            MyLeft += offsetLeft;
+            MyShapeThumb.MyLeft -= offsetLeft;
+
+            var shapeTop = MyShapeThumb.MyTop;
+            var offsetTop = shapeTop + shapeBounds.Top;
+            MyTop += offsetTop;
+            MyShapeThumb.MyTop -= offsetTop;
+
+            Width = shapeBounds.Width;
+            Height = shapeBounds.Height;
+        }
         public void AnchorHandleSwitch()
         {
             MyShapeThumb?.AnchorSwitch();
         }
 
 
+        #region リサイズハンドル
+
         /// <summary>
         /// リサイズハンドルの表示切替、Adornerの付け外し
         /// </summary>
-        /// <returns>装飾</returns>
-        public ResizeHandleAdorner? ResizeHandleSwitch()
+        public void ResizeHandleSwitch()
         {
-            //図形のAdornerLayerを調べて装飾が在れば削除、なければ作成、追加する
+            //図形のAdornerLayerを調べてリサイズ用の装飾が在れば削除、なければ作成追加する
             var items = MyAdornerLayer.GetAdorners(this);
             if (items != null)
             {
-                foreach (var item in items.OfType<ResizeHandleAdorner>())
-                {
-                    MyAdornerLayer.Remove(item);
-                    MyResizeHandleAdorner.OnTargetLeftChanged -= MyResizeHandleAdorner_OnTargetLeftChanged;
-                    MyResizeHandleAdorner.OnTargetTopChanged -= MyResizeHandleAdorner_OnTargetTopChanged;
-                }
-                return null;
+                RemoveResizeHandleAdorner();
             }
             else
             {
-                MyResizeHandleAdorner.OnTargetLeftChanged += MyResizeHandleAdorner_OnTargetLeftChanged;
-                MyResizeHandleAdorner.OnTargetTopChanged += MyResizeHandleAdorner_OnTargetTopChanged;                
-                MyAdornerLayer.Add(MyResizeHandleAdorner);
-                return MyResizeHandleAdorner;
+                AddResizeHandleAdorner();
             }
-
         }
 
+        /// <summary>
+        /// リサイズハンドルの追加と
+        /// リサイズ時の縦横位置の変更量を通知するイベントを購読
+        /// </summary>
+        public void AddResizeHandleAdorner()
+        {
+            MyResizeHandleAdorner.OnTargetLeftChanged += MyResizeHandleAdorner_OnTargetLeftChanged;
+            MyResizeHandleAdorner.OnTargetTopChanged += MyResizeHandleAdorner_OnTargetTopChanged;
+            MyAdornerLayer.Add(MyResizeHandleAdorner);
+        }
+
+        /// <summary>
+        /// リサイズハンドルの削除と
+        /// リサイズ時の縦横位置の変更量を通知するイベントの購読を解除
+        /// </summary>
+        public void RemoveResizeHandleAdorner()
+        {
+            MyResizeHandleAdorner.OnTargetLeftChanged -= MyResizeHandleAdorner_OnTargetLeftChanged;
+            MyResizeHandleAdorner.OnTargetTopChanged -= MyResizeHandleAdorner_OnTargetTopChanged;
+            MyAdornerLayer.Remove(MyResizeHandleAdorner);
+        }
+
+        /// <summary>
+        /// リサイズ時に縦位置が変更されたとき、図形を逆方向へ移動
+        /// </summary>
+        /// <param name="obj"></param>
         private void MyResizeHandleAdorner_OnTargetTopChanged(double obj)
         {
-            MyShapeThumb.MyTop-=obj;
+            MyShapeThumb.MyTop -= obj;
         }
 
         private void MyResizeHandleAdorner_OnTargetLeftChanged(double obj)
         {
-            MyShapeThumb.MyLeft-=obj;
+            MyShapeThumb.MyLeft -= obj;
         }
+        #endregion リサイズハンドル
 
-        
         #endregion メソッド
 
 

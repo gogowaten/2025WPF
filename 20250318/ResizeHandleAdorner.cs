@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Globalization;
+using System.ComponentModel;
 
 namespace _20250318
 {
@@ -138,6 +139,16 @@ namespace _20250318
             });
         }
 
+
+        #region イベント
+        //ハンドルのドラッグ移動により、ターゲットの位置が変更されたときに、その変更量を通知
+        public event Action<double>? OnTargetLeftChanged;
+        public event Action<double>? OnTargetTopChanged;
+        //public event EventHandler<double>? OnTargetLeftChanged;//こっちでもいい
+        //public event PropertyChangedEventHandler PropertyChanged;//これは違う感じ
+        #endregion イベント
+
+
         //各ハンドルをドラッグ移動したとき
         private void Handle_DragDelta(object sender, DragDeltaEventArgs e)
         {
@@ -206,9 +217,6 @@ namespace _20250318
             return base.ArrangeOverride(finalSize);
         }
 
-
-        public event Action<double> OnTargetLeftChanged;
-        public event Action<double> OnTargetTopChanged;
 
         /// <summary>
         /// 移動量で水平移動とWidthを変更

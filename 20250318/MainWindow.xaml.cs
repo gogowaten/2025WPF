@@ -21,8 +21,13 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         var data = new ItemData();
+        data.MyPoints = [new Point(),new Point(200,0),new Point(200,100),new Point(0,100)];
+        data.MyShapeType = ShapeType.Bezier;
+        data.MyStrokeThickness = 10;
+
         MyThumb = new(data);
         MyCanvas.Children.Add(MyThumb);
+        DataContext = MyThumb;
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
@@ -31,7 +36,23 @@ public partial class MainWindow : Window
         //{
         //    layer.Add(new ResizeHandleAdorner(MyRect));
         //}
+        //MyThumb.MyShapeThumb.AddPoint()
+        
+    }
+
+    private void AdornerSwitch_Click(object sender, RoutedEventArgs e)
+    {
         MyThumb.ResizeHandleSwitch();
         MyThumb.AnchorHandleSwitch();
+    }
+
+    private void ShapTypeSwitch_Click(object sender, RoutedEventArgs e)
+    {
+        MyThumb.MyShapeThumb.ChangeShapeType();
+    }
+
+    private void FitSizeAndPos_Click(object sender, RoutedEventArgs e)
+    {
+        MyThumb.FitSizeAndPos();
     }
 }

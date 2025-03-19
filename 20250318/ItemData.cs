@@ -30,6 +30,9 @@ namespace _20250318
         public double MyStrokeThickness { get => _myStrokeThickness; set => SetProperty(ref _myStrokeThickness, value); }
 
 
+        private ShapeType _myShapeType;
+        public ShapeType MyShapeType { get => _myShapeType; set => SetProperty(ref _myShapeType, value); }
+
 
         public PointCollection MyPoints
         {

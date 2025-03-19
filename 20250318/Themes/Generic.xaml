@@ -68,7 +68,10 @@
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:GeoShapeThumb}">
           <local:GeoShape x:Name="shape"
-                          Stroke="Orange" StrokeThickness="30"
+                          DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                          Stroke="Orange"
+                          StrokeThickness="{Binding MyStrokeThickness}"
+                          MyShapeType="{Binding MyShapeType}"
                           MyHeadBeginType="Arrow"
                           MyPoints="0,20,200,20"/>
         </ControlTemplate>
@@ -92,7 +95,14 @@
                   Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}"
                   Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"
                   >
-            <local:GeoShapeThumb x:Name="shapeThumb"/>
+            <local:GeoShapeThumb x:Name="shapeThumb"
+                                 DataContext="{Binding
+                                    RelativeSource={RelativeSource Mode=TemplatedParent},
+                                    Path=MyItemData}"
+                                 MyStrokeThickness="{Binding MyStrokeThickness}"
+                                 MyShapeType="{Binding MyShapeType}"
+                                 MyPoints="{Binding MyPoints, Mode=TwoWay}"
+                                 />
             <Rectangle Stroke="DodgerBlue"
                        Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}"
                        Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"
