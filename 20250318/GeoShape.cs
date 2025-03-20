@@ -24,7 +24,7 @@ namespace _20250318
         public GeoShape()
         {
             MyInitializeBind();
-
+            
         }
 
         #region 初期処理
@@ -279,6 +279,17 @@ namespace _20250318
         #endregion 依存関係プロパティ
 
 
+        /// <summary>
+        /// RenderBoundsの更新、
+        /// RenderBoundsはRenderTransformを変更しても更新されないので、その時用
+        /// </summary>
+        public void UpdateRenderBounds()
+        {
+            //回転後のBounds
+            var clone = this.DefiningGeometry.Clone();
+            clone.Transform = RenderTransform;
+            MyRenderBounds = clone.GetRenderBounds(MyPen);
+        }
 
 
         /// <summary>

@@ -10,11 +10,17 @@ using System.ComponentModel;
 
 namespace _20250318
 {
+    //ハンドルの表示位置、ターゲットの境界線の上、内側、外側
+    public enum HandleLayoutType { Middle = 0, In, Out }
+
+
     /// <summary>
     /// 要素にリサイズ用のハンドルを装飾表示する
     /// </summary>
     public class ResizeHandleAdorner : Adorner
     {
+
+
         #region VisualCollectionで必要        
         protected override int VisualChildrenCount => MyVisualChildren.Count;
 
@@ -107,15 +113,23 @@ namespace _20250318
         //ハンドルの位置とターゲットの縦横サイズをバインド
         private void MyBind2(HandleThumb handle, DependencyProperty handleDp, DependencyProperty targetDp)
         {
-            handle.SetBinding(handleDp, new Binding()
-            {
-                Source = MyTarget,
-                Path = new PropertyPath(targetDp),
-                Mode = BindingMode.TwoWay,
-                Converter = new MyConvNonZero()
-            });
-
+            MultiBinding mb = new() { Converter = new MyConvNonZeroMulti(), Mode = BindingMode.OneWay };
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyHandleSizeProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyHandleLayoutProperty) });
+            mb.Bindings.Add(new Binding() { Source = MyTarget, Path = new PropertyPath(targetDp) });
+            handle.SetBinding(handleDp, mb);
         }
+        //private void MyBind2(HandleThumb handle, DependencyProperty handleDp, DependencyProperty targetDp)
+        //{
+        //    handle.SetBinding(handleDp, new Binding()
+        //    {
+        //        Source = MyTarget,
+        //        Path = new PropertyPath(targetDp),
+        //        Mode = BindingMode.TwoWay,
+        //        Converter = new MyConvNonZero()
+        //    });
+        //}
+
 
         //ハンドルの表示位置、ターゲットの辺の中間
         private void MyBind(HandleThumb handle, DependencyProperty dp, DependencyProperty targetProperty)
@@ -127,17 +141,26 @@ namespace _20250318
             handle.SetBinding(dp, mb);
         }
 
-        //ハンドルの位置とハンドルのサイズをバインド
+        ////ハンドルの位置とハンドルのサイズをバインド
+        //private void MyBindHandleSize(HandleThumb target, DependencyProperty dp)
+        //{
+        //    target.SetBinding(dp, new Binding()
+        //    {
+        //        Source = this,
+        //        Path = new PropertyPath(MyHandleSizeProperty),
+        //        Converter = new MyConvReverseSign(),
+        //        Mode = BindingMode.TwoWay
+        //    });
+        //}
+
         private void MyBindHandleSize(HandleThumb target, DependencyProperty dp)
         {
-            target.SetBinding(dp, new Binding()
-            {
-                Source = this,
-                Path = new PropertyPath(MyHandleSizeProperty),
-                Converter = new MyConvReverseSign(),
-                Mode = BindingMode.TwoWay
-            });
+            var mb = new MultiBinding() { Converter = new MyConvReverseSignMulti() };
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyHandleSizeProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyHandleLayoutProperty) });
+            target.SetBinding(dp, mb);
         }
+
 
 
         #region イベント
@@ -148,6 +171,35 @@ namespace _20250318
         //public event PropertyChangedEventHandler PropertyChanged;//これは違う感じ
         #endregion イベント
 
+        private bool SetTargetWidth(double horizontalChange)
+        {
+            if (MyTarget.Width + horizontalChange >= 1.0)
+            {
+                MyTarget.Width += horizontalChange;
+                return true;
+            }
+            else if (MyTarget.Width > 1.0)
+            {
+                MyTarget.Width = 1.0;
+                return true;
+            }
+            else { return false; }
+
+        }
+        private bool SetTargetHeight(double verticalChange)
+        {
+            if (MyTarget.Height + verticalChange >= 1.0)
+            {
+                MyTarget.Height += verticalChange;
+                return true;
+            }
+            else if (MyTarget.Height > 1.0)
+            {
+                MyTarget.Height = 1.0;
+                return true;
+            }
+            else { return false; }
+        }
 
         //各ハンドルをドラッグ移動したとき
         private void Handle_DragDelta(object sender, DragDeltaEventArgs e)
@@ -164,12 +216,12 @@ namespace _20250318
             }
             else if (sender == Right)
             {
-                Right.MyLeft += e.HorizontalChange;
+                SetTargetWidth(e.HorizontalChange);
                 e.Handled = true;
             }
             else if (sender == Bottom)
             {
-                Bottom.MyTop += e.VerticalChange;
+                SetTargetHeight(e.VerticalChange);
                 e.Handled = true;
             }
             else if (TopLeft == sender)
@@ -180,26 +232,44 @@ namespace _20250318
             }
             else if (TopRight == sender)
             {
-                VerticalChange(MyTarget, e.VerticalChange);
-                TopRight.MyLeft += e.HorizontalChange;
+                if (SetTargetWidth(e.HorizontalChange))
+                {
+                    VerticalChange(MyTarget, e.VerticalChange);
+                }
                 e.Handled = true;
             }
             else if (BottomLeft == sender)
             {
-                HorizontalChange(MyTarget, e.HorizontalChange);
-                BottomLeft.MyTop += e.VerticalChange;
+                if (SetTargetHeight(e.VerticalChange))
+                {
+                    HorizontalChange(MyTarget, e.HorizontalChange);
+                }
                 e.Handled = true;
             }
             else if (BottomRight == sender)
             {
-                BottomRight.MyLeft += e.HorizontalChange;
-                BottomRight.MyTop += e.VerticalChange;
+                SetTargetWidth(e.HorizontalChange);
+                SetTargetHeight(e.VerticalChange);
                 e.Handled = true;
             }
 
         }
 
 
+        #region 依存関係プロパティ
+
+
+        public HandleLayoutType MyHandleLayout
+        {
+            get { return (HandleLayoutType)GetValue(MyHandleLayoutProperty); }
+            set { SetValue(MyHandleLayoutProperty, value); }
+        }
+        public static readonly DependencyProperty MyHandleLayoutProperty =
+            DependencyProperty.Register(nameof(MyHandleLayout), typeof(HandleLayoutType), typeof(ResizeHandleAdorner),
+                new FrameworkPropertyMetadata(HandleLayoutType.Middle,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public double MyHandleSize
         {
@@ -208,7 +278,7 @@ namespace _20250318
         }
         public static readonly DependencyProperty MyHandleSizeProperty =
             DependencyProperty.Register(nameof(MyHandleSize), typeof(double), typeof(ResizeHandleAdorner), new FrameworkPropertyMetadata(20.0));
-
+        #endregion 依存関係プロパティ
 
         //これがないとCanvasのサイズが0のままになって何も表示されない
         protected override Size ArrangeOverride(Size finalSize)
@@ -220,33 +290,57 @@ namespace _20250318
 
         /// <summary>
         /// 移動量で水平移動とWidthを変更
-        /// ただしWidthが0未満にならないときだけ
+        /// もしwidthが1未満になるような移動量のときは、Widthが1になるように移動量を変換して処理
         /// </summary>
         /// <param name="target">ターゲット</param>
         /// <param name="horizontalChange">水平移動量</param>
         /// <returns></returns>
         private void HorizontalChange(FrameworkElement target, double horizontalChange)
         {
-            if (target.Width - horizontalChange > 0 && horizontalChange != 0)
+            if (horizontalChange == 0) { return; }
+            if (target.Width - horizontalChange > 0)
             {
-                OffsetLeft(target, horizontalChange);
-                target.Width -= horizontalChange;
-                OnTargetLeftChanged?.Invoke(horizontalChange);
+                target.Width-= horizontalChange;
             }
+            else
+            {
+                horizontalChange = target.Width - 1.0;
+                target.Width = 1.0;
+            }
+            OffsetLeft(target, horizontalChange);
+            //リサイズハンドルによりターゲットの位置が変更されたことを知らせる
+            OnTargetLeftChanged?.Invoke(horizontalChange);
         }
 
         private void VerticalChange(FrameworkElement target, double verticalChange)
         {
-            if (target.Height - verticalChange > 0 && verticalChange != 0)
+            if (verticalChange == 0) { return; }
+            if (target.Height - verticalChange > 0)
             {
-                OffsetTop(target, verticalChange);
                 target.Height -= verticalChange;
-                OnTargetTopChanged?.Invoke(verticalChange);
             }
+            else
+            {
+                verticalChange = target.Height - 1.0;
+                target.Height = 1.0;
+            }
+            OffsetTop(target, verticalChange);
+            OnTargetTopChanged?.Invoke(verticalChange);
         }
+        
+        //private void VerticalChange(FrameworkElement target, double verticalChange)
+        //{
+        //    if (target.Height - verticalChange > 0 && verticalChange != 0)
+        //    {
+        //        OffsetTop(target, verticalChange);
+        //        target.Height -= verticalChange;
+        //        OnTargetTopChanged?.Invoke(verticalChange);
+        //    }
+
+        //}
 
         /// <summary>
-        /// ターゲットをオフセット移動する
+        /// 要素をオフセット移動する
         /// </summary>
         /// <param name="elem">ターゲット</param>
         /// <param name="offset">移動量</param>
@@ -259,12 +353,37 @@ namespace _20250318
             Canvas.SetLeft(elem, Canvas.GetLeft(elem) + offset);
         }
 
+        public void GetHandlesRenderBounds()
+        {
+            var r = this.RenderSize;
+        }
+
+
     }
 
 
 
     #region コンバーター
+    public class MyConvReverseSignMulti : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var handleSize = (double)values[0];
+            var layout = (HandleLayoutType)values[1];
+            return layout switch
+            {
+                HandleLayoutType.In => 0,
+                HandleLayoutType.Out => -handleSize,
+                HandleLayoutType.Middle => -handleSize / 2.0,
+                _ => (object)0,
+            };
+        }
 
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
     /// <summary>
     /// +-を逆にする
     /// </summary>
@@ -276,6 +395,41 @@ namespace _20250318
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyConvNonZeroMulti : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var handleSize = (double)values[0];
+            var layout = (HandleLayoutType)values[1];
+            var targetSize = (double)values[2];
+            if (targetSize <= 1.0) { targetSize = 1.0; }
+            return layout switch
+            {
+                HandleLayoutType.In => targetSize - handleSize,
+                HandleLayoutType.Out => targetSize,
+                HandleLayoutType.Middle => targetSize - handleSize / 2.0,
+                _ => targetSize
+            };
+
+            //else
+            //{
+            //    return layout switch
+            //    {
+            //        HandleLayoutType.In => 1 - handleSize,
+            //        HandleLayoutType.Middle => 1-handleSize/2.0,
+            //        HandleLayoutType.Out => 1,
+            //        _ => 1
+            //    };
+            //}
+
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

@@ -73,7 +73,11 @@
                           StrokeThickness="{Binding MyStrokeThickness}"
                           MyShapeType="{Binding MyShapeType}"
                           MyHeadBeginType="Arrow"
-                          MyPoints="0,20,200,20"/>
+                          MyPoints="0,20,200,20">
+            <local:GeoShape.RenderTransform>
+              <RotateTransform x:Name="angle" Angle="{Binding MyAngle, Mode=TwoWay}"/>
+            </local:GeoShape.RenderTransform>
+          </local:GeoShape>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
@@ -102,7 +106,9 @@
                                  MyStrokeThickness="{Binding MyStrokeThickness}"
                                  MyShapeType="{Binding MyShapeType}"
                                  MyPoints="{Binding MyPoints, Mode=TwoWay}"
-                                 />
+                                 MyAngle="{Binding MyAngle, Mode=TwoWay}"
+                                 >
+            </local:GeoShapeThumb>
             <Rectangle Stroke="DodgerBlue"
                        Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}"
                        Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"

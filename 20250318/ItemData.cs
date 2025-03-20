@@ -34,6 +34,10 @@ namespace _20250318
         public ShapeType MyShapeType { get => _myShapeType; set => SetProperty(ref _myShapeType, value); }
 
 
+        private double _myAnagle;
+        public double MyAngle { get => _myAnagle; set => SetProperty(ref _myAnagle, value); }
+
+
         public PointCollection MyPoints
         {
             get { return (PointCollection)GetValue(MyPointsProperty); }

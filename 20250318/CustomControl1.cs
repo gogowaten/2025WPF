@@ -183,6 +183,15 @@ namespace _20250318
         #region 依存関係プロパティ
         #region 図形とのバインド用
 
+
+        public double MyAngle
+        {
+            get { return (double)GetValue(MyAngleProperty); }
+            set { SetValue(MyAngleProperty, value); }
+        }
+        public static readonly DependencyProperty MyAngleProperty =
+            DependencyProperty.Register(nameof(MyAngle), typeof(double), typeof(GeoShapeThumb), new PropertyMetadata(0.0));
+
         public ShapeType MyShapeType
         {
             get { return (ShapeType)GetValue(MyShapeTypeProperty); }
@@ -249,8 +258,14 @@ namespace _20250318
 
         #region メソッド
 
+        /// <summary>
+        /// 図形が収まるRectの取得
+        /// </summary>
+        /// <returns></returns>
         public Rect GetShapeRenderBounds()
         {
+            //RenderTransformが変更されていることを考慮して、更新してから取得
+            MyGeoShape.UpdateRenderBounds();
             return MyGeoShape.MyRenderBounds;
         }
 
@@ -553,10 +568,17 @@ namespace _20250318
             MyShapeThumb.ChangeToBezier();
         }
 
-
+        /// <summary>
+        /// 自身をリサイズとアンカーの両方のハンドルを含むサイズと位置にする
+        /// </summary>
         public void FitSizeAndPosAdorner()
         {
-
+            //リサイズハンドルのBounds
+            MyResizeHandleAdorner.GetHandlesRenderBounds();
+        }
+        public void Test()
+        {
+            MyResizeHandleAdorner.MyHandleLayout = HandleLayoutType.In;
         }
 
         /// <summary>
@@ -564,21 +586,23 @@ namespace _20250318
         /// </summary>
         public void FitSizeAndPos()
         {
-            //var myBounds = new Rect(MyLeft, MyTop, Width, Height);
-            var unionBouns = new Rect(MyLeft, MyTop, Width, Height);
             var shapeBounds = MyShapeThumb.GetShapeRenderBounds();
-            unionBouns.Union(shapeBounds);
 
-            var shapeLeft = MyShapeThumb.MyLeft;
-            var offsetLeft = shapeLeft + shapeBounds.Left;
+            //var myBounds = new Rect(MyLeft, MyTop, Width, Height);
+            //var unionBouns = new Rect(MyLeft, MyTop, Width, Height);
+            //unionBouns.Union(shapeBounds);
+
+            //自身と図形の横位置
+            var offsetLeft = MyShapeThumb.MyLeft + shapeBounds.Left;
             MyLeft += offsetLeft;
             MyShapeThumb.MyLeft -= offsetLeft;
 
-            var shapeTop = MyShapeThumb.MyTop;
-            var offsetTop = shapeTop + shapeBounds.Top;
+            //自身と図形の縦位置
+            var offsetTop = MyShapeThumb.MyTop + shapeBounds.Top;
             MyTop += offsetTop;
             MyShapeThumb.MyTop -= offsetTop;
 
+            //自身のサイズ
             Width = shapeBounds.Width;
             Height = shapeBounds.Height;
         }
