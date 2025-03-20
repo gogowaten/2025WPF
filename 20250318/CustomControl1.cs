@@ -578,7 +578,21 @@ namespace _20250318
         }
         public void Test()
         {
-            MyResizeHandleAdorner.MyHandleLayout = HandleLayoutType.In;
+            //MyResizeHandleAdorner.MyHandleLayout = HandleLayoutType.In;
+            var handleLayout = MyResizeHandleAdorner.MyHandleLayout;
+            if (handleLayout == HandleLayoutType.In)
+            {
+                handleLayout = HandleLayoutType.Middle;
+            }
+            else if (handleLayout == HandleLayoutType.Middle)
+            {
+                handleLayout = HandleLayoutType.Out;
+            }
+            else
+            {
+                handleLayout = HandleLayoutType.In;
+            }
+            MyResizeHandleAdorner.MyHandleLayout = handleLayout;
         }
 
         /// <summary>

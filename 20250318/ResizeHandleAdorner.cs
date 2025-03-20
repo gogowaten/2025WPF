@@ -300,7 +300,7 @@ namespace _20250318
             if (horizontalChange == 0) { return; }
             if (target.Width - horizontalChange > 0)
             {
-                target.Width-= horizontalChange;
+                target.Width -= horizontalChange;
             }
             else
             {
@@ -327,17 +327,7 @@ namespace _20250318
             OffsetTop(target, verticalChange);
             OnTargetTopChanged?.Invoke(verticalChange);
         }
-        
-        //private void VerticalChange(FrameworkElement target, double verticalChange)
-        //{
-        //    if (target.Height - verticalChange > 0 && verticalChange != 0)
-        //    {
-        //        OffsetTop(target, verticalChange);
-        //        target.Height -= verticalChange;
-        //        OnTargetTopChanged?.Invoke(verticalChange);
-        //    }
 
-        //}
 
         /// <summary>
         /// 要素をオフセット移動する
@@ -372,10 +362,10 @@ namespace _20250318
             var layout = (HandleLayoutType)values[1];
             return layout switch
             {
-                HandleLayoutType.In => 0,
+                HandleLayoutType.In => 0.0,
                 HandleLayoutType.Out => -handleSize,
                 HandleLayoutType.Middle => -handleSize / 2.0,
-                _ => (object)0,
+                _ => (object)0.0,
             };
         }
 
