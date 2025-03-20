@@ -5,8 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250320_ResizeHandleAdorner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="367" Width="602">
+  <Grid UseLayoutRounding="True">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
+    <Canvas x:Name="MyCanvas">
+      <Rectangle x:Name="MyElement" Fill="Red" Width="100" Height="100" Canvas.Left="150" Canvas.Top="50">
+        <Rectangle.RenderTransform>
+          <RotateTransform Angle="0"/>
+        </Rectangle.RenderTransform>
+      </Rectangle>
 
-    </Grid>
+    </Canvas>
+    
+    
+    <StackPanel Grid.Column="1">
+      <Button Content="test" Click="Button_Click"/>
+      <ComboBox x:Name="MyComboBox"/>
+      <Slider x:Name="MySlider" Minimum="1" Maximum="50" Value="20"/>
+      
+    </StackPanel>
+  </Grid>
 </Window>
