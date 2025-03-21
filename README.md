@@ -1,6 +1,8 @@
 # 20250320_ResizeHandleAdorner
 https://github.com/gogowaten/2025WPF/tree/main/20250320_ResizeHandleAdorner<br>
 ![Animation20250320_221629](https://github.com/user-attachments/assets/9454f1b3-5ef2-4944-a114-a50d50f407c8)<br>
+WPF、要素をリサイズするときのハンドルThumbをAdornerで作ってみた.mp6 - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/03/21/141719<br>
 リサイズAdorner、ハンドルの表示位置をターゲットの内側と境界線の上に表示切替できるようにした<br>
 <br><br><br>
 
