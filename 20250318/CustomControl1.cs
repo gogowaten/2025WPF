@@ -122,7 +122,7 @@ namespace _20250318
         //アンカーハンドルを表示する装飾
         public AnchorHandleAdorner? MyShapesAnchorHandleAdorner { get; private set; }
 
-        //装飾のLayer
+        //アンカーハンドルを表示する装飾のLayer
         public AdornerLayer MyShapesAdornerLayer { get; private set; } = null!;
 
         //中に表示している図形
