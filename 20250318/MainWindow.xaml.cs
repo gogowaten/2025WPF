@@ -20,6 +20,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+
+
         var data = new ItemData();
         data.MyPoints = [new Point(), new Point(200, 0)];
         data.MyShapeType = ShapeType.Line;
@@ -34,10 +36,6 @@ public partial class MainWindow : Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        //if(AdornerLayer.GetAdornerLayer(MyRect) is AdornerLayer layer)
-        //{
-        //    layer.Add(new ResizeHandleAdorner(MyRect));
-        //}
         MyThumb.Test();
     }
 
@@ -82,5 +80,10 @@ public partial class MainWindow : Window
     private void FitHandleSizeAndPos_Click(object sender, RoutedEventArgs e)
     {
         MyThumb.FitSizeAndPosAdorner();
+    }
+
+    private void ResizeHandleType_Click(object sender, RoutedEventArgs e)
+    {
+        MyThumb.ChangeResizeHandleType();
     }
 }

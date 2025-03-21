@@ -92,43 +92,33 @@ namespace _20250320_ResizeHandleAdorner
             MyBind(Right, HandleThumb.MyTopProperty, HeightProperty);
             MyBind(Bottom, HandleThumb.MyLeftProperty, WidthProperty);
 
-            //ハンドルの位置とターゲットの縦横サイズをバインド
-            MyBind2(Right, HandleThumb.MyLeftProperty, WidthProperty);
-            MyBind2(Bottom, HandleThumb.MyTopProperty, HeightProperty);
-            MyBind2(TopRight, HandleThumb.MyLeftProperty, WidthProperty);
-            MyBind2(BottomLeft, HandleThumb.MyTopProperty, HeightProperty);
-            MyBind2(BottomRight, HandleThumb.MyLeftProperty, WidthProperty);
-            MyBind2(BottomRight, HandleThumb.MyTopProperty, HeightProperty);
+            //ハンドルの位置とターゲットの縦横サイズをバインド、下、右用
+            MyBindForBottomRight(Right, HandleThumb.MyLeftProperty, WidthProperty);
+            MyBindForBottomRight(Bottom, HandleThumb.MyTopProperty, HeightProperty);
+            MyBindForBottomRight(TopRight, HandleThumb.MyLeftProperty, WidthProperty);
+            MyBindForBottomRight(BottomLeft, HandleThumb.MyTopProperty, HeightProperty);
+            MyBindForBottomRight(BottomRight, HandleThumb.MyLeftProperty, WidthProperty);
+            MyBindForBottomRight(BottomRight, HandleThumb.MyTopProperty, HeightProperty);
 
-            //ハンドルの位置とハンドルのサイズをバインド
-            MyBindHandleSize(Top, HandleThumb.MyTopProperty);
-            MyBindHandleSize(Left, HandleThumb.MyLeftProperty);
-            MyBindHandleSize(TopLeft, HandleThumb.MyTopProperty);
-            MyBindHandleSize(TopLeft, HandleThumb.MyLeftProperty);
-            MyBindHandleSize(TopRight, HandleThumb.MyTopProperty);
-            MyBindHandleSize(BottomLeft, HandleThumb.MyLeftProperty);
+            //ハンドルの位置とターゲットの縦横サイズをバインド、上、左用
+            MyBindForTopLeft(Top, HandleThumb.MyTopProperty);
+            MyBindForTopLeft(Left, HandleThumb.MyLeftProperty);
+            MyBindForTopLeft(TopLeft, HandleThumb.MyTopProperty);
+            MyBindForTopLeft(TopLeft, HandleThumb.MyLeftProperty);
+            MyBindForTopLeft(TopRight, HandleThumb.MyTopProperty);
+            MyBindForTopLeft(BottomLeft, HandleThumb.MyLeftProperty);
 
         }
 
         //ハンドルの位置とターゲットの縦横サイズをバインド
-        private void MyBind2(HandleThumb handle, DependencyProperty handleDp, DependencyProperty targetDp)
+        private void MyBindForBottomRight(HandleThumb handle, DependencyProperty handleDp, DependencyProperty targetDp)
         {
-            MultiBinding mb = new() { Converter = new MyConvNonZeroMulti(), Mode = BindingMode.OneWay };
+            MultiBinding mb = new() { Converter = new MyConvForBottomRight(), Mode = BindingMode.OneWay };
             mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyHandleSizeProperty) });
             mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyHandleLayoutProperty) });
             mb.Bindings.Add(new Binding() { Source = MyTarget, Path = new PropertyPath(targetDp) });
             handle.SetBinding(handleDp, mb);
         }
-        //private void MyBind2(HandleThumb handle, DependencyProperty handleDp, DependencyProperty targetDp)
-        //{
-        //    handle.SetBinding(handleDp, new Binding()
-        //    {
-        //        Source = MyTarget,
-        //        Path = new PropertyPath(targetDp),
-        //        Mode = BindingMode.TwoWay,
-        //        Converter = new MyConvNonZero()
-        //    });
-        //}
 
 
         //ハンドルの表示位置、ターゲットの辺の中間
@@ -141,24 +131,13 @@ namespace _20250320_ResizeHandleAdorner
             handle.SetBinding(dp, mb);
         }
 
-        ////ハンドルの位置とハンドルのサイズをバインド
-        //private void MyBindHandleSize(HandleThumb target, DependencyProperty dp)
-        //{
-        //    target.SetBinding(dp, new Binding()
-        //    {
-        //        Source = this,
-        //        Path = new PropertyPath(MyHandleSizeProperty),
-        //        Converter = new MyConvReverseSign(),
-        //        Mode = BindingMode.TwoWay
-        //    });
-        //}
-
-        private void MyBindHandleSize(HandleThumb target, DependencyProperty dp)
+        //ハンドルの位置とハンドルのサイズをバインド       
+        private void MyBindForTopLeft(HandleThumb handle, DependencyProperty dp)
         {
-            var mb = new MultiBinding() { Converter = new MyConvReverseSignMulti() };
+            var mb = new MultiBinding() { Converter = new MyConvForTopLeftHandle() };
             mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyHandleSizeProperty) });
             mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyHandleLayoutProperty) });
-            target.SetBinding(dp, mb);
+            handle.SetBinding(dp, mb);
         }
 
 
@@ -354,7 +333,11 @@ namespace _20250320_ResizeHandleAdorner
 
 
     #region コンバーター
-    public class MyConvReverseSignMulti : IMultiValueConverter
+    /// <summary>
+    /// ハンドルサイズと位置指定によって位置を計算
+    /// 左要素か上要素があるハンドル用
+    /// </summary>
+    public class MyConvForTopLeftHandle : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -374,23 +357,12 @@ namespace _20250320_ResizeHandleAdorner
             throw new NotImplementedException();
         }
     }
+
     /// <summary>
-    /// +-を逆にする
+    /// ハンドルサイズと位置指定とリサイズ対象のサイズからハンドルの位置を計算
+    /// 右要素か下要素があるハンドル用
     /// </summary>
-    public class MyConvReverseSign : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return -(double)value;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class MyConvNonZeroMulti : IMultiValueConverter
+    public class MyConvForBottomRight : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -405,41 +377,11 @@ namespace _20250320_ResizeHandleAdorner
                 HandleLayoutType.Online => targetSize - handleSize / 2.0,
                 _ => targetSize
             };
-
-            //else
-            //{
-            //    return layout switch
-            //    {
-            //        HandleLayoutType.In => 1 - handleSize,
-            //        HandleLayoutType.Middle => 1-handleSize/2.0,
-            //        HandleLayoutType.Out => 1,
-            //        _ => 1
-            //    };
-            //}
-
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
-        }
-    }
-
-    /// <summary>
-    /// 0未満のときだけ1に変換
-    /// </summary>
-    public class MyConvNonZero : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            double v = (double)value;
-            return v < 1 ? 1 : v;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            double v = (double)value;
-            return v < 1 ? 1 : v;
         }
     }
 

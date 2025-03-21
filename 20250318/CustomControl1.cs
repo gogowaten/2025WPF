@@ -576,9 +576,10 @@ namespace _20250318
             //リサイズハンドルのBounds
             MyResizeHandleAdorner.GetHandlesRenderBounds();
         }
-        public void Test()
+
+        //リサイズハンドルの表示位置変更
+        public void ChangeResizeHandleType()
         {
-            //MyResizeHandleAdorner.MyHandleLayout = HandleLayoutType.In;
             var handleLayout = MyResizeHandleAdorner.MyHandleLayout;
             if (handleLayout == HandleLayoutType.In)
             {
@@ -593,6 +594,29 @@ namespace _20250318
                 handleLayout = HandleLayoutType.In;
             }
             MyResizeHandleAdorner.MyHandleLayout = handleLayout;
+        }
+
+        public void Test()
+        {
+            Rect? AnchorBounds = MyShapeThumb.MyShapesAnchorHandleAdorner?.TTT();
+            //Rect? AnchorBounds = MyShapeThumb.MyShapesAnchorHandleAdorner?.GetRenderBounds();
+            Rect shapeBounds = MyShapeThumb.GetShapeRenderBounds();
+            Rect union = MyShapeThumb.GetShapeRenderBounds();
+            if (AnchorBounds is Rect rr)
+            {
+                union.Union(rr);
+            }
+            Width = union.Width;
+            Height=union.Height;
+
+            var offsetLeft = union.Left + MyShapeThumb.MyLeft;
+            var offsetTop = union.Top + MyShapeThumb.MyTop;
+
+            MyShapeThumb.MyLeft -= offsetLeft;
+            MyShapeThumb.MyTop -= offsetTop;
+            MyLeft += offsetLeft;
+            MyTop += offsetTop;
+
         }
 
         /// <summary>

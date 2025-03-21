@@ -2,6 +2,8 @@
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+//WPF、要素をリサイズするときのハンドルThumbをAdornerで作ってみた.mp6 - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/03/21/141719
 
 namespace _20250320_ResizeHandleAdorner
 {

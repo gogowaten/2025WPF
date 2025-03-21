@@ -36,7 +36,11 @@
       <Button x:Name="FitHandleSizeAndPos" Content="ハンドルサイズと位置を図形に合わせる" Click="FitHandleSizeAndPos_Click"/>
       <Button x:Name="AddPointToEnd" Content="末尾にPoint追加" Click="AddPointToEnd_Click"/>
       <Button x:Name="RemovePointEnd" Content="末尾のPoint削除" Click="RemovePointEnd_Click"/>
+      <Button x:Name="ResizeHandleType" Content="リサイズハンドル位置" Click="ResizeHandleType_Click"/>
       <Button Content="test" Click="Button_Click"/>
+      
+      
+      
       <GroupBox DataContext="{Binding}" Header="MyShapeTThumb">
         <StackPanel>
           <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth 0}"/>

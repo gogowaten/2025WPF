@@ -75,7 +75,7 @@
                           MyHeadBeginType="Arrow"
                           MyPoints="0,20,200,20">
             <local:GeoShape.RenderTransform>
-              <RotateTransform x:Name="angle" Angle="{Binding MyAngle, Mode=TwoWay}"/>
+              <RotateTransform x:Name="angle" Angle="{Binding Path=MyAngle, Mode=TwoWay}"/>
             </local:GeoShape.RenderTransform>
           </local:GeoShape>
         </ControlTemplate>

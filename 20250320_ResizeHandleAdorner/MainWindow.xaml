@@ -12,14 +12,8 @@
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
     <Canvas x:Name="MyCanvas">
-      <Rectangle x:Name="MyElement" Fill="Red" Width="100" Height="100" Canvas.Left="150" Canvas.Top="50">
-        <Rectangle.RenderTransform>
-          <RotateTransform Angle="0"/>
-        </Rectangle.RenderTransform>
-      </Rectangle>
-
+      <Rectangle x:Name="MyElement" Fill="Red" Width="100" Height="100" Canvas.Left="150" Canvas.Top="50"/>
     </Canvas>
-    
     
     <StackPanel Grid.Column="1">
       <Button Content="test" Click="Button_Click"/>

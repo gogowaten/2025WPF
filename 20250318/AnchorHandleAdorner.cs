@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media.Imaging;
 
 namespace _20250318
 {
@@ -272,6 +273,61 @@ namespace _20250318
             DependencyProperty.Register(nameof(MyAnchorHandleSize), typeof(double), typeof(AnchorHandleAdorner), new PropertyMetadata(20.0));
 
         #endregion 依存関係プロパティ
+
+        #region メソッド
+        public Rect GetRenderBounds()
+        {
+            var pc = MyTarget.MyPoints.Clone();
+            double left = double.MaxValue;
+            double top = double.MaxValue;
+            double width = double.MinValue;
+            double height = double.MinValue;
+            foreach (var item in pc)
+            {
+                if (left > item.X) { left = item.X; }
+                if (top > item.Y) { top = item.Y; }
+                if (width < item.X) { width = item.X; }
+                if (height < item.Y) { height = item.Y; }
+            }
+            width -= left;
+            height -= top;
+            var bounds = new Rect(left, top, width, height);
+            bounds.Inflate(MyAnchorHandleSize / 2.0, MyAnchorHandleSize / 2.0);
+            var rr = RenderTransform.TransformBounds(bounds);
+            return bounds;
+        }
+        public Rect TTT()
+        {
+            PointCollection pc = [];
+            foreach (var item in MyTarget.MyPoints)
+            {
+                pc.Add(MyTarget.RenderTransform.Transform(item));
+            }
+            var bounds = GetPointCollectionBounds(pc);
+            bounds.Inflate(MyAnchorHandleSize / 2.0, MyAnchorHandleSize / 2.0);
+            return bounds;
+
+        }
+
+        public static Rect GetPointCollectionBounds(PointCollection pc)
+        {
+            double left = double.MaxValue;
+            double top = double.MaxValue;
+            double width = double.MinValue;
+            double height = double.MinValue;
+            foreach (var item in pc)
+            {
+                if (left > item.X) { left = item.X; }
+                if (top > item.Y) { top = item.Y; }
+                if (width < item.X) { width = item.X; }
+                if (height < item.Y) { height = item.Y; }
+            }
+            width -= left;
+            height -= top;
+            var bounds = new Rect(left, top, width, height);
+            return bounds;
+        }
+        #endregion メソッド
     }
 
 
