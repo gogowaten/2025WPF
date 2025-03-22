@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace _20250321
+namespace _20250322_GeoShapeThumbThumb
 {
 
     /// <summary>
@@ -128,6 +128,10 @@ namespace _20250321
         //中に表示している図形
         private GeoShape MyGeoShape { get; set; } = null!;
         #endregion フィールド
+
+        //イベント
+        //アンカーハンドル移動終了時にそれを知らせる用
+        public event Action<DragCompletedEventArgs>? OnAnchorHandleDragComleted;
 
 
         static GeoShapeThumb()
@@ -363,7 +367,7 @@ namespace _20250321
             }
         }
 
-        public event Action<DragCompletedEventArgs>? OnAnchorHandleDragComleted;
+        
         private void MyShapesAnchorHandleAdorner_OnDragCompleted(DragCompletedEventArgs obj)
         {
             OnAnchorHandleDragComleted?.Invoke(obj);
@@ -431,7 +435,7 @@ namespace _20250321
                 {
                     MyItemData.MyPoints = [new Point(0, 0), new Point(200, 100)];
                 }
-                
+
             }
 
         }
