@@ -5,8 +5,65 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250322_GeoShapeThumbThumb"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="367" Width="602">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="250"/>
+    </Grid.ColumnDefinitions>
+    <Canvas x:Name="MyCanvas" UseLayoutRounding="True"/>
 
-    </Grid>
+
+
+    <StackPanel Grid.Column="1">
+      <UniformGrid Columns="2">
+        <Button Content="test" Click="Button_Click"/>
+        <Button x:Name="ShapTypeSwitch" Content="直線と曲線切替" Click="ShapTypeSwitch_Click"/>
+        <Button x:Name="Line" Content="直線にする" Click="Line_Click"/>
+        <Button x:Name="Bezier" Content="ベジェ曲線にする" Click="Bezier_Click"/>
+        <Button x:Name="AddPointToEnd" Content="末尾にPoint追加" Click="AddPointToEnd_Click"/>
+        <Button x:Name="RemovePointEnd" Content="末尾のPoint削除" Click="RemovePointEnd_Click"/>
+        <Button x:Name="ResizeHandleType" Content="リサイズハンドル位置" Click="ResizeHandleType_Click"/>
+        <Button x:Name="AdornerSwitch" Content="ハンドル表示切替" Click="AdornerSwitch_Click"/>
+      </UniformGrid>
+      <Button x:Name="FitSizeAndPos" Content="図形に合わせる" Click="FitSizeAndPos_Click"/>
+      <Button x:Name="FitHandleSizeAndPos" Content="アンカーハンドルと図形に合わせる" Click="FitHandleSizeAndPos_Click"/>
+
+
+
+      <GroupBox DataContext="{Binding}" Header="MyShapeTThumb">
+        <StackPanel>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth 0}"/>
+            <TextBlock Text="{Binding ActualHeight, StringFormat=ActualHeight 0}"/>
+            <TextBlock Text="{Binding MyLeft, StringFormat=MyLeft 0.0}"/>
+            <TextBlock Text="{Binding MyTop, StringFormat=MyTop 0.0}"/>
+            <TextBlock Text="{Binding MyItemData.MyStrokeThickness, StringFormat=MyStrokeThickness 0}"/>
+            <Slider Value="{Binding MyItemData.MyStrokeThickness}"
+                    Minimum="0" Maximum="50"
+                    TickFrequency="5" IsSnapToTickEnabled="True"/>
+            <TextBlock Text="{Binding MyItemData.MyAngle, StringFormat=MyAngle 0}"/>
+            <Slider Value="{Binding MyItemData.MyAngle}"
+                    Minimum="0" Maximum="90"
+                    TickFrequency="10" IsSnapToTickEnabled="True"/>
+          </UniformGrid>
+          <TextBlock Text="{Binding MyItemData.MyShapeType, StringFormat=MyShapeType {0}}"/>
+          <TextBlock Text="{Binding MyItemData.MyPoints, StringFormat=poi {0:0}}" TextWrapping="Wrap"/>
+        </StackPanel>
+      </GroupBox>
+      <GroupBox DataContext="{Binding MyShapeThumb}" Header="MyShapeThumb">
+        <StackPanel>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth 0}"/>
+            <TextBlock Text="{Binding ActualHeight, StringFormat=ActualHeight 0}"/>
+            <TextBlock Text="{Binding MyLeft, StringFormat=MyLeft {0:0}}"/>
+            <TextBlock Text="{Binding MyTop, StringFormat=MyTop {0:0}}"/>
+          </UniformGrid>
+          <TextBlock Text="{Binding MyShapeType, StringFormat=MyShapeType {0}}"/>
+          <TextBlock Text="{Binding MyPoints, StringFormat=poi {0:0}}" TextWrapping="Wrap"/>
+
+        </StackPanel>
+      </GroupBox>
+    </StackPanel>
+  </Grid>
 </Window>

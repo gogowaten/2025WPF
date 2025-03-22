@@ -450,7 +450,7 @@ namespace _20250322_GeoShapeThumbThumb
 
         #region 依存関係プロパティ
 
-
+        //リサイズハンドル
         public ResizeHandleAdorner MyResizeHandleAdorner
         {
             get { return (ResizeHandleAdorner)GetValue(MyResizeHandleAdornerProperty); }
@@ -461,7 +461,7 @@ namespace _20250322_GeoShapeThumbThumb
 
 
 
-        #region 図形とのバインド用
+        #region 図形Thumbとのバインド用
 
         public GeoShapeThumb MyShapeThumb
         {
@@ -644,7 +644,8 @@ namespace _20250322_GeoShapeThumbThumb
         }
 
         /// <summary>
-        /// 自身のサイズと位置を図形に合わせる
+        /// 自身のサイズと位置を図形に合わせる、けど
+        /// FitToShapeAndAnchorHandleがあるから必要ないかも
         /// </summary>
         public void FitSizeAndPos()
         {
@@ -716,7 +717,7 @@ namespace _20250322_GeoShapeThumbThumb
         }
 
         /// <summary>
-        /// リサイズ時に縦位置が変更されたとき、図形を逆方向へ移動
+        /// リサイズ時に縦位置が変更されたとき、図形Thumbを逆方向へ移動
         /// </summary>
         /// <param name="obj"></param>
         private void MyResizeHandleAdorner_OnTargetTopChanged(double obj)

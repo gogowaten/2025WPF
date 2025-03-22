@@ -287,7 +287,7 @@ namespace _20250322_GeoShapeThumbThumb
         public void UpdateRenderBounds()
         {
             //回転後のBounds
-            var clone = this.DefiningGeometry.Clone();
+            Geometry clone = this.DefiningGeometry.Clone();
             clone.Transform = RenderTransform;
             MyRenderBounds = clone.GetRenderBounds(MyPen);
         }
