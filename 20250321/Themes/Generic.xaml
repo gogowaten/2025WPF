@@ -94,7 +94,7 @@
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:GeoShapeTThumb}">
           <Canvas x:Name="PART_Canvas"
-                  Background="AliceBlue"
+                  Background="Linen"
                   ClipToBounds="True"
                   Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}"
                   Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"
@@ -109,7 +109,7 @@
                                  MyAngle="{Binding MyAngle, Mode=TwoWay}"
                                  >
             </local:GeoShapeThumb>
-            <Rectangle Stroke="DodgerBlue"
+            <Rectangle Stroke="Orange"
                        Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}"
                        Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"
                        />

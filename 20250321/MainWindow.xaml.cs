@@ -44,6 +44,7 @@ public partial class MainWindow : Window
     {
         MyThumb.ResizeHandleSwitch();
         MyThumb.AnchorHandleSwitch();
+        MyThumb.FitToShapeAndAnchorHandle();
     }
 
     private void ShapTypeSwitch_Click(object sender, RoutedEventArgs e)
@@ -60,22 +61,26 @@ public partial class MainWindow : Window
     private void Line_Click(object sender, RoutedEventArgs e)
     {
         MyThumb.ChangeToLine();
+        MyThumb.FitToShapeAndAnchorHandle();
     }
 
     private void Bezier_Click(object sender, RoutedEventArgs e)
     {
         MyThumb.ChangeToBezier();
+        MyThumb.FitToShapeAndAnchorHandle();
     }
 
     private void AddPointToEnd_Click(object sender, RoutedEventArgs e)
     {
         Random r = new();
         MyThumb.AddPoint(new Point(r.Next(300), r.Next(200)));
+        MyThumb.FitToShapeAndAnchorHandle();
     }
 
     private void RemovePointEnd_Click(object sender, RoutedEventArgs e)
     {
         MyThumb.RemovePointEnd();
+        MyThumb.FitToShapeAndAnchorHandle();
     }
 
     private void FitHandleSizeAndPos_Click(object sender, RoutedEventArgs e)

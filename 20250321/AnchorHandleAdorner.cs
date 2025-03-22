@@ -244,7 +244,18 @@ namespace _20250321
                     Mode = BindingMode.TwoWay
                 });
             thumb.DragDelta += Thumb_DragDelta;
+            thumb.DragCompleted += Thumb_DragCompleted;
             return thumb;
+        }
+
+        /// <summary>
+        /// ハンドル移動終了時にそれを知らせるためのイベント、
+        /// DragCompletedEventArgsを送っているけどいらないかも
+        /// </summary>
+        public event Action<DragCompletedEventArgs>? OnDragCompleted;
+        private void Thumb_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            OnDragCompleted?.Invoke(e);
         }
 
         //ハンドルThumbのマウスドラッグ移動、対応するPointも更新する

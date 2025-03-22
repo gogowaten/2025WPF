@@ -350,16 +350,23 @@ namespace _20250321
             if (MyShapesAnchorHandleAdorner == null)
             {
                 MyShapesAnchorHandleAdorner = new AnchorHandleAdorner(MyGeoShape);
+                MyShapesAnchorHandleAdorner.OnDragCompleted += MyShapesAnchorHandleAdorner_OnDragCompleted;
                 MyShapesAdornerLayer.Add(MyShapesAnchorHandleAdorner);
                 return MyShapesAnchorHandleAdorner;
             }
             else
             {
+                MyShapesAnchorHandleAdorner.OnDragCompleted -= MyShapesAnchorHandleAdorner_OnDragCompleted;
                 MyShapesAdornerLayer.Remove(MyShapesAnchorHandleAdorner);
                 MyShapesAnchorHandleAdorner = null;
                 return null;
             }
+        }
 
+        public event Action<DragCompletedEventArgs> OnAnchorHandleDragComleted;
+        private void MyShapesAnchorHandleAdorner_OnDragCompleted(DragCompletedEventArgs obj)
+        {
+            OnAnchorHandleDragComleted?.Invoke(obj);
         }
         #endregion メソッド
 
@@ -419,6 +426,7 @@ namespace _20250321
             if (GetTemplateChild("shapeThumb") is GeoShapeThumb shape)
             {
                 MyShapeThumb = shape;
+                MyShapeThumb.OnAnchorHandleDragComleted += MyShapeThumb_OnAnchorHandleDragComleted;
                 if (MyItemData.MyPoints == null)
                 {
                     MyItemData.MyPoints = [new Point(0, 0), new Point(200, 100)];
@@ -426,6 +434,11 @@ namespace _20250321
                 
             }
 
+        }
+
+        private void MyShapeThumb_OnAnchorHandleDragComleted(DragCompletedEventArgs obj)
+        {
+            FitToShapeAndAnchorHandle();
         }
 
 
