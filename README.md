@@ -1,7 +1,7 @@
 # 20250322_GeoShapeThumbThumb
 https://github.com/gogowaten/2025WPF/tree/main/20250322_GeoShapeThumbThumb<br>
-WPF、ここ2ヶ![Animation20250322_120056](https://github.com/user-attachments/assets/00030233-48ab-44fa-beab-d8f305e1d0a5)<br>
-月間で行ってきたことのまとめ、矢印図形の移動と編集 - 午後わてんのブログ<br>
+![Animation20250322_120056](https://github.com/user-attachments/assets/00030233-48ab-44fa-beab-d8f305e1d0a5)<br>
+WPF、ここ2ヶ月間で行ってきたことのまとめ、矢印図形の移動と編集 - 午後わてんのブログ<br>
 https://gogowaten.hatenablog.com/entry/2025/03/22/151516<br>
 <br><br><br>
 
