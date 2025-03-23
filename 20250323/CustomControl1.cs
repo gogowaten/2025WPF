@@ -382,6 +382,7 @@ namespace _20250323
 
         }
 
+
         private void KisoThumb_Loaded(object sender, RoutedEventArgs e)
         {
             MyBind();
@@ -514,7 +515,7 @@ namespace _20250323
         #region マウスクリック
 
         /// <summary>
-        /// クリックダウン時、
+        /// マウスダウン時、
         /// ClickedThumb更新後、SelectedThumbsを更新
         /// </summary>
         /// <param name="sender"></param>
@@ -525,15 +526,17 @@ namespace _20250323
             var sou = e.Source;
             var ori = e.OriginalSource;
 
-            if (e.Source == e.OriginalSource)
+            //if (e.Source == e.OriginalSource)
+            if(this is not RootThumb || this is not GroupThumb)
             {
                 Focusable = false;
                 UpdateSelectedThumbs(this, Keyboard.Modifiers == ModifierKeys.Control);
             }
+
         }
 
         /// <summary>
-        /// SelectedThumbsを更新、クリックダウン専用
+        /// SelectedThumbsを更新、マウスダウン専用
         /// </summary>
         /// <param name="clickedThumb">クリックされたThumb</param>
         /// <param name="isControlPressed">ctrlキーが押されていた</param>
@@ -1229,7 +1232,7 @@ namespace _20250323
         ///内部図形の移動、
         ///Thumbの移動 
         /// </summary>
-     
+
 
         /// <summary>
         /// 回転対応！！！！！！！！！！！！！！！！！！
@@ -1348,32 +1351,6 @@ namespace _20250323
             return (left, top);
         }
 
-
-        /// <summary>
-        /// 全部のアンカーポイントが収まるRectを返す
-        /// アンカーポイントが表示されていなければ0を返す
-        /// </summary>
-        /// <returns></returns>
-        private Rect GetBoundsFromAnchorThumb()
-        {
-            if (MyEzShapeAdorner != null)
-            {
-                double anchorSize = MyEzShapeAdorner.MyAnchorHandleSize;
-                double anchorSizeHalf = anchorSize / 2.0;//アンカーポイントの中心位置
-                Rect r = new();
-                foreach (var item in MyItemData.MyPoints)
-                {
-                    Rect pr = new(item.X - anchorSizeHalf, item.Y - anchorSizeHalf, anchorSize, anchorSize);
-                    r.Union(pr);
-                }
-                return r;
-            }
-            else
-            {
-                return new Rect();
-            }
-        }
-
         /// <summary>
         /// すべてのアンカーハンドルThumbを含んだ回転後(Transform)のRectを返す
         /// けど、ハンドル自体は回転しないで計算しているので多少の誤差がある
@@ -1453,28 +1430,34 @@ namespace _20250323
         public GeoShapeTThumb(ItemData data)
         {
             MyItemData = data;
-            DataContext = data;
-            DragDelta += GeoShapeTThumb_DragDelta;
+            //DataContext = data;
+            //DragDelta += GeoShapeTThumb_DragDelta;
             Loaded += GeoShapeTThumb_Loaded;
         }
 
-        private void GeoShapeTThumb_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            MyLeft += e.HorizontalChange;
-            MyTop += e.VerticalChange;
-            e.Handled = true;
-        }
+        //private void GeoShapeTThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        //{
+        //    MyLeft += e.HorizontalChange;
+        //    MyTop += e.VerticalChange;
+        //    e.Handled = true;
+        //}
 
         private void GeoShapeTThumb_Loaded(object sender, RoutedEventArgs e)
         {
-            //Width = MyShapeThumb.ActualWidth;
-            //Height = MyShapeThumb.ActualHeight;
             MyResizeHandleAdorner = new ResizeHandleAdorner(this);
             if (AdornerLayer.GetAdornerLayer(this) is AdornerLayer layer)
             {
                 MyAdornerLayer = layer;
             }
-            FitToShapeAndAnchorHandle();
+            if (MyShapeThumb != null)
+            {
+                FitToShapeAndAnchorHandle();
+            }
+            else
+            {
+                throw new NullReferenceException("内部要素がない");
+
+            }
         }
 
 
@@ -1494,6 +1477,7 @@ namespace _20250323
 
         }
 
+        //アンカーハンドルのドラッグ移動終了時には、位置とサイズを更新する
         private void MyShapeThumb_OnAnchorHandleDragComleted(DragCompletedEventArgs obj)
         {
             FitToShapeAndAnchorHandle();
@@ -1537,29 +1521,29 @@ namespace _20250323
         //    DependencyProperty.Register(nameof(MyItemData), typeof(ItemData), typeof(GeoShapeTThumb), new PropertyMetadata(null));
 
 
-        public double MyLeft
-        {
-            get { return (double)GetValue(MyLeftProperty); }
-            set { SetValue(MyLeftProperty, value); }
-        }
-        public static readonly DependencyProperty MyLeftProperty =
-            DependencyProperty.Register(nameof(MyLeft), typeof(double), typeof(GeoShapeTThumb),
-                new FrameworkPropertyMetadata(0.0,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        //public double MyLeft
+        //{
+        //    get { return (double)GetValue(MyLeftProperty); }
+        //    set { SetValue(MyLeftProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyLeftProperty =
+        //    DependencyProperty.Register(nameof(MyLeft), typeof(double), typeof(GeoShapeTThumb),
+        //        new FrameworkPropertyMetadata(0.0,
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public double MyTop
-        {
-            get { return (double)GetValue(MyTopProperty); }
-            set { SetValue(MyTopProperty, value); }
-        }
-        public static readonly DependencyProperty MyTopProperty =
-            DependencyProperty.Register(nameof(MyTop), typeof(double), typeof(GeoShapeTThumb),
-                new FrameworkPropertyMetadata(0.0,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        //public double MyTop
+        //{
+        //    get { return (double)GetValue(MyTopProperty); }
+        //    set { SetValue(MyTopProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyTopProperty =
+        //    DependencyProperty.Register(nameof(MyTop), typeof(double), typeof(GeoShapeTThumb),
+        //        new FrameworkPropertyMetadata(0.0,
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         #endregion 自身用
 
         #endregion 依存関係プロパティ
@@ -1674,6 +1658,7 @@ namespace _20250323
 
             //図形とそのアンカーハンドルが収まるサイズと位置の取得
             //図形のBoundsと全ハンドルのBoundsをUnionすると取得できる
+
             Rect union = MyShapeThumb.GetShapeRenderBounds();
             if (MyShapeThumb.MyShapesAnchorHandleAdorner?.GetHandlesRenderBounds() is Rect rr)
             {
@@ -1692,8 +1677,10 @@ namespace _20250323
 
             MyShapeThumb.MyLeft -= offsetLeft;
             MyShapeThumb.MyTop -= offsetTop;
-            MyLeft += offsetLeft;
-            MyTop += offsetTop;
+            //MyLeft += offsetLeft;
+            //MyTop += offsetTop;
+            MyItemData.MyLeft += offsetLeft;
+            MyItemData.MyTop += offsetTop;
 
         }
 
@@ -1711,12 +1698,14 @@ namespace _20250323
 
             //自身と図形の横位置
             var offsetLeft = MyShapeThumb.MyLeft + shapeBounds.Left;
-            MyLeft += offsetLeft;
+            MyItemData.MyLeft += offsetLeft;
+            //MyLeft += offsetLeft;
             MyShapeThumb.MyLeft -= offsetLeft;
 
             //自身と図形の縦位置
             var offsetTop = MyShapeThumb.MyTop + shapeBounds.Top;
-            MyTop += offsetTop;
+            MyItemData.MyTop += offsetTop;
+            //MyTop += offsetTop;
             MyShapeThumb.MyTop -= offsetTop;
 
             //自身のサイズ
@@ -1899,13 +1888,13 @@ namespace _20250323
 
         #region イベントハンドラ
 
-        private void AddItemsData()
-        {
-            for (int i = 0; i < MyThumbs.Count; i++)
-            {
-                MyItemData.MyThumbsItemData.Add(MyThumbs[i].MyItemData);
-            }
-        }
+        //private void AddItemsData()
+        //{
+        //    for (int i = 0; i < MyThumbs.Count; i++)
+        //    {
+        //        MyItemData.MyThumbsItemData.Add(MyThumbs[i].MyItemData);
+        //    }
+        //}
         /// <summary>
         /// 子要素の追加時
         /// 子要素に親要素(自身)を登録
@@ -2943,6 +2932,10 @@ namespace _20250323
             else if (data.MyThumbType == ThumbType.Bezier)
             {
                 return new EzBezierThumb(data);
+            }
+            else if (data.MyThumbType == ThumbType.PolyLine)
+            {
+                return new GeoShapeTThumb(data);
             }
             else { return null; }
         }

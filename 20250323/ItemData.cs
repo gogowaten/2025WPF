@@ -304,8 +304,17 @@ namespace _20250323
 
         #endregion テキスト系
 
-        #region 保存しない系
+        #region Root用
 
+        private double _myAddOffsetLeft = 32;
+        public double MyAddOffsetLeft { get => _myAddOffsetLeft; set => SetProperty(ref _myAddOffsetLeft, value); }
+
+        private double _myAddOffsetTop = 32;
+        public double MyAddOffsetTop { get => _myAddOffsetTop; set => SetProperty(ref _myAddOffsetTop, value); }
+
+        #endregion Root用
+
+        #region 保存しない系
 
         private Visibility _isWakuVisible;
         public Visibility IsWakuVisible { get => _isWakuVisible; set => SetProperty(ref _isWakuVisible, value); }
@@ -324,15 +333,6 @@ namespace _20250323
 
         #endregion 保存しない系
 
-        #region Root用
-
-        private double _myAddOffsetLeft = 32;
-        public double MyAddOffsetLeft { get => _myAddOffsetLeft; set => SetProperty(ref _myAddOffsetLeft, value); }
-
-        private double _myAddOffsetTop = 32;
-        public double MyAddOffsetTop { get => _myAddOffsetTop; set => SetProperty(ref _myAddOffsetTop, value); }
-
-        #endregion Root用
     }
 
 

@@ -28,6 +28,7 @@
         <Button x:Name="AddTextThumb2" Content="AddTextThumb" Click="AddTextThumb_Click"/>
         <Button x:Name="AddEllipseThumb" Content="AddEllipseThumb" Click="AddEllipseThumb_Click"/>
         <Button x:Name="AddBeziThumb" Content="AddBezi" Click="AddBeziThumb_Click"/>
+        <Button x:Name="AddPolyLine" Content="AddLine" Click="AddPolyLine_Click"/>
         <UniformGrid Columns="2">
           <Button x:Name="AddGroup" Content="グループ化" Click="AddGroup_Click"/>
           <Button x:Name="Ungroup" Content="グループ解除" Click="Ungroup_Click"/>

@@ -74,7 +74,7 @@ namespace _20250323
                 //装飾ターゲットの親要素がCanvasではない場合は、
                 //以下の5個のハンドルは表示しない(外す)
                 //これらはターゲットの位置変更に関係するからCanvas以外では不具合の元
-                if (MyTarget.Parent.GetType() != typeof(Canvas))
+                //if (MyTarget.Parent !=null && MyTarget.Parent.GetType() != typeof(Canvas))
                 {
                     MyCanvas.Children.Remove(Top);
                     MyCanvas.Children.Remove(Left);

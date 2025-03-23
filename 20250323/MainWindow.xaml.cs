@@ -212,4 +212,20 @@ public partial class MainWindow : Window
             bezi.AnchorOnOffSwitch();
         }
     }
+
+    private void AddPolyLine_Click(object sender, RoutedEventArgs e)
+    {
+        var data = new ItemData(ThumbType.PolyLine)
+        {
+            MyText = "折れ線",
+            MyPoints = [new System.Windows.Point(), new System.Windows.Point(200, 0), new System.Windows.Point(100, 100), new System.Windows.Point(0, 100)],
+            MyForeground = Brushes.RosyBrown,
+            MyBackground = Brushes.SeaShell,
+            MyStroke = Brushes.Tomato,
+            MyStrokeThickness = 30.0,
+        };
+        
+
+        MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
+    }
 }
