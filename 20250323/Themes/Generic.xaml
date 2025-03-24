@@ -234,7 +234,7 @@
                                  DataContext="{Binding
                                     RelativeSource={RelativeSource Mode=TemplatedParent},
                                     Path=MyItemData}"
-                                 MyStrokeThickness="50"
+                                 MyStrokeThickness="10"
                                  MyShapeType="Line"
                                  MyPoints="{Binding MyPoints, Mode=TwoWay}"
                                  MyAngle="{Binding MyAngle, Mode=TwoWay}"
@@ -304,7 +304,7 @@
                           Focusable="False">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                  <local:ExCanvas/>
+                  <local:ExCanvas Background="AliceBlue"/>
                 </ItemsPanelTemplate>
               </ItemsControl.ItemsPanel>
             </ItemsControl>

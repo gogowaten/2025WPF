@@ -341,7 +341,7 @@ namespace _20250323
     public abstract class KisoThumb : Thumb
     {
         //クリックダウンとドラッグ移動完了時に使う、直前に選択されたものかの判断用
-        bool IsPreviewSelected { get; set; }
+        internal bool IsPreviewSelected { get; set; }
 
 
         //public ThumbType MyThumbType { get; protected set; }
@@ -369,18 +369,96 @@ namespace _20250323
             Initialized += KisoThumb_Initialized;
             Loaded += KisoThumb_Loaded;
 
-            PreviewMouseDown += KisoThumb_PreviewMouseDownTest;
-            PreviewMouseUp += KisoThumb_PreviewMouseUpTest;
+            //PreviewMouseDown += KisoThumb_PreviewMouseDownTest;
+            PreviewMouseDown += KisoThumb_PreviewMouseDown2;
+            //PreviewMouseUp += KisoThumb_PreviewMouseUpTest;
+            PreviewMouseUp += KisoThumb_PreviewMouseUp2;
+
 
             DragStarted += KisoThumb_DragStarted2;
-            DragCompleted += KisoThumb_DragCompleted2;
             DragDelta += Thumb_DragDelta3;
+            //DragCompleted += KisoThumb_DragCompleted2;
+            DragCompleted += KisoThumb_DragCompleted3;
 
             KeyUp += KisoThumb_KeyUp;
             PreviewKeyDown += KisoThumb_PreviewKeyDown;
-
-
         }
+
+        protected void KisoThumb_PreviewMouseUp2(object sender, MouseButtonEventArgs e)
+        {
+            if (GetSelectableThumb(this) is KisoThumb thumb)
+            {
+                //thumb.Focusable = true;
+                ////thumb.Focus();
+                //thumb.BringIntoView();
+                //e.Handled = true;
+            }
+        }
+
+        protected void KisoThumb_DragCompleted3(object sender, DragCompletedEventArgs e)
+        {
+            if (this is RootThumb) { return; }
+
+            if (GetSelectableThumb(this) is KisoThumb thumb && GetRootThumb() is RootThumb root)
+            {
+                if (thumb.MyParentThumb?.MyExCanvas is ExCanvas canvas)
+                {
+                    canvas.IsAutoResize = true;
+                    thumb.MyParentThumb?.ReLayout3();
+                }
+
+                bool isMoved = e.HorizontalChange != 0 || e.VerticalChange != 0;
+                root.TestDragCompleted(thumb, isMoved);
+                e.Handled = true;
+            }
+        }
+
+        protected void KisoThumb_PreviewMouseDown2(object sender, MouseButtonEventArgs e)
+        {
+            if (this is RootThumb) { return; }
+            var sou = e.Source;
+            var ori = e.OriginalSource;
+            if (GetClickedCandidateThumb(e) is KisoThumb clicked
+                && GetSelectableThumb(clicked) is KisoThumb focus
+                && GetRootThumb() is RootThumb root)
+            {
+                focus.Focusable = false;
+                root.TestPreviewMouseDown(focus, clicked);
+                //e.Handled = true;
+                //ここでtrueにしない場合はグループ内をクリックで入れ子の分だけイベントが発生してしまうけど
+                //trueにするとドラッグ移動が動かなくなってしまう
+            }
+
+            //if (GetSelectableThumb(this) is KisoThumb thumb && GetRootThumb() is RootThumb root)
+            //{
+            //    Focusable = false;
+            //    root.TestPreviewMouseDown(thumb);
+            //    //e.Handled = true;
+            //}
+        }
+        private KisoThumb? GetClickedCandidateThumb(MouseButtonEventArgs e)
+        {
+            if (e.OriginalSource is DependencyObject dependency)
+            {
+                return GetClickedCandidateThumb(dependency);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// クリックイベントのオリジナルソースを元に、クリックされた基礎Thumbを返す
+        /// </summary>
+        /// <param name="originalSource"></param>
+        /// <returns></returns>
+        private KisoThumb? GetClickedCandidateThumb(DependencyObject? originalSource)
+        {
+            if (originalSource is null) { return null; }
+            if (originalSource is KisoThumb kiso) { return kiso; }
+            return GetClickedCandidateThumb(VisualTreeHelper.GetParent(originalSource));
+        }
+
+
+        #region 初期化
 
 
         private void KisoThumb_Loaded(object sender, RoutedEventArgs e)
@@ -451,6 +529,7 @@ namespace _20250323
 
         }
 
+        #endregion 初期化
 
         #region イベントハンドラ
 
@@ -520,20 +599,20 @@ namespace _20250323
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        internal void KisoThumb_PreviewMouseDownTest(object sender, MouseButtonEventArgs e)
-        {
-            //イベント発生順序、Root、Group、その他Item
-            var sou = e.Source;
-            var ori = e.OriginalSource;
+        //internal void KisoThumb_PreviewMouseDownTest(object sender, MouseButtonEventArgs e)
+        //{
+        //    //イベント発生順序、Root、Group、その他Item
+        //    var sou = e.Source;
+        //    var ori = e.OriginalSource;
 
-            //if (e.Source == e.OriginalSource)
-            if(this is not RootThumb || this is not GroupThumb)
-            {
-                Focusable = false;
-                UpdateSelectedThumbs(this, Keyboard.Modifiers == ModifierKeys.Control);
-            }
+        //    if (e.Source == e.OriginalSource)
+        //    //if(this is not RootThumb || this is not GroupThumb)
+        //    {
+        //        Focusable = false;
+        //        UpdateSelectedThumbs(this, Keyboard.Modifiers == ModifierKeys.Control);
+        //    }
 
-        }
+        //}
 
         /// <summary>
         /// SelectedThumbsを更新、マウスダウン専用
@@ -550,13 +629,13 @@ namespace _20250323
                 if (selectedCount == 0)
                 {
                     //追加
-                    root.AddToSelectedThumbs(current);
+                    root.SelectedThumbsToAdd(current);
                 }
                 //選択されていない＋ctrlありの場合、直前追加
                 else if (!isContained && isControlPressed)
                 {
                     //追加
-                    root.AddToSelectedThumbs(current);
+                    root.SelectedThumbsToAdd(current);
                     //直前追加のフラグ
                     current.IsPreviewSelected = true;
                 }
@@ -622,6 +701,7 @@ namespace _20250323
                     {
                         if (parent.MyExCanvas is ExCanvas canvas)
                         {
+                            //Parentの自動リサイズを停止する
                             canvas.IsAutoResize = false;
                         }
                         //parent.AddAnchorThumb(current);
@@ -636,6 +716,7 @@ namespace _20250323
         }
 
         /// <summary>
+        /// SelectedThumb全てを移動
         /// 移動距離を四捨五入(丸めて)整数ドラッグ移動
         /// </summary>
         /// <param name="sender"></param>
@@ -658,7 +739,7 @@ namespace _20250323
 
         /// <summary>
         /// ドラッグ移動終了時
-        /// アンカーThumbを削除と要素再配置後に親要素の再配置
+        /// 要素再配置後に親要素の再配置
         /// </summary>
         internal void KisoThumb_DragCompleted2(object sender, DragCompletedEventArgs e)
         {
@@ -2044,7 +2125,9 @@ namespace _20250323
             MySelectedThumbs = [];
             DragDelta -= Thumb_DragDelta3;
             DragStarted -= KisoThumb_DragStarted2;
-            DragCompleted -= KisoThumb_DragCompleted2;
+            //DragCompleted -= KisoThumb_DragCompleted2;
+            DragCompleted -= KisoThumb_DragCompleted3;
+            PreviewMouseDown -= KisoThumb_PreviewMouseDown2;
             KeyUp -= KisoThumb_KeyUp;
             Loaded += RootThumb_Loaded;
         }
@@ -2066,12 +2149,112 @@ namespace _20250323
 
         #region internalメソッド
 
+        internal void TestDragCompleted(KisoThumb thumb, bool isMoved)
+        {
+            thumb.Focusable = true;
+            thumb.BringIntoView();
+
+            if (MySelectedThumbs.Count <= 1) { return; }
+
+            //移動した＋通常クリック
+            if (isMoved && Keyboard.Modifiers == ModifierKeys.None)
+            {
+
+            }
+            //移動した＋ctrlクリック
+            else if (isMoved && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+
+            }
+            //移動していない＋通常クリック
+            else if (!isMoved && Keyboard.Modifiers == ModifierKeys.None)
+            {
+                SelectedThumbsClearAndAddThumb(thumb);
+            }
+            //移動していない＋ctrlクリック
+            else if (!isMoved && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                if (!thumb.IsPreviewSelected)
+                {
+                    int currrentIndex = MySelectedThumbs.IndexOf(thumb);
+                    MySelectedThumbs.Remove(thumb);
+                    if (currrentIndex == 0)
+                    {
+                        MyFocusThumb = MySelectedThumbs[0];
+                    }
+                    else
+                    {
+                        MyFocusThumb = MySelectedThumbs[currrentIndex - 1];
+                    }
+                }
+                thumb.IsPreviewSelected = false;
+            }
+
+
+        }
+
+        internal void TestPreviewMouseDown(KisoThumb focusCandidate, KisoThumb clickedCandidate)
+        {
+            MyClickedThumb = clickedCandidate;
+            bool withControlKey = Keyboard.Modifiers == ModifierKeys.Control;
+            bool isContains = MySelectedThumbs.Contains(focusCandidate);
+            //選択Thumb以外をクリック、入れ替え
+            if (!isContains && Keyboard.Modifiers == ModifierKeys.None)
+            {
+                SelectedThumbsClearAndAddThumb(focusCandidate);
+            }
+            //選択Thumb以外をctrlクリック→追加
+            else if (!isContains && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                SelectedThumbsToAdd(focusCandidate);
+                focusCandidate.IsPreviewSelected = true;
+            }
+            //選択Thumbのどれかをクリック→PreviewDownでは無しもしない、DragCompleteで移動ありなら何もしない、移動なしなら入れ替え
+            else if (isContains && Keyboard.Modifiers == ModifierKeys.None)
+            {
+
+            }
+            //選択Thumbのどれかをctrlクリック→PreviewDownでは無しもしない、DragCompleteで移動なしなら外すけど、選択Thumbが1個なら何もしない。移動ありなら何もしない
+            else if (isContains && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+            }
+
+        }
+
+        //internal void TestPreviewMouseDown(KisoThumb thumb)
+        //{
+        //    MyClickedThumb = thumb;
+        //    bool withControlKey = Keyboard.Modifiers == ModifierKeys.Control;
+        //    bool isContains = MySelectedThumbs.Contains(thumb);
+        //    //選択Thumb以外をクリック、入れ替え
+        //    if (!isContains && Keyboard.Modifiers == ModifierKeys.None)
+        //    {
+        //        SelectedThumbsClearAndAddThumb(thumb);
+        //    }
+        //    //選択Thumb以外をctrlクリック→追加
+        //    else if (!isContains && Keyboard.Modifiers == ModifierKeys.Control)
+        //    {
+        //        SelectedThumbsToAdd(thumb);
+        //        thumb.IsPreviewSelected = true;
+        //    }
+        //    //選択Thumbのどれかをクリック→PreviewDownでは無しもしない、DragCompleteで移動ありなら何もしない、移動なしなら入れ替え
+        //    else if (isContains && Keyboard.Modifiers == ModifierKeys.None)
+        //    {
+
+        //    }
+        //    //選択Thumbのどれかをctrlクリック→PreviewDownでは無しもしない、DragCompleteで移動なしなら外すけど、選択Thumbが1個なら何もしない。移動ありなら何もしない
+        //    else if (isContains && Keyboard.Modifiers == ModifierKeys.Control)
+        //    {
+        //    }
+
+        //}
+
 
         /// <summary>
         /// MySelectedThumbsへの追加
         /// </summary>
         /// <param name="kiso"></param>
-        internal void AddToSelectedThumbs(KisoThumb kiso)
+        internal void SelectedThumbsToAdd(KisoThumb kiso)
         {
             MySelectedThumbs.Add(kiso);
             MyFocusThumb = kiso;
@@ -2090,7 +2273,7 @@ namespace _20250323
             }
             kiso.IsSelectable = true;
             MySelectedThumbs.Clear();
-            AddToSelectedThumbs(kiso);
+            SelectedThumbsToAdd(kiso);
         }
 
 
@@ -2111,7 +2294,7 @@ namespace _20250323
                 GroupThumb motoGroup = MyActiveGroupThumb;
                 if (ChangeActiveGroupThumb(gt))
                 {
-                    AddToSelectedThumbs(motoGroup);
+                    SelectedThumbsToAdd(motoGroup);
                 }
                 ;
             }
@@ -2146,7 +2329,7 @@ namespace _20250323
             {
                 if (ChangeActiveGroupThumb(gt))
                 {
-                    AddToSelectedThumbs(MyClickedThumb);
+                    SelectedThumbsToAdd(MyClickedThumb);
                 }
                 ;
             }
@@ -2201,7 +2384,7 @@ namespace _20250323
             }
 
             MySelectedThumbs.Clear();
-            AddToSelectedThumbs(thumb);
+            SelectedThumbsToAdd(thumb);
         }
         public void AddThumbToActiveGroup(KisoThumb thumb, GroupThumb parent)
         {

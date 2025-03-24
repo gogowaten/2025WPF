@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:_20250323"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:RootThumb}"
-        Title="MainWindow" Height="467" Width="602">
+        Title="MainWindow" Height="667" Width="602">
 
   <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>

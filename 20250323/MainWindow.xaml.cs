@@ -218,7 +218,7 @@ public partial class MainWindow : Window
         var data = new ItemData(ThumbType.PolyLine)
         {
             MyText = "折れ線",
-            MyPoints = [new System.Windows.Point(), new System.Windows.Point(200, 0), new System.Windows.Point(100, 100), new System.Windows.Point(0, 100)],
+            MyPoints = [new System.Windows.Point(), new System.Windows.Point(100, 0), new System.Windows.Point(100, 100), new System.Windows.Point(0, 100)],
             MyForeground = Brushes.RosyBrown,
             MyBackground = Brushes.SeaShell,
             MyStroke = Brushes.Tomato,
