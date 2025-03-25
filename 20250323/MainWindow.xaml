@@ -87,6 +87,9 @@
             <TextBlock Text="{Binding MyItemData.MyAngle, StringFormat=angle 0}"/>
             <Slider Value="{Binding MyItemData.MyStrokeThickness}" Minimum="1.0" Maximum="60"/>
             <TextBlock Text="{Binding MyItemData.MyStrokeThickness, StringFormat=strokethickness 0}"/>
+            <TextBlock Text="{Binding Focusable, StringFormat=Focusable {0}}"/>
+            <TextBlock Text="{Binding IsFocus, StringFormat=IsFocus {0}}"/>
+            <TextBlock Text="{Binding IsFocused, StringFormat=IsFocused {0}}"/>
           </UniformGrid>
           <TextBlock Text="{Binding MyItemData.MyPoints, StringFormat=pos {0:0}}"/>
           <TextBlock Text="{Binding MyInsideElementBounds, StringFormat=insideB {0:0}}"/>
@@ -117,6 +120,9 @@
             <Slider Value="{Binding MyItemData.MyForegroundR}" Minimum="0" Maximum="255"/>
             <TextBlock Text="{Binding MyItemData.MyForegroundR, StringFormat=赤 {0:000}}"/>
           </UniformGrid>
+          <TextBlock Text="{Binding Focusable, StringFormat=Focusable {0}}"/>
+          <TextBlock Text="{Binding IsFocus, StringFormat=IsFocus {0}}"/>
+          <TextBlock Text="{Binding IsFocused, StringFormat=IsFocused {0}}"/>
         </UniformGrid>
       </GroupBox>
     </StackPanel>
