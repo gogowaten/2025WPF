@@ -9,6 +9,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Point = System.Windows.Point;
+
 
 //WPF、要素をファイルに保存と復元テスト - 午後わてんのブログ
 //https://gogowaten.hatenablog.com/entry/2025/02/28/130209
@@ -36,6 +38,15 @@ public partial class MainWindow : Window
         }
         MyScrollViewer.Content = MyRoot;
         DataContext = MyRoot;
+
+        data = new(ThumbType.GeoShape)
+        {
+            MyPoints = [new Point(), new Point(100, 0)],
+            MyStroke = Brushes.Maroon,
+            MyStrokeThickness = 40,
+        };
+        //GeoShapeThumb2 thumb2 = new(data);
+        MyRoot.AddNewThumbFromItemData(data, MyRoot);
     }
 
     private void MyTest2_Click(object sender, RoutedEventArgs e)
@@ -211,6 +222,10 @@ public partial class MainWindow : Window
         {
             bezi.AnchorOnOffSwitch();
         }
+        if (MyRoot.MyFocusThumb is GeoShapeThumb2 shape)
+        {
+            shape.AnchorSwitch();
+        }
     }
 
     private void AddPolyLine_Click(object sender, RoutedEventArgs e)
@@ -224,7 +239,7 @@ public partial class MainWindow : Window
             MyStroke = Brushes.Tomato,
             MyStrokeThickness = 30.0,
         };
-        
+
 
         MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
     }

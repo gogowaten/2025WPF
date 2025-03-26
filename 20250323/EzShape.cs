@@ -779,31 +779,31 @@ namespace _20250323
     //    }
     //}
 
-    ////Penの生成、各種プロパティも反映
-    //public class MyConverterPen : IMultiValueConverter
-    //{
-    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-    //    {
-    //        var thick = (double)values[0];
-    //        var miter = (double)values[1];
-    //        var end = (PenLineCap)values[2];
-    //        var sta = (PenLineCap)values[3];
-    //        var join = (PenLineJoin)values[4];
-    //        Pen result = new(Brushes.Transparent, thick)
-    //        {
-    //            EndLineCap = end,
-    //            StartLineCap = sta,
-    //            LineJoin = join,
-    //            MiterLimit = miter
-    //        };
-    //        return result;
-    //    }
+    //Penの生成、各種プロパティも反映
+    public class MyConverterPen : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var thick = (double)values[0];
+            var miter = (double)values[1];
+            var end = (PenLineCap)values[2];
+            var sta = (PenLineCap)values[3];
+            var join = (PenLineJoin)values[4];
+            Pen result = new(Brushes.Transparent, thick)
+            {
+                EndLineCap = end,
+                StartLineCap = sta,
+                LineJoin = join,
+                MiterLimit = miter
+            };
+            return result;
+        }
 
-    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     ////Segment用のPointCollection生成
     ////ソースに影響を与えないためにクローン作成して、その先頭要素を削除して返す

@@ -35,14 +35,14 @@ namespace _20250323
             //Pointsの先頭を外したPointCollection
             _ = SetBinding(MySegmentPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterSegmentPoints() });
 
-            //Penのバインド、Penは図形のBoundsを計測するために必要
-            MultiBinding mb = new() { Converter = new MyConverterPen() };
-            mb.Bindings.Add(MakeOneWayBind(StrokeThicknessProperty));
-            mb.Bindings.Add(MakeOneWayBind(StrokeMiterLimitProperty));
-            mb.Bindings.Add(MakeOneWayBind(StrokeEndLineCapProperty));
-            mb.Bindings.Add(MakeOneWayBind(StrokeStartLineCapProperty));
-            mb.Bindings.Add(MakeOneWayBind(StrokeLineJoinProperty));
-            _ = SetBinding(MyPenProperty, mb);
+            ////Penのバインド、Penは図形のBoundsを計測するために必要
+            //MultiBinding mb = new() { Converter = new MyConverterPen() };
+            //mb.Bindings.Add(MakeOneWayBind(StrokeThicknessProperty));
+            //mb.Bindings.Add(MakeOneWayBind(StrokeMiterLimitProperty));
+            //mb.Bindings.Add(MakeOneWayBind(StrokeEndLineCapProperty));
+            //mb.Bindings.Add(MakeOneWayBind(StrokeStartLineCapProperty));
+            //mb.Bindings.Add(MakeOneWayBind(StrokeLineJoinProperty));
+            //_ = SetBinding(MyPenProperty, mb);
         }
 
         private Binding MakeOneWayBind(DependencyProperty property)
@@ -107,14 +107,14 @@ namespace _20250323
 
 
 
-                //Boundsの更新はここで行う必要がある。OnRenderではなんか違う
-                //MyBounds1 = geo.Bounds;
-                //MyBounds2 = geo.GetRenderBounds(MyPen);
-                //回転後のBounds
-                var clone = geo.Clone();
-                clone.Transform = RenderTransform;
-                //MyBounds3 = clone.Bounds;
-                MyRenderBounds = clone.GetRenderBounds(MyPen);
+                ////Boundsの更新はここで行う必要がある。OnRenderではなんか違う
+                ////MyBounds1 = geo.Bounds;
+                ////MyBounds2 = geo.GetRenderBounds(MyPen);
+                ////回転後のBounds
+                //var clone = geo.Clone();
+                //clone.Transform = RenderTransform;
+                ////MyBounds3 = clone.Bounds;
+                //MyRenderBounds = clone.GetRenderBounds(MyPen);
 
                 return geo;
             }
@@ -129,23 +129,23 @@ namespace _20250323
 
         #region 読み取り用
 
-        //サイズと位置
-        public Rect MyRenderBounds
-        {
-            get { return (Rect)GetValue(MyRenderBoundsProperty); }
-            set { SetValue(MyRenderBoundsProperty, value); }
-        }
-        public static readonly DependencyProperty MyRenderBoundsProperty =
-            DependencyProperty.Register(nameof(MyRenderBounds), typeof(Rect), typeof(GeoShape), new PropertyMetadata(new Rect()));
+        ////サイズと位置
+        //public Rect MyRenderBounds
+        //{
+        //    get { return (Rect)GetValue(MyRenderBoundsProperty); }
+        //    set { SetValue(MyRenderBoundsProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyRenderBoundsProperty =
+        //    DependencyProperty.Register(nameof(MyRenderBounds), typeof(Rect), typeof(GeoShape), new PropertyMetadata(new Rect()));
 
-        //サイズと位置の計算に使う
-        public Pen MyPen
-        {
-            get { return (Pen)GetValue(MyPenProperty); }
-            set { SetValue(MyPenProperty, value); }
-        }
-        public static readonly DependencyProperty MyPenProperty =
-            DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(GeoShape), new PropertyMetadata(new Pen()));
+        ////サイズと位置の計算に使う
+        //public Pen MyPen
+        //{
+        //    get { return (Pen)GetValue(MyPenProperty); }
+        //    set { SetValue(MyPenProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyPenProperty =
+        //    DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(GeoShape), new PropertyMetadata(new Pen()));
 
         //MyPointsから作成
         public PointCollection MySegmentPoints
@@ -280,19 +280,21 @@ namespace _20250323
         #endregion 依存関係プロパティ
 
 
-        /// <summary>
-        /// RenderBoundsの更新、
-        /// RenderBoundsはRenderTransformを変更しても更新されないので、その時用
-        /// </summary>
-        public void UpdateRenderBounds()
-        {
-            //回転後のBounds
-            Geometry clone = this.DefiningGeometry.Clone();
-            clone.Transform = RenderTransform;
-            MyRenderBounds = clone.GetRenderBounds(MyPen);
-        }
+        ///// <summary>
+        ///// RenderBoundsの更新、
+        ///// RenderBoundsはRenderTransformを変更しても更新されないので、その時用
+        ///// </summary>
+        //public void UpdateRenderBounds()
+        //{
+        //    //回転後のBounds
+        //    Geometry clone = this.DefiningGeometry.Clone();
+        //    clone.Transform = RenderTransform;
+        //    MyRenderBounds = clone.GetRenderBounds(MyPen);
+        //}
 
 
+        #region メソッド
+        
         /// <summary>
         /// ベジェ曲線部分の描画
         /// </summary>
@@ -370,7 +372,11 @@ namespace _20250323
                 (edgeSize - 1.0) * Math.Cos(lineRadian) + edge.X,
                 (edgeSize - 1.0) * Math.Sin(lineRadian) + edge.Y);
         }
+        #endregion メソッド
 
+
+        #region パフリックメソッド
+        
         /// <summary>
         /// 角度をラジアンに変換
         /// </summary>
@@ -381,7 +387,28 @@ namespace _20250323
             return degree / 360.0 * (Math.PI * 2.0);
         }
 
+        /// <summary>
+        /// 図形が収まるRectを返す
+        /// </summary>
+        /// <returns></returns>
+        public Rect GetRenderBounds()
+        {
+            //自身のGeometryのクローンを使う
+            //自身に適用されているRenderTransformとPenをクローンに適用して
+            //クローンのGetRenderBoundsで得られる
+            var geo = DefiningGeometry.Clone();
+            geo.Transform = RenderTransform;
+            Pen myPen = new(Brushes.Transparent, StrokeThickness)
+            {
+                EndLineCap = StrokeEndLineCap,
+                StartLineCap = StrokeStartLineCap,
+                LineJoin = StrokeLineJoin,
+                MiterLimit = StrokeMiterLimit,
+            };
+            return geo.GetRenderBounds(myPen);
+        }
 
+        #endregion パフリックメソッド
 
 
 

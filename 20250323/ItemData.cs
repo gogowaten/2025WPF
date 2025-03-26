@@ -16,7 +16,7 @@ namespace _20250323
 {
 
     //Thumbの種類の識別用
-    public enum ThumbType { None = 0, Root, Group, Text, Ellipse, Rect, Bezier, PolyLine }
+    public enum ThumbType { None = 0, Root, Group, Text, Ellipse, Rect, Bezier, PolyLine ,GeoShape}
 
     //[DataContract]
     [KnownType(typeof(ItemData))]

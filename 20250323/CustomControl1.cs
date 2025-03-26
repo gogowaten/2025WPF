@@ -220,9 +220,10 @@ namespace _20250323
         /// <returns></returns>
         public Rect GetShapeRenderBounds()
         {
-            //RenderTransformが変更されていることを考慮して、更新してから取得
-            MyGeoShape.UpdateRenderBounds();
-            return MyGeoShape.MyRenderBounds;
+            ////RenderTransformが変更されていることを考慮して、更新してから取得
+            //MyGeoShape.UpdateRenderBounds();
+            //return MyGeoShape.MyRenderBounds;
+            return MyGeoShape.GetRenderBounds();
         }
 
 
@@ -306,13 +307,13 @@ namespace _20250323
             if (MyShapesAnchorHandleAdorner == null)
             {
                 MyShapesAnchorHandleAdorner = new AnchorHandleAdorner(MyGeoShape);
-                MyShapesAnchorHandleAdorner.OnDragCompleted += MyShapesAnchorHandleAdorner_OnDragCompleted;
+                MyShapesAnchorHandleAdorner.OnAnchorThumbDragCompleted += MyShapesAnchorHandleAdorner_OnDragCompleted;
                 MyShapesAdornerLayer.Add(MyShapesAnchorHandleAdorner);
                 return MyShapesAnchorHandleAdorner;
             }
             else
             {
-                MyShapesAnchorHandleAdorner.OnDragCompleted -= MyShapesAnchorHandleAdorner_OnDragCompleted;
+                MyShapesAnchorHandleAdorner.OnAnchorThumbDragCompleted -= MyShapesAnchorHandleAdorner_OnDragCompleted;
                 MyShapesAdornerLayer.Remove(MyShapesAnchorHandleAdorner);
                 MyShapesAnchorHandleAdorner = null;
                 return null;
@@ -1369,6 +1370,128 @@ namespace _20250323
         //}
 
     }
+
+
+    public class GeoShapeThumb2 : KisoThumb
+    {
+        private AdornerLayer MyShepeAdornerLayer { get; set; } = null!;
+        //public AnchorHandleThumb? MyAnchorHandle { get; private set; }
+        public AnchorHandleAdorner? MyAnchorHandleAdorner { get; private set; }
+        public GeoShape MyGeoShape { get; private set; } = null!;
+        static GeoShapeThumb2()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoShapeThumb2), new FrameworkPropertyMetadata(typeof(GeoShapeThumb2)));
+        }
+        public GeoShapeThumb2() { }
+        public GeoShapeThumb2(ItemData data)
+        {
+            MyItemData = data;
+            Loaded += GeoShapeThumb2_Loaded;
+        }
+
+        private void GeoShapeThumb2_Loaded(object sender, RoutedEventArgs e)
+        {
+            var data = MyItemData;
+            var poi = MyGeoShape.MyPoints;
+            var poi2 = MyItemData.MyPoints;
+            var sto = MyGeoShape.Stroke;
+            var thi = MyGeoShape.StrokeThickness;
+            UpdateLocateAndSize();
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            if (GetTemplateChild("geoShape") is GeoShape shape)
+            {
+                MyGeoShape = shape;
+                MyShepeAdornerLayer = AdornerLayer.GetAdornerLayer(MyGeoShape);
+
+            }
+            else
+            {
+                throw new NullReferenceException("内部図形の取得に失敗");
+            }
+        }
+
+        #region メソッド
+        #region アンカーハンドルの表示切り替え
+        public void AnchorSwitch()
+        {
+            if (MyAnchorHandleAdorner is null) { AnchorOn(); }
+            else { AnchorOff(); }
+        }
+        public void AnchorOn()
+        {
+            if (MyAnchorHandleAdorner is null)
+            {
+                MyAnchorHandleAdorner = new(MyGeoShape);
+                MyAnchorHandleAdorner.OnAnchorThumbDragCompleted += MyAnchorHandleAdorner_OnDragCompleted;
+                MyShepeAdornerLayer.Add(MyAnchorHandleAdorner);
+            }
+        }
+        public void AnchorOff()
+        {
+            if (MyAnchorHandleAdorner != null)
+            {
+                MyAnchorHandleAdorner.OnAnchorThumbDragCompleted -= MyAnchorHandleAdorner_OnDragCompleted;
+                MyShepeAdornerLayer.Remove(MyAnchorHandleAdorner);
+                MyAnchorHandleAdorner = null;
+            }
+        }
+        #endregion アンカーハンドルの表示切り替え
+
+        private void MyAnchorHandleAdorner_OnDragCompleted(DragCompletedEventArgs obj)
+        {
+            UpdateLocateAndSize();
+        }
+
+        //位置とサイズの更新
+        public void UpdateLocateAndSize()
+        {
+            Rect neko = MyGeoShape.GetRenderBounds();
+            Rect unionRect = MyGeoShape.GetRenderBounds();
+            if(MyAnchorHandleAdorner?.GetHandlesRenderBounds() is Rect handlesRect)
+            {
+                unionRect.Union(handlesRect);
+            }
+
+            Width = unionRect.Width;
+            Height = unionRect.Height;
+            var shapeLeft = Canvas.GetLeft(MyGeoShape);
+            var shapeTop = Canvas.GetTop(MyGeoShape);
+            var offsetLeft = unionRect.Left + shapeLeft;
+            var offsetTop = unionRect.Top+ shapeTop;
+            Canvas.SetLeft(MyGeoShape, -unionRect.Left);
+            Canvas.SetTop(MyGeoShape, -unionRect.Top);
+            MyItemData.MyLeft += offsetLeft;
+            MyItemData.MyTop += offsetTop;
+        }
+
+        private (double left, double top) GetTopLeftFromPoints(PointCollection points)
+        {
+            double left = double.MaxValue;
+            double top = double.MaxValue;
+            foreach (var item in points)
+            {
+                if (left > item.X) { left = item.X; }
+                if (top > item.Y) { top = item.Y; }
+            }
+            return (left, top);
+        }
+
+        #endregion メソッド
+
+
+        #region 依存関係プロパティ
+
+
+
+        #endregion 依存関係プロパティ
+
+    }
+
+
 
 
 
@@ -2957,6 +3080,10 @@ namespace _20250323
             else if (data.MyThumbType == ThumbType.PolyLine)
             {
                 return new GeoShapeTThumb(data);
+            }
+            else if(data.MyThumbType == ThumbType.GeoShape)
+            {
+                return new GeoShapeThumb2(data);
             }
             else { return null; }
         }
