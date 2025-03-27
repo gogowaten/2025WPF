@@ -1,0 +1,385 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:_20250327_GeoShapeThumbSerialize">
+
+
+
+
+
+  <Style TargetType="{x:Type local:HandleThumb}">
+    <Setter Property="Canvas.Left"
+            Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyLeft, Mode=TwoWay}"/>
+    <Setter Property="Canvas.Top"
+            Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyTop, Mode=TwoWay}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:HandleThumb}">
+          <Grid>
+            <Rectangle
+              Stroke="White"
+              StrokeThickness="1.0"/>
+            <Rectangle
+              Stroke="Black"
+              StrokeThickness="1.0"
+              StrokeDashArray="2"
+              Fill="Transparent"
+              />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+
+  <Style TargetType="local:AnchorHandleThumb">
+    <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MySize}"/>
+    <Setter Property="Height" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MySize}"/>
+    <Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyLeft}"/>
+    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyTop}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:AnchorHandleThumb}">
+          <Grid Background="Transparent">
+            <Rectangle Width="4" Height="4" Fill="White"/>
+            <Rectangle Width="2" Height="2" Fill="Blue"/>
+            <Ellipse x:Name="rect"
+                     Stroke="Blue"
+                     StrokeThickness="1.0"
+                     StrokeDashArray="3"
+                     />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+
+
+  <Style x:Key="waku4" TargetType="Border">
+    <Style.Resources>
+      <local:MyWakuBrushConverter x:Key="wakuConvert2"/>
+    </Style.Resources>
+    <Setter Property="Visibility" Value="{Binding IsWakuVisible, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+    <Setter Property="BorderThickness" Value="1.0"/>
+    <Setter Property="BorderBrush">
+      <Setter.Value>
+        <MultiBinding Converter="{StaticResource wakuConvert2}">
+          <Binding Path="MyBrushList" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+          <Binding Path="IsFocus" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+          <Binding Path="IsSelected" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+          <Binding Path="IsSelectable" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+          <Binding Path="IsActiveGroup" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+        </MultiBinding>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+  <Style x:Key="kiso" TargetType="{x:Type local:KisoThumb}">
+    <Setter Property="MyThumbType" Value="{Binding
+      RelativeSource={RelativeSource Mode=Self}, Mode=TwoWay, Path=MyItemData.MyThumbType}"/>
+    <Setter Property="Canvas.Left" Value="{Binding
+      RelativeSource={RelativeSource Mode=Self}, Mode=TwoWay, Path=MyItemData.MyLeft}"/>
+    <Setter Property="Canvas.Top" Value="{Binding
+      RelativeSource={RelativeSource Mode=Self}, Mode=TwoWay, Path=MyItemData.MyTop}"/>
+    <Setter Property="Panel.ZIndex" Value="{Binding Mode=TwoWay,
+      RelativeSource={RelativeSource Mode=Self}, Path=MyItemData.MyZIndex}"/>
+    <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyInsideElementBounds.Width}"/>
+    <Setter Property="Height" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyInsideElementBounds.Height}"/>
+
+  </Style>
+
+
+
+  <Style TargetType="{x:Type local:TextBlockThumb}"
+         BasedOn="{StaticResource kiso}">
+
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:TextBlockThumb}">
+          <Grid>
+            <Canvas>
+              <TextBlock x:Name="element"
+                         Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyText}"
+                         Foreground="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyForeground}"
+                         Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyBackground}"
+                         FontSize="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyFontSize}"
+                         Canvas.Left="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementOffsetLeft}"
+                         Canvas.Top="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementOffsetTop}"
+                         >
+                <TextBlock.RenderTransform>
+                  <RotateTransform x:Name="angle" Angle="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyAngle}"/>
+                </TextBlock.RenderTransform>
+              </TextBlock>
+            </Canvas>
+            <Border Style="{StaticResource waku4}"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+
+  <Style TargetType="{x:Type local:EllipseTextThumb}"
+         BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:EllipseTextThumb}">
+          <Grid>
+            <Canvas>
+              <Grid x:Name="element"
+                    Canvas.Left="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementOffsetLeft}"
+                    Canvas.Top="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementOffsetTop}"
+                    >
+                <Grid.RenderTransform>
+                  <RotateTransform x:Name="angle" Angle="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyAngle}"/>
+                </Grid.RenderTransform>
+                <Ellipse Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyWidth}"
+                     Height="{Binding
+                        RelativeSource={RelativeSource Mode=TemplatedParent},
+                        Path=MyItemData.MyHeight}"
+                     Fill="{Binding
+                        RelativeSource={RelativeSource Mode=TemplatedParent},
+                        Path=MyItemData.MyFill}"/>
+                <TextBlock Text="{Binding
+                        RelativeSource={RelativeSource Mode=TemplatedParent},
+                        Path=MyItemData.MyText}"
+                       Foreground="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyForeground}"
+                       FontSize="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyFontSize}"
+                       Background="Transparent"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       />
+              </Grid>
+            </Canvas>
+            <Border Style="{StaticResource waku4}"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+
+  <!--<Style TargetType="{x:Type local:EzBezierThumb}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:EzBezierThumb}">
+          <Grid>
+            <Canvas x:Name="PART_Canvas"
+                    Background="{Binding
+                      RelativeSource={RelativeSource Mode=TemplatedParent},
+                      Path=MyItemData.MyBackground}">
+              <local:EzBezier x:Name="bezi"
+                              Canvas.Left="0"
+                              Canvas.Top="0"
+                              MyAngle="{Binding
+                                RelativeSource={RelativeSource Mode=TemplatedParent},
+                                Path=MyItemData.MyAngle}"
+                              MyPoints="{Binding
+                                RelativeSource={RelativeSource Mode=TemplatedParent},
+                                Path=MyItemData.MyPoints, Mode=TwoWay}"
+                              Stroke="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyStroke}"
+                              StrokeThickness="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyStrokeThickness}"
+                />
+            </Canvas>
+            <Border Style="{StaticResource waku4}"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>-->
+
+
+
+
+  <Style TargetType="{x:Type local:GeoShapeThumb2}" BasedOn="{StaticResource kiso}">
+    <Style.Resources>
+      <local:MyConvRotateTransform x:Key="rotate"/>
+    </Style.Resources>
+
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:GeoShapeThumb2}">
+          <Grid>
+            <Canvas x:Name="PART_Canvas">
+              <local:GeoShape
+                x:Name="geoShape"
+                DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData}"
+                Canvas.Left="0" Canvas.Top="0"
+                MyPoints="{Binding MyPoints, Mode=TwoWay}"
+                Stroke="{Binding MyStroke}"
+                StrokeThickness="{Binding MyStrokeThickness}"
+                MyShapeType="{Binding MyShapeType}"
+                MyHeadBeginType="{Binding MyGeoShapeHeadCapType}"
+                RenderTransform="{Binding MyAngle, Converter={StaticResource rotate}}"
+                >
+                <!--<local:GeoShape.RenderTransform>
+                  <RotateTransform x:Name="angle" Angle="{Binding MyAngle}"/>
+                </local:GeoShape.RenderTransform>-->
+              </local:GeoShape>
+            </Canvas>
+            <Border Style="{StaticResource waku4}"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+
+
+  <Style TargetType="{x:Type local:GeoShapeThumb}">
+    <Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyLeft, Mode=TwoWay}"/>
+    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyTop, Mode=TwoWay}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:GeoShapeThumb}">
+          <local:GeoShape x:Name="shape"
+                          DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                          Stroke="Orange"
+                          StrokeThickness="{Binding MyStrokeThickness}"
+                          MyShapeType="{Binding MyShapeType}"
+                          MyHeadBeginType="Arrow"
+                          MyPoints="0,20,200,20">
+            <local:GeoShape.RenderTransform>
+              <RotateTransform x:Name="angle" Angle="{Binding Path=MyAngle, Mode=TwoWay}"/>
+            </local:GeoShape.RenderTransform>
+          </local:GeoShape>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+  <!--<Style TargetType="{x:Type local:GeoShapeTThumb}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:GeoShapeTThumb}">
+          <Grid>
+            <Canvas x:Name="PART_Canvas"
+                  Background="Linen"
+                  ClipToBounds="False"
+                  Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}"
+                  Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"
+                  >
+              <local:GeoShapeThumb x:Name="shapeThumb"
+                                 DataContext="{Binding
+                                    RelativeSource={RelativeSource Mode=TemplatedParent},
+                                    Path=MyItemData}"
+                                 MyStrokeThickness="10"
+                                 MyShapeType="Line"
+                                 MyPoints="{Binding MyPoints, Mode=TwoWay}"
+                                 MyAngle="{Binding MyAngle, Mode=TwoWay}"
+                                 >
+              </local:GeoShapeThumb>
+            </Canvas>
+            <Border Style="{StaticResource waku4}"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>-->
+
+
+
+  <!--<Style TargetType="{x:Type local:GeoShapeTThumb}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyLeft, Mode=TwoWay}"/>
+    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyTop, Mode=TwoWay}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:GeoShapeTThumb}">
+          <Canvas x:Name="PART_Canvas"
+                  Background="Linen"
+                  ClipToBounds="True"
+                  Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}"
+                  Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"
+                  >
+            <local:GeoShapeThumb x:Name="shapeThumb"
+                                 DataContext="{Binding
+                                    RelativeSource={RelativeSource Mode=TemplatedParent},
+                                    Path=MyItemData}"
+                                 MyStrokeThickness="{Binding MyStrokeThickness}"
+                                 MyShapeType="{Binding MyShapeType}"
+                                 MyPoints="{Binding MyPoints, Mode=TwoWay}"
+                                 MyAngle="{Binding MyAngle, Mode=TwoWay}"
+                                 >
+            </local:GeoShapeThumb>
+            <Rectangle Stroke="Orange"
+                       Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}"
+                       Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"
+                       />
+          </Canvas>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>-->
+
+
+
+
+
+
+
+  <Style TargetType="{x:Type local:GroupThumb}"
+         BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:GroupThumb}">
+          <Grid>
+            <ItemsControl x:Name="PART_ItemsControl" 
+                          ItemsSource="{Binding
+                            RelativeSource={RelativeSource Mode=TemplatedParent},
+                            Path=MyThumbs}"
+                          Background="{Binding
+                            RelativeSource={RelativeSource Mode=TemplatedParent},
+                            Path=MyItemData.MyBackground}"
+                          Focusable="False">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <local:ExCanvas Background="AliceBlue"/>
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <Border Style="{StaticResource waku4}"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="{x:Type local:RootThumb}"
+         BasedOn="{StaticResource kiso}">
+    <Setter Property="KeyboardNavigation.TabNavigation" Value="Cycle"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:RootThumb}">
+          <ItemsControl x:Name="PART_ItemsControl"
+                        ItemsSource="{Binding
+                          RelativeSource={RelativeSource Mode=TemplatedParent},
+                          Path=MyThumbs}"
+                        Background="{Binding
+                          RelativeSource={RelativeSource
+                          Mode=TemplatedParent},
+                          Path=MyItemData.MyBackground}"
+                        Focusable="False">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <local:ExCanvas/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+
+
+
+</ResourceDictionary>
