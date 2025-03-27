@@ -243,4 +243,34 @@ public partial class MainWindow : Window
 
         MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
     }
+
+    private void AddPoint_Click(object sender, RoutedEventArgs e)
+    {
+        if (MyRoot.MyFocusThumb is GeoShapeThumb2 geo2)
+        {
+            Random r = new();
+            //Point maeP = geo2.MyItemData.MyPoints[^1];
+
+            //geo2.MyItemData.MyPoints.Add(new Point(100, 140));
+            geo2.AddPoint(new Point(r.Next(200), r.Next(200)));
+
+        }
+
+    }
+
+    private void RemovePoint_Click(object sender, RoutedEventArgs e)
+    {
+        if(MyRoot.MyFocusThumb is GeoShapeThumb2 geo2)
+        {
+            geo2.RemovePoint();
+        }
+    }
+
+    private void ShapeTypeSwitch_Click(object sender, RoutedEventArgs e)
+    {
+        if(MyRoot.MyFocusThumb is GeoShapeThumb2 geo2)
+        {
+            geo2.ShapeTypeSwitch();
+        }
+    }
 }

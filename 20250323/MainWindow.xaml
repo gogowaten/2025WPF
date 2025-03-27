@@ -54,6 +54,9 @@
         <Button x:Name="SaveRoot" Content="Rootをファイルに保存" Click="SaveRoot_Click"/>
         <Button x:Name="ReadRootFile" Content="Rootファイル読み込み" Click="ReadRootFile_Click"/>
         <Button x:Name="AnchorSwitch" Content="AnchorSwitch" Click="AnchorSwitch_Click"/>
+        <Button x:Name="ShapeTypeSwitch" Content="直線とベジェ曲線の切り替え" Click="ShapeTypeSwitch_Click"/>
+        <Button x:Name="AddPoint" Content="末尾にPoint追加" Click="AddPoint_Click"/>
+        <Button x:Name="RemovePoint" Content="末尾のPoint削除" Click="RemovePoint_Click"/>
         <Button x:Name="MyTest2" Content="Test2AddPoint(100, 150)" Click="MyTest2_Click"/>
       </UniformGrid>
       <UniformGrid Columns="2">

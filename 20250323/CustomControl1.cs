@@ -1372,6 +1372,9 @@ namespace _20250323
     }
 
 
+    /// <summary>
+    /// Pointの追加削除はItemDataの操作じゃなくて、メソッドを使う、AddPoint
+    /// </summary>
     public class GeoShapeThumb2 : KisoThumb
     {
         private AdornerLayer MyShepeAdornerLayer { get; set; } = null!;
@@ -1406,7 +1409,7 @@ namespace _20250323
             {
                 MyGeoShape = shape;
                 MyShepeAdornerLayer = AdornerLayer.GetAdornerLayer(MyGeoShape);
-
+                //MyGeoShape.SetBinding(GeoShape.MyShapeTypeProperty,new Binding() { Source})
             }
             else
             {
@@ -1414,7 +1417,83 @@ namespace _20250323
             }
         }
 
+        #region イベント
+        /// <summary>
+        /// アンカーハンドルThumbのドラッグ移動終了時
+        /// </summary>
+        /// <param name="obj"></param>
+        private void MyAnchorHandleAdorner_OnDragCompleted(DragCompletedEventArgs obj)
+        {
+            //位置とサイズの修正、全体の再レイアウト
+            UpdateLocateAndSize();
+            MyParentThumb?.ReLayout3();
+        }
+
+        #endregion イベント
+
         #region メソッド
+
+        /// <summary>
+        /// 直線とベジェ曲線の切り替え
+        /// </summary>
+        public void ShapeTypeSwitch()
+        {
+            if (MyGeoShape.MyShapeType == ShapeType.Line)
+            {
+                ShapeTypeToBezier();
+            }
+            else
+            {
+                ShapeTypeToLine();
+            }
+        }
+        public void ShapeTypeToLine()
+        {
+            MyGeoShape.MyShapeType = ShapeType.Line;
+            MyAnchorHandleAdorner?.RemoveControlLine();
+            UpdateLocateAndSize();
+            MyParentThumb?.ReLayout3();
+        }
+        public void ShapeTypeToBezier()
+        {
+            MyGeoShape.MyShapeType = ShapeType.Bezier;
+            MyAnchorHandleAdorner?.AddControlLine();
+            UpdateLocateAndSize();
+            MyParentThumb?.ReLayout3();
+        }
+
+        #region アンカーPointの追加と削除
+
+        /// <summary>
+        /// Pointの追加(挿入)
+        /// </summary>
+        /// <param name="poi"></param>
+        /// <param name="id">追加(挿入)位置、省略時は末尾に追加する</param>
+        public void AddPoint(Point poi, int id = -1)
+        {
+            if (id == -1) { id = MyItemData.MyPoints.Count; }
+            MyItemData.MyPoints.Insert(id, poi);
+            //アンカーハンドルが表示されている場合は、アンカーハンドルも追加する
+            MyAnchorHandleAdorner?.AddAnchorHandleThumb(id, poi);
+            UpdateLocateAndSize();
+            MyParentThumb?.ReLayout3();
+        }
+
+        /// <summary>
+        /// Pointの削除
+        /// </summary>
+        /// <param name="id">削除位置、省略時は末尾のPointを削除する</param>
+        public void RemovePoint(int id = -1)
+        {
+            if(id == -1) {id = MyItemData.MyPoints.Count-1; }
+            MyItemData.MyPoints.RemoveAt(id);
+            MyAnchorHandleAdorner?.RemoveAnchorHandleThumb(id);
+            UpdateLocateAndSize();
+            MyParentThumb?.ReLayout3();
+        }
+
+        #endregion アンカーPointの追加と削除
+
         #region アンカーハンドルの表示切り替え
         public void AnchorSwitch()
         {
@@ -1428,6 +1507,8 @@ namespace _20250323
                 MyAnchorHandleAdorner = new(MyGeoShape);
                 MyAnchorHandleAdorner.OnAnchorThumbDragCompleted += MyAnchorHandleAdorner_OnDragCompleted;
                 MyShepeAdornerLayer.Add(MyAnchorHandleAdorner);
+                UpdateLocateAndSize();
+                MyParentThumb?.ReLayout3();
             }
         }
         public void AnchorOff()
@@ -1437,35 +1518,38 @@ namespace _20250323
                 MyAnchorHandleAdorner.OnAnchorThumbDragCompleted -= MyAnchorHandleAdorner_OnDragCompleted;
                 MyShepeAdornerLayer.Remove(MyAnchorHandleAdorner);
                 MyAnchorHandleAdorner = null;
+                UpdateLocateAndSize();
+                MyParentThumb?.ReLayout3();
             }
         }
         #endregion アンカーハンドルの表示切り替え
 
-        private void MyAnchorHandleAdorner_OnDragCompleted(DragCompletedEventArgs obj)
-        {
-            UpdateLocateAndSize();
-        }
-
         //位置とサイズの更新
         public void UpdateLocateAndSize()
         {
+            //図形のBounds(図形が収まるRect)から決める、ただし
+            //アンカーハンドルが表示されている場合は、
+            //アンカーハンドルのBoundsと合成(union)したものから決める
             Rect neko = MyGeoShape.GetRenderBounds();
             Rect unionRect = MyGeoShape.GetRenderBounds();
-            if(MyAnchorHandleAdorner?.GetHandlesRenderBounds() is Rect handlesRect)
+            if (MyAnchorHandleAdorner?.GetHandlesRenderBounds() is Rect handlesRect)
             {
                 unionRect.Union(handlesRect);
             }
 
+            //サイズはそのままBoundsのサイズ
             Width = unionRect.Width;
             Height = unionRect.Height;
+
+            //図形の位置を修正する前に元の位置を取得
             var shapeLeft = Canvas.GetLeft(MyGeoShape);
             var shapeTop = Canvas.GetTop(MyGeoShape);
-            var offsetLeft = unionRect.Left + shapeLeft;
-            var offsetTop = unionRect.Top+ shapeTop;
             Canvas.SetLeft(MyGeoShape, -unionRect.Left);
             Canvas.SetTop(MyGeoShape, -unionRect.Top);
-            MyItemData.MyLeft += offsetLeft;
-            MyItemData.MyTop += offsetTop;
+
+            //自身の位置、図形の位置と反対方向
+            MyItemData.MyLeft += unionRect.Left + shapeLeft;
+            MyItemData.MyTop += unionRect.Top + shapeTop;
         }
 
         private (double left, double top) GetTopLeftFromPoints(PointCollection points)
@@ -3081,7 +3165,7 @@ namespace _20250323
             {
                 return new GeoShapeTThumb(data);
             }
-            else if(data.MyThumbType == ThumbType.GeoShape)
+            else if (data.MyThumbType == ThumbType.GeoShape)
             {
                 return new GeoShapeThumb2(data);
             }

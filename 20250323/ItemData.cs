@@ -152,8 +152,8 @@ namespace _20250323
         public double MyStrokeThickness { get => _myStrokeThickness; set => SetProperty(ref _myStrokeThickness, value); }
 
 
-        private int prop;
-        public int Prop { get => prop; set => SetProperty(ref prop, value); }
+        private ShapeType _myShapeType = ShapeType.Line;
+        public ShapeType MyShapeType { get => _myShapeType; set => SetProperty(ref _myShapeType, value); }
 
 
 

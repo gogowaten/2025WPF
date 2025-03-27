@@ -194,7 +194,8 @@ namespace _20250323
         }
 
         /// <summary>
-        /// アンカーハンドルの追加(挿入)
+        /// アンカーハンドルの追加(挿入)、
+        /// Point追加時にも使う
         /// </summary>
         /// <param name="index"></param>
         /// <param name="poi"></param>
