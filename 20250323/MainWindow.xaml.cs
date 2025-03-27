@@ -44,6 +44,7 @@ public partial class MainWindow : Window
             MyPoints = [new Point(), new Point(100, 0)],
             MyStroke = Brushes.Maroon,
             MyStrokeThickness = 40,
+            MyTop = 0,
         };
         //GeoShapeThumb2 thumb2 = new(data);
         MyRoot.AddNewThumbFromItemData(data, MyRoot);
@@ -230,18 +231,27 @@ public partial class MainWindow : Window
 
     private void AddPolyLine_Click(object sender, RoutedEventArgs e)
     {
-        var data = new ItemData(ThumbType.PolyLine)
+        var data = new ItemData(ThumbType.GeoShape)
         {
             MyText = "折れ線",
-            MyPoints = [new System.Windows.Point(), new System.Windows.Point(100, 0), new System.Windows.Point(100, 100), new System.Windows.Point(0, 100)],
+            MyPoints = [new Point(), new Point(100, 0), new Point(100, 100), new Point(0, 100)],
             MyForeground = Brushes.RosyBrown,
             MyBackground = Brushes.SeaShell,
             MyStroke = Brushes.Tomato,
-            MyStrokeThickness = 30.0,
+            MyStrokeThickness = 40.0,
         };
-
-
         MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
+        //var data = new ItemData(ThumbType.PolyLine)
+        //{
+        //    MyText = "折れ線",
+        //    MyPoints = [new Point(), new Point(100, 0), new Point(100, 100), new Point(0, 100)],
+        //    MyForeground = Brushes.RosyBrown,
+        //    MyBackground = Brushes.SeaShell,
+        //    MyStroke = Brushes.Tomato,
+        //    MyStrokeThickness = 30.0,
+        //};
+        //MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
+
     }
 
     private void AddPoint_Click(object sender, RoutedEventArgs e)
@@ -260,7 +270,7 @@ public partial class MainWindow : Window
 
     private void RemovePoint_Click(object sender, RoutedEventArgs e)
     {
-        if(MyRoot.MyFocusThumb is GeoShapeThumb2 geo2)
+        if (MyRoot.MyFocusThumb is GeoShapeThumb2 geo2)
         {
             geo2.RemovePoint();
         }
@@ -268,7 +278,7 @@ public partial class MainWindow : Window
 
     private void ShapeTypeSwitch_Click(object sender, RoutedEventArgs e)
     {
-        if(MyRoot.MyFocusThumb is GeoShapeThumb2 geo2)
+        if (MyRoot.MyFocusThumb is GeoShapeThumb2 geo2)
         {
             geo2.ShapeTypeSwitch();
         }

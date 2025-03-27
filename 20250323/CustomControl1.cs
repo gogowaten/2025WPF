@@ -1394,13 +1394,19 @@ namespace _20250323
 
         private void GeoShapeThumb2_Loaded(object sender, RoutedEventArgs e)
         {
-            var data = MyItemData;
-            var poi = MyGeoShape.MyPoints;
-            var poi2 = MyItemData.MyPoints;
-            var sto = MyGeoShape.Stroke;
-            var thi = MyGeoShape.StrokeThickness;
-            UpdateLocateAndSize();
+            MyInitialize();
         }
+
+        //初期化、図形の位置と自身のサイズを設定
+        private void MyInitialize()
+        {
+            var shapeBounds = MyGeoShape.GetRenderBounds();
+            Canvas.SetLeft(MyGeoShape, -shapeBounds.Left);
+            Canvas.SetTop(MyGeoShape, -shapeBounds.Top);
+            Width = shapeBounds.Width;
+            Height = shapeBounds.Height;
+        }
+
 
         public override void OnApplyTemplate()
         {
@@ -1409,7 +1415,6 @@ namespace _20250323
             {
                 MyGeoShape = shape;
                 MyShepeAdornerLayer = AdornerLayer.GetAdornerLayer(MyGeoShape);
-                //MyGeoShape.SetBinding(GeoShape.MyShapeTypeProperty,new Binding() { Source})
             }
             else
             {
