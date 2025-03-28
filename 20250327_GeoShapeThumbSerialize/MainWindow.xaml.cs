@@ -19,6 +19,9 @@ using Point = System.Windows.Point;
 //この矢印図形を追加した感じ
 //リサイズ機能は外した
 
+//2025WPF/20250327_GeoShapeThumbSerialize at main · gogowaten/2025WPF
+//https://github.com/gogowaten/2025WPF/tree/main/20250327_GeoShapeThumbSerialize
+
 namespace _20250327_GeoShapeThumbSerialize;
 
 /// <summary>
