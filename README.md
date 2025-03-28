@@ -1,3 +1,12 @@
+# 20250327_GeoShapeThumbSerialize
+https://github.com/gogowaten/2025WPF/tree/main/20250327_GeoShapeThumbSerialize<br>
+![Animation20250328_140103](https://github.com/user-attachments/assets/5b191152-532b-4114-8da0-d90ffa84d527)<br>
+WPF、矢印図形Thumbのシリアライズテスト - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/03/28/151812<br>
+<br><br><br>
+
+
+
 # 20250322_GeoShapeThumbThumb
 https://github.com/gogowaten/2025WPF/tree/main/20250322_GeoShapeThumbThumb<br>
 ![Animation20250322_120056](https://github.com/user-attachments/assets/00030233-48ab-44fa-beab-d8f305e1d0a5)<br>
