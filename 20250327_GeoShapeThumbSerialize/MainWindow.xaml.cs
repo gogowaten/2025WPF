@@ -11,10 +11,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Point = System.Windows.Point;
 
-
-//WPF、要素をファイルに保存と復元テスト - 午後わてんのブログ
-//https://gogowaten.hatenablog.com/entry/2025/02/28/130209
-//を改変、EzShape追加
+//2025WPF / 20250310 at main · gogowaten/2025WPF
+//https://github.com/gogowaten/2025WPF/tree/main/20250310
+//これに
+//2025WPF/20250327_GeoShapeThumbSerialize at main · gogowaten/2025WPF
+//https://github.com/gogowaten/2025WPF/tree/main/20250327_GeoShapeThumbSerialize
+//この矢印図形を追加した感じ
+//リサイズ機能は外した
 
 namespace _20250327_GeoShapeThumbSerialize;
 
@@ -31,7 +34,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        ItemData data = new(ThumbType.Root) { MyBackground = Brushes.SkyBlue };
+        ItemData data = new(ThumbType.Root) { MyBackground = Brushes.DeepSkyBlue };
         if (new RootThumb(data) is RootThumb root)
         {
             MyRoot = root;
@@ -203,19 +206,6 @@ public partial class MainWindow : Window
         MyRoot.RemoveAll();
     }
 
-    private void AddBeziThumb_Click(object sender, RoutedEventArgs e)
-    {
-        var data = new ItemData(ThumbType.Bezier)
-        {
-            MyText = "Bezier",
-            MyPoints = [new System.Windows.Point(), new System.Windows.Point(100, 0), new System.Windows.Point(100, 100), new System.Windows.Point(0, 100)],
-            MyForeground = Brushes.RosyBrown,
-            MyBackground = Brushes.SeaShell,
-            MyStroke = Brushes.Tomato,
-            MyStrokeThickness = 10.0,
-        };
-        MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
-    }
 
     private void AnchorSwitch_Click(object sender, RoutedEventArgs e)
     {
@@ -233,25 +223,28 @@ public partial class MainWindow : Window
     {
         var data = new ItemData(ThumbType.GeoShape)
         {
-            MyText = "折れ線",
+            MyText = "図形",
             MyPoints = [new Point(), new Point(100, 0), new Point(100, 100), new Point(0, 100)],
-            MyForeground = Brushes.RosyBrown,
-            MyBackground = Brushes.SeaShell,
-            MyStroke = Brushes.Tomato,
-            MyStrokeThickness = 40.0,
+            MyBackground = null,
+            MyStroke = Brushes.Khaki,
+            MyStrokeThickness = 30.0,
         };
         MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
-        //var data = new ItemData(ThumbType.PolyLine)
-        //{
-        //    MyText = "折れ線",
-        //    MyPoints = [new Point(), new Point(100, 0), new Point(100, 100), new Point(0, 100)],
-        //    MyForeground = Brushes.RosyBrown,
-        //    MyBackground = Brushes.SeaShell,
-        //    MyStroke = Brushes.Tomato,
-        //    MyStrokeThickness = 30.0,
-        //};
-        //MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
+    }
 
+    private void AddBezier_Click(object sender, RoutedEventArgs e)
+    {
+        var data = new ItemData(ThumbType.GeoShape)
+        {
+            MyText = "図形",
+            MyPoints = [new Point(), new Point(200, 0), new Point(0, 100), new Point(200, 100)],
+            MyBackground = null,
+            MyStroke = Brushes.PaleGoldenrod,
+            MyStrokeThickness = 30.0,
+            MyShapeType = ShapeType.Bezier,
+            MyGeoShapeHeadCapType = HeadType.Arrow,
+        };
+        MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
     }
 
     private void AddPoint_Click(object sender, RoutedEventArgs e)
@@ -281,6 +274,7 @@ public partial class MainWindow : Window
         if (MyRoot.MyFocusThumb is GeoShapeThumb2 geo2)
         {
             geo2.ShapeTypeSwitch();
+            var neko = geo2.MyItemData.MyBackground;
         }
     }
 
@@ -297,6 +291,9 @@ public partial class MainWindow : Window
             {
                 shape.MyItemData.MyGeoShapeHeadCapType = HeadType.None;
             }
+            shape.UpdateLocateAndSize();
+            MyRoot.MyFocusThumb.MyParentThumb?.ReLayout3();
         }
     }
+
 }

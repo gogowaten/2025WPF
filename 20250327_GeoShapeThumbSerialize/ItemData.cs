@@ -16,7 +16,7 @@ namespace _20250327_GeoShapeThumbSerialize
 {
 
     //Thumbの種類の識別用
-    public enum ThumbType { None = 0, Root, Group, Text, Ellipse, Rect, Bezier, PolyLine, GeoShape }
+    public enum ThumbType { None = 0, Root, Group, Text, Ellipse, Rect, GeoShape }
 
     //[DataContract]
     [KnownType(typeof(ItemData))]
@@ -260,7 +260,7 @@ namespace _20250327_GeoShapeThumbSerialize
         [DataMember] public byte MyBackgroundB { get => _myBackgroundB; set => SetProperty(ref _myBackgroundB, value); }
 
         [IgnoreDataMember]
-        public Brush MyBackground
+        public Brush? MyBackground
         {
             get { return (Brush)GetValue(MyBackgroundProperty); }
             set { SetValue(MyBackgroundProperty, value); }

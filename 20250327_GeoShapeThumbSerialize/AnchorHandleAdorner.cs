@@ -282,7 +282,7 @@ namespace _20250327_GeoShapeThumbSerialize
             set { SetValue(MyAnchorHandleSizeProperty, value); }
         }
         public static readonly DependencyProperty MyAnchorHandleSizeProperty =
-            DependencyProperty.Register(nameof(MyAnchorHandleSize), typeof(double), typeof(AnchorHandleAdorner), new PropertyMetadata(20.0));
+            DependencyProperty.Register(nameof(MyAnchorHandleSize), typeof(double), typeof(AnchorHandleAdorner), new PropertyMetadata(40.0));
 
         #endregion 依存関係プロパティ
 

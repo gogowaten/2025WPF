@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:_20250327_GeoShapeThumbSerialize"
         mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance local:RootThumb}"
-        Title="MainWindow" Height="667" Width="602">
+        Title="MainWindow" Height="367" Width="654">
 
   <Grid x:Name="MyGrid" UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
@@ -26,19 +26,12 @@
       <UniformGrid Columns="2">
         <Button x:Name="AddTextThumb2" Content="AddTextThumb" Click="AddTextThumb_Click"/>
         <Button x:Name="AddEllipseThumb" Content="AddEllipseThumb" Click="AddEllipseThumb_Click"/>
-        <Button x:Name="AddBeziThumb" Content="AddBezi" Click="AddBeziThumb_Click"/>
         <Button x:Name="AddPolyLine" Content="AddLine" Click="AddPolyLine_Click"/>
+        <Button x:Name="AddBezier" Content="矢印ベジェ曲線" Click="AddBezier_Click"/>
         <UniformGrid Columns="2">
           <Button x:Name="AddGroup" Content="グループ化" Click="AddGroup_Click"/>
           <Button x:Name="Ungroup" Content="グループ解除" Click="Ungroup_Click"/>
         </UniformGrid>
-        <Button x:Name="SaveToFile" Content="Focusをファイルに保存" Click="SaveToFile_Click"/>
-        <Button x:Name="ReadToFile" Content="ファイルから追加" Click="ReadToFile_Click"/>
-        <UniformGrid Columns="2">
-          <Button x:Name="Remove" Content="削除" Click="Remove_Click"/>
-          <Button x:Name="RemoveAll" Content="全削除" Click="RemoveAll_Click"/>
-        </UniformGrid>
-        <Button x:Name="WakuVisible" Content="枠の表示切り替え" Click="WakuVisible_Click"/>
         <UniformGrid Columns="2">
           <Button x:Name="In" Content="In" Click="In_Click"/>
           <Button x:Name="Out" Content="Out" Click="Out_Click"/>
@@ -51,26 +44,21 @@
           <Button x:Name="ToTop" Content="最前面へ" Click="Top_Click"/>
           <Button x:Name="Bottom" Content="最背面へ" Click="Bottom_Click"/>
         </UniformGrid>
+        <Button x:Name="SaveToFile" Content="Focusをファイルに保存" Click="SaveToFile_Click"/>
         <Button x:Name="SaveRoot" Content="Rootをファイルに保存" Click="SaveRoot_Click"/>
+        <Button x:Name="ReadToFile" Content="ファイルから追加" Click="ReadToFile_Click"/>
         <Button x:Name="ReadRootFile" Content="Rootファイル読み込み" Click="ReadRootFile_Click"/>
         <Button x:Name="AnchorSwitch" Content="AnchorSwitch" Click="AnchorSwitch_Click"/>
         <Button x:Name="ShapeTypeSwitch" Content="直線とベジェ曲線の切り替え" Click="ShapeTypeSwitch_Click"/>
         <Button x:Name="AddPoint" Content="末尾にPoint追加" Click="AddPoint_Click"/>
-        <Button x:Name="RemovePoint" Content="末尾のPoint削除" Click="RemovePoint_Click"/>
         <Button x:Name="ShapeCapSwitch" Content="先端形状の切り替え" Click="ShapeCapSwitch_Click"/>
+        <Button x:Name="RemovePoint" Content="末尾のPoint削除" Click="RemovePoint_Click"/>
+        <Button x:Name="WakuVisible" Content="枠の表示切り替え" Click="WakuVisible_Click"/>
         <Button x:Name="MyTest2" Content="Test2AddPoint(100, 150)" Click="MyTest2_Click"/>
-      </UniformGrid>
-      <UniformGrid Columns="2">
-        <TextBlock Text="{Binding MyThumbs.Count, StringFormat=count 0}"/>
-        <TextBlock Text="{Binding MyItemData.MyThumbsItemData.Count, StringFormat=itemcount 0}"/>
-        <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
-        <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=itemtype {0}}"/>
-        <TextBlock Text="{Binding ActualWidth, StringFormat=actwidth {0:0.0}}"/>
-        <TextBlock Text="{Binding ActualHeight, StringFormat=actheight {0:0.0}}"/>
-        <Slider Value="{Binding MyItemData.MyAddOffsetLeft}" Minimum="0" Maximum="64"
-                TickFrequency="8" IsSnapToTickEnabled="True"/>
-        <TextBlock Text="{Binding MyItemData.MyAddOffsetLeft, StringFormat=AddOffsetLeft 0}"/>
-        <TextBlock Text="{Binding MySelectedThumbs.Count, StringFormat=selectedCount 0}"/>
+        <UniformGrid Columns="2">
+          <Button x:Name="Remove" Content="削除" Click="Remove_Click"/>
+          <Button x:Name="RemoveAll" Content="全削除" Click="RemoveAll_Click"/>
+        </UniformGrid>
       </UniformGrid>
 
       <GroupBox DataContext="{Binding MyFocusThumb}" Header="FocusThumb">
@@ -98,6 +86,19 @@
           <TextBlock Text="{Binding MyInsideElementBounds, StringFormat=insideB {0:0}}"/>
         </StackPanel>
       </GroupBox>
+
+      <UniformGrid Columns="2">
+        <TextBlock Text="{Binding MyThumbs.Count, StringFormat=count 0}"/>
+        <TextBlock Text="{Binding MyItemData.MyThumbsItemData.Count, StringFormat=itemcount 0}"/>
+        <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
+        <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=itemtype {0}}"/>
+        <TextBlock Text="{Binding ActualWidth, StringFormat=actwidth {0:0.0}}"/>
+        <TextBlock Text="{Binding ActualHeight, StringFormat=actheight {0:0.0}}"/>
+        <Slider Value="{Binding MyItemData.MyAddOffsetLeft}" Minimum="0" Maximum="64"
+                TickFrequency="8" IsSnapToTickEnabled="True"/>
+        <TextBlock Text="{Binding MyItemData.MyAddOffsetLeft, StringFormat=AddOffsetLeft 0}"/>
+        <TextBlock Text="{Binding MySelectedThumbs.Count, StringFormat=selectedCount 0}"/>
+      </UniformGrid>
 
       <GroupBox DataContext="{Binding MyActiveGroupThumb}" Header="ActiveGroup">
         <UniformGrid Columns="2">

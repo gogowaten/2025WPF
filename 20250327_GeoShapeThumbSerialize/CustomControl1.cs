@@ -65,269 +65,270 @@ namespace _20250327_GeoShapeThumbSerialize
 
 
     /// <summary>
+    /// 未使用
     /// アンカーハンドルの表示切替とドラッグ移動できるGeoShape
     /// </summary>
-    public class GeoShapeThumb : Thumb
-    {
-        #region フィールド
+    //public class GeoShapeThumb : Thumb
+    //{
+    //    #region フィールド
 
-        //アンカーハンドルを表示する装飾
-        public AnchorHandleAdorner? MyShapesAnchorHandleAdorner { get; private set; }
+    //    //アンカーハンドルを表示する装飾
+    //    public AnchorHandleAdorner? MyShapesAnchorHandleAdorner { get; private set; }
 
-        //アンカーハンドルを表示する装飾のLayer
-        public AdornerLayer MyShapesAdornerLayer { get; private set; } = null!;
+    //    //アンカーハンドルを表示する装飾のLayer
+    //    public AdornerLayer MyShapesAdornerLayer { get; private set; } = null!;
 
-        //中に表示している図形
-        private GeoShape MyGeoShape { get; set; } = null!;
-        #endregion フィールド
+    //    //中に表示している図形
+    //    private GeoShape MyGeoShape { get; set; } = null!;
+    //    #endregion フィールド
 
-        //イベント
-        //アンカーハンドル移動終了時にそれを知らせる用
-        public event Action<DragCompletedEventArgs>? OnAnchorHandleDragComleted;
-
-
-        static GeoShapeThumb()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoShapeThumb), new FrameworkPropertyMetadata(typeof(GeoShapeThumb)));
-        }
-        public GeoShapeThumb()
-        {
-            DragDelta += GeoShapeThumb_DragDelta;
-        }
-
-        //起動時、Templateの中から図形を取り出してバインド設定
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            if (GetTemplateChild("shape") is GeoShape shape)
-            {
-                MyGeoShape = shape;
-                MyShapesAdornerLayer = AdornerLayer.GetAdornerLayer(MyGeoShape);
-
-                //MyPointsのバインド、自身のMyPointsが
-                //nullなら図形のMyPointsをソースにする、
-                //nullじゃなければ自身のMyPointsをソースにする
-                if (MyPoints != null)
-                {
-                    MyGeoShape.SetBinding(GeoShape.MyPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.TwoWay });
-                }
-                else
-                {
-                    SetBinding(MyPointsProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyPointsProperty), Mode = BindingMode.TwoWay });
-                }
-            }
-            else
-            {
-                throw new ArgumentNullException("Templateの中に図形が見つからない");
-            }
-        }
+    //    //イベント
+    //    //アンカーハンドル移動終了時にそれを知らせる用
+    //    public event Action<DragCompletedEventArgs>? OnAnchorHandleDragComleted;
 
 
+    //    static GeoShapeThumb()
+    //    {
+    //        DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoShapeThumb), new FrameworkPropertyMetadata(typeof(GeoShapeThumb)));
+    //    }
+    //    public GeoShapeThumb()
+    //    {
+    //        DragDelta += GeoShapeThumb_DragDelta;
+    //    }
 
-        //自身のドラッグ移動
-        private void GeoShapeThumb_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            //アンカーハンドルが表示されているときだけ移動
-            if (MyShapesAnchorHandleAdorner != null)
-            {
-                MyLeft += e.HorizontalChange;
-                MyTop += e.VerticalChange;
-                e.Handled = true;
-            }
-        }
+    //    //起動時、Templateの中から図形を取り出してバインド設定
+    //    public override void OnApplyTemplate()
+    //    {
+    //        base.OnApplyTemplate();
+    //        if (GetTemplateChild("shape") is GeoShape shape)
+    //        {
+    //            MyGeoShape = shape;
+    //            MyShapesAdornerLayer = AdornerLayer.GetAdornerLayer(MyGeoShape);
 
-        #region 依存関係プロパティ
-        #region 図形とのバインド用
-
-
-        public double MyAngle
-        {
-            get { return (double)GetValue(MyAngleProperty); }
-            set { SetValue(MyAngleProperty, value); }
-        }
-        public static readonly DependencyProperty MyAngleProperty =
-            DependencyProperty.Register(nameof(MyAngle), typeof(double), typeof(GeoShapeThumb), new PropertyMetadata(0.0));
-
-        public ShapeType MyShapeType
-        {
-            get { return (ShapeType)GetValue(MyShapeTypeProperty); }
-            set { SetValue(MyShapeTypeProperty, value); }
-        }
-        public static readonly DependencyProperty MyShapeTypeProperty =
-            DependencyProperty.Register(nameof(MyShapeType), typeof(ShapeType), typeof(GeoShapeThumb),
-                new FrameworkPropertyMetadata(ShapeType.Line,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-        public PointCollection MyPoints
-        {
-            get { return (PointCollection)GetValue(MyPointsProperty); }
-            set { SetValue(MyPointsProperty, value); }
-        }
-        public static readonly DependencyProperty MyPointsProperty =
-            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(GeoShapeThumb), new FrameworkPropertyMetadata(null,
-                FrameworkPropertyMetadataOptions.AffectsRender |
-                FrameworkPropertyMetadataOptions.AffectsMeasure |
-                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-
-        public double MyStrokeThickness
-        {
-            get { return (double)GetValue(MyStrokeThicknessProperty); }
-            set { SetValue(MyStrokeThicknessProperty, value); }
-        }
-        public static readonly DependencyProperty MyStrokeThicknessProperty =
-            DependencyProperty.Register(nameof(MyStrokeThickness), typeof(double), typeof(GeoShapeThumb),
-                new FrameworkPropertyMetadata(10.0,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-        #endregion 図形とのバインド用
-
-
-        public double MyLeft
-        {
-            get { return (double)GetValue(MyLeftProperty); }
-            set { SetValue(MyLeftProperty, value); }
-        }
-        public static readonly DependencyProperty MyLeftProperty =
-            DependencyProperty.Register(nameof(MyLeft), typeof(double), typeof(GeoShapeThumb),
-                new FrameworkPropertyMetadata(0.0,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-        public double MyTop
-        {
-            get { return (double)GetValue(MyTopProperty); }
-            set { SetValue(MyTopProperty, value); }
-        }
-        public static readonly DependencyProperty MyTopProperty =
-            DependencyProperty.Register(nameof(MyTop), typeof(double), typeof(GeoShapeThumb),
-                new FrameworkPropertyMetadata(0.0,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-        #endregion 依存関係プロパティ
-
-
-        #region メソッド
-
-        /// <summary>
-        /// 図形が収まるRectの取得
-        /// </summary>
-        /// <returns></returns>
-        public Rect GetShapeRenderBounds()
-        {
-            ////RenderTransformが変更されていることを考慮して、更新してから取得
-            //MyGeoShape.UpdateRenderBounds();
-            //return MyGeoShape.MyRenderBounds;
-            return MyGeoShape.GetRenderBounds();
-        }
+    //            //MyPointsのバインド、自身のMyPointsが
+    //            //nullなら図形のMyPointsをソースにする、
+    //            //nullじゃなければ自身のMyPointsをソースにする
+    //            if (MyPoints != null)
+    //            {
+    //                MyGeoShape.SetBinding(GeoShape.MyPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.TwoWay });
+    //            }
+    //            else
+    //            {
+    //                SetBinding(MyPointsProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyPointsProperty), Mode = BindingMode.TwoWay });
+    //            }
+    //        }
+    //        else
+    //        {
+    //            throw new ArgumentNullException("Templateの中に図形が見つからない");
+    //        }
+    //    }
 
 
 
+    //    //自身のドラッグ移動
+    //    private void GeoShapeThumb_DragDelta(object sender, DragDeltaEventArgs e)
+    //    {
+    //        //アンカーハンドルが表示されているときだけ移動
+    //        if (MyShapesAnchorHandleAdorner != null)
+    //        {
+    //            MyLeft += e.HorizontalChange;
+    //            MyTop += e.VerticalChange;
+    //            e.Handled = true;
+    //        }
+    //    }
 
-        /// <summary>
-        /// 直線とベジェ曲線の切り替え
-        /// </summary>
-        public void ChangeShapeType()
-        {
-            if (MyShapeType == ShapeType.Line) { ChangeToBezier(); }
-            else { ChangeToLine(); }
-        }
-        public void ChangeToLine()
-        {
-            if (MyShapeType == ShapeType.Bezier)
-            {
-                MyShapeType = ShapeType.Line;
-                MyShapesAnchorHandleAdorner?.RemoveControlLine();
-                MyGeoShape.MyShapeType = ShapeType.Line;
-            }
-        }
-        public void ChangeToBezier()
-        {
-            if (MyShapeType == ShapeType.Line)
-            {
-                MyShapeType = ShapeType.Bezier;
-                MyShapesAnchorHandleAdorner?.AddControlLine();
-                MyGeoShape.MyShapeType = ShapeType.Bezier;
-            }
-        }
-
-        #region Pointの追加と削除
-        //ItemDataのMyPointsは操作しないで、ShapeThumbのメソッドを利用する
-
-        /// <summary>
-        /// Pointの追加
-        /// </summary>
-        /// <param name="index">挿入箇所Index</param>
-        /// <param name="poi">Point</param>
-        public void AddPoint(int index, Point poi)
-        {
-            MyPoints.Insert(index, poi);
-            //図形に装飾が在れば、装飾の更新
-            MyShapesAnchorHandleAdorner?.AddAnchorHandleThumb(index, poi);
-        }
-
-        /// <summary>
-        /// Pointを末尾に追加
-        /// </summary>
-        /// <param name="poi"></param>
-        public void AddPoint(Point poi)
-        {
-            int id = MyPoints.Count;
-            AddPoint(id, poi);
-        }
-
-        /// <summary>
-        /// Pointの削除
-        /// </summary>
-        /// <param name="index"></param>
-        public void RemovePoint(int index)
-        {
-            //最低2個は残して削除処理
-            if (MyPoints.Count > 2)
-            {
-                MyPoints.RemoveAt(index);
-                MyShapesAnchorHandleAdorner?.RemoveAnchorHandleThumb(index);
-            }
-        }
-
-        #endregion Pointの追加と削除
-
-        /// <summary>
-        /// アンカーハンドルの表示切替、Adornerの付け外し
-        /// </summary>
-        /// <returns>装飾</returns>
-        public AnchorHandleAdorner? AnchorSwitch()
-        {
-            //図形のAdornerLayerに装飾が在れば削除、なければ作成、追加する
-            if (MyShapesAnchorHandleAdorner == null)
-            {
-                MyShapesAnchorHandleAdorner = new AnchorHandleAdorner(MyGeoShape);
-                MyShapesAnchorHandleAdorner.OnAnchorThumbDragCompleted += MyShapesAnchorHandleAdorner_OnDragCompleted;
-                MyShapesAdornerLayer.Add(MyShapesAnchorHandleAdorner);
-                return MyShapesAnchorHandleAdorner;
-            }
-            else
-            {
-                MyShapesAnchorHandleAdorner.OnAnchorThumbDragCompleted -= MyShapesAnchorHandleAdorner_OnDragCompleted;
-                MyShapesAdornerLayer.Remove(MyShapesAnchorHandleAdorner);
-                MyShapesAnchorHandleAdorner = null;
-                return null;
-            }
-        }
+    //    #region 依存関係プロパティ
+    //    #region 図形とのバインド用
 
 
-        private void MyShapesAnchorHandleAdorner_OnDragCompleted(DragCompletedEventArgs obj)
-        {
-            OnAnchorHandleDragComleted?.Invoke(obj);
-        }
-        #endregion メソッド
+    //    public double MyAngle
+    //    {
+    //        get { return (double)GetValue(MyAngleProperty); }
+    //        set { SetValue(MyAngleProperty, value); }
+    //    }
+    //    public static readonly DependencyProperty MyAngleProperty =
+    //        DependencyProperty.Register(nameof(MyAngle), typeof(double), typeof(GeoShapeThumb), new PropertyMetadata(0.0));
 
-    }
+    //    public ShapeType MyShapeType
+    //    {
+    //        get { return (ShapeType)GetValue(MyShapeTypeProperty); }
+    //        set { SetValue(MyShapeTypeProperty, value); }
+    //    }
+    //    public static readonly DependencyProperty MyShapeTypeProperty =
+    //        DependencyProperty.Register(nameof(MyShapeType), typeof(ShapeType), typeof(GeoShapeThumb),
+    //            new FrameworkPropertyMetadata(ShapeType.Line,
+    //                FrameworkPropertyMetadataOptions.AffectsRender |
+    //                FrameworkPropertyMetadataOptions.AffectsMeasure |
+    //                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+    //    public PointCollection MyPoints
+    //    {
+    //        get { return (PointCollection)GetValue(MyPointsProperty); }
+    //        set { SetValue(MyPointsProperty, value); }
+    //    }
+    //    public static readonly DependencyProperty MyPointsProperty =
+    //        DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(GeoShapeThumb), new FrameworkPropertyMetadata(null,
+    //            FrameworkPropertyMetadataOptions.AffectsRender |
+    //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+    //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+
+    //    public double MyStrokeThickness
+    //    {
+    //        get { return (double)GetValue(MyStrokeThicknessProperty); }
+    //        set { SetValue(MyStrokeThicknessProperty, value); }
+    //    }
+    //    public static readonly DependencyProperty MyStrokeThicknessProperty =
+    //        DependencyProperty.Register(nameof(MyStrokeThickness), typeof(double), typeof(GeoShapeThumb),
+    //            new FrameworkPropertyMetadata(10.0,
+    //                FrameworkPropertyMetadataOptions.AffectsRender |
+    //                FrameworkPropertyMetadataOptions.AffectsMeasure |
+    //                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+    //    #endregion 図形とのバインド用
+
+
+    //    public double MyLeft
+    //    {
+    //        get { return (double)GetValue(MyLeftProperty); }
+    //        set { SetValue(MyLeftProperty, value); }
+    //    }
+    //    public static readonly DependencyProperty MyLeftProperty =
+    //        DependencyProperty.Register(nameof(MyLeft), typeof(double), typeof(GeoShapeThumb),
+    //            new FrameworkPropertyMetadata(0.0,
+    //                FrameworkPropertyMetadataOptions.AffectsRender |
+    //                FrameworkPropertyMetadataOptions.AffectsMeasure |
+    //                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+    //    public double MyTop
+    //    {
+    //        get { return (double)GetValue(MyTopProperty); }
+    //        set { SetValue(MyTopProperty, value); }
+    //    }
+    //    public static readonly DependencyProperty MyTopProperty =
+    //        DependencyProperty.Register(nameof(MyTop), typeof(double), typeof(GeoShapeThumb),
+    //            new FrameworkPropertyMetadata(0.0,
+    //                FrameworkPropertyMetadataOptions.AffectsRender |
+    //                FrameworkPropertyMetadataOptions.AffectsMeasure |
+    //                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+    //    #endregion 依存関係プロパティ
+
+
+    //    #region メソッド
+
+    //    /// <summary>
+    //    /// 図形が収まるRectの取得
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    public Rect GetShapeRenderBounds()
+    //    {
+    //        ////RenderTransformが変更されていることを考慮して、更新してから取得
+    //        //MyGeoShape.UpdateRenderBounds();
+    //        //return MyGeoShape.MyRenderBounds;
+    //        return MyGeoShape.GetRenderBounds();
+    //    }
+
+
+
+
+    //    /// <summary>
+    //    /// 直線とベジェ曲線の切り替え
+    //    /// </summary>
+    //    public void ChangeShapeType()
+    //    {
+    //        if (MyShapeType == ShapeType.Line) { ChangeToBezier(); }
+    //        else { ChangeToLine(); }
+    //    }
+    //    public void ChangeToLine()
+    //    {
+    //        if (MyShapeType == ShapeType.Bezier)
+    //        {
+    //            MyShapeType = ShapeType.Line;
+    //            MyShapesAnchorHandleAdorner?.RemoveControlLine();
+    //            MyGeoShape.MyShapeType = ShapeType.Line;
+    //        }
+    //    }
+    //    public void ChangeToBezier()
+    //    {
+    //        if (MyShapeType == ShapeType.Line)
+    //        {
+    //            MyShapeType = ShapeType.Bezier;
+    //            MyShapesAnchorHandleAdorner?.AddControlLine();
+    //            MyGeoShape.MyShapeType = ShapeType.Bezier;
+    //        }
+    //    }
+
+    //    #region Pointの追加と削除
+    //    //ItemDataのMyPointsは操作しないで、ShapeThumbのメソッドを利用する
+
+    //    /// <summary>
+    //    /// Pointの追加
+    //    /// </summary>
+    //    /// <param name="index">挿入箇所Index</param>
+    //    /// <param name="poi">Point</param>
+    //    public void AddPoint(int index, Point poi)
+    //    {
+    //        MyPoints.Insert(index, poi);
+    //        //図形に装飾が在れば、装飾の更新
+    //        MyShapesAnchorHandleAdorner?.AddAnchorHandleThumb(index, poi);
+    //    }
+
+    //    /// <summary>
+    //    /// Pointを末尾に追加
+    //    /// </summary>
+    //    /// <param name="poi"></param>
+    //    public void AddPoint(Point poi)
+    //    {
+    //        int id = MyPoints.Count;
+    //        AddPoint(id, poi);
+    //    }
+
+    //    /// <summary>
+    //    /// Pointの削除
+    //    /// </summary>
+    //    /// <param name="index"></param>
+    //    public void RemovePoint(int index)
+    //    {
+    //        //最低2個は残して削除処理
+    //        if (MyPoints.Count > 2)
+    //        {
+    //            MyPoints.RemoveAt(index);
+    //            MyShapesAnchorHandleAdorner?.RemoveAnchorHandleThumb(index);
+    //        }
+    //    }
+
+    //    #endregion Pointの追加と削除
+
+    //    /// <summary>
+    //    /// アンカーハンドルの表示切替、Adornerの付け外し
+    //    /// </summary>
+    //    /// <returns>装飾</returns>
+    //    public AnchorHandleAdorner? AnchorSwitch()
+    //    {
+    //        //図形のAdornerLayerに装飾が在れば削除、なければ作成、追加する
+    //        if (MyShapesAnchorHandleAdorner == null)
+    //        {
+    //            MyShapesAnchorHandleAdorner = new AnchorHandleAdorner(MyGeoShape);
+    //            MyShapesAnchorHandleAdorner.OnAnchorThumbDragCompleted += MyShapesAnchorHandleAdorner_OnDragCompleted;
+    //            MyShapesAdornerLayer.Add(MyShapesAnchorHandleAdorner);
+    //            return MyShapesAnchorHandleAdorner;
+    //        }
+    //        else
+    //        {
+    //            MyShapesAnchorHandleAdorner.OnAnchorThumbDragCompleted -= MyShapesAnchorHandleAdorner_OnDragCompleted;
+    //            MyShapesAdornerLayer.Remove(MyShapesAnchorHandleAdorner);
+    //            MyShapesAnchorHandleAdorner = null;
+    //            return null;
+    //        }
+    //    }
+
+
+    //    private void MyShapesAnchorHandleAdorner_OnDragCompleted(DragCompletedEventArgs obj)
+    //    {
+    //        OnAnchorHandleDragComleted?.Invoke(obj);
+    //    }
+    //    #endregion メソッド
+
+    //}
 
 
 
@@ -891,28 +892,11 @@ namespace _20250327_GeoShapeThumbSerialize
 
         #region public
 
-        //public Rect GetInsideElementBounds()
-        //{
-        //    if (MyInsideElement is FrameworkElement elem)
-        //    {
-        //        var tf = elem.RenderTransform;
-        //        var r = tf.TransformBounds(new Rect(0, 0, elem.ActualWidth, elem.ActualHeight));
-        //        return r;
-        //    }
-        //    else { return Rect.Empty; }
-        //}
-
-        //public void Serialize(string filePath)
-        //{
-        //    DataContractSerializer serializer = new(typeof(ItemData));
-        //    XmlWriterSettings settings = new() { Indent = true, Encoding = new UTF8Encoding(false) };
-        //    using var writer = XmlWriter.Create(filePath, settings);
-        //    serializer.WriteObject(writer, this.MyItemData);
-        //}
-
 
         #region ZIndex
-
+        //ZIndexの変更
+        //変更するThumb自体と、その前後のThumbも変更する必要がある、さらに
+        //親ThumbのMyThumbsと、親ThumbのMyItemData.MyThumbsItemDataも変更する必要がある
 
         public void ZIndexUp()
         {
@@ -923,6 +907,7 @@ namespace _20250327_GeoShapeThumbSerialize
                 if (moto >= limit) { return; }
                 int saki = moto + 1;
                 gt.MyThumbs.Move(moto, saki);
+                gt.MyItemData.MyThumbsItemData.Move(moto, saki);
                 FixZIndex(moto, saki);
             }
         }
@@ -938,6 +923,7 @@ namespace _20250327_GeoShapeThumbSerialize
                 int limit = gt.MyThumbs.Count - 1;
                 if (moto >= limit) { return; }
                 gt.MyThumbs.Move(moto, limit);
+                gt.MyItemData.MyThumbsItemData.Move(moto, limit);
                 FixZIndex(moto, limit);
             }
         }
@@ -951,6 +937,7 @@ namespace _20250327_GeoShapeThumbSerialize
                 if (moto == 0) { return; }
                 int saki = moto - 1;
                 gt.MyThumbs.Move(moto, saki);
+                gt.MyItemData.MyThumbsItemData.Move(moto, saki);
                 FixZIndex(saki, moto);
             }
         }
@@ -966,6 +953,7 @@ namespace _20250327_GeoShapeThumbSerialize
                 if (moto == 0) { return; }
                 int saki = 0;
                 gt.MyThumbs.Move(moto, 0);
+                gt.MyItemData.MyThumbsItemData.Move(moto, 0);
                 FixZIndex(saki, moto);
             }
         }
@@ -1021,355 +1009,6 @@ namespace _20250327_GeoShapeThumbSerialize
 
 
 
-    //public abstract class EzShapeThumb : KisoThumb
-    //{
-    //    static EzShapeThumb()
-    //    {
-    //        DefaultStyleKeyProperty.OverrideMetadata(typeof(EzShapeThumb), new FrameworkPropertyMetadata(typeof(EzShapeThumb)));
-    //    }
-    //    //public EzShapeThumb()
-    //    //{
-    //    //    DataContext = MyItemData;
-    //    //    DragDelta += EzShapeThumb_DragDelta;
-    //    //    Loaded += EzShapeThumb_Loaded;
-    //    //}
-    //    public EzShapeThumb(ItemData data) : base()
-    //    {
-    //        MyItemData = data;
-    //        //DataContext = MyItemData;
-    //        Loaded += EzShapeThumb_Loaded;
-
-    //    }
-
-    //    #region 起動時
-
-    //    private void EzShapeThumb_Loaded(object sender, RoutedEventArgs e)
-    //    {
-    //        //起動時だけ位置がずれるので応急処置
-    //        var neko = MyItemData.MyLeft;
-    //        var inu = MyItemData.MyTop;
-    //        //UpdatePointsAndSizeWithoutZeroFix();
-    //        UpdatePointsAndSizeWithTransform();
-    //        //UpdatePointsAndSizeWithTransform();
-    //        MyItemData.MyLeft = neko;
-    //        MyItemData.MyTop = inu;
-    //    }
-
-
-    //    //起動時、Templateの中からCanvasとEzShapeを取得
-    //    public override void OnApplyTemplate()
-    //    {
-    //        base.OnApplyTemplate();
-    //        if (GetTemplateChild("PART_Canvas") is Canvas panel)
-    //        {
-    //            MyPART_Canvas = panel;
-    //            if (GetChildEzShape(panel) is EzShape shape)
-    //            {
-    //                MyEzShape = shape;
-    //                //MyEzShape.MyParentShapeThumb = this;
-    //            }
-    //            else
-    //            {
-    //                MessageBox.Show("内部表示要素の図形が見つからない");
-    //            }
-    //        }
-    //    }
-
-    //    private static EzShape? GetChildEzShape(FrameworkElement element)
-    //    {
-    //        var count = VisualTreeHelper.GetChildrenCount(element);
-    //        for (int i = 0; i < count; i++)
-    //        {
-    //            if (VisualTreeHelper.GetChild(element, i) is EzShape shape)
-    //            {
-    //                return shape;
-    //            }
-    //        }
-    //        return null;
-    //    }
-
-    //    #endregion 起動時
-
-    //    #region 依存関係プロパティ
-
-
-    //    //内部図形のアンカーポイント表示用のAdorner
-    //    public EzShapeAdorner? MyEzShapeAdorner
-    //    {
-    //        get { return (EzShapeAdorner)GetValue(MyEzShapeAdornerProperty); }
-    //        protected set { SetValue(MyEzShapeAdornerProperty, value); }
-    //    }
-    //    public static readonly DependencyProperty MyEzShapeAdornerProperty =
-    //        DependencyProperty.Register(nameof(MyEzShapeAdorner), typeof(EzShapeAdorner), typeof(EzShapeThumb), new PropertyMetadata(null));
-
-
-    //    //確認用なので必要ない
-    //    public Canvas MyPART_Canvas
-    //    {
-    //        get { return (Canvas)GetValue(MyPART_CanvasProperty); }
-    //        protected set { SetValue(MyPART_CanvasProperty, value); }
-    //    }
-    //    public static readonly DependencyProperty MyPART_CanvasProperty =
-    //        DependencyProperty.Register(nameof(MyPART_Canvas), typeof(Canvas), typeof(EzShapeThumb), new PropertyMetadata(null));
-
-
-
-    //    public EzShape MyEzShape
-    //    {
-    //        get { return (EzShape)GetValue(MyEzShapeProperty); }
-    //        set { SetValue(MyEzShapeProperty, value); }
-    //    }
-    //    public static readonly DependencyProperty MyEzShapeProperty =
-    //        DependencyProperty.Register(nameof(MyEzShape), typeof(EzShape), typeof(EzShapeThumb), new PropertyMetadata(null));
-    //    #endregion 依存関係プロパティ
-
-
-    //    #region イベントハンドラ
-
-    //    private void EzShapeAnchor_DragCompleted(object sender, DragCompletedEventArgs e)
-    //    {
-    //        if (sender is AnchorHandleThumb handle)
-    //        {
-    //            UpdatePointsAndSizeWithTransform();
-    //            this.MyParentThumb?.ReLayout3();
-    //        }
-
-    //    }
-
-    //    /// <summary>
-    //    /// アンカーのドラッグ移動時の処理
-    //    /// 対応Pointを更新、アンカーの移動
-    //    /// </summary>
-    //    /// <param name="sender"></param>
-    //    /// <param name="e"></param>
-    //    private void EzShapeAnchor_DragDelta(object sender, DragDeltaEventArgs e)
-    //    {
-    //        if (sender is Thumb t && MyEzShapeAdorner != null)
-    //        {
-    //            int id = (int)t.Tag;
-    //            Point po = MyItemData.MyPoints[id];
-    //            double left = po.X + e.HorizontalChange;
-    //            double top = po.Y + e.VerticalChange;
-
-    //            //Pointの更新
-    //            MyItemData.MyPoints[id] = new(left, top);
-
-    //            //アンカーの移動
-    //            Canvas.SetLeft(t, left - MyEzShapeAdorner.MyAnchorHandleSize / 2.0);
-    //            Canvas.SetTop(t, top - MyEzShapeAdorner.MyAnchorHandleSize / 2.0);
-
-    //            e.Handled = true;
-    //        }
-    //    }
-    //    #endregion イベントハンドラ
-
-
-
-    //    #region メソッド
-
-
-
-    //    public void AddPoint(Point point)
-    //    {
-    //        //MyEzShape.AddPoint(point);
-    //        MyItemData.MyPoints.Add(point);
-    //        if (MyEzShapeAdorner?.AddAnchorThumb(point) is AnchorHandleThumb anchor)
-    //        {
-    //            AnchorHandleThumbAddDragHandler(anchor);
-    //        }
-    //        UpdatePointsAndSizeWithTransform();
-    //        MyParentThumb?.ReLayout3();
-    //    }
-
-
-
-    //    /// <summary>
-    //    ///頂点移動後に実行
-    //    ///Thumbのサイズと位置を更新する、アンカーポイント表示の有無で変化する
-    //    ///処理の順番は
-    //    ///MyPointsのBoundsが0,0になるように全体を移動、
-    //    ///アンカーポイントも移動、
-    //    ///Layout更新、
-    //    ///Thumbサイズ更新、
-    //    ///内部図形の移動、
-    //    ///Thumbの移動 
-    //    /// </summary>
-
-
-    //    /// <summary>
-    //    /// 回転対応！！！！！！！！！！！！！！！！！！
-    //    /// </summary>
-    //    public void UpdatePointsAndSizeWithTransform()
-    //    {
-    //        var (left, top) = GetTopLeftFromPoints(MyItemData.MyPoints);
-    //        var topLeft = new Point(left, top);
-    //        Point rotatePoint = MyEzShape.RenderTransform.Transform(topLeft);
-    //        FixPointsZero(left, top);// PointsのゼロFix移動
-    //        MyEzShapeAdorner?.ResetAnchorLocate();// AdornerをPointsの表示位置に合わせる
-    //        UpdateLayout();// 要る？→必要            
-
-    //        //図形だけのRect取得
-    //        Rect unionR = MyEzShape.MyBounds4;
-    //        //アンカーハンドルが表示されている場合
-    //        if (MyEzShapeAdorner != null)
-    //        {
-    //            //アンカーハンドルThumbすべてが収まるRect取得して、図形だけのRectと合成(union)
-    //            //unionR.Union(MyEzShape.MyAnchorHandleThumbsBounds);
-    //            //unionR.Union(MyEzShapeAdorner.GetAnchorHandleThumbBounds());
-    //            //unionR.Union(GetBoundsFromAnchorThumb());
-    //            unionR.Union(GetBoundsFromAnchorThumbRotate(MyEzShape.RenderTransform, MyEzShape.MyPoints, MyEzShapeAdorner.MyAnchorHandleSize));
-
-    //        }
-    //        //自身のサイズ変更
-    //        Width = unionR.Width;
-    //        Height = unionR.Height;
-    //        //自身の移動先を計算は、内部図形の位置の変更する前に行う
-    //        var goLeft = Canvas.GetLeft(MyEzShape) + unionR.Left + rotatePoint.X;
-    //        var goTop = Canvas.GetTop(MyEzShape) + unionR.Top + rotatePoint.Y;
-    //        goLeft += MyItemData.MyLeft;
-    //        goTop += MyItemData.MyTop;
-
-    //        //図形と自身(ShapeThumb)の位置を変更
-    //        SetLocate(MyEzShape, -unionR.Left, -unionR.Top);
-    //        MyItemData.MyLeft = goLeft;
-    //        MyItemData.MyTop = goTop;
-    //    }
-
-    //    private void SetLocate(FrameworkElement element, double left, double top)
-    //    {
-    //        Canvas.SetLeft(element, left);
-    //        Canvas.SetTop(element, top);
-    //    }
-
-    //    /// <summary>
-    //    /// アンカーハンドルの表示切替
-    //    /// </summary>
-    //    public void AnchorOnOffSwitch()
-    //    {
-    //        //レイヤー取得
-    //        if (AdornerLayer.GetAdornerLayer(MyEzShape) is AdornerLayer layer)
-    //        {
-    //            //無ければ追加(表示)
-    //            if (MyEzShapeAdorner is null)
-    //            {
-    //                EzShapeAdorner adorner = new(MyEzShape);
-    //                layer.Add(adorner);
-    //                MyEzShapeAdorner = adorner;
-    //                UpdatePointsAndSizeWithTransform();
-
-    //                foreach (var item in MyEzShapeAdorner.MyAnchorHandleThumbsList)
-    //                {
-    //                    AnchorHandleThumbAddDragHandler(item);
-    //                }
-    //            }
-    //            //在れば削除
-    //            else
-    //            {
-    //                layer.Remove(MyEzShapeAdorner);
-    //                MyEzShapeAdorner = null;
-    //                UpdatePointsAndSizeWithTransform();
-    //            }
-    //        }
-    //    }
-
-    //    //アンカーハンドルにドラッグイベントハンドラー追加
-    //    protected void AnchorHandleThumbAddDragHandler(AnchorHandleThumb item)
-    //    {
-    //        item.DragDelta += EzShapeAnchor_DragDelta;
-    //        item.DragCompleted += EzShapeAnchor_DragCompleted;
-    //    }
-
-
-    //    /// <summary>
-    //    /// Points全体のリセット、左上に寄せる、TopLeftを0にする
-    //    /// </summary>
-    //    public void FixPointsZero(PointCollection points)
-    //    {
-    //        var (left, top) = GetTopLeftFromPoints(points);
-    //        for (int i = 0; i < points.Count; i++)
-    //        {
-    //            Point p = points[i];
-    //            points[i] = new Point(p.X - left, p.Y - top);
-    //        }
-    //    }
-    //    public void FixPointsZero(double offsetX, double offsetY)
-    //    {
-    //        for (int i = 0; i < MyItemData.MyPoints.Count; i++)
-    //        {
-    //            Point p = MyItemData.MyPoints[i];
-    //            MyItemData.MyPoints[i] = new Point(p.X - offsetX, p.Y - offsetY);
-    //        }
-    //    }
-
-    //    private (double left, double top) GetTopLeftFromPoints(PointCollection points)
-    //    {
-    //        double left = double.MaxValue;
-    //        double top = double.MaxValue;
-    //        foreach (var item in points)
-    //        {
-    //            if (left > item.X) { left = item.X; }
-    //            if (top > item.Y) { top = item.Y; }
-    //        }
-    //        return (left, top);
-    //    }
-
-    //    /// <summary>
-    //    /// すべてのアンカーハンドルThumbを含んだ回転後(Transform)のRectを返す
-    //    /// けど、ハンドル自体は回転しないで計算しているので多少の誤差がある
-    //    /// </summary>
-    //    /// <param name="transform">RenderTransform</param>
-    //    /// <param name="points"></param>
-    //    /// <param name="handleSize">アンカーハンドルThumbのサイズ</param>
-    //    /// <returns></returns>
-    //    private Rect GetBoundsFromAnchorThumbRotate(Transform transform, PointCollection points, double handleSize)
-    //    {
-    //        //Pointsを変形
-    //        PointCollection tempPc = [];
-    //        foreach (var item in points)
-    //        {
-    //            tempPc.Add(transform.Transform(item));
-    //        }
-
-    //        //各アンカーハンドルのRectを作成して
-    //        //RectのUnionメソッドを利用すれば、
-    //        //すべてのアンカーハンドルが収まるRectが作成できる
-    //        double halfHandle = handleSize / 2.0;//アンカーポイントの中心位置
-    //        Point p = tempPc[0];
-    //        Rect r = new(p.X - halfHandle, p.Y - halfHandle, handleSize, handleSize);
-    //        foreach (var item in tempPc)
-    //        {
-    //            Rect pr = new(item.X - halfHandle, item.Y - halfHandle, handleSize, handleSize);
-    //            r.Union(pr);
-    //        }
-    //        return r;
-    //    }
-
-
-
-    //    #endregion メソッド
-
-    //}
-
-
-    //public class EzBezierThumb : EzShapeThumb
-    //{
-    //    static EzBezierThumb()
-    //    {
-    //        DefaultStyleKeyProperty.OverrideMetadata(typeof(EzBezierThumb), new FrameworkPropertyMetadata(typeof(EzBezierThumb)));
-    //    }
-
-    //    public EzBezierThumb(ItemData data) : base(data)
-    //    {
-
-    //        //Loaded += EzBezierThumb_Loaded;
-    //    }
-
-    //    //private void EzBezierThumb_Loaded(object sender, RoutedEventArgs e)
-    //    //{
-    //    //    //UpdatePointsAndSizeWithTransform();
-    //    //}
-
-    //}
 
 
     /// <summary>
@@ -1580,377 +1219,6 @@ namespace _20250327_GeoShapeThumbSerialize
 
     }
 
-
-
-
-
-
-    /// <summary>
-    /// Canvasの中にGeoShapeThumbを配置したThumb
-    /// 作成にはItemDataが必要
-    /// 図形のアンカーハンドルの表示切替
-    /// 自身のリサイズ用のハンドルの表示切替
-    /// 図形の移動と自身の移動
-    /// </summary>
-    //public class GeoShapeTThumb : KisoThumb
-    //{
-    //    private AdornerLayer MyAdornerLayer { get; set; } = null!;
-    //    static GeoShapeTThumb()
-    //    {
-    //        DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoShapeTThumb), new FrameworkPropertyMetadata(typeof(GeoShapeTThumb)));
-    //    }
-    //    public GeoShapeTThumb() { }
-    //    public GeoShapeTThumb(ItemData data)
-    //    {
-    //        MyItemData = data;
-    //        //DataContext = data;
-    //        //DragDelta += GeoShapeTThumb_DragDelta;
-    //        Loaded += GeoShapeTThumb_Loaded;
-    //    }
-
-    //    //private void GeoShapeTThumb_DragDelta(object sender, DragDeltaEventArgs e)
-    //    //{
-    //    //    MyLeft += e.HorizontalChange;
-    //    //    MyTop += e.VerticalChange;
-    //    //    e.Handled = true;
-    //    //}
-
-    //    private void GeoShapeTThumb_Loaded(object sender, RoutedEventArgs e)
-    //    {
-    //        MyResizeHandleAdorner = new ResizeHandleAdorner(this);
-    //        if (AdornerLayer.GetAdornerLayer(this) is AdornerLayer layer)
-    //        {
-    //            MyAdornerLayer = layer;
-    //        }
-    //        if (MyShapeThumb != null)
-    //        {
-    //            FitToShapeAndAnchorHandle();
-    //        }
-    //        else
-    //        {
-    //            throw new NullReferenceException("内部要素がない");
-
-    //        }
-    //    }
-
-
-    //    public override void OnApplyTemplate()
-    //    {
-    //        base.OnApplyTemplate();
-    //        if (GetTemplateChild("shapeThumb") is GeoShapeThumb shape)
-    //        {
-    //            MyShapeThumb = shape;
-    //            MyShapeThumb.OnAnchorHandleDragComleted += MyShapeThumb_OnAnchorHandleDragComleted;
-    //            if (MyItemData.MyPoints == null)
-    //            {
-    //                MyItemData.MyPoints = [new Point(0, 0), new Point(200, 100)];
-    //            }
-
-    //        }
-
-    //    }
-
-    //    //アンカーハンドルのドラッグ移動終了時には、位置とサイズを更新する
-    //    private void MyShapeThumb_OnAnchorHandleDragComleted(DragCompletedEventArgs obj)
-    //    {
-    //        FitToShapeAndAnchorHandle();
-    //    }
-
-
-
-
-    //    #region 依存関係プロパティ
-
-    //    //リサイズハンドル
-    //    public ResizeHandleAdorner MyResizeHandleAdorner
-    //    {
-    //        get { return (ResizeHandleAdorner)GetValue(MyResizeHandleAdornerProperty); }
-    //        protected set { SetValue(MyResizeHandleAdornerProperty, value); }
-    //    }
-    //    public static readonly DependencyProperty MyResizeHandleAdornerProperty =
-    //        DependencyProperty.Register(nameof(MyResizeHandleAdorner), typeof(ResizeHandleAdorner), typeof(GeoShapeTThumb), new PropertyMetadata(null));
-
-
-
-    //    #region 図形Thumbとのバインド用
-
-    //    public GeoShapeThumb MyShapeThumb
-    //    {
-    //        get { return (GeoShapeThumb)GetValue(MyShapeThumbProperty); }
-    //        set { SetValue(MyShapeThumbProperty, value); }
-    //    }
-    //    public static readonly DependencyProperty MyShapeThumbProperty =
-    //        DependencyProperty.Register(nameof(MyShapeThumb), typeof(GeoShapeThumb), typeof(GeoShapeTThumb), new PropertyMetadata(null));
-    //    #endregion 図形とのバインド用
-
-    //    #region 自身用
-
-    //    //public ItemData MyItemData
-    //    //{
-    //    //    get { return (ItemData)GetValue(MyItemDataProperty); }
-    //    //    protected set { SetValue(MyItemDataProperty, value); }
-    //    //}
-    //    //public static readonly DependencyProperty MyItemDataProperty =
-    //    //    DependencyProperty.Register(nameof(MyItemData), typeof(ItemData), typeof(GeoShapeTThumb), new PropertyMetadata(null));
-
-
-    //    //public double MyLeft
-    //    //{
-    //    //    get { return (double)GetValue(MyLeftProperty); }
-    //    //    set { SetValue(MyLeftProperty, value); }
-    //    //}
-    //    //public static readonly DependencyProperty MyLeftProperty =
-    //    //    DependencyProperty.Register(nameof(MyLeft), typeof(double), typeof(GeoShapeTThumb),
-    //    //        new FrameworkPropertyMetadata(0.0,
-    //    //            FrameworkPropertyMetadataOptions.AffectsRender |
-    //    //            FrameworkPropertyMetadataOptions.AffectsMeasure |
-    //    //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-    //    //public double MyTop
-    //    //{
-    //    //    get { return (double)GetValue(MyTopProperty); }
-    //    //    set { SetValue(MyTopProperty, value); }
-    //    //}
-    //    //public static readonly DependencyProperty MyTopProperty =
-    //    //    DependencyProperty.Register(nameof(MyTop), typeof(double), typeof(GeoShapeTThumb),
-    //    //        new FrameworkPropertyMetadata(0.0,
-    //    //            FrameworkPropertyMetadataOptions.AffectsRender |
-    //    //            FrameworkPropertyMetadataOptions.AffectsMeasure |
-    //    //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-    //    #endregion 自身用
-
-    //    #endregion 依存関係プロパティ
-
-    //    #region メソッド
-
-    //    #region Pointの追加と削除
-
-    //    /// <summary>
-    //    /// Pointの追加
-    //    /// </summary>
-    //    /// <param name="index">挿入箇所Index</param>
-    //    /// <param name="poi">Point</param>
-    //    public void AddPoint(int index, Point poi)
-    //    {
-    //        MyShapeThumb.AddPoint(index, poi);
-    //    }
-
-    //    /// <summary>
-    //    /// Pointを末尾に追加
-    //    /// </summary>
-    //    /// <param name="poi"></param>
-    //    public void AddPoint(Point poi)
-    //    {
-    //        int id = MyItemData.MyPoints.Count;
-    //        AddPoint(id, poi);
-    //    }
-
-    //    /// <summary>
-    //    /// 指定IndexのPointを削除
-    //    /// </summary>
-    //    /// <param name="index"></param>
-    //    public void RemovePoint(int index)
-    //    {
-    //        //最低2個は残して削除処理
-    //        if (MyItemData.MyPoints.Count > 2)
-    //        {
-    //            //MyItemData.MyPoints.RemoveAt(index);
-    //            MyShapeThumb.RemovePoint(index);
-    //        }
-    //    }
-
-    //    /// <summary>
-    //    /// 先頭のPointを削除
-    //    /// </summary>
-    //    public void RemovePointTop()
-    //    {
-    //        RemovePoint(0);
-    //    }
-    //    /// <summary>
-    //    /// 末尾のPointを削除
-    //    /// </summary>
-    //    public void RemovePointEnd()
-    //    {
-    //        RemovePoint(MyItemData.MyPoints.Count - 1);
-    //    }
-    //    #endregion Pointの追加と削除
-
-
-
-    //    //直線とベジェ曲線の切り替え
-    //    public void ChangeShapeType()
-    //    {
-    //        MyShapeThumb.ChangeShapeType();
-    //    }
-    //    public void ChangeToLine()
-    //    {
-    //        MyShapeThumb.ChangeToLine();
-    //    }
-    //    public void ChangeToBezier()
-    //    {
-    //        MyShapeThumb.ChangeToBezier();
-    //    }
-
-    //    /// <summary>
-    //    /// 自身をリサイズとアンカーの両方のハンドルを含むサイズと位置にする
-    //    /// </summary>
-    //    public void FitSizeAndPosAdorner()
-    //    {
-    //        //リサイズハンドルのBounds
-    //        MyResizeHandleAdorner.GetHandlesRenderBounds();
-    //    }
-
-    //    //リサイズハンドルの表示位置変更
-    //    public void ChangeResizeHandleType()
-    //    {
-    //        var handleLayout = MyResizeHandleAdorner.MyHandleLayout;
-    //        if (handleLayout == HandleLayoutType.In)
-    //        {
-    //            handleLayout = HandleLayoutType.Middle;
-    //        }
-    //        else if (handleLayout == HandleLayoutType.Middle)
-    //        {
-    //            handleLayout = HandleLayoutType.Out;
-    //        }
-    //        else
-    //        {
-    //            handleLayout = HandleLayoutType.In;
-    //        }
-    //        MyResizeHandleAdorner.MyHandleLayout = handleLayout;
-    //    }
-
-    //    /// <summary>
-    //    /// サイズと位置の調整、
-    //    /// 図形のアンカーハンドルが表示されていれば、ハンドルと図形の両方に合わせる
-    //    /// ハンドルが非表示ならば、図形に合わせる
-    //    /// </summary>
-    //    public void FitToShapeAndAnchorHandle()
-    //    {
-    //        //Rect? AnchorBounds = MyShapeThumb.MyShapesAnchorHandleAdorner?.GetHandlesRenderBounds();
-    //        //Rect shapeBounds = MyShapeThumb.GetShapeRenderBounds();
-
-    //        //図形とそのアンカーハンドルが収まるサイズと位置の取得
-    //        //図形のBoundsと全ハンドルのBoundsをUnionすると取得できる
-
-    //        Rect union = MyShapeThumb.GetShapeRenderBounds();
-    //        if (MyShapeThumb.MyShapesAnchorHandleAdorner?.GetHandlesRenderBounds() is Rect rr)
-    //        {
-    //            union.Union(rr);
-    //        }
-
-    //        //サイズ変更、サイズはUnionのサイズと同じ
-    //        Width = union.Width;
-    //        Height = union.Height;
-
-
-    //        //位置変更は今の図形の位置とUnionとの差を計算、差分を図形に適用、自身は反対側に移動
-
-    //        var offsetLeft = union.Left + MyShapeThumb.MyLeft;
-    //        var offsetTop = union.Top + MyShapeThumb.MyTop;
-
-    //        MyShapeThumb.MyLeft -= offsetLeft;
-    //        MyShapeThumb.MyTop -= offsetTop;
-    //        //MyLeft += offsetLeft;
-    //        //MyTop += offsetTop;
-    //        MyItemData.MyLeft += offsetLeft;
-    //        MyItemData.MyTop += offsetTop;
-
-    //    }
-
-    //    /// <summary>
-    //    /// 自身のサイズと位置を図形に合わせる、けど
-    //    /// FitToShapeAndAnchorHandleがあるから必要ないかも
-    //    /// </summary>
-    //    public void FitSizeAndPos()
-    //    {
-    //        var shapeBounds = MyShapeThumb.GetShapeRenderBounds();
-
-    //        //var myBounds = new Rect(MyLeft, MyTop, Width, Height);
-    //        //var unionBouns = new Rect(MyLeft, MyTop, Width, Height);
-    //        //unionBouns.Union(shapeBounds);
-
-    //        //自身と図形の横位置
-    //        var offsetLeft = MyShapeThumb.MyLeft + shapeBounds.Left;
-    //        MyItemData.MyLeft += offsetLeft;
-    //        //MyLeft += offsetLeft;
-    //        MyShapeThumb.MyLeft -= offsetLeft;
-
-    //        //自身と図形の縦位置
-    //        var offsetTop = MyShapeThumb.MyTop + shapeBounds.Top;
-    //        MyItemData.MyTop += offsetTop;
-    //        //MyTop += offsetTop;
-    //        MyShapeThumb.MyTop -= offsetTop;
-
-    //        //自身のサイズ
-    //        Width = shapeBounds.Width;
-    //        Height = shapeBounds.Height;
-    //    }
-    //    public void AnchorHandleSwitch()
-    //    {
-    //        MyShapeThumb?.AnchorSwitch();
-    //    }
-
-
-    //    #region リサイズハンドル
-
-    //    /// <summary>
-    //    /// リサイズハンドルの表示切替、Adornerの付け外し
-    //    /// </summary>
-    //    public void ResizeHandleSwitch()
-    //    {
-    //        //図形のAdornerLayerを調べてリサイズ用の装飾が在れば削除、なければ作成追加する
-    //        var items = MyAdornerLayer.GetAdorners(this);
-    //        if (items != null)
-    //        {
-    //            RemoveResizeHandleAdorner();
-    //        }
-    //        else
-    //        {
-    //            AddResizeHandleAdorner();
-    //        }
-    //    }
-
-    //    /// <summary>
-    //    /// リサイズハンドルの追加と
-    //    /// リサイズ時の縦横位置の変更量を通知するイベントを購読
-    //    /// </summary>
-    //    public void AddResizeHandleAdorner()
-    //    {
-    //        MyResizeHandleAdorner.OnTargetLeftChanged += MyResizeHandleAdorner_OnTargetLeftChanged;
-    //        MyResizeHandleAdorner.OnTargetTopChanged += MyResizeHandleAdorner_OnTargetTopChanged;
-    //        MyAdornerLayer.Add(MyResizeHandleAdorner);
-    //    }
-
-    //    /// <summary>
-    //    /// リサイズハンドルの削除と
-    //    /// リサイズ時の縦横位置の変更量を通知するイベントの購読を解除
-    //    /// </summary>
-    //    public void RemoveResizeHandleAdorner()
-    //    {
-    //        MyResizeHandleAdorner.OnTargetLeftChanged -= MyResizeHandleAdorner_OnTargetLeftChanged;
-    //        MyResizeHandleAdorner.OnTargetTopChanged -= MyResizeHandleAdorner_OnTargetTopChanged;
-    //        MyAdornerLayer.Remove(MyResizeHandleAdorner);
-    //    }
-
-    //    /// <summary>
-    //    /// リサイズ時に縦位置が変更されたとき、図形Thumbを逆方向へ移動
-    //    /// </summary>
-    //    /// <param name="obj"></param>
-    //    private void MyResizeHandleAdorner_OnTargetTopChanged(double obj)
-    //    {
-    //        MyShapeThumb.MyTop -= obj;
-    //    }
-
-    //    private void MyResizeHandleAdorner_OnTargetLeftChanged(double obj)
-    //    {
-    //        MyShapeThumb.MyLeft -= obj;
-    //    }
-    //    #endregion リサイズハンドル
-
-    //    #endregion メソッド
-
-
-    //}
 
 
 
@@ -3162,14 +2430,6 @@ namespace _20250327_GeoShapeThumbSerialize
             {
                 return new RootThumb(data);
             }
-            //else if (data.MyThumbType == ThumbType.Bezier)
-            //{
-            //    return new EzBezierThumb(data);
-            //}
-            //else if (data.MyThumbType == ThumbType.PolyLine)
-            //{
-            //    return new GeoShapeTThumb(data);
-            //}
             else if (data.MyThumbType == ThumbType.GeoShape)
             {
                 return new GeoShapeThumb2(data);
