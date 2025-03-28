@@ -19,8 +19,8 @@ using Point = System.Windows.Point;
 //この矢印図形を追加した感じ
 //リサイズ機能は外した
 
-//2025WPF/20250327_GeoShapeThumbSerialize at main · gogowaten/2025WPF
-//https://github.com/gogowaten/2025WPF/tree/main/20250327_GeoShapeThumbSerialize
+//WPF、矢印図形Thumbのシリアライズテスト - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/03/28/151812
 
 namespace _20250327_GeoShapeThumbSerialize;
 
@@ -283,7 +283,7 @@ public partial class MainWindow : Window
 
     private void ShapeCapSwitch_Click(object sender, RoutedEventArgs e)
     {
-        if(MyRoot.MyFocusThumb is GeoShapeThumb2 shape)
+        if (MyRoot.MyFocusThumb is GeoShapeThumb2 shape)
         {
             HeadType type = shape.MyItemData.MyGeoShapeHeadCapType;
             if (type == HeadType.None)
