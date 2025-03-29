@@ -28,6 +28,7 @@
         <Button x:Name="AddEllipseThumb" Content="AddEllipseThumb" Click="AddEllipseThumb_Click"/>
         <Button x:Name="AddPolyLine" Content="AddLine" Click="AddPolyLine_Click"/>
         <Button x:Name="AddBezier" Content="矢印ベジェ曲線" Click="AddBezier_Click"/>
+        <Button x:Name="AddImageFiles" Content="画像ファイル追加" Click="AddImageFiles_Click"/>
         <UniformGrid Columns="2">
           <Button x:Name="AddGroup" Content="グループ化" Click="AddGroup_Click"/>
           <Button x:Name="Ungroup" Content="グループ解除" Click="Ungroup_Click"/>

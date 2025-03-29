@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using Microsoft.Win32;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -76,11 +77,17 @@ public partial class MainWindow : Window
 
     private void MyTest2_Click(object sender, RoutedEventArgs e)
     {
-        ItemData data = new(ThumbType.Image);
-        var bmp = MyRoot.GetBitmap("D:\\ブログ用\\テスト用画像\\hueRectT000.png");
-        data.MyBitmapSource = bmp;
-        MyRoot.AddNewThumbFromItemData(data, MyRoot);
-
+        //ItemData data = new(ThumbType.Image);
+        //var bmp = MyRoot.GetBitmap("D:\\ブログ用\\テスト用画像\\hueRectT000.png");
+        //data.MyBitmapSource = bmp;
+        //MyRoot.AddNewThumbFromItemData(data, MyRoot);
+        if (MyRoot.MyFocusThumb?.MyItemData is ItemData data)
+        {
+            if (MyRoot.SaveItemData(data, "E:\\20250329ItemData.zip"))
+            {
+                MessageBox.Show("保存した");
+            }
+        }
     }
 
     private void AddTextThumb()
@@ -311,4 +318,14 @@ public partial class MainWindow : Window
         }
     }
 
+    //画像ファイルから追加、複数対応、未対応ファイルの場合は追加できなかったものをメッセージ表示
+    private void AddImageFiles_Click(object sender, RoutedEventArgs e)
+    {
+        OpenFileDialog dialog = new() { Multiselect = true };
+
+        if (dialog.ShowDialog() is true)
+        {
+            MyRoot.OpenFiles(dialog.FileNames);
+        }
+    }
 }

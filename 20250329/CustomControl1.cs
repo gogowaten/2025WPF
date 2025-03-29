@@ -2327,15 +2327,28 @@ namespace _20250329
         /// <summary>
         /// ファイル名に使える文字列ならtrueを返す
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="fileName"></param>
         /// <returns></returns>
-        public static bool CheckFileNameValidated(string name)
+        public static bool CheckFileNameValidated(string fileName)
         {
-            if (string.IsNullOrWhiteSpace(name)) return false;
+            if (string.IsNullOrWhiteSpace(fileName)) return false;
             char[] invalid = System.IO.Path.GetInvalidFileNameChars();
-            return name.IndexOfAny(invalid) < 0;
+            return fileName.IndexOfAny(invalid) < 0;
         }
 
+
+        public static bool CheckFilePathValidated(string filePath)
+        {
+            var fileName = System.IO.Path.GetFileName(filePath);
+            if (CheckFileNameValidated(fileName))
+            {
+                if (Directory.Exists(System.IO.Path.GetDirectoryName(filePath)))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         /// <summary>
         /// 重複回避ファイルパス作成、重複しなくなるまでファイル名末尾に_を追加して返す
@@ -2360,7 +2373,9 @@ namespace _20250329
 
         public bool SaveItemData(ItemData data, string filePath)
         {
-            if (!CheckFileNameValidated(filePath)) { return false; }
+
+
+            if (!CheckFilePathValidated(filePath)) { return false; }
 
             using FileStream zipStream = File.Create(filePath);
             using ZipArchive archive = new(zipStream, ZipArchiveMode.Create);
@@ -2371,18 +2386,20 @@ namespace _20250329
             };
             DataContractSerializer serializer = new(typeof(ItemData));
             ZipArchiveEntry entry = archive.CreateEntry("Data.xml");
-            using Stream entryStream = entry.Open();
-            using XmlWriter writer = XmlWriter.Create(entryStream, settings);
-            try
-            {
-                serializer.WriteObject(writer, data);
-            }
-            catch (Exception ex)
-            {
-                return false;
-                throw new ArgumentException(ex.Message);
-            }
 
+            using (Stream entryStream = entry.Open())
+            {
+                using XmlWriter writer = XmlWriter.Create(entryStream, settings);
+                try
+                {
+                    serializer.WriteObject(writer, data);
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                    throw new ArgumentException(ex.Message);
+                }
+            }
 
             //BitmapSourceの保存
             SubLoop(archive, data);
@@ -2390,18 +2407,19 @@ namespace _20250329
 
             void SubLoop(ZipArchive archive, ItemData subData)
             {
-                if (data.MyBitmapSource != null)
-                {
-                    Sub(data, archive);
-                }
+                Sub(archive, data);
+
                 //子要素のBitmapSource保存
                 foreach (ItemData item in subData.MyThumbsItemData)
                 {
-                    Sub(item, archive);
-                    if (item.MyThumbType == ThumbType.Group) { SubLoop(archive, item); }
+                    Sub(archive, item);
+                    if (item.MyThumbType == ThumbType.Group)
+                    {
+                        SubLoop(archive, item);
+                    }
                 }
             }
-            void Sub(ItemData itemData, ZipArchive archive)
+            void Sub(ZipArchive archive, ItemData itemData)
             {
                 //画像があった場合はpng形式にしてzipに詰め込む
                 if (itemData.MyBitmapSource is BitmapSource bmp)
@@ -2417,6 +2435,9 @@ namespace _20250329
                 }
             }
         }
+
+
+
 
         #endregion ItemData保存
 
@@ -2435,25 +2456,6 @@ namespace _20250329
         public static readonly DependencyProperty MySelectedThumbsProperty =
             DependencyProperty.Register(nameof(MySelectedThumbs), typeof(ObservableCollectionKisoThumb), typeof(RootThumb), new PropertyMetadata(null));
 
-        //public KisoThumb? MyClickedThumb
-        //{
-        //    get { return (KisoThumb)GetValue(MyClickedThumbProperty); }
-        //    set { SetValue(MyClickedThumbProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyClickedThumbProperty =
-        //    DependencyProperty.Register(nameof(MyClickedThumb), typeof(KisoThumb), typeof(RootThumb), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnMyClickedThumbChanged)));
-
-        //private static void OnMyClickedThumbChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    ////FocusThumbの更新
-        //    //if (d is RootThumb rt)
-        //    //{
-        //    //    if (e.NewValue is KisoThumb n && n.IsSelectable)
-        //    //    {
-        //    //        rt.MyFocusThumb = n;
-        //    //    }
-        //    //}
-        //}
 
         public KisoThumb? MyClickedThumb
         {
