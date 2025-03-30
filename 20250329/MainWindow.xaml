@@ -78,7 +78,7 @@
             <TextBox Text="{Binding MyItemData.MyText, UpdateSourceTrigger=PropertyChanged}"
                    AcceptsReturn="True"
                    AcceptsTab="True"/>
-            <Slider Value="{Binding MyItemData.MyAngle}" Minimum="0" Maximum="360"/>
+            <Slider Value="{Binding MyItemData.MyAngle}" Minimum="0" Maximum="90" TickFrequency="10" IsSnapToTickEnabled="True"/>
             <TextBlock Text="{Binding MyItemData.MyAngle, StringFormat=angle 0}"/>
             <Slider Value="{Binding MyItemData.MyStrokeThickness}" Minimum="1.0" Maximum="60"/>
             <TextBlock Text="{Binding MyItemData.MyStrokeThickness, StringFormat=strokethickness 0}"/>

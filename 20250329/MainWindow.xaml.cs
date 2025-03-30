@@ -34,6 +34,8 @@ public partial class MainWindow : Window
     private RootThumb MyRoot { get; set; } = null!;
     string SaveFileName = "E:\\" + DateTime.Now.ToString("yyyyMMdd") + ".xml";
     string SaveRootFileName = "E:\\" + DateTime.Now.ToString("yyyyMMdd") + "Root.xml";
+    string SaveFileNameZip = "E:\\" + DateTime.Now.ToString("yyyyMMdd") + ".zip";
+    string SaveRootFileNameZip = "E:\\" + DateTime.Now.ToString("yyyyMMdd") + "Root.zip";
 
     public MainWindow()
     {
@@ -81,13 +83,12 @@ public partial class MainWindow : Window
         //var bmp = MyRoot.GetBitmap("D:\\ブログ用\\テスト用画像\\hueRectT000.png");
         //data.MyBitmapSource = bmp;
         //MyRoot.AddNewThumbFromItemData(data, MyRoot);
-        if (MyRoot.MyFocusThumb?.MyItemData is ItemData data)
+        if(MyRoot.LoadItemData(SaveFileNameZip)is ItemData data)
         {
-            if (MyRoot.SaveItemData(data, "E:\\20250329ItemData.zip"))
-            {
-                MessageBox.Show("保存した");
-            }
+            data.MyLeft = 0;data.MyTop = 0;
+            MyRoot.AddNewThumbFromItemData(data);
         }
+        
     }
 
     private void AddTextThumb()
@@ -128,9 +129,15 @@ public partial class MainWindow : Window
 
     private void SaveToFile_Click(object sender, RoutedEventArgs e)
     {
-
-        _ = MyRoot.MyFocusThumb?.MyItemData.Serialize(SaveFileName);
-        //_ = MyRoot.MyFocusThumb?.MyItemData.Serialize("E:\\20250227.xml");
+        //_ = MyRoot.MyFocusThumb?.MyItemData.Serialize(SaveFileName);
+        if (MyRoot.MyFocusThumb?.MyItemData is ItemData data)
+        {
+            //if (MyRoot.SaveItemData(data, "E:\\20250329ItemData.zip"))
+            if (MyRoot.SaveItemData(data, SaveFileNameZip))
+            {
+                MessageBox.Show("保存した");
+            }
+        }
     }
 
     private void ReadToFile_Click(object sender, RoutedEventArgs e)

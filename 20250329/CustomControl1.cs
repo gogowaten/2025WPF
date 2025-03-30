@@ -648,6 +648,29 @@ namespace _20250329
         }
 
         /// <summary>
+        /// PointをSelectableなParentまでのRenderTransformを適用して返す
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="poi"></param>
+        /// <returns></returns>
+        private Point GetRenderTransrormsPoint(GroupThumb parent, Point poi)
+        {
+            poi = parent.MyInsideElement.RenderTransform.Transform(poi);
+            if (parent.IsSelectable)
+            {
+                return poi;
+            }
+            else if (parent.MyParentThumb is GroupThumb nextParent)
+            {
+                return GetRenderTransrormsPoint(nextParent, poi);
+            }
+            else
+            {
+                return poi;
+            }
+
+        }
+        /// <summary>
         /// SelectedThumb全てを移動
         /// 移動距離を四捨五入(丸めて)整数ドラッグ移動
         /// </summary>
@@ -655,19 +678,52 @@ namespace _20250329
         /// <param name="e"></param>
         internal void Thumb_DragDelta3(object sender, DragDeltaEventArgs e)
         {
-            if (sender is KisoThumb t && t.IsSelectable)
+            if (sender is KisoThumb thumb && thumb.IsSelectable)
             {
+                var sou = e.Source;
+                var ori = e.OriginalSource;
+                var hori = e.HorizontalChange;
+                var vert = e.VerticalChange;
+
+                //回転対応
+                //Parentが回転していると、その分の移動方向も回転されてしまい、
+                //マウスカーソルの移動方向と差が出るので、それを直す処理、
+                Point poi = new(e.HorizontalChange, e.VerticalChange);
+                if (e.OriginalSource is KisoThumb kiso && kiso.MyParentThumb is GroupThumb parent)
+                {
+                    poi = GetRenderTransrormsPoint(parent, poi);
+                }
+
+                int yoko = (int)(poi.X + 0.5);
+                int tate = (int)(poi.Y + 0.5);
                 if (GetRootThumb() is RootThumb root)
                 {
                     foreach (var item in root.MySelectedThumbs)
                     {
-                        item.MyItemData.MyLeft += (int)(e.HorizontalChange + 0.5);
-                        item.MyItemData.MyTop += (int)(e.VerticalChange + 0.5);
+                        item.MyItemData.MyLeft += yoko;
+                        item.MyItemData.MyTop += tate;
+                        //item.MyItemData.MyLeft += (int)(e.HorizontalChange + 0.5);
+                        //item.MyItemData.MyTop += (int)(e.VerticalChange + 0.5);
                     }
                     e.Handled = true;
                 }
             }
         }
+        //internal void Thumb_DragDelta3(object sender, DragDeltaEventArgs e)
+        //{
+        //    if (sender is KisoThumb thumb && thumb.IsSelectable)
+        //    {
+        //        if (GetRootThumb() is RootThumb root)
+        //        {
+        //            foreach (var item in root.MySelectedThumbs)
+        //            {
+        //                item.MyItemData.MyLeft += (int)(e.HorizontalChange + 0.5);
+        //                item.MyItemData.MyTop += (int)(e.VerticalChange + 0.5);
+        //            }
+        //            e.Handled = true;
+        //        }
+        //    }
+        //}
 
         // ドラッグ移動終了時
         protected void KisoThumb_DragCompleted3(object sender, DragCompletedEventArgs e)
@@ -1305,15 +1361,33 @@ namespace _20250329
         /// </summary>
         private void GroupThumb_Loaded(object sender, RoutedEventArgs e)
         {
-            var temp = GetTemplateChild("PART_ItemsControl");
-            if (temp is ItemsControl ic)
+
+            if (GetTemplateChild("element") is ItemsControl ic)
+            //if (GetTemplateChild("PART_ItemsControl") is ItemsControl ic)
             {
                 MyExCanvas = GetExCanvas(ic);
-                if (MyExCanvas != null)
-                {
-                    _ = SetBinding(WidthProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualWidthProperty) });
-                    _ = SetBinding(HeightProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualHeightProperty) });
-                }
+
+                ic.SetBinding(WidthProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualWidthProperty) });
+                ic.SetBinding(HeightProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualHeightProperty) });
+                //内部表示要素のTransformBounds(回転後のサイズと位置)
+                var mb = new MultiBinding() { Converter = new MyConvRenderBounds() };
+                mb.Bindings.Add(new Binding() { Source = ic, Path = new PropertyPath(ActualWidthProperty) });
+                mb.Bindings.Add(new Binding() { Source = ic, Path = new PropertyPath(ActualHeightProperty) });
+                mb.Bindings.Add(new Binding() { Source = ic, Path = new PropertyPath(RenderTransformProperty) });
+                SetBinding(MyInsideElementBoundsProperty, mb);
+
+                //if (MyExCanvas != null)
+                //{
+                //    _ = SetBinding(WidthProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualWidthProperty) });
+                //    _ = SetBinding(HeightProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualHeightProperty) });
+                //}
+
+                //if (MyExCanvas != null && MyInsideElement != null)
+                //{
+                //    MyInsideElement.SetBinding(WidthProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualWidthProperty) });
+                //    MyInsideElement.SetBinding(HeightProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualHeightProperty) });
+
+                //}
             }
 
             //ZIndexの再振り当て
@@ -1357,6 +1431,7 @@ namespace _20250329
             if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems?[0] is KisoThumb addThumb)
             {
                 addThumb.MyParentThumb = this;
+
                 //リストにItemDataを追加と、枠表示を親とのバインド
                 if (addThumb.MyItemData.MyThumbType != ThumbType.None)
                 {
@@ -1479,10 +1554,8 @@ namespace _20250329
     /// </summary>
     public class RootThumb : GroupThumb
     {
-        /// <summary>
-        /// 選択されたThumb
-        /// </summary>
-        //public ObservableCollection<KisoThumb> MySelectThumbs { get; set; }
+        //シリアライズ時の内部ファイル名
+        private const string XML_FILE_NAME = "Data.xml";
 
         static RootThumb()
         {
@@ -2322,7 +2395,7 @@ namespace _20250329
 
         #endregion Thumb追加と削除
 
-        #region ItemData保存
+        #region ItemData読み書き、ファイルに保存とファイルの読み込み
 
         /// <summary>
         /// ファイル名に使える文字列ならtrueを返す
@@ -2373,8 +2446,6 @@ namespace _20250329
 
         public bool SaveItemData(ItemData data, string filePath)
         {
-
-
             if (!CheckFilePathValidated(filePath)) { return false; }
 
             using FileStream zipStream = File.Create(filePath);
@@ -2385,7 +2456,7 @@ namespace _20250329
                 Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false),
             };
             DataContractSerializer serializer = new(typeof(ItemData));
-            ZipArchiveEntry entry = archive.CreateEntry("Data.xml");
+            ZipArchiveEntry entry = archive.CreateEntry(XML_FILE_NAME);
 
             using (Stream entryStream = entry.Open())
             {
@@ -2436,10 +2507,68 @@ namespace _20250329
             }
         }
 
+        public ItemData? LoadItemData(string path)
+        {
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+
+            using FileStream stream = File.OpenRead(path);
+            using ZipArchive archive = new(stream, ZipArchiveMode.Read);
+            ZipArchiveEntry? entry = archive.GetEntry(XML_FILE_NAME);
+            if (entry == null) return null;
+            using Stream entryStream = entry.Open();
+            DataContractSerializer serializer = new(typeof(ItemData));
+            using XmlReader reader = XmlReader.Create(entryStream);
+            ItemData? data = (ItemData?)serializer.ReadObject(reader);
+            if (data == null) return null;
+
+            SubSetImageSource(data, archive);
+            SubLoop(data, archive);
+            //Guidの更新、重要
+            data.MyGuid = System.Guid.NewGuid().ToString();
+            return data;
+
+            //Dataに画像があれば取得
+            void SubSetImageSource(ItemData data, ZipArchive archive)
+            {
+                //Guidに一致する画像ファイルを取得
+                ZipArchiveEntry? imageEntry = archive.GetEntry(data.MyGuid + ".png");
+                if (imageEntry == null) return;
+
+                using Stream imageStream = imageEntry.Open();
+                PngBitmapDecoder decoder =
+                    new(imageStream,
+                    BitmapCreateOptions.None,
+                    BitmapCacheOption.Default);
+                //画像の指定
+                data.MyBitmapSource = decoder.Frames[0];
+            }
+
+            //子要素が画像タイプだった場合とグループだった場合
+            void SubLoop(ItemData data, ZipArchive archive)
+            {
+                foreach (var item in data.MyThumbsItemData)
+                {
+                    //DataのTypeがImage型ならzipから画像を取り出して設定
+                    if (item.MyThumbType == ThumbType.Image)
+                    {
+                        SubSetImageSource(item, archive);
+                    }
+                    //DataのTypeがGroupなら子要素も取り出す
+                    else if (item.MyThumbType == ThumbType.Group)
+                    {
+                        SubLoop(item, archive);
+                    }
+                    //Guidの更新
+                    item.MyGuid = Guid.NewGuid().ToString();
+                }
+            }
+        }
 
 
-
-        #endregion ItemData保存
+        #endregion ItemData読み書き
 
         #endregion パブリックなメソッド
 
