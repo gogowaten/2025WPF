@@ -47,7 +47,7 @@
         </UniformGrid>
         <Button x:Name="SaveToFile" Content="Focusをファイルに保存" Click="SaveToFile_Click"/>
         <Button x:Name="SaveRoot" Content="Rootをファイルに保存" Click="SaveRoot_Click"/>
-        <Button x:Name="ReadToFile" Content="ファイルから追加" Click="ReadToFile_Click"/>
+        <Button x:Name="LoadFile" Content="ファイルから追加" Click="LoadFile_Click"/>
         <Button x:Name="ReadRootFile" Content="Rootファイル読み込み" Click="ReadRootFile_Click"/>
         <Button x:Name="AnchorSwitch" Content="AnchorSwitch" Click="AnchorSwitch_Click"/>
         <Button x:Name="ShapeTypeSwitch" Content="直線とベジェ曲線の切り替え" Click="ShapeTypeSwitch_Click"/>

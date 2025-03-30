@@ -702,8 +702,6 @@ namespace _20250329
                     {
                         item.MyItemData.MyLeft += yoko;
                         item.MyItemData.MyTop += tate;
-                        //item.MyItemData.MyLeft += (int)(e.HorizontalChange + 0.5);
-                        //item.MyItemData.MyTop += (int)(e.VerticalChange + 0.5);
                     }
                     e.Handled = true;
                 }
@@ -1371,10 +1369,17 @@ namespace _20250329
                 ic.SetBinding(HeightProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualHeightProperty) });
                 //内部表示要素のTransformBounds(回転後のサイズと位置)
                 var mb = new MultiBinding() { Converter = new MyConvRenderBounds() };
-                mb.Bindings.Add(new Binding() { Source = ic, Path = new PropertyPath(ActualWidthProperty) });
-                mb.Bindings.Add(new Binding() { Source = ic, Path = new PropertyPath(ActualHeightProperty) });
+                mb.Bindings.Add(new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualWidthProperty) });
+                mb.Bindings.Add(new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualHeightProperty) });
                 mb.Bindings.Add(new Binding() { Source = ic, Path = new PropertyPath(RenderTransformProperty) });
                 SetBinding(MyInsideElementBoundsProperty, mb);
+
+                //var mb = new MultiBinding() { Converter = new MyConvRenderBounds() };
+                //mb.Bindings.Add(new Binding() { Source = ic, Path = new PropertyPath(ActualWidthProperty) });
+                //mb.Bindings.Add(new Binding() { Source = ic, Path = new PropertyPath(ActualHeightProperty) });
+                //mb.Bindings.Add(new Binding() { Source = ic, Path = new PropertyPath(RenderTransformProperty) });
+                //SetBinding(MyInsideElementBoundsProperty, mb);
+
 
                 //if (MyExCanvas != null)
                 //{
@@ -1382,12 +1387,6 @@ namespace _20250329
                 //    _ = SetBinding(HeightProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualHeightProperty) });
                 //}
 
-                //if (MyExCanvas != null && MyInsideElement != null)
-                //{
-                //    MyInsideElement.SetBinding(WidthProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualWidthProperty) });
-                //    MyInsideElement.SetBinding(HeightProperty, new Binding() { Source = MyExCanvas, Path = new PropertyPath(ActualHeightProperty) });
-
-                //}
             }
 
             //ZIndexの再振り当て

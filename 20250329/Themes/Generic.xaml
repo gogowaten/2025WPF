@@ -259,8 +259,7 @@
                               Background="{Binding
                                 RelativeSource={RelativeSource Mode=TemplatedParent},
                                 Path=MyItemData.MyBackground}"
-                              Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementBounds.Width}"
-                              Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementBounds.Height}"
+                              
                               Focusable="False"
                               Canvas.Left="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementOffsetLeft}"
                               Canvas.Top="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementOffsetTop}"
@@ -270,7 +269,7 @@
                 </ItemsControl.RenderTransform>
                 <ItemsControl.ItemsPanel>
                   <ItemsPanelTemplate>
-                    <local:ExCanvas x:Name="element" Background="AliceBlue"/>
+                    <local:ExCanvas x:Name="element"/>
                   </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
               </ItemsControl>

@@ -50,7 +50,7 @@ public partial class MainWindow : Window
         AllowDrop = true;
         Drop += MainWindow_Drop;
 
-        ItemData data = new(ThumbType.Root) { MyBackground = Brushes.DeepSkyBlue };
+        ItemData data = new(ThumbType.Root) { MyBackground = Brushes.White };
         if (new RootThumb(data) is RootThumb root)
         {
             MyRoot = root;
@@ -83,12 +83,8 @@ public partial class MainWindow : Window
         //var bmp = MyRoot.GetBitmap("D:\\ブログ用\\テスト用画像\\hueRectT000.png");
         //data.MyBitmapSource = bmp;
         //MyRoot.AddNewThumbFromItemData(data, MyRoot);
-        if(MyRoot.LoadItemData(SaveFileNameZip)is ItemData data)
-        {
-            data.MyLeft = 0;data.MyTop = 0;
-            MyRoot.AddNewThumbFromItemData(data);
-        }
         
+
     }
 
     private void AddTextThumb()
@@ -140,15 +136,19 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ReadToFile_Click(object sender, RoutedEventArgs e)
+    private void LoadFile_Click(object sender, RoutedEventArgs e)
     {
-        if (ItemData.Deserialize(SaveFileName) is ItemData data)
-        //if (ItemData.Deserialize("E:\\20250227.xml") is ItemData data)
+        //if (ItemData.Deserialize(SaveFileName) is ItemData data)
+        //{
+        //    //ファイルから追加するときは0座標にしないと離れた位置に追加される
+        //    data.MyLeft = 0;
+        //    data.MyTop = 0;
+        //    MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
+        //}
+        if (MyRoot.LoadItemData(SaveFileNameZip) is ItemData data)
         {
-            //ファイルから追加するときは0座標にしないと離れた位置に追加される
-            data.MyLeft = 0;
-            data.MyTop = 0;
-            MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);
+            data.MyLeft = 0; data.MyTop = 0;
+            MyRoot.AddNewThumbFromItemData(data);
         }
     }
 
