@@ -17,7 +17,7 @@
                   HorizontalScrollBarVisibility="Auto"
                   HorizontalAlignment="Left"
                   VerticalAlignment="Top"
-                  VerticalScrollBarVisibility="Auto"                  
+                  VerticalScrollBarVisibility="Auto"
                   >
     </ScrollViewer>
 
@@ -60,7 +60,7 @@
           <Button x:Name="Remove" Content="削除" Click="Remove_Click"/>
           <Button x:Name="RemoveAll" Content="全削除" Click="RemoveAll_Click"/>
         </UniformGrid>
-        
+
       </UniformGrid>
 
       <GroupBox DataContext="{Binding MyFocusThumb}" Header="FocusThumb">

@@ -83,7 +83,7 @@ public partial class MainWindow : Window
         //var bmp = MyRoot.GetBitmap("D:\\ブログ用\\テスト用画像\\hueRectT000.png");
         //data.MyBitmapSource = bmp;
         //MyRoot.AddNewThumbFromItemData(data, MyRoot);
-        
+
 
     }
 
@@ -123,6 +123,7 @@ public partial class MainWindow : Window
         AddEllipseTextThumb();
     }
 
+    //FocusThumbをファイルに保存
     private void SaveToFile_Click(object sender, RoutedEventArgs e)
     {
         //_ = MyRoot.MyFocusThumb?.MyItemData.Serialize(SaveFileName);
@@ -136,6 +137,7 @@ public partial class MainWindow : Window
         }
     }
 
+    //ファイルからの読み込み
     private void LoadFile_Click(object sender, RoutedEventArgs e)
     {
         //if (ItemData.Deserialize(SaveFileName) is ItemData data)
@@ -212,14 +214,27 @@ public partial class MainWindow : Window
         MyRoot.MyFocusThumb?.ZIndexBottom();
     }
 
+    //Rootの保存、全体の保存
     private void SaveRoot_Click(object sender, RoutedEventArgs e)
     {
-        _ = MyRoot.MyItemData.Serialize(SaveRootFileName);
+        //_ = MyRoot.MyItemData.Serialize(SaveRootFileName);
+        MyRoot.SaveItemData(MyRoot.MyItemData, SaveRootFileNameZip);
     }
 
+    //Rootファイルの読み込み
     private void ReadRootFile_Click(object sender, RoutedEventArgs e)
     {
-        if (ItemData.Deserialize(SaveRootFileName) is ItemData data)
+        ////画像なしDataのとき
+        //if (ItemData.Deserialize(SaveRootFileName) is ItemData data)
+        //{
+        //    if (new RootThumb(data) is RootThumb root)
+        //    {
+        //        MyScrollViewer.Content = root;
+        //        MyRoot = root;
+        //        DataContext = root;
+        //    }
+        //}
+        if (MyRoot.LoadItemData(SaveRootFileNameZip) is ItemData data)
         {
             if (new RootThumb(data) is RootThumb root)
             {
