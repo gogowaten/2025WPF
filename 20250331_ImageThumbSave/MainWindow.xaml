@@ -1,0 +1,138 @@
+﻿<Window x:Class="_20250331_ImageThumbSave.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_20250331_ImageThumbSave"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:RootThumb}"
+        Title="MainWindow" Height="547" Width="654">
+
+  <Grid x:Name="MyGrid" UseLayoutRounding="True">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="260"/>
+    </Grid.ColumnDefinitions>
+    <ScrollViewer x:Name="MyScrollViewer"
+                  HorizontalScrollBarVisibility="Auto"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
+                  VerticalScrollBarVisibility="Auto"
+                  >
+    </ScrollViewer>
+
+
+    <StackPanel Grid.Column="1" DataContext="{Binding}">
+      <UniformGrid Columns="2">
+        <Button x:Name="AddTextThumb2" Content="AddTextThumb" Click="AddTextThumb_Click"/>
+        <Button x:Name="AddEllipseThumb" Content="AddEllipseThumb" Click="AddEllipseThumb_Click"/>
+        <Button x:Name="AddPolyLine" Content="AddLine" Click="AddPolyLine_Click"/>
+        <Button x:Name="AddBezier" Content="矢印ベジェ曲線" Click="AddBezier_Click"/>
+        <Button x:Name="AddImageFiles" Content="画像ファイル追加" Click="AddImageFiles_Click"/>
+        <UniformGrid Columns="2">
+          <Button x:Name="AddGroup" Content="グループ化" Click="AddGroup_Click"/>
+          <Button x:Name="Ungroup" Content="グループ解除" Click="Ungroup_Click"/>
+        </UniformGrid>
+        <UniformGrid Columns="2">
+          <Button x:Name="In" Content="In" Click="In_Click"/>
+          <Button x:Name="Out" Content="Out" Click="Out_Click"/>
+        </UniformGrid>
+        <UniformGrid Columns="2">
+          <Button x:Name="Up" Content="前面へ" Click="Up_Click"/>
+          <Button x:Name="Down" Content="背面へ" Click="Down_Click"/>
+        </UniformGrid>
+        <UniformGrid Columns="2">
+          <Button x:Name="ToTop" Content="最前面へ" Click="Top_Click"/>
+          <Button x:Name="Bottom" Content="最背面へ" Click="Bottom_Click"/>
+        </UniformGrid>
+        <Button x:Name="SaveToFile" Content="Focusをファイルに保存" Click="SaveToFile_Click"/>
+        <Button x:Name="SaveRoot" Content="Rootをファイルに保存" Click="SaveRoot_Click"/>
+        <Button x:Name="LoadFile" Content="ファイルから追加" Click="LoadFile_Click"/>
+        <Button x:Name="ReadRootFile" Content="Rootファイル読み込み" Click="ReadRootFile_Click"/>
+        <Button x:Name="AnchorSwitch" Content="AnchorSwitch" Click="AnchorSwitch_Click"/>
+        <Button x:Name="ShapeTypeSwitch" Content="直線とベジェ曲線の切り替え" Click="ShapeTypeSwitch_Click"/>
+        <Button x:Name="AddPoint" Content="末尾にPoint追加" Click="AddPoint_Click"/>
+        <Button x:Name="ShapeCapSwitch" Content="先端形状の切り替え" Click="ShapeCapSwitch_Click"/>
+        <Button x:Name="RemovePoint" Content="末尾のPoint削除" Click="RemovePoint_Click"/>
+        <Button x:Name="WakuVisible" Content="枠の表示切り替え" Click="WakuVisible_Click"/>
+        <Button x:Name="MyTest2" Content="Test2" Click="MyTest2_Click"/>
+        <UniformGrid Columns="2">
+          <Button x:Name="Remove" Content="削除" Click="Remove_Click"/>
+          <Button x:Name="RemoveAll" Content="全削除" Click="RemoveAll_Click"/>
+        </UniformGrid>
+
+      </UniformGrid>
+
+      <GroupBox DataContext="{Binding MyFocusThumb}" Header="FocusThumb">
+        <StackPanel>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=datatype {0}}"/>
+            <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
+            <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=left 0}"/>
+            <TextBlock Text="{Binding MyItemData.MyTop, StringFormat=top 0}"/>
+            <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth 0}"/>
+            <TextBlock Text="{Binding ActualHeight, StringFormat=ActualHeight 0}"/>
+            <TextBlock Text="{Binding MyItemData.MyGuid, StringFormat=guid {0}}"/>
+            <TextBlock Text="{Binding MyItemData.MyText, StringFormat=text {0}}"/>
+            <TextBlock Text="{Binding MyParentThumb.MyThumbType, StringFormat=parentType {0}}"/>
+            <TextBox Text="{Binding MyItemData.MyText, UpdateSourceTrigger=PropertyChanged}"
+                   AcceptsReturn="True"
+                   AcceptsTab="True"/>
+            <Slider Value="{Binding MyItemData.MyAngle}" Minimum="0" Maximum="90" TickFrequency="10" IsSnapToTickEnabled="True"/>
+            <TextBlock Text="{Binding MyItemData.MyAngle, StringFormat=angle 0}"/>
+            <Slider Value="{Binding MyItemData.MyStrokeThickness}" Minimum="1.0" Maximum="60"/>
+            <TextBlock Text="{Binding MyItemData.MyStrokeThickness, StringFormat=strokethickness 0}"/>
+            <TextBlock Text="{Binding Focusable, StringFormat=Focusable {0}}"/>
+            <TextBlock Text="{Binding IsFocus, StringFormat=IsFocus {0}}"/>
+            <TextBlock Text="{Binding IsFocused, StringFormat=IsFocused {0}}"/>
+          </UniformGrid>
+          <TextBlock Text="{Binding MyItemData.MyPoints, StringFormat=pos {0:0}}"/>
+          <TextBlock Text="{Binding MyInsideElementBounds, StringFormat=insideB {0:0}}"/>
+        </StackPanel>
+      </GroupBox>
+
+      <UniformGrid Columns="2">
+        <TextBlock Text="{Binding MyThumbs.Count, StringFormat=count 0}"/>
+        <TextBlock Text="{Binding MyItemData.MyThumbsItemData.Count, StringFormat=itemcount 0}"/>
+        <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
+        <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=itemtype {0}}"/>
+        <TextBlock Text="{Binding ActualWidth, StringFormat=actwidth {0:0.0}}"/>
+        <TextBlock Text="{Binding ActualHeight, StringFormat=actheight {0:0.0}}"/>
+        <Slider Value="{Binding MyItemData.MyAddOffsetLeft}" Minimum="0" Maximum="64"
+                TickFrequency="8" IsSnapToTickEnabled="True"/>
+        <TextBlock Text="{Binding MyItemData.MyAddOffsetLeft, StringFormat=AddOffsetLeft 0}"/>
+        <TextBlock Text="{Binding MySelectedThumbs.Count, StringFormat=selectedCount 0}"/>
+      </UniformGrid>
+
+      <GroupBox DataContext="{Binding MyActiveGroupThumb}" Header="ActiveGroup">
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=datatype {0}}"/>
+          <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
+          <TextBlock Text="{Binding ActualWidth, StringFormat=actwidth 0}"/>
+          <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=left 0}"/>
+        </UniformGrid>
+      </GroupBox>
+
+      <GroupBox DataContext="{Binding MyClickedThumb}" Header="Clicked">
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=datatype {0}}"/>
+          <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
+          <TextBlock Text="{Binding ActualWidth, StringFormat=actWidth 0}"/>
+          <TextBlock Text="{Binding MyItemData.MyZIndex, StringFormat=zIndex 0}"/>
+          <TextBlock Text="{Binding MyItemData.MyGuid, StringFormat=guid {0}}"/>
+          <TextBlock Text="{Binding MyItemData.MyText, StringFormat=text {0}}"/>
+          <TextBox Text="{Binding MyItemData.MyText, UpdateSourceTrigger=PropertyChanged}"
+         AcceptsReturn="True"
+         AcceptsTab="True"/>
+          <UniformGrid Columns="2">
+            <Slider Value="{Binding MyItemData.MyForegroundR}" Minimum="0" Maximum="255"/>
+            <TextBlock Text="{Binding MyItemData.MyForegroundR, StringFormat=赤 {0:000}}"/>
+          </UniformGrid>
+          <TextBlock Text="{Binding Focusable, StringFormat=Focusable {0}}"/>
+          <TextBlock Text="{Binding IsFocus, StringFormat=IsFocus {0}}"/>
+          <TextBlock Text="{Binding IsFocused, StringFormat=IsFocused {0}}"/>
+        </UniformGrid>
+      </GroupBox>
+    </StackPanel>
+  </Grid>
+</Window>
