@@ -1,3 +1,12 @@
+# 20250331_ImageThumbSave
+https://github.com/gogowaten/2025WPF/tree/main/20250331_ImageThumbSave<br>
+![Animation20250331_123401-ezgif com-optimize](https://github.com/user-attachments/assets/0ad0c1f4-c8df-4ce3-87cd-96bd01a3b393)<br>
+WPF、画像を含んでいる状態をファイルに保存と読み込みテスト - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/03/31/145244<br>
+<br><br><br>
+
+
+
 # 20250327_GeoShapeThumbSerialize
 https://github.com/gogowaten/2025WPF/tree/main/20250327_GeoShapeThumbSerialize<br>
 ![Animation20250328_140103](https://github.com/user-attachments/assets/5b191152-532b-4114-8da0-d90ffa84d527)<br>
