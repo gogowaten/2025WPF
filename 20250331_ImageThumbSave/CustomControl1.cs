@@ -2444,6 +2444,13 @@ namespace _20250331_ImageThumbSave
             else return string.Empty;
         }
 
+        /// <summary>
+        /// ファイルに保存
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public bool SaveItemData(ItemData data, string filePath)
         {
             if (!CheckFilePathValidated(filePath)) { return false; }
@@ -2507,6 +2514,11 @@ namespace _20250331_ImageThumbSave
             }
         }
 
+        /// <summary>
+        /// ファイルからItemData復元
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public ItemData? LoadItemData(string path)
         {
             if (!File.Exists(path))

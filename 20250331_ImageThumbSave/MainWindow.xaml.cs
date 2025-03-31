@@ -13,16 +13,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Point = System.Windows.Point;
 
-//2025WPF / 20250310 at main · gogowaten/2025WPF
-//https://github.com/gogowaten/2025WPF/tree/main/20250310
-//これに
-//2025WPF/20250327_GeoShapeThumbSerialize at main · gogowaten/2025WPF
-//https://github.com/gogowaten/2025WPF/tree/main/20250327_GeoShapeThumbSerialize
-//この矢印図形を追加した感じ
-//リサイズ機能は外した
 
-//WPF、矢印図形Thumbのシリアライズテスト - 午後わてんのブログ
-//https://gogowaten.hatenablog.com/entry/2025/03/28/151812
+//WPF、画像を含んでいる状態をファイルに保存と読み込みテスト - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/03/31/145244
 
 namespace _20250331_ImageThumbSave;
 

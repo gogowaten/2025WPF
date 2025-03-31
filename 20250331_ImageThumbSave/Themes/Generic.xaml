@@ -94,11 +94,14 @@
   </Style>
 
 
+  
   <Style TargetType="{x:Type local:ImageThumb}" BasedOn="{StaticResource kiso}">
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:ImageThumb}">
-          <Grid DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData}">
+          <Grid DataContext="{Binding
+              RelativeSource={RelativeSource Mode=TemplatedParent},
+              Path=MyItemData}">
             <Canvas>
               <Image x:Name="element"
                      Source="{Binding MyBitmapSource}"
