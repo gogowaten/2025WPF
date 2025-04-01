@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "20250401_MultiprexTransformBounds", "20250401_MultiprexTransformBounds.csproj", "{14F3B211-207A-487B-B0D4-FB99C22D3770}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{14F3B211-207A-487B-B0D4-FB99C22D3770}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14F3B211-207A-487B-B0D4-FB99C22D3770}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14F3B211-207A-487B-B0D4-FB99C22D3770}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14F3B211-207A-487B-B0D4-FB99C22D3770}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CCFA516F-79B6-4C5B-B9B7-D3CFFB666510}
+	EndGlobalSection
+EndGlobal

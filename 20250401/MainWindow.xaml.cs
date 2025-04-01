@@ -30,6 +30,7 @@ namespace _20250401
 
         }
 
+
         private void RedBounds()
         {
             var canvasMatrix = MyCanvas.RenderTransform.Value;
@@ -93,38 +94,6 @@ namespace _20250401
             MyGreenBounds.Width = redR.Width;
             MyGreenBounds.Height = redR.Height;
 
-        }
-
-        private void Bounds4Rect()
-        {
-            Transform tr = MyRed.RenderTransform;
-            Matrix tfvalue = tr.Value;
-            var tf2 = MyCanvas.RenderTransform;
-            Matrix matrix2 = tf2.Value;
-            matrix2.Append(tfvalue);
-            MatrixTransform matrix = new(matrix2);
-            var rrrr = matrix.TransformBounds(new(0, 0, MyRed.Width, MyRed.Height));
-            var rr = MyRed.RenderTransform.TransformBounds(new(0, 0, MyRed.Width, MyRed.Height));
-            var rrr = MyCanvas.RenderTransform.TransformBounds(rr);
-            MyWhiteBounds.Width = rrr.Width; MyWhiteBounds.Height = rrr.Height;
-            var left = GetLeft(MyCanvas) + rrr.Left; var top = GetTop(MyCanvas) + rrr.Top;
-            SetLeft(MyWhiteBounds, left); SetTop(MyWhiteBounds, top);
-        }
-        private void Canvas2Rect()
-        {
-            Rect rr = new(0, 0, MyRed.Width, MyRed.Height);
-            rr.Union(new Rect(Canvas.GetLeft(MyOrangeBounds), Canvas.GetTop(MyOrangeBounds), MyOrangeBounds.Width, MyOrangeBounds.Height));
-            MyBlueBounds.Width = rr.Width; MyBlueBounds.Height = rr.Height;
-            SetLeft(MyBlueBounds, rr.Left); SetTop(MyBlueBounds, rr.Top);
-        }
-        private void Canvas3Rect()
-        {
-            Rect rr = new(0, 0, MyBlueBounds.Width, MyBlueBounds.Height);
-            var rrr = MyCanvas.RenderTransform.TransformBounds(rr);
-            MyGreenBounds.Width = rrr.Width; MyGreenBounds.Height = rrr.Height;
-            var left = Canvas.GetLeft(MyCanvas); var top = Canvas.GetTop(MyCanvas);
-            left += rrr.Left; top += rrr.Top;
-            SetLeft(MyGreenBounds, left); SetTop(MyGreenBounds, top);
         }
 
 
