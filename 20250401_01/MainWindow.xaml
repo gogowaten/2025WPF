@@ -5,15 +5,77 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250401_01"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="400">
-    <Grid>
-    <Canvas>
-      <Rectangle x:Name="MyRed" Fill="Red" Canvas.Left="40" Canvas.Top="20" Width="40" Height="40">
+        Title="MainWindow" Height="367" Width="602">
+  <Grid UseLayoutRounding="True">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition/>
+      <ColumnDefinition/>
+    </Grid.ColumnDefinitions>
+
+    <Canvas DataContext="{Binding ElementName=MyBlackWaku}">
+      <Rectangle x:Name="MyRed" Fill="Red"
+                 Canvas.Left="40" Canvas.Top="20" Width="100" Height="40">
         <Rectangle.RenderTransform>
           <RotateTransform Angle="40"/>
         </Rectangle.RenderTransform>
       </Rectangle>
-      <Border x:Name="MyBlackWaku" BorderBrush="Black" BorderThickness="2"/>
+      <Rectangle Stroke="DodgerBlue" StrokeThickness="2" Width="160" Height="120"/>
+      <Rectangle x:Name="MyBlackWaku" Stroke="Black" StrokeThickness="2"/>
+      <StackPanel Margin="10,200,10,10">
+        <TextBlock Text="{Binding (Canvas.Left), StringFormat=Left {0:0.0}}"/>
+        <TextBlock Text="{Binding (Canvas.Top), StringFormat=Top {0:0.0}}"/>
+        <TextBlock Text="{Binding Width, StringFormat=Width {0:0.0}}"/>
+        <TextBlock Text="{Binding Height, StringFormat=Height {0:0.0}}"/>
+      </StackPanel>
     </Canvas>
-    </Grid>
+
+
+    <Canvas Grid.Column="1" DataContext="{Binding ElementName=MyBlackWaku2}">
+      <Canvas x:Name="MyCanvas2" Width="160" Height="120">
+        <Canvas.RenderTransform>
+          <RotateTransform Angle="40"/>
+        </Canvas.RenderTransform>
+        <Rectangle x:Name="MyRed2" Fill="Red"
+                   Canvas.Left="40" Canvas.Top="20" Width="100" Height="40"/>
+        <Rectangle x:Name="MyBlue" Stroke="DodgerBlue" StrokeThickness="2"
+                   Width="{Binding ElementName=MyCanvas2, Path=Width}"
+                   Height="{Binding ElementName=MyCanvas2, Path=Height}"/>
+      </Canvas>
+      <Rectangle x:Name="MyBlackWaku2" Stroke="Black" StrokeThickness="2"/>
+      <StackPanel Margin="10,200,10,10">
+        <TextBlock Text="{Binding (Canvas.Left), StringFormat=Left {0:0.0}}"/>
+        <TextBlock Text="{Binding (Canvas.Top), StringFormat=Top {0:0.0}}"/>
+        <TextBlock Text="{Binding Width, StringFormat=Width {0:0.0}}"/>
+        <TextBlock Text="{Binding Height, StringFormat=Height {0:0.0}}"/>
+      </StackPanel>
+    </Canvas>
+
+    <Canvas Grid.Column="2" DataContext="{Binding ElementName=MyBlackWaku3}">
+      <Canvas x:Name="MyCanvas3" Width="160" Height="120">
+        <Canvas.RenderTransform>
+          <RotateTransform Angle="10"/>
+        </Canvas.RenderTransform>
+        <Rectangle x:Name="MyRed3" Fill="Red"
+                   Canvas.Left="40" Canvas.Top="20" Width="100" Height="40">
+          <Rectangle.RenderTransform>
+            <RotateTransform Angle="30"/>
+          </Rectangle.RenderTransform>
+        </Rectangle>
+        <Rectangle Stroke="DodgerBlue" StrokeThickness="2"
+                   Width="{Binding ElementName=MyCanvas2, Path=Width}"
+                   Height="{Binding ElementName=MyCanvas2, Path=Height}"/>
+      </Canvas>
+      <!--<Border x:Name="MyBlackWaku3" BorderBrush="Black" BorderThickness="2"/>-->
+      <Rectangle x:Name="MyBlackWaku3" Stroke="Black" StrokeThickness="2"/>
+      <StackPanel Margin="10,200,10,10">
+        <TextBlock Text="{Binding (Canvas.Left), StringFormat=Left {0:0.0}}"/>
+        <TextBlock Text="{Binding (Canvas.Top), StringFormat=Top {0:0.0}}"/>
+        <TextBlock Text="{Binding Width, StringFormat=Width {0:0.0}}"/>
+        <TextBlock Text="{Binding Height, StringFormat=Height {0:0.0}}"/>
+      </StackPanel>
+    </Canvas>
+
+
+  </Grid>
 </Window>
