@@ -2,6 +2,9 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
+//WPF、子要素と孫要素ともに回転時の、孫要素がピッタリ収まるBounds(Rect)の取得 - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/04/02/151945
+
 namespace _20250401_01
 {
     public partial class MainWindow : Window
