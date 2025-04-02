@@ -1,3 +1,12 @@
+# 20250401_01
+https://github.com/gogowaten/2025WPF/tree/main/20250401_01<br>
+![20250402_131727_](https://github.com/user-attachments/assets/35dc3cee-2cb3-4b98-a081-42b42a3be6b3)<br>
+WPF、子要素と孫要素ともに回転時の、孫要素がピッタリ収まるBounds(Rect)の取得 - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/04/02/151945<br>
+<br><br><br>
+
+
+
 # 20250331_ImageThumbSave
 https://github.com/gogowaten/2025WPF/tree/main/20250331_ImageThumbSave<br>
 ![Animation20250331_123401-ezgif com-optimize](https://github.com/user-attachments/assets/0ad0c1f4-c8df-4ce3-87cd-96bd01a3b393)<br>
