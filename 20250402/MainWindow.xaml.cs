@@ -42,6 +42,15 @@ namespace _20250402
             //最終的なBoundsを黒枠に適用
             Rect result = new(topLeft, redUnionBounds.Size);
             MySetBounds(MyBlackWaku30, result);
+
+            //Rect canvasTFBounds1 = MyCanvas3.RenderTransform.TransformBounds(new Rect(GetLeft(MyRed30), GetTop(MyRed30), MyRed30.Width, MyRed30.Height));
+            //MySetBounds(MyBlackWaku30, canvasTFBounds1);
+            //Rect canvasTFBounds2 = MyCanvas3.RenderTransform.TransformBounds(new Rect(GetLeft(MyRed31), GetTop(MyRed31), MyRed31.Width, MyRed31.Height));
+            //MySetBounds(MyBlackWaku31, canvasTFBounds2);
+            //Rect unionR = canvasTFBounds1;
+            //unionR.Union(canvasTFBounds2);
+            //MySetBounds(MyBlackWaku32, unionR);
+
         }
 
         /// <summary>
