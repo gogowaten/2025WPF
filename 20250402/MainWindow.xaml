@@ -13,7 +13,8 @@
       <ColumnDefinition/>
     </Grid.ColumnDefinitions>
 
-    <Canvas DataContext="{Binding ElementName=MyBlackWaku12}">
+    <Canvas x:Name="MyCanvas1" DataContext="{Binding ElementName=MyBlackWaku12}">
+      <Rectangle Fill="Khaki" Width="160" Height="120"/>
       <Rectangle x:Name="MyRed10" Fill="Red"
                  Canvas.Left="40" Canvas.Top="20" Width="40" Height="40">
         <Rectangle.RenderTransform>
@@ -27,7 +28,6 @@
         </Rectangle.RenderTransform>
       </Rectangle>
 
-      <Rectangle Stroke="DodgerBlue" StrokeThickness="2" Width="160" Height="120"/>
       <Rectangle x:Name="MyBlackWaku10" Stroke="Black" StrokeThickness="2" Opacity="0.2"/>
       <Rectangle x:Name="MyBlackWaku11" Stroke="Black" StrokeThickness="2" Opacity="0.2"/>
       <Rectangle x:Name="MyBlackWaku12" Stroke="Black" StrokeThickness="2" Opacity="0.5"/>
@@ -41,18 +41,14 @@
 
 
     <Canvas Grid.Column="1" DataContext="{Binding ElementName=MyBlackWaku22}">
-      <Canvas x:Name="MyCanvas2" Width="160" Height="120">
+      <Canvas x:Name="MyCanvas2" Width="160" Height="120" Background="Khaki">
         <Canvas.RenderTransform>
-          <RotateTransform Angle="40"/>
+          <RotateTransform Angle="10"/>
         </Canvas.RenderTransform>
         <Rectangle x:Name="MyRed20" Fill="Red"
                    Canvas.Left="40" Canvas.Top="20" Width="40" Height="40"/>
         <Rectangle x:Name="MyRed21" Fill="Red"
                    Canvas.Left="100" Canvas.Top="50" Width="40" Height="40"/>
-
-        <Rectangle x:Name="MyBlue" Stroke="DodgerBlue" StrokeThickness="2"
-                   Width="{Binding ElementName=MyCanvas2, Path=Width}"
-                   Height="{Binding ElementName=MyCanvas2, Path=Height}"/>
       </Canvas>
       <Rectangle x:Name="MyBlackWaku20" Stroke="Black" StrokeThickness="2" Opacity="0.2"/>
       <Rectangle x:Name="MyBlackWaku21" Stroke="Black" StrokeThickness="2" Opacity="0.2"/>
@@ -66,7 +62,7 @@
     </Canvas>
 
     <Canvas Grid.Column="2" DataContext="{Binding ElementName=MyBlackWaku32}">
-      <Canvas x:Name="MyCanvas3" Width="160" Height="120">
+      <Canvas x:Name="MyCanvas3" Width="160" Height="120" Background="Khaki">
         <Canvas.RenderTransform>
           <RotateTransform Angle="10"/>
         </Canvas.RenderTransform>
@@ -81,10 +77,7 @@
           <Rectangle.RenderTransform>
             <RotateTransform Angle="10"/>
           </Rectangle.RenderTransform>
-        </Rectangle>
-        <Rectangle Stroke="DodgerBlue" StrokeThickness="2"
-                   Width="{Binding ElementName=MyCanvas2, Path=Width}"
-                   Height="{Binding ElementName=MyCanvas2, Path=Height}"/>
+        </Rectangle>        
       </Canvas>
       <Rectangle x:Name="MyBlackWaku30" Stroke="Black" StrokeThickness="2" Opacity="0.2"/>
       <Rectangle x:Name="MyBlackWaku31" Stroke="Black" StrokeThickness="2" Opacity="0.2"/>

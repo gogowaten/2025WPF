@@ -23,34 +23,41 @@ namespace _20250402
         //親要素から見た孫要素のBounds取得
         private void Test31()
         {
-            //位置の取得A、孫要素自体のTransform後のBounds
-            Size redSize = new(MyRed30.Width, MyRed30.Height);
-            Rect redZeroBounds = MyRed30.RenderTransform.TransformBounds(new Rect(redSize));
+            Rect r1 = GetRenderTransformBounds(MyCanvas3, MyRed30);
+            Rect r2 = GetRenderTransformBounds(MyCanvas3, MyRed31);
+            MySetBounds(MyBlackWaku30, r1);
+            MySetBounds(MyBlackWaku31, r2);
+            r1.Union(r2);
+            MySetBounds(MyBlackWaku32, r1);
+        }
 
-            //位置の取得B、子要素のTransformを使った孫要素のBounds
-            Rect redRect = new(GetPoint(MyRed30), redSize);
-            Rect canvasTFBounds = MyCanvas3.RenderTransform.TransformBounds(redRect);
+        /// <summary>
+        /// childの位置とサイズのRectを、parentのRenderTransformのTransformBoundsで返す
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="child"></param>
+        /// <returns></returns>
+        private static Rect GetRenderTransformBounds(FrameworkElement parent, FrameworkElement child)
+        {
+            Rect rectZero = new(0, 0, child.Width, child.Height);
+            Rect rect = new(Canvas.GetLeft(child), Canvas.GetTop(child), child.Width, child.Height);
+
+            //位置の取得A、child自身のTransformを使ったBounds            
+            Rect boundsZero = child.RenderTransform.TransformBounds(rectZero);
+
+            //位置の取得B、parentのTransformを使ったBounds            
+            Rect parentTFBounds = parent.RenderTransform.TransformBounds(rect);
 
             //最終的な位置の取得は、AとBの合成(offset)
-            Point topLeft = canvasTFBounds.TopLeft;
-            topLeft.Offset(redZeroBounds.X, redZeroBounds.Y);
+            Point topLeft = parentTFBounds.TopLeft;
+            topLeft.Offset(boundsZero.X, boundsZero.Y);
 
-            //サイズ取得は、子要素と孫要素のTransformを合成したTransformでのBounds
-            MatrixTransform unionTF = UnionTransform(MyCanvas3.RenderTransform, MyRed30.RenderTransform);
-            Rect redUnionBounds = unionTF.TransformBounds(redRect);
+            //サイズ取得は、parentとchildのTransformを合成したTransformでのBounds
+            MatrixTransform unionTF = UnionTransform(parent.RenderTransform, child.RenderTransform);
+            Rect unionBounds = unionTF.TransformBounds(rect);
 
-            //最終的なBoundsを黒枠に適用
-            Rect result = new(topLeft, redUnionBounds.Size);
-            MySetBounds(MyBlackWaku30, result);
-
-            //Rect canvasTFBounds1 = MyCanvas3.RenderTransform.TransformBounds(new Rect(GetLeft(MyRed30), GetTop(MyRed30), MyRed30.Width, MyRed30.Height));
-            //MySetBounds(MyBlackWaku30, canvasTFBounds1);
-            //Rect canvasTFBounds2 = MyCanvas3.RenderTransform.TransformBounds(new Rect(GetLeft(MyRed31), GetTop(MyRed31), MyRed31.Width, MyRed31.Height));
-            //MySetBounds(MyBlackWaku31, canvasTFBounds2);
-            //Rect unionR = canvasTFBounds1;
-            //unionR.Union(canvasTFBounds2);
-            //MySetBounds(MyBlackWaku32, unionR);
-
+            //最終的な位置とサイズを返す
+            return new Rect(topLeft, unionBounds.Size);
         }
 
         /// <summary>
@@ -76,12 +83,17 @@ namespace _20250402
             MySetBounds(MyBlackWaku20, canvasTFBounds1);
             Rect canvasTFBounds2 = MyCanvas2.RenderTransform.TransformBounds(new Rect(GetLeft(MyRed21), GetTop(MyRed21), MyRed21.Width, MyRed21.Height));
             MySetBounds(MyBlackWaku21, canvasTFBounds2);
+
+            //それぞれのRectを合成したものが目的のBoundsになる
             Rect unionR = canvasTFBounds1;
             unionR.Union(canvasTFBounds2);
             MySetBounds(MyBlackWaku22, unionR);
-
+            //Rect neko = GetRenderTransformBounds(MyCanvas2, MyRed20);
+            //Rect inu = GetRenderTransformBounds(MyCanvas2, MyRed21);
         }
 
+        //図形だけ回転の場合
+        //零座標のRectで計算
         private void Test11()
         {
             Rect r = MyRed10.RenderTransform.TransformBounds(new Rect(0, 0, MyRed10.Width, MyRed10.Height));
@@ -90,6 +102,8 @@ namespace _20250402
             Rect r2 = MyRed11.RenderTransform.TransformBounds(new Rect(0, 0, MyRed11.Width, MyRed11.Height));
             r2.Offset(GetLeft(MyRed11), GetTop(MyRed11));
             MySetBounds(MyBlackWaku11, r2);
+
+            //それぞれのRectを合成したものが目的のBoundsになる
             Rect unionR = r;
             unionR.Union(r2);
             MySetBounds(MyBlackWaku12, unionR);
@@ -97,17 +111,15 @@ namespace _20250402
 
 
 
-
-        private Point GetPoint(FrameworkElement element) => new Point(Canvas.GetLeft(element), Canvas.GetTop(element));
         private double GetLeft(FrameworkElement element) => Canvas.GetLeft(element);
+
         private double GetTop(FrameworkElement element) => Canvas.GetTop(element);
+
         private void SetLeft(FrameworkElement element, double value) => Canvas.SetLeft(element, value);
+
         private void SetTop(FrameworkElement element, double value) => Canvas.SetTop(element, value);
-        private void MySetTopLeft(FrameworkElement element, Point poi)
-        {
-            SetLeft(element, poi.X);
-            SetTop(element, poi.Y);
-        }
+
+    
         private void MySetBounds(FrameworkElement element, Rect bounds)
         {
             SetLeft(element, bounds.Left);
@@ -115,5 +127,6 @@ namespace _20250402
             element.Width = bounds.Width;
             element.Height = bounds.Height;
         }
+
     }
 }
