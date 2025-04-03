@@ -1,3 +1,11 @@
+# 20250403
+https://github.com/gogowaten/2025WPF/tree/main/20250403<br>
+![20250403_210633_](https://github.com/user-attachments/assets/e140db9f-1e2a-460d-a6d8-a70e6c2984c1)<br>
+対象を画像ファイルとして保存<br>
+<br><br><br>
+
+
+
 # 20250402
 https://github.com/gogowaten/2025WPF/tree/main/20250402<br>
 ![20250403_112326](https://github.com/user-attachments/assets/c812ab03-1c61-4528-8b69-4dc255537b85)<br>
