@@ -1,3 +1,13 @@
+# 20250402
+https://github.com/gogowaten/2025WPF/tree/main/20250402<br>
+![20250403_112326](https://github.com/user-attachments/assets/c812ab03-1c61-4528-8b69-4dc255537b85)<br>
+WPF、回転した子要素の中の回転した複数子要素がピッタリ収まるBoundsの取得 - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/04/03/121228<br>
+<br><br><br>
+
+
+
+
 # 20250401_01
 https://github.com/gogowaten/2025WPF/tree/main/20250401_01<br>
 ![20250402_131727_](https://github.com/user-attachments/assets/35dc3cee-2cb3-4b98-a081-42b42a3be6b3)<br>
