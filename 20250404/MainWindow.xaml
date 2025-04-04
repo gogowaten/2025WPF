@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:_20250404"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:KisoThumb}"
-        Title="MainWindow" Height="347" Width="654">
+        Title="MainWindow" Height="367" Width="654">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>

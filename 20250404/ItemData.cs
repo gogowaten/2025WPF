@@ -7,8 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace _20250404.Themes
+namespace _20250404
 {
+    /// <summary>
+    /// シリアライズするData
+    /// </summary>
     public class ItemData : DependencyObject, IExtensibleDataObject, INotifyPropertyChanged
     {
         #region 必要
@@ -26,6 +29,9 @@ namespace _20250404.Themes
         #endregion 必要
         public ItemData() { }
 
+        /// <summary>
+        /// 横位置の指定
+        /// </summary>
         private double _myLeft;
         public double MyLeft { get => _myLeft; set => SetProperty(ref _myLeft, value); }
 
@@ -35,9 +41,15 @@ namespace _20250404.Themes
         private string _myText = string.Empty;
         public string MyText { get => _myText; set => SetProperty(ref _myText, value); }
 
+        /// <summary>
+        /// 中の要素の回転角度、RotateTransformのAngleにバインドする用
+        /// </summary>
         private double _myAngle;
         public double MyAngle { get => _myAngle; set => SetProperty(ref _myAngle, value); }
 
+        /// <summary>
+        /// 中の要素の拡大率、ScaleTransformのScaleXにバインドする用
+        /// </summary>
         private double _myScaleX = 1.0;
         public double MyScaleX { get => _myScaleX; set => SetProperty(ref _myScaleX, value); }
 

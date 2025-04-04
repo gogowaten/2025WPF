@@ -5,10 +5,18 @@
   
   
   <Style TargetType="{x:Type local:KisoThumb}" x:Key="kiso">
-    <Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyActualLeft}"/>
-    <Setter Property="Canvas.Top" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyActualTop}"/>
-    <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyInsideElementRenderBounds.Width}"/>
-    <Setter Property="Height" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyInsideElementRenderBounds.Height}"/>
+    <Setter Property="Canvas.Left"
+            Value="{Binding RelativeSource={RelativeSource Mode=Self},
+                            Path=MyActualLeft}"/>
+    <Setter Property="Canvas.Top"
+            Value="{Binding RelativeSource={RelativeSource Mode=Self},
+                            Path=MyActualTop}"/>
+    <Setter Property="Width"
+            Value="{Binding RelativeSource={RelativeSource Mode=Self},
+                            Path=MyInsideElementRenderBounds.Width}"/>
+    <Setter Property="Height"
+            Value="{Binding RelativeSource={RelativeSource Mode=Self},
+                            Path=MyInsideElementRenderBounds.Height}"/>
   </Style>
 
   

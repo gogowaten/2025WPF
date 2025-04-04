@@ -1,5 +1,4 @@
-﻿using _20250404.Themes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -143,6 +142,10 @@ namespace _20250404
 
         #region 依存関係プロパティ
 
+
+        /// <summary>
+        /// 実際の表示位置に使う。Canvas.Leftとバインドする
+        /// </summary>
         public double MyActualLeft
         {
             get { return (double)GetValue(MyActualLeftProperty); }
@@ -159,7 +162,9 @@ namespace _20250404
         public static readonly DependencyProperty MyActualTopProperty =
             DependencyProperty.Register(nameof(MyActualTop), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
 
-
+        /// <summary>
+        /// 中の要素のBounds。表示されている要素がピッタリ収まるRect
+        /// </summary>
         public Rect MyInsideElementRenderBounds
         {
             get { return (Rect)GetValue(MyInsideElementRenderBoundsProperty); }
