@@ -1,3 +1,14 @@
+# 20250404
+**仕切り直しになるかも**<br>
+バインド設定と依存関係プロパティも最初から作り直し<br>
+https://github.com/gogowaten/2025WPF/tree/main/20250404<br>
+![Animation20250404_161617](https://github.com/user-attachments/assets/daccfb34-3f3a-401f-8d64-45904ca5c290)<br>
+中心で回転と拡縮できた<br>
+<br><br><br>
+
+
+
+
 # 20250403
 https://github.com/gogowaten/2025WPF/tree/main/20250403<br>
 ![20250403_210633_](https://github.com/user-attachments/assets/e140db9f-1e2a-460d-a6d8-a70e6c2984c1)<br>
