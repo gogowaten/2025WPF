@@ -31,6 +31,9 @@ namespace _20250405
         public ItemData() { }
 
 
+        //回転拡縮の中心軸
+        private double _myTransformOrigin = 0.5;
+        public double MyTransformOrigin { get => _myTransformOrigin; set => SetProperty(ref _myTransformOrigin, value); }
 
 
         //アンカーポイント群

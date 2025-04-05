@@ -28,10 +28,14 @@ namespace _20250405
 
         public void Test1()
         {
-            ItemData data = new();
-            data.MyLeft = 100;
-            data.MyTop = 100;
-            data.MyPoints = [new Point(100,0), new Point(300, 0)];
+            ItemData data = new()
+            {
+                MyLeft = 100,
+                MyTop = 100,
+                MyPoints = [new Point(100, 0), new Point(200, 0)],
+                MyAngle = 0,
+            };
+
             MyGeoShapeThumb = new(data);
             MyGeoShapeThumb.Opacity = 0.5;
             
@@ -40,7 +44,9 @@ namespace _20250405
 
         private void Test_Click(object sender, RoutedEventArgs e)
         {
-            geo.AnchorHandleOn();
+            //geo.AnchorHandleOn();
+            MyGeoShapeThumb.MyInsideGeoShape.MyPointReset();
+
         }
     }
 }

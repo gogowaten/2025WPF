@@ -72,12 +72,39 @@ namespace _20250405
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var width = ((double)values[0]) / 2.0;
-            var height = ((double)values[1]) / 2.0;
-            var scaleX = (double)values[2];
-            var scaleY = (double)values[3];
+            var origin = (double)values[0];
+            var width = ((double)values[1]) * origin;
+            var height = ((double)values[2]) * origin;
+            var scaleX = (double)values[3];
+            var scaleY = (double)values[4];
             ScaleTransform scale = new(scaleX, scaleY, width, height);
-            var angle = (double)values[4];
+
+            var angle = (double)values[5];
+            RotateTransform rotate = new(angle, width, height);
+            TransformGroup transformGroup = new TransformGroup();
+            transformGroup.Children.Add(scale);
+            transformGroup.Children.Add(rotate);
+            return transformGroup;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class MyConvRenderTransform2 : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var origin = (double)values[0];
+            var bounds = (Rect)values[1];
+            var width = bounds.Width * origin;
+            var height = bounds.Height * origin;
+            var scaleX = (double)values[3];
+            var scaleY = (double)values[4];
+            ScaleTransform scale = new(scaleX, scaleY, width, height);
+
+            var angle = (double)values[5];
             RotateTransform rotate = new(angle, width, height);
             TransformGroup transformGroup = new TransformGroup();
             transformGroup.Children.Add(scale);

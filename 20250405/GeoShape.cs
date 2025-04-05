@@ -12,7 +12,9 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-//using System.Security.Cryptography.Xml;
+using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Windows.Media.Imaging;
 
 
 namespace _20250405
@@ -71,11 +73,44 @@ namespace _20250405
 
 
 
-    public class GeoShape : Shape
+    public class GeoShape : Shape, INotifyPropertyChanged
     {
+        #region 必要
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void SetProperty<T>(ref T field, T value, [System.Runtime.CompilerServices.CallerMemberName] string? name = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return;
+            field = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        #endregion 必要
+
+        //private bool _isOffset;
+        //public bool IsOffset
+        //{
+        //    get => _isOffset;
+        //    set
+        //    {
+        //        SetProperty(ref _isOffset, value);
+        //        if (value)
+        //        {
+        //            MyBindActualLocate();
+        //        }
+        //        else
+        //        {
+        //            MyBindActualLocateKaijo();
+        //        }
+        //    }
+        //}
+
         public GeoShape()
         {
             MyInitializeBind();
+            Canvas.SetLeft(this, 0);
+            Canvas.SetTop(this, 0);
+
 
         }
 
@@ -85,11 +120,55 @@ namespace _20250405
         {
             //Pointsの始点と終点を外したPointCollection。始点と終点以外の線の描画に使う
             _ = SetBinding(MySegmentPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterSegmentPoints() });
-
             MyBindPen();
-            
+            //MyBindTTT();
+
+            //Loaded += GeoShape_Loaded;
         }
 
+        //private void GeoShape_Loaded(object sender, RoutedEventArgs e)
+        //{
+
+        //    //MyBindActualLocate();
+        //    //if (RenderTransform == Transform.Identity)
+        //    //{
+
+        //    //    TransformGroup group = new();
+        //    //    group.Children.Add(new RotateTransform());
+        //    //    group.Children.Add(new ScaleTransform());
+        //    //    RenderTransform = group;
+        //    //}
+        //    //else
+        //    //{
+        //    //    var neko = RenderTransform;
+        //    //}
+
+        //}
+        //private void MyBindTTT()
+        //{
+        //    SetBinding(MyOffsetLeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyRenderBoundsProperty), Converter = new MyConvOffsetLeft() });
+        //    SetBinding(MyOffsetTopProperty, new Binding() { Source = this, Path = new PropertyPath(MyRenderBoundsProperty), Converter = new MyConvOffsetTop() });
+
+
+        //}
+
+        //private void MyBindActualLocate()
+        //{
+        //    var mb = new MultiBinding() { Converter = new MyConvActualLeftForGeoShape() };
+        //    mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(Canvas.LeftProperty) });
+        //    mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyRenderBoundsProperty) });
+        //    SetBinding(Canvas.LeftProperty, mb);
+
+        //    mb = new MultiBinding() { Converter = new MyConvActualTopForGeoShape() };
+        //    mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(Canvas.TopProperty) });
+        //    mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyRenderBoundsProperty) });
+        //    SetBinding(Canvas.TopProperty, mb);
+        //}
+        //private void MyBindActualLocateKaijo()
+        //{
+        //    SetBinding(Canvas.LeftProperty, new Binding());
+        //    SetBinding(Canvas.TopProperty, new Binding());
+        //}
 
         private void MyBindPen()
         {
@@ -110,7 +189,7 @@ namespace _20250405
         }
         #endregion 初期処理
 
-
+        //描画
         protected override Geometry DefiningGeometry
         {
             get
@@ -175,6 +254,9 @@ namespace _20250405
                 ////MyBounds3 = clone.Bounds;
                 //MyRenderBounds = clone.GetRenderBounds(MyPen);
                 MyRenderBounds = geo.GetRenderBounds(MyPen);
+
+
+
                 return geo;
             }
         }
@@ -189,30 +271,45 @@ namespace _20250405
         #region 読み取り用
 
 
-        ////strokeなどPenを考慮した実際のサイズ
-        //public double MyActualWidth
-        //{
-        //    get { return (double)GetValue(MyActualWidthProperty); }
-        //    set { SetValue(MyActualWidthProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyActualWidthProperty =
-        //    DependencyProperty.Register(nameof(MyActualWidth), typeof(double), typeof(GeoShape), new PropertyMetadata(0.0));
+        public double MyOffsetLeft
+        {
+            get { return (double)GetValue(MyOffsetLeftProperty); }
+            set { SetValue(MyOffsetLeftProperty, value); }
+        }
+        public static readonly DependencyProperty MyOffsetLeftProperty =
+            DependencyProperty.Register(nameof(MyOffsetLeft), typeof(double), typeof(GeoShape), new PropertyMetadata(0.0));
 
-        //public double MyActualHeight
-        //{
-        //    get { return (double)GetValue(MyActualHeightProperty); }
-        //    set { SetValue(MyActualHeightProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyActualHeightProperty =
-        //    DependencyProperty.Register(nameof(MyActualHeight), typeof(double), typeof(GeoShape), new PropertyMetadata(0.0));
+        public double MyOffsetTop
+        {
+            get { return (double)GetValue(MyOffsetTopProperty); }
+            set { SetValue(MyOffsetTopProperty, value); }
+        }
+        public static readonly DependencyProperty MyOffsetTopProperty =
+            DependencyProperty.Register(nameof(MyOffsetTop), typeof(double), typeof(GeoShape), new PropertyMetadata(0.0));
 
-        //public Rect MyRenderTransformBounds
-        //{
-        //    get { return (Rect)GetValue(MyRenderTransformBoundsProperty); }
-        //    set { SetValue(MyRenderTransformBoundsProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyRenderTransformBoundsProperty =
-        //    DependencyProperty.Register(nameof(MyRenderTransformBounds), typeof(Rect), typeof(GeoShape), new PropertyMetadata(new Rect()));
+        public double MyActualLeft
+        {
+            get { return (double)GetValue(MyActualLeftProperty); }
+            set { SetValue(MyActualLeftProperty, value); }
+        }
+        public static readonly DependencyProperty MyActualLeftProperty =
+            DependencyProperty.Register(nameof(MyActualLeft), typeof(double), typeof(GeoShape), new PropertyMetadata(0.0));
+
+        public double MyActualTop
+        {
+            get { return (double)GetValue(MyActualTopProperty); }
+            set { SetValue(MyActualTopProperty, value); }
+        }
+        public static readonly DependencyProperty MyActualTopProperty =
+            DependencyProperty.Register(nameof(MyActualTop), typeof(double), typeof(GeoShape), new PropertyMetadata(0.0));
+
+        public bool MyIsOffset
+        {
+            get { return (bool)GetValue(MyIsOffsetProperty); }
+            set { SetValue(MyIsOffsetProperty, value); }
+        }
+        public static readonly DependencyProperty MyIsOffsetProperty =
+            DependencyProperty.Register(nameof(MyIsOffset), typeof(bool), typeof(GeoShape), new PropertyMetadata(false));
 
 
         //Strokeを考慮したBounds。Transformは考慮しないBounds
@@ -366,20 +463,21 @@ namespace _20250405
         #endregion 依存関係プロパティ
 
 
-        ///// <summary>
-        ///// RenderBoundsの更新、
-        ///// RenderBoundsはRenderTransformを変更しても更新されないので、その時用
-        ///// </summary>
-        //public void UpdateRenderBounds()
-        //{
-        //    //回転後のBounds
-        //    Geometry clone = this.DefiningGeometry.Clone();
-        //    clone.Transform = RenderTransform;
-        //    MyRenderBounds = clone.GetRenderBounds(MyPen);
-        //}
+
+
 
 
         #region 描画メソッド
+
+        /// <summary>
+        /// 角度をラジアンに変換
+        /// </summary>
+        /// <param name="degree"></param>
+        /// <returns></returns>
+        public static double DegreeToRadian(double degree)
+        {
+            return degree / 360.0 * (Math.PI * 2.0);
+        }
 
         /// <summary>
         /// ベジェ曲線部分の描画
@@ -463,14 +561,19 @@ namespace _20250405
 
         #region パフリックメソッド
 
-        /// <summary>
-        /// 角度をラジアンに変換
-        /// </summary>
-        /// <param name="degree"></param>
-        /// <returns></returns>
-        public static double DegreeToRadian(double degree)
+        public void MyPointReset()
         {
-            return degree / 360.0 * (Math.PI * 2.0);
+            double left = double.MaxValue; double top = double.MaxValue;
+            foreach (Point item in MyPoints)
+            {
+                left = Math.Min(left, item.X);
+                top = Math.Min(top, item.Y);
+            }
+            for (int i = 0; i < MyPoints.Count; i++)
+            {
+                Point poi = MyPoints[i];
+                MyPoints[i] = new Point(poi.X - left, poi.Y - top);
+            }
         }
 
         /// <summary>
@@ -557,15 +660,76 @@ namespace _20250405
 
 
     #region コンバーター
+    public class MyConvOffsetLeft : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var bounds = (Rect)value;
+            return -bounds.Left;
+        }
 
-    //public class MyConverterRenderTransformBounds : IMultiValueConverter
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class MyConvOffsetTop : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var bounds = (Rect)value;
+            return -bounds.Top;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class MyConvActualLeftForGeoShape : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var left = (double)values[0];
+            var bounds = (Rect)values[1];
+            return left - bounds.Left;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyConvActualTopForGeoShape : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var top = (double)values[0];
+            var bounds = (Rect)values[1];
+            return top - bounds.Top;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    //public class MyConvActualLeftForGeoShape : IMultiValueConverter
     //{
     //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     //    {
-    //        var renderBounds = (Rect)values[0];
-    //        var transform = (Transform)values[1];
-    //        var origin = (Point)values[2];
-    //        transform.
+    //        var flag = (bool)values[0];
+    //        var left = (double)values[1];
+    //        var bounds = (Rect)values[2];
+    //        if (flag)
+    //        {
+    //            return left - bounds.Left;
+    //        }
+    //        else { return left; }
     //    }
 
     //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -573,6 +737,27 @@ namespace _20250405
     //        throw new NotImplementedException();
     //    }
     //}
+
+    //public class MyConvActualTopForGeoShape : IMultiValueConverter
+    //{
+    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        var flag = (bool)values[0];
+    //        var top = (double)values[1];
+    //        var bounds = (Rect)values[2];
+    //        if (flag)
+    //        {
+    //            return top - bounds.Top;
+    //        }
+    //        else { return top; }
+    //    }
+
+    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
 
     public class MyConvGeoShapeBounds : IMultiValueConverter
     {
@@ -604,36 +789,7 @@ namespace _20250405
             throw new NotImplementedException();
         }
     }
-    //public class MyConvGeoShapeRenderBounds : IMultiValueConverter
-    //{
-    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-    //    {
-    //        var geo = (Geometry)values[0];
-    //        Geometry clone = geo.Clone();
-    //        var angel = (double)values[1];
-    //        var scalex=(double)values[2];
-    //        var scaley=(double)values[3];
 
-    //        var thickness=(double)values[4];
-    //        var endCap = (PenLineCap)values[5];
-    //        var beginCap =(PenLineCap)values[6];
-    //        var join=(PenLineJoin)values[7];
-    //        var miter = (double)values[8];
-    //        Pen myPen = new(Brushes.Transparent, thickness)
-    //        {
-    //            EndLineCap = endCap,
-    //            StartLineCap = beginCap,
-    //            LineJoin = join,
-    //            MiterLimit = miter,
-    //        };
-
-    //    }
-
-    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
 
     //Segment用のPointCollection生成
     //ソースに影響を与えないためにクローン作成して、その始点と終点要素を削除して返す
