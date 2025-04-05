@@ -12,13 +12,64 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Security.Cryptography.Xml;
+//using System.Security.Cryptography.Xml;
 
 
-namespace _20250403
+namespace _20250405
 {
     public enum HeadType { None = 0, Arrow, }
     public enum ShapeType { Line = 0, Bezier, }
+
+    //アンカーハンドル付きのGeoShape
+    public class GeoShapeWithAnchorHandle : GeoShape
+    {
+        public AdornerLayer MyAdornerLayer { get; set; } = null!;
+        public AnchorHandleAdorner? MyAnchorHandleAdorner { get; set; }
+        public GeoShapeWithAnchorHandle()
+        {
+
+            Loaded += GeoShapeWithAnchorHandle_Loaded;
+        }
+
+        private void GeoShapeWithAnchorHandle_Loaded(object sender, RoutedEventArgs e)
+        {
+            MyAdornerLayer = AdornerLayer.GetAdornerLayer(this);
+        }
+
+
+        #region アンカーハンドルの表示切り替え
+        public void AnchorSwitch()
+        {
+            if (MyAnchorHandleAdorner is null) { AnchorHandleOn(); }
+            else { AnchorHandleOff(); }
+        }
+        public void AnchorHandleOn()
+        {
+            if (MyAnchorHandleAdorner is null)
+            {
+                MyAnchorHandleAdorner = new(this);
+                //MyAnchorHandleAdorner.OnAnchorThumbDragCompleted += MyAnchorHandleAdorner_OnDragCompleted;
+                MyAdornerLayer.Add(MyAnchorHandleAdorner);
+                //UpdateLocateAndSize();
+                //MyParentThumb?.ReLayout3();
+            }
+        }
+        public void AnchorHandleOff()
+        {
+            if (MyAnchorHandleAdorner != null)
+            {
+                //MyAnchorHandleAdorner.OnAnchorThumbDragCompleted -= MyAnchorHandleAdorner_OnDragCompleted;
+                MyAdornerLayer.Remove(MyAnchorHandleAdorner);
+                MyAnchorHandleAdorner = null;
+                //UpdateLocateAndSize();
+                //MyParentThumb?.ReLayout3();
+            }
+        }
+        #endregion アンカーハンドルの表示切り替え
+
+    }
+
+
 
     public class GeoShape : Shape
     {
@@ -32,17 +83,25 @@ namespace _20250403
 
         private void MyInitializeBind()
         {
-            //Pointsの先頭を外したPointCollection
+            //Pointsの始点と終点を外したPointCollection。始点と終点以外の線の描画に使う
             _ = SetBinding(MySegmentPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterSegmentPoints() });
 
-            ////Penのバインド、Penは図形のBoundsを計測するために必要
-            //MultiBinding mb = new() { Converter = new MyConverterPen() };
-            //mb.Bindings.Add(MakeOneWayBind(StrokeThicknessProperty));
-            //mb.Bindings.Add(MakeOneWayBind(StrokeMiterLimitProperty));
-            //mb.Bindings.Add(MakeOneWayBind(StrokeEndLineCapProperty));
-            //mb.Bindings.Add(MakeOneWayBind(StrokeStartLineCapProperty));
-            //mb.Bindings.Add(MakeOneWayBind(StrokeLineJoinProperty));
-            //_ = SetBinding(MyPenProperty, mb);
+            MyBindPen();
+            
+        }
+
+
+        private void MyBindPen()
+        {
+            //Penのバインド、Penは図形のBoundsを計測するために必要
+            MultiBinding mb = new() { Converter = new MyConverterPen() };
+            mb.Bindings.Add(MakeOneWayBind(StrokeThicknessProperty));
+            mb.Bindings.Add(MakeOneWayBind(StrokeMiterLimitProperty));
+            mb.Bindings.Add(MakeOneWayBind(StrokeEndLineCapProperty));
+            mb.Bindings.Add(MakeOneWayBind(StrokeStartLineCapProperty));
+            mb.Bindings.Add(MakeOneWayBind(StrokeLineJoinProperty));
+            _ = SetBinding(MyPenProperty, mb);
+
         }
 
         private Binding MakeOneWayBind(DependencyProperty property)
@@ -63,12 +122,12 @@ namespace _20250403
                     Fill = Stroke;
                 }
 
-
                 StreamGeometry geo = new();
                 using (var context = geo.Open())
                 {
                     Point begin = MyPoints[0];
                     Point end = MyPoints[^1];
+                    //先端の描画
                     switch (MyHeadBeginType)
                     {
                         case HeadType.None:
@@ -79,18 +138,18 @@ namespace _20250403
                         default:
                             break;
                     }
-
+                    //終端の描画
                     switch (MyHeadEndType)
                     {
                         case HeadType.None:
                             break;
                         case HeadType.Arrow:
-                            end = DrawArrow(context, end, MyPoints[^2]);
+                            end = DrawArrow(context, end, MyPoints[^2]);//終点とその一個前
                             break;
                         default:
                             break;
                     }
-
+                    //線の描画
                     switch (MyShapeType)
                     {
                         case ShapeType.Line:
@@ -115,7 +174,7 @@ namespace _20250403
                 //clone.Transform = RenderTransform;
                 ////MyBounds3 = clone.Bounds;
                 //MyRenderBounds = clone.GetRenderBounds(MyPen);
-
+                MyRenderBounds = geo.GetRenderBounds(MyPen);
                 return geo;
             }
         }
@@ -129,23 +188,50 @@ namespace _20250403
 
         #region 読み取り用
 
-        ////サイズと位置
-        //public Rect MyRenderBounds
-        //{
-        //    get { return (Rect)GetValue(MyRenderBoundsProperty); }
-        //    set { SetValue(MyRenderBoundsProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyRenderBoundsProperty =
-        //    DependencyProperty.Register(nameof(MyRenderBounds), typeof(Rect), typeof(GeoShape), new PropertyMetadata(new Rect()));
 
-        ////サイズと位置の計算に使う
-        //public Pen MyPen
+        ////strokeなどPenを考慮した実際のサイズ
+        //public double MyActualWidth
         //{
-        //    get { return (Pen)GetValue(MyPenProperty); }
-        //    set { SetValue(MyPenProperty, value); }
+        //    get { return (double)GetValue(MyActualWidthProperty); }
+        //    set { SetValue(MyActualWidthProperty, value); }
         //}
-        //public static readonly DependencyProperty MyPenProperty =
-        //    DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(GeoShape), new PropertyMetadata(new Pen()));
+        //public static readonly DependencyProperty MyActualWidthProperty =
+        //    DependencyProperty.Register(nameof(MyActualWidth), typeof(double), typeof(GeoShape), new PropertyMetadata(0.0));
+
+        //public double MyActualHeight
+        //{
+        //    get { return (double)GetValue(MyActualHeightProperty); }
+        //    set { SetValue(MyActualHeightProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyActualHeightProperty =
+        //    DependencyProperty.Register(nameof(MyActualHeight), typeof(double), typeof(GeoShape), new PropertyMetadata(0.0));
+
+        //public Rect MyRenderTransformBounds
+        //{
+        //    get { return (Rect)GetValue(MyRenderTransformBoundsProperty); }
+        //    set { SetValue(MyRenderTransformBoundsProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyRenderTransformBoundsProperty =
+        //    DependencyProperty.Register(nameof(MyRenderTransformBounds), typeof(Rect), typeof(GeoShape), new PropertyMetadata(new Rect()));
+
+
+        //Strokeを考慮したBounds。Transformは考慮しないBounds
+        public Rect MyRenderBounds
+        {
+            get { return (Rect)GetValue(MyRenderBoundsProperty); }
+            set { SetValue(MyRenderBoundsProperty, value); }
+        }
+        public static readonly DependencyProperty MyRenderBoundsProperty =
+            DependencyProperty.Register(nameof(MyRenderBounds), typeof(Rect), typeof(GeoShape), new PropertyMetadata(new Rect()));
+
+        //サイズと位置の計算に使う
+        public Pen MyPen
+        {
+            get { return (Pen)GetValue(MyPenProperty); }
+            set { SetValue(MyPenProperty, value); }
+        }
+        public static readonly DependencyProperty MyPenProperty =
+            DependencyProperty.Register(nameof(MyPen), typeof(Pen), typeof(GeoShape), new PropertyMetadata(new Pen()));
 
         //MyPointsから作成
         public PointCollection MySegmentPoints
@@ -293,7 +379,7 @@ namespace _20250403
         //}
 
 
-        #region メソッド
+        #region 描画メソッド
 
         /// <summary>
         /// ベジェ曲線部分の描画
@@ -305,7 +391,7 @@ namespace _20250403
         {
             context.BeginFigure(begin, isFill, isClose);
             var bezier = MySegmentPoints.Clone();
-            //            List<Point> bezier = MyPoints.Skip(1).Take(MyPoints.Count - 2).ToList();
+            //List<Point> bezier = MyPoints.Skip(1).Take(MyPoints.Count - 2).ToList();
             bezier.Add(end);
             context.PolyBezierTo(bezier, true, isSmoothJoin);
 
@@ -372,7 +458,7 @@ namespace _20250403
                 (edgeSize - 1.0) * Math.Cos(lineRadian) + edge.X,
                 (edgeSize - 1.0) * Math.Sin(lineRadian) + edge.Y);
         }
-        #endregion メソッド
+        #endregion 描画メソッド
 
 
         #region パフリックメソッド
@@ -396,7 +482,7 @@ namespace _20250403
             //自身のGeometryのクローンを使う
             //自身に適用されているRenderTransformとPenをクローンに適用して
             //クローンのGetRenderBoundsで得られる
-            var geo = DefiningGeometry.Clone();
+            Geometry geo = DefiningGeometry.Clone();
             geo.Transform = RenderTransform;
             Pen myPen = new(Brushes.Transparent, StrokeThickness)
             {
@@ -416,23 +502,157 @@ namespace _20250403
 
 
 
+    /// <summary>
+    /// GeoShape用のアンカーハンドルThumb
+    /// </summary>
+    public class AnchorHandleThumb : Thumb
+    {
+        static AnchorHandleThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(AnchorHandleThumb), new FrameworkPropertyMetadata(typeof(AnchorHandleThumb)));
+        }
+        public AnchorHandleThumb()
+        {
+
+        }
+
+        #region 依存関係プロパティ
+
+
+        public double MyLeft
+        {
+            get { return (double)GetValue(MyLeftProperty); }
+            set { SetValue(MyLeftProperty, value); }
+        }
+        public static readonly DependencyProperty MyLeftProperty =
+            DependencyProperty.Register(nameof(MyLeft), typeof(double), typeof(AnchorHandleThumb),
+                new FrameworkPropertyMetadata(0.0,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public double MyTop
+        {
+            get { return (double)GetValue(MyTopProperty); }
+            set { SetValue(MyTopProperty, value); }
+        }
+        public static readonly DependencyProperty MyTopProperty =
+            DependencyProperty.Register(nameof(MyTop), typeof(double), typeof(AnchorHandleThumb),
+                new FrameworkPropertyMetadata(0.0,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public double MySize
+        {
+            get { return (double)GetValue(MySizeProperty); }
+            set { SetValue(MySizeProperty, value); }
+        }
+        public static readonly DependencyProperty MySizeProperty =
+            DependencyProperty.Register(nameof(MySize), typeof(double), typeof(AnchorHandleThumb), new PropertyMetadata(20.0));
+
+        #endregion 依存関係プロパティ
+
+    }
+
+
+    #region コンバーター
+
+    //public class MyConverterRenderTransformBounds : IMultiValueConverter
+    //{
+    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        var renderBounds = (Rect)values[0];
+    //        var transform = (Transform)values[1];
+    //        var origin = (Point)values[2];
+    //        transform.
+    //    }
+
+    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
+    public class MyConvGeoShapeBounds : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+
+            if (values[0] is not Geometry) { return new Rect(); }
+            var geo = (Geometry)parameter;
+            var clone = geo.Clone();
+
+            var thickness = (double)values[0];
+            var endCap = (PenLineCap)values[1];
+            var beginCap = (PenLineCap)values[2];
+            var join = (PenLineJoin)values[3];
+            var miter = (double)values[4];
+            Pen myPen = new(Brushes.Transparent, thickness)
+            {
+                EndLineCap = endCap,
+                StartLineCap = beginCap,
+                LineJoin = join,
+                MiterLimit = miter,
+            };
+
+            return clone.GetRenderBounds(myPen);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    //public class MyConvGeoShapeRenderBounds : IMultiValueConverter
+    //{
+    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        var geo = (Geometry)values[0];
+    //        Geometry clone = geo.Clone();
+    //        var angel = (double)values[1];
+    //        var scalex=(double)values[2];
+    //        var scaley=(double)values[3];
+
+    //        var thickness=(double)values[4];
+    //        var endCap = (PenLineCap)values[5];
+    //        var beginCap =(PenLineCap)values[6];
+    //        var join=(PenLineJoin)values[7];
+    //        var miter = (double)values[8];
+    //        Pen myPen = new(Brushes.Transparent, thickness)
+    //        {
+    //            EndLineCap = endCap,
+    //            StartLineCap = beginCap,
+    //            LineJoin = join,
+    //            MiterLimit = miter,
+    //        };
+
+    //    }
+
+    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
 
     //Segment用のPointCollection生成
-    //ソースに影響を与えないためにクローン作成して、その先頭要素を削除して返す
+    //ソースに影響を与えないためにクローン作成して、その始点と終点要素を削除して返す
     public class MyConverterSegmentPoints : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is PointCollection pc && pc.Count > 0)
+            if (value is PointCollection pc)
             {
-                var clone = pc.Clone();
-                clone.RemoveAt(0);
-                return clone;
+                if (pc.Count > 1)
+                {
+                    var clone = pc.Clone();
+                    clone.RemoveAt(0);
+                    clone.RemoveAt(clone.Count - 1);
+                    return clone;
+                }
+                return pc;
             }
-            else
-            {
-                return new PointCollection();
-            }
+            return new PointCollection();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -441,5 +661,31 @@ namespace _20250403
         }
     }
 
+    //Penの生成、各種プロパティも反映
+    public class MyConverterPen : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var thick = (double)values[0];
+            var miter = (double)values[1];
+            var end = (PenLineCap)values[2];
+            var sta = (PenLineCap)values[3];
+            var join = (PenLineJoin)values[4];
+            Pen result = new(Brushes.Transparent, thick)
+            {
+                EndLineCap = end,
+                StartLineCap = sta,
+                LineJoin = join,
+                MiterLimit = miter
+            };
+            return result;
+        }
 
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    #endregion コンバーター
 }

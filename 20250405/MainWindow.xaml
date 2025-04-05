@@ -1,0 +1,61 @@
+﻿<Window x:Class="_20250405.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_20250405"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=local:GeoShapeThumb}"
+        Title="MainWindow" Height="367" Width="602">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
+
+    <Canvas x:Name="MyCanvas">
+      <Polyline x:Name="MyShape" Stroke="Red" StrokeThickness="40"
+                Points="00,0,200,0, 100,30"
+                RenderTransformOrigin="0.5,0.5">
+        <Polyline.RenderTransform>
+          <RotateTransform Angle="45"/>
+        </Polyline.RenderTransform>
+      </Polyline>
+      <local:GeoShapeWithAnchorHandle x:Name="geo" MyPoints="100,0,300,00" Canvas.Left="100" Canvas.Top="100"
+                      StrokeThickness="20" Stroke="Blue"
+                      MyHeadBeginType="None" MyHeadEndType="Arrow" MyShapeType="Line"/>
+    </Canvas>
+
+    <StackPanel Grid.Column="1" DataContext="{Binding}">
+      <GroupBox Header="GeoShapeThumb">
+        <StackPanel>
+          <TextBlock Text="{Binding MyInsideElementRenderBounds, StringFormat=InsideBounds {0:0}}"/>
+          <TextBlock Text="{Binding ActualHeight, StringFormat=ActualHeight 0}"/>
+          <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth 0}"/>
+          <TextBlock Text="{Binding MyActualLeft, StringFormat=MyActualLeft 0}"/>
+          <TextBlock Text="{Binding MyActualTop, StringFormat=MyActualTop 0}"/>
+          <TextBlock Text="{Binding MyInsideElement, StringFormat= 0}"/>
+          <TextBlock Text="{Binding MyInsideElementRenderBounds, StringFormat= MyInsideBounds {0:0}}"/>
+
+        </StackPanel>
+      </GroupBox>
+      <GroupBox Header="InsideElement">
+        <StackPanel DataContext="{Binding MyItemData}">
+          <TextBlock Text="{Binding MyLeft, StringFormat=MyLeft {0:0}}"/>
+          <TextBlock Text="{Binding MyTop, StringFormat=MyTop {0:0}}"/>
+          <TextBlock Text="{Binding MyPoints, StringFormat=Poi {0:0}}"/>
+        </StackPanel>
+      </GroupBox>
+      <StackPanel DataContext="{Binding ElementName=MyShape}">
+        <TextBlock Text="{Binding ActualHeight, StringFormat=ActualHeight {0:0}}"/>
+        <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth {0:0}}"/>
+      </StackPanel>
+      <GroupBox Header="geo">
+        <StackPanel DataContext="{Binding ElementName=geo}">
+          <TextBlock Text="{Binding MyRenderBounds, StringFormat=MyRenderBounds {0:0 }}"/>
+        </StackPanel>
+      </GroupBox>
+      <Button x:Name="Test" Content="test" Click="Test_Click"/>
+    </StackPanel>
+  </Grid>
+</Window>
