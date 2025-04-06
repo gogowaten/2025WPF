@@ -1,3 +1,11 @@
+# 20250406_GeometryBoundsTest3
+https://github.com/gogowaten/2025WPF/tree/main/20250406_GeometryBoundsTest3<br>
+![20250406_170049](https://github.com/user-attachments/assets/e45c3dfd-33da-49be-a26c-6976e91ef4eb)<br>
+回転した図形の見た目上でのBounds取得<br>
+<br><br><br>
+
+
+
 # 20250406_GeometryBoundsTest2
 https://github.com/gogowaten/2025WPF/tree/main/20250406_GeometryBoundsTest2<br>
 ![20250406_154627](https://github.com/user-attachments/assets/7ff23681-ed7c-4e72-bc02-0d4f87b5dabe)<br>
