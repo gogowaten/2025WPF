@@ -18,7 +18,7 @@ namespace _20250405
 {
     public class GeoShapeThumb : KisoThumb
     {
-        
+
         static GeoShapeThumb()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoShapeThumb), new FrameworkPropertyMetadata(typeof(GeoShapeThumb)));
@@ -47,9 +47,12 @@ namespace _20250405
         /// </summary>
         private void MyBindInsideElementLocate()
         {
-            BindingOperations.SetBinding(MyInsideElement, Canvas.LeftProperty, new Binding(nameof(MyInsideGeoShape.MyRenderBounds)) { Source = MyInsideGeoShape, Converter = new MyConvInsideElementLeft() });
-            BindingOperations.SetBinding(MyInsideElement, Canvas.TopProperty, new Binding(nameof(MyInsideGeoShape.MyRenderBounds)) { Source = MyInsideGeoShape, Converter = new MyConvInsideElementTop() });
-            
+            BindingOperations.SetBinding(MyInsideElement, Canvas.LeftProperty, new Binding() { Source = this, Converter = new MyConvInsideElementLeft(), Path = new PropertyPath(MyInsideElementRenderTransformBoundsProperty) });
+            BindingOperations.SetBinding(MyInsideElement, Canvas.TopProperty, new Binding() { Source = this, Converter = new MyConvInsideElementTop(), Path = new PropertyPath(MyInsideElementRenderTransformBoundsProperty) });
+
+            //BindingOperations.SetBinding(MyInsideElement, Canvas.LeftProperty, new Binding(nameof(MyInsideGeoShape.MyRenderBounds)) { Source = MyInsideGeoShape, Converter = new MyConvInsideElementLeft() });
+            //BindingOperations.SetBinding(MyInsideElement, Canvas.TopProperty, new Binding(nameof(MyInsideGeoShape.MyRenderBounds)) { Source = MyInsideGeoShape, Converter = new MyConvInsideElementTop() });
+
 
         }
 
@@ -74,13 +77,23 @@ namespace _20250405
 
         /// <summary>
         /// 中の要素の回転拡縮後Bounds取得用。これを元に自身の位置とサイズを決める
+        /// GeoShapeではBoundsからじゃなくて、Geometryから求める
         /// </summary>
         private void MyBindInsideElementRenderTransformBounds()
         {
-            var mb = new MultiBinding() { Converter = new MyConvRenderTransormBounds(), ConverterParameter = MyInsideElement };
-            mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(RenderTransformProperty) });
-            mb.Bindings.Add(new Binding(nameof(MyInsideGeoShape.MyRenderBounds.Width)) { Source = MyInsideGeoShape.MyRenderBounds });
-            mb.Bindings.Add(new Binding(nameof(MyInsideGeoShape.MyRenderBounds.Height)) { Source = MyInsideGeoShape.MyRenderBounds });
+
+            var mb = new MultiBinding() { Converter = new MyConvRenderTransormBoundsForGeoShape(), ConverterParameter = MyInsideElement };
+
+
+            mb.Bindings.Add(new Binding(nameof(MyInsideGeoShape.RenderedGeometry)) { Source = MyInsideGeoShape });
+            mb.Bindings.Add(new Binding(nameof(ItemData.MyAngle)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding(nameof(ItemData.MyScaleX)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding(nameof(ItemData.MyScaleY)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding(nameof(ItemData.MyTransformOrigin)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding()
+            { Source = MyInsideGeoShape, Path = new PropertyPath(GeoShape.MyPenProperty) });
+            mb.Bindings.Add(new Binding()
+            { Source = MyInsideGeoShape, Path = new PropertyPath(GeoShape.MyRenderBoundsProperty) });
 
             SetBinding(MyInsideElementRenderTransformBoundsProperty, mb);
         }
@@ -92,17 +105,17 @@ namespace _20250405
         {
             //中心で回転拡縮したいので、縦横サイズも必要
             var mb = new MultiBinding() { Converter = new MyConvRenderTransform() };
+
             mb.Bindings.Add(new Binding(nameof(ItemData.MyTransformOrigin)) { Source = MyItemData });
-            mb.Bindings.Add(new Binding(nameof(MyInsideGeoShape.MyRenderBounds.Width)) { Source = MyInsideGeoShape.MyRenderBounds });
-            mb.Bindings.Add(new Binding(nameof(MyInsideGeoShape.MyRenderBounds.Height)) { Source = MyInsideGeoShape.MyRenderBounds });
-            //mb.Bindings.Add(new Binding(nameof(MyInsideGeoShape.MyRenderBounds)) { Source = MyInsideGeoShape });
-
-
+            mb.Bindings.Add(new Binding(nameof(MyInsideGeoShape.MyRenderBounds.Width))
+            { Source = MyInsideGeoShape.MyRenderBounds });
+            mb.Bindings.Add(new Binding(nameof(MyInsideGeoShape.MyRenderBounds.Height))
+            { Source = MyInsideGeoShape.MyRenderBounds });
             mb.Bindings.Add(new Binding(nameof(ItemData.MyScaleX)) { Source = MyItemData });
             mb.Bindings.Add(new Binding(nameof(ItemData.MyScaleY)) { Source = MyItemData });
             mb.Bindings.Add(new Binding(nameof(ItemData.MyAngle)) { Source = MyItemData });
-            MyInsideElement.SetBinding(RenderTransformProperty, mb);
 
+            MyInsideElement.SetBinding(RenderTransformProperty, mb);
         }
 
 

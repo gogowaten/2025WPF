@@ -56,7 +56,7 @@
                               MyIsOffset="True"
                               MyPoints="{Binding MyPoints}"
                               Stroke="Red"
-                              StrokeThickness="20"
+                              StrokeThickness="40"
                               MyHeadEndType="Arrow"/>
               <Rectangle x:Name="waku"
                          DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"

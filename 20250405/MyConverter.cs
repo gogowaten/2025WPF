@@ -73,17 +73,18 @@ namespace _20250405
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             var origin = (double)values[0];
-            var width = ((double)values[1]) * origin;
-            var height = ((double)values[2]) * origin;
+            var width = (double)values[1];
+            var height = (double)values[2];
             var scaleX = (double)values[3];
             var scaleY = (double)values[4];
-            ScaleTransform scale = new(scaleX, scaleY, width, height);
-
             var angle = (double)values[5];
-            RotateTransform rotate = new(angle, width, height);
-            TransformGroup transformGroup = new TransformGroup();
-            transformGroup.Children.Add(scale);
-            transformGroup.Children.Add(rotate);
+
+            var centerX = width * origin;
+            var centerY = height * origin;
+
+            TransformGroup transformGroup = new();
+            transformGroup.Children.Add(new RotateTransform(angle, centerX, centerY));
+            transformGroup.Children.Add(new ScaleTransform(scaleX, scaleY, centerX, centerY));
             return transformGroup;
         }
 
@@ -92,23 +93,23 @@ namespace _20250405
             throw new NotImplementedException();
         }
     }
+
     public class MyConvRenderTransform2 : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             var origin = (double)values[0];
             var bounds = (Rect)values[1];
-            var width = bounds.Width * origin;
-            var height = bounds.Height * origin;
             var scaleX = (double)values[3];
             var scaleY = (double)values[4];
-            ScaleTransform scale = new(scaleX, scaleY, width, height);
-
             var angle = (double)values[5];
-            RotateTransform rotate = new(angle, width, height);
-            TransformGroup transformGroup = new TransformGroup();
-            transformGroup.Children.Add(scale);
-            transformGroup.Children.Add(rotate);
+
+            var centerX = bounds.Width * origin;
+            var centerY = bounds.Height * origin;
+
+            TransformGroup transformGroup = new();
+            transformGroup.Children.Add(new RotateTransform(angle, centerX, centerY));
+            transformGroup.Children.Add(new ScaleTransform(scaleX, scaleY, centerX, centerY));
             return transformGroup;
         }
 
@@ -117,6 +118,40 @@ namespace _20250405
             throw new NotImplementedException();
         }
     }
+
+
+    public class MyConvRenderTransormBoundsForGeoShape : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+
+            var geo = (Geometry)values[0];
+            var angle = (double)values[1];
+            var scaleX = (double)values[2];
+            var scaleY = (double)values[3];
+            var origin = (double)values[4];
+            var pen = (Pen)values[5];
+            var bounds = (Rect)values[6];
+            var centerX = bounds.Width * origin;
+            var centerY = bounds.Height * origin;
+            //var centerX = (bounds.Left + bounds.Width) * origin;
+            //var centerY = (bounds.Top + bounds.Height) * origin;
+
+            TransformGroup transformGroup = new();
+            transformGroup.Children.Add(new RotateTransform(angle, centerX, centerY));
+            transformGroup.Children.Add(new ScaleTransform(scaleX, scaleY));
+            geo.Transform = transformGroup;
+            var result = geo.GetRenderBounds(pen);
+            result.Offset(-bounds.Left, -bounds.Top);
+            return result;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class MyConvRenderTransormBounds : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -134,4 +169,5 @@ namespace _20250405
             throw new NotImplementedException();
         }
     }
+
 }

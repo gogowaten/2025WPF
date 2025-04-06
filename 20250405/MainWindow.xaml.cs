@@ -32,8 +32,8 @@ namespace _20250405
             {
                 MyLeft = 100,
                 MyTop = 100,
-                MyPoints = [new Point(100, 0), new Point(200, 0)],
-                MyAngle = 0,
+                MyPoints = [new Point(00, 0), new Point(200, 0)],
+                MyAngle = 20,
             };
 
             MyGeoShapeThumb = new(data);
@@ -45,8 +45,12 @@ namespace _20250405
         private void Test_Click(object sender, RoutedEventArgs e)
         {
             //geo.AnchorHandleOn();
-            MyGeoShapeThumb.MyInsideGeoShape.MyPointReset();
-
+            //MyGeoShapeThumb.MyInsideGeoShape.MyPointReset();
+            Geometry geo =MyGeoShapeThumb.MyInsideGeoShape.RenderedGeometry;
+            RotateTransform rotate = new(20);
+            var clone = geo.Clone();
+            geo.Transform = rotate;
+           var bounds = geo.GetRenderBounds(MyGeoShapeThumb.MyInsideGeoShape.MyPen);
         }
     }
 }

@@ -14,13 +14,52 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-      <Polyline x:Name="MyShape" Stroke="Red" StrokeThickness="40"
-                Points="00,0,200,0, 100,30"
-                RenderTransformOrigin="0.5,0.5">
+      <Polyline Stroke="Red" StrokeThickness="100" Opacity="0.5"
+                Points="0,0,100,0"/>
+      
+      <Polyline x:Name="MyShape" Stroke="Red" StrokeThickness="100" Opacity="0.5"
+                Points="0,0,100,0"
+                RenderTransformOrigin="0.5,0.5"
+                >
         <Polyline.RenderTransform>
-          <RotateTransform Angle="45"/>
+          <RotateTransform Angle="40"/>
         </Polyline.RenderTransform>
       </Polyline>
+      <Polyline Stroke="Blue" StrokeThickness="100" Opacity="0.5"
+                Points="0,0,100,0"                
+                >
+        <Polyline.RenderTransform>
+          <RotateTransform Angle="40" CenterX="50" CenterY="0"/>
+        </Polyline.RenderTransform>
+      </Polyline>
+      
+      <Polyline Stroke="Red" StrokeThickness="100" Opacity="0.5"
+                Points="200,0,300,0"/>
+      
+      <Polyline Stroke="Red" StrokeThickness="100" Opacity="0.5"
+                Points="200,0,300,0"
+                RenderTransformOrigin="0.5,0.5"
+                >
+        <Polyline.RenderTransform>
+          <RotateTransform Angle="40"/>
+        </Polyline.RenderTransform>
+      </Polyline>
+      <Polyline Stroke="Blue" StrokeThickness="100" Opacity="0.5"
+                Points="200,0,300,0"                
+                >
+        <Polyline.RenderTransform>
+          <RotateTransform Angle="40" CenterX="50" CenterY="0"/>
+        </Polyline.RenderTransform>
+      </Polyline>
+      <Polyline Stroke="Blue" StrokeThickness="100" Opacity="0.5"
+                Points="200,0,300,0"                
+                >
+        <Polyline.RenderTransform>
+          <RotateTransform Angle="40" CenterX="250" CenterY="0"/>
+        </Polyline.RenderTransform>
+      </Polyline>
+      
+      
       <local:GeoShapeWithAnchorHandle
         x:Name="geo" MyPoints="100,0,200,00"
         Canvas.Left="100" Canvas.Top="100"
@@ -34,6 +73,8 @@
           </TransformGroup>
         </local:GeoShapeWithAnchorHandle.RenderTransform>
       </local:GeoShapeWithAnchorHandle>
+      <Line Stroke="Black" X1="100" Y1="100" X2="300" Y2="100"/>
+      <Line Stroke="Black" X1="200" Y1="0" X2="200" Y2="200"/>
     </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding}">

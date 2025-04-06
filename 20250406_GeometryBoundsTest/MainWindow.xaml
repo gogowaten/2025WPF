@@ -1,0 +1,88 @@
+﻿<Window x:Class="_20250406_GeometryBoundsTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_20250406_GeometryBoundsTest"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="367" Width="602">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="250"/>
+    </Grid.ColumnDefinitions>
+
+    <Canvas x:Name="MyCanvas">
+      <Canvas.Resources>
+        <Style x:Key="rectangle" TargetType="Rectangle">
+          <Setter Property="Width" Value="100"/>
+          <Setter Property="Height" Value="100"/>
+          <Setter Property="StrokeThickness" Value="4"/>
+        </Style>
+        <Style x:Key="rectangle1" TargetType="Rectangle" BasedOn="{StaticResource rectangle}">
+          <Setter Property="RenderTransform">
+            <Setter.Value>
+              <RotateTransform Angle="45"/>
+            </Setter.Value>
+          </Setter>
+        </Style>
+        <Style x:Key="rectangle2" TargetType="Rectangle" BasedOn="{StaticResource rectangle1}">
+          <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+        </Style>
+
+        <Style x:Key="poly" TargetType="Polyline">
+          <Setter Property="Canvas.Left" Value="200"/>
+          <Setter Property="Points" Value="0,0,100,0"/>
+          <Setter Property="StrokeThickness" Value="100"/>
+          <Setter Property="Opacity" Value="0.5"/>
+        </Style>
+        <Style x:Key="poly1" TargetType="Polyline" BasedOn="{StaticResource poly}">
+          <Setter Property="RenderTransform">
+            <Setter.Value>
+              <RotateTransform Angle="45"/>
+            </Setter.Value>
+          </Setter>
+        </Style>
+        <Style x:Key="poly2" TargetType="Polyline" BasedOn="{StaticResource poly1}">
+          <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+        </Style>
+
+        <Style x:Key="poly3" TargetType="Polyline" BasedOn="{StaticResource poly}">
+          <Setter Property="RenderTransform">
+            <Setter.Value>
+              <RotateTransform Angle="45" CenterX="50" CenterY="0"/>
+            </Setter.Value>
+          </Setter>
+        </Style>
+      </Canvas.Resources>
+      <Rectangle Style="{StaticResource rectangle}" Stroke="DodgerBlue"/>
+      <Rectangle Style="{StaticResource rectangle1}" Stroke="Red"/>
+      <Rectangle Style="{StaticResource rectangle2}" Stroke="Gold"/>
+      <Polyline Style="{StaticResource poly}" Stroke="DodgerBlue" Opacity="1.0"/>
+      <Polyline Style="{StaticResource poly1}" Stroke="Red"/>
+      <Polyline Style="{StaticResource poly2}" Stroke="Gold"/>
+      <Polyline Style="{StaticResource poly3}" Stroke="Green"/>
+    </Canvas>
+
+    <StackPanel Grid.Column="1">
+      <TextBlock TextWrapping="Wrap">
+        Geometry系の要素を中心を軸に回転したい、<LineBreak/>
+        回転角度は45度を指定<LineBreak/>
+        四角枠はRectangleで比較のための要素、<LineBreak/>
+        塗りつぶしの四角はGeometry系の一種でPolyLine<LineBreak/>
+        <LineBreak/>
+        青が回転なしの元の状態<LineBreak/>
+        赤はRotateTransformのAngleに45度を指定<LineBreak/>
+        黄色は赤に加え、RenderTransformOriginに0.5,0.5を指定<LineBreak/>
+        緑は赤に加え、RotateTransformのCenterXとYに適当な値を指定で、これが求める結果<LineBreak/>
+        <LineBreak/>
+        RenderTransformOriginに0.5,0.5を指定した場合(黄色)<LineBreak/>
+        Rectangle(黄色枠)は期待通り中心を軸に回転<LineBreak/>
+        PolyLine(黄色四角)はズレてしまう<LineBreak/>
+        PolyLine(赤色四角)もなんか違う<LineBreak/>
+        PolyLine(緑色四角)は期待通りだけど、<LineBreak/>
+        RotateTransformのCenterXとYに適当な値を指定する必要がある<LineBreak/>
+      </TextBlock>
+    </StackPanel>
+  </Grid>
+</Window>
