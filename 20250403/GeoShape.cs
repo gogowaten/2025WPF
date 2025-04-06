@@ -415,24 +415,24 @@ namespace _20250403
     }
 
 
-
-
     //Segment用のPointCollection生成
-    //ソースに影響を与えないためにクローン作成して、その先頭要素を削除して返す
+    //ソースに影響を与えないためにクローン作成して、その始点と終点要素を削除して返す
     public class MyConverterSegmentPoints : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is PointCollection pc && pc.Count > 0)
+            if (value is PointCollection pc)
             {
-                var clone = pc.Clone();
-                clone.RemoveAt(0);
-                return clone;
+                if (pc.Count > 1)
+                {
+                    var clone = pc.Clone();
+                    clone.RemoveAt(0);
+                    clone.RemoveAt(clone.Count - 1);
+                    return clone;
+                }
+                return pc;
             }
-            else
-            {
-                return new PointCollection();
-            }
+            return new PointCollection();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -440,6 +440,8 @@ namespace _20250403
             throw new NotImplementedException();
         }
     }
+
+
 
 
 }
