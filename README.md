@@ -2,6 +2,7 @@
 https://github.com/gogowaten/2025WPF/tree/main/20250406_GeometryBoundsTest3<br>
 ![20250406_170049](https://github.com/user-attachments/assets/e45c3dfd-33da-49be-a26c-6976e91ef4eb)<br>
 回転した図形の見た目上でのBounds取得<br>
+赤図形を45度回転したのが青図形で、青枠がそのBounds<br>
 <br><br><br>
 
 
