@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.NetworkInformation;
-using System.Text;
+﻿using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace _20250406
+namespace _20250406_GeometryBoundsTest3
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -26,6 +24,12 @@ namespace _20250406
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //図形の見た目上での中心を軸に回転するRotateTransformを作成(取得)する
+            Rect geometryBounds = MyPoly.RenderedGeometry.Bounds;
+            double boundsCenterX = geometryBounds.Width * 0.5;//0.5で中心になる。0なら左上になる
+            double centerX = boundsCenterX + geometryBounds.Left;
+            double boundsCenterY = geometryBounds.Height * 0.5;
+            double centerY = boundsCenterY + geometryBounds.Top;
+            //RotateTransform rotate = new(45, centerX, centerY);
             RotateTransform rotate = GetRotateTransform(MyPoly, 45, 0.5);
             MyPoly.RenderTransform = rotate;
 
@@ -38,9 +42,9 @@ namespace _20250406
             Canvas.SetLeft(MyRect, transformedBounds.Left);
             Canvas.SetTop(MyRect, transformedBounds.Top);
 
-            Pen myPen = new(Brushes.Transparent, MyPoly.StrokeThickness);
-            Rect geometryRenderBounds = MyPoly.RenderedGeometry.GetRenderBounds(myPen);
-            Rect これは違う = rotate.TransformBounds(geometryRenderBounds);
+            //Pen myPen = new(Brushes.Transparent, MyPoly.StrokeThickness);
+            //Rect geometryRenderBounds = MyPoly.RenderedGeometry.GetRenderBounds(myPen);
+            //Rect これは違う = rotate.TransformBounds(geometryRenderBounds);
         }
 
         /// <summary>
