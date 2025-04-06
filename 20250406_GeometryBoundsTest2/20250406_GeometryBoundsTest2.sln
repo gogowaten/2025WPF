@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "20250406_GeometryBoundsTest2", "20250406_GeometryBoundsTest2.csproj", "{B25154C6-25A8-446C-B04E-571AB4C0FDDA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B25154C6-25A8-446C-B04E-571AB4C0FDDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B25154C6-25A8-446C-B04E-571AB4C0FDDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B25154C6-25A8-446C-B04E-571AB4C0FDDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B25154C6-25A8-446C-B04E-571AB4C0FDDA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E24EB62-579E-4D1B-AB70-8B85BCE2C652}
+	EndGlobalSection
+EndGlobal

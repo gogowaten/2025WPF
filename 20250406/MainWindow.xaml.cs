@@ -29,7 +29,7 @@ namespace _20250406
             double centerX = boundsCenterX + geometryBounds.Left;
             double boundsCenterY = geometryBounds.Height * 0.5;
             double centerY = boundsCenterY + geometryBounds.Top;
-            RotateTransform rotate = new(90, centerX, centerY);
+            RotateTransform rotate = new(45, centerX, centerY);
             MyPoly.RenderTransform = rotate;
 
             //作成したRotateTransformを利用して
