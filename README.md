@@ -1,3 +1,11 @@
+# 20250406_GeometryBoundsTest2
+https://github.com/gogowaten/2025WPF/tree/main/20250406_GeometryBoundsTest2<br>
+![20250406_154627](https://github.com/user-attachments/assets/7ff23681-ed7c-4e72-bc02-0d4f87b5dabe)<br>
+Geometry図形の見た目上での中心を軸に回転するときの、軸座標を求める<br>
+<br><br><br>
+
+
+
 # 20250406_GeometryBoundsTest
 https://github.com/gogowaten/2025WPF/tree/main/20250406_GeometryBoundsTest<br>
 ![20250406_131918_](https://github.com/user-attachments/assets/b6842ccf-5bf1-499a-a1ea-fa35cb3d9361)
