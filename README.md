@@ -1,3 +1,10 @@
+# 20250406_GeometryBoundsTest
+https://github.com/gogowaten/2025WPF/tree/main/20250406_GeometryBoundsTest<br>
+![20250406_131918](https://github.com/user-attachments/assets/3e6860c7-f0fd-459a-aab9-74531ead5dcc)
+<br><br><br>
+
+
+
 # 20250404
 **仕切り直しになるかも**<br>
 バインド設定と依存関係プロパティも最初から作り直し<br>
