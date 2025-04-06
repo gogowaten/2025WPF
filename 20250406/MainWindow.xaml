@@ -8,8 +8,8 @@
         Title="MainWindow" Height="367" Width="602">
   <Window.Resources>
     <Style x:Key="poly" TargetType="Polyline">
-      <Setter Property="Points" Value="100,100,200,100"/>
-      <!--<Setter Property="Points" Value="100,100,200,100,100,200,200,200"/>-->
+      <!--<Setter Property="Points" Value="100,100,200,100"/>-->
+      <Setter Property="Points" Value="100,100,200,100,100,200,200,200"/>
       <Setter Property="Stroke" Value="Red"/>
       <Setter Property="StrokeThickness" Value="40"/>
       <Setter Property="Opacity" Value="0.2"/>
@@ -30,6 +30,7 @@
       </Polyline>
       <Polyline x:Name="MyPoly" Style="{StaticResource poly}"
                 Stroke="Blue"/>
+      <Rectangle x:Name="MyRect" Stroke="Blue" StrokeThickness="1.0"/>
     </Canvas>
 
     <StackPanel Grid.Column="1">
