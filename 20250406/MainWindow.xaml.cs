@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Windows;
@@ -21,10 +22,43 @@ namespace _20250406
         public MainWindow()
         {
             InitializeComponent();
+            Test1();
         }
+
+        private void Test1()
+        {
+            Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            MyRectGeometryBounds.SetBinding(WidthProperty, new Binding(nameof(Shape.RenderedGeometry.Bounds.Width)) { Source = MyPoly.RenderedGeometry.Bounds });
+            MyRectGeometryBounds.SetBinding(HeightProperty, new Binding(nameof(Shape.RenderedGeometry.Bounds.Height)) { Source = MyPoly.RenderedGeometry.Bounds });
+            SetBinding(MyGeometryBoundsProperty,new Binding() { Source=MyPoly ,Converter=new MyConvBounds()});
+
+
+        }
+
+
+        public Geometry MyGeometry
+        {
+            get { return (Geometry)GetValue(MyGeometryProperty); }
+            set { SetValue(MyGeometryProperty, value); }
+        }
+        public static readonly DependencyProperty MyGeometryProperty =
+            DependencyProperty.Register(nameof(MyGeometry), typeof(Geometry), typeof(MainWindow), new PropertyMetadata(null));
+
+        public Rect MyGeometryBounds
+        {
+            get { return (Rect)GetValue(MyGeometryBoundsProperty); }
+            set { SetValue(MyGeometryBoundsProperty, value); }
+        }
+        public static readonly DependencyProperty MyGeometryBoundsProperty =
+            DependencyProperty.Register(nameof(MyGeometryBounds), typeof(Rect), typeof(MainWindow), new PropertyMetadata(new Rect()));
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var neko = MyGeometryBounds;
             //図形の見た目上での中心を軸に回転するRotateTransformを作成(取得)する
             RotateTransform rotate = GetRotateTransform(MyPoly, 45, 0.5);
             MyPoly.RenderTransform = rotate;
@@ -72,6 +106,20 @@ namespace _20250406
             var clone = target.RenderedGeometry.Clone();
             clone.Transform = henkei;
             return clone.GetRenderBounds(new Pen(Brushes.Transparent, target.StrokeThickness));
+        }
+    }
+
+    public class MyConvBounds : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var target    =(Shape)value;
+            return target.RenderedGeometry.Bounds;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

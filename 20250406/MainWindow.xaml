@@ -23,18 +23,16 @@
 
     <Canvas x:Name="MyCanvas">
       <Polyline x:Name="MyPoly1" Style="{StaticResource poly}"/>
-      <Polyline Style="{StaticResource poly}">
-        <Polyline.RenderTransform>
-          <RotateTransform Angle="45" CenterX="180"/>
-        </Polyline.RenderTransform>
-      </Polyline>
+      
       <Polyline x:Name="MyPoly" Style="{StaticResource poly}"
                 Stroke="Blue"/>
+      <Rectangle x:Name="MyRectGeometryBounds" Stroke="Blue" StrokeThickness="1.0"/>
       <Rectangle x:Name="MyRect" Stroke="Blue" StrokeThickness="1.0"/>
     </Canvas>
 
     <StackPanel Grid.Column="1">
       <Button Content="test1" Click="Button_Click"/>
+      <Slider x:Name="MySliderAngle"/>
     </StackPanel>
   </Grid>
 </Window>
