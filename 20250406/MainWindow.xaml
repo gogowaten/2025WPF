@@ -14,6 +14,14 @@
       <Setter Property="StrokeThickness" Value="40"/>
       <Setter Property="Opacity" Value="0.2"/>
     </Style>
+    <Style x:Key="geo" TargetType="local:GeoShape">
+      <!--<Setter Property="MyPoints" Value="100,100,200,100"/>-->
+      <Setter Property="MyPoints" Value="100,100,200,100,100,200,200,200"/>
+      <Setter Property="Stroke" Value="Red"/>
+      <Setter Property="StrokeThickness" Value="40"/>
+      <Setter Property="Opacity" Value="0.2"/>
+    </Style>
+
   </Window.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
@@ -22,17 +30,53 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-      <Polyline x:Name="MyPoly1" Style="{StaticResource poly}"/>
-      
-      <Polyline x:Name="MyPoly" Style="{StaticResource poly}"
-                Stroke="Blue"/>
-      <Rectangle x:Name="MyRectGeometryBounds" Stroke="Blue" StrokeThickness="1.0"/>
-      <Rectangle x:Name="MyRect" Stroke="Blue" StrokeThickness="1.0"/>
+      <local:GeoShape x:Name="MyPoly1" Style="{StaticResource geo}"/>
+      <local:GeoShape x:Name="MyShape" Style="{StaticResource geo}"
+                Stroke="Blue"
+                      MyCenterX="{Binding ElementName=MySliderCenter, Path=Value}"
+                      MyCenterY="{Binding ElementName=MySliderCenter, Path=Value}"
+                      MyScaleX="{Binding ElementName=MySliderScale, Path=Value}"
+                      MyScaleY="{Binding ElementName=MySliderScale, Path=Value}"
+                      
+                      />
+
+      <Rectangle x:Name="MyRect" Stroke="Blue" StrokeThickness="1.0"
+                 DataContext="{Binding ElementName=MyShape, Path=MyShapeTransformedBounds}"
+                 Width="{Binding Width}"
+                 Height="{Binding Height}"
+                 Canvas.Left="{Binding Left}"
+                 Canvas.Top="{Binding Top}"
+                 />
     </Canvas>
 
     <StackPanel Grid.Column="1">
       <Button Content="test1" Click="Button_Click"/>
-      <Slider x:Name="MySliderAngle"/>
+      <GroupBox DataContext="{Binding ElementName=MyShape}">
+        <StackPanel>
+          <TextBlock Text="{Binding MyShapeTransformedBounds.Left, StringFormat=Left {0:0}}"/>
+          <TextBlock Text="{Binding MyShapeTransformedBounds.Top, StringFormat=Top {0:0}}"/>
+          <TextBlock Text="{Binding MyShapeTransformedBounds.Width, StringFormat=Width {0:0}}"/>
+          <TextBlock Text="{Binding MyShapeTransformedBounds.Height, StringFormat=Height {0:0}}"/>
+          <UniformGrid Columns="2">
+            <Slider x:Name="MySliderAngle" Value="{Binding MyAngle}" Minimum="0" Maximum="360"
+                  TickFrequency="10" IsSnapToTickEnabled="True"/>
+            <TextBlock Text="{Binding MyAngle, StringFormat=Angle {0:0}}"/>
+
+            <Slider x:Name="MySliderCenter" Value="{Binding MyCenterX}" Minimum="0.0" Maximum="1.0"
+                  TickFrequency="0.1" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"/>
+            <TextBlock Text="{Binding MyCenterX, StringFormat=Center {0:0.0}}"/>
+
+            <Slider x:Name="MySliderScale" Value="1.0" Minimum="0.0" Maximum="2.0"
+                  TickFrequency="0.1" IsSnapToTickEnabled="True" IsMoveToPointEnabled="False"/>
+            <TextBlock Text="{Binding MyScaleX, StringFormat=Scale {0:0.00}}"/>
+          </UniformGrid>
+
+
+
+
+
+        </StackPanel>
+      </GroupBox>
     </StackPanel>
   </Grid>
 </Window>

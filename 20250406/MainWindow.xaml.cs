@@ -32,9 +32,6 @@ namespace _20250406
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            MyRectGeometryBounds.SetBinding(WidthProperty, new Binding(nameof(Shape.RenderedGeometry.Bounds.Width)) { Source = MyPoly.RenderedGeometry.Bounds });
-            MyRectGeometryBounds.SetBinding(HeightProperty, new Binding(nameof(Shape.RenderedGeometry.Bounds.Height)) { Source = MyPoly.RenderedGeometry.Bounds });
-            SetBinding(MyGeometryBoundsProperty,new Binding() { Source=MyPoly ,Converter=new MyConvBounds()});
 
 
         }
@@ -58,23 +55,7 @@ namespace _20250406
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var neko = MyGeometryBounds;
-            //図形の見た目上での中心を軸に回転するRotateTransformを作成(取得)する
-            RotateTransform rotate = GetRotateTransform(MyPoly, 45, 0.5);
-            MyPoly.RenderTransform = rotate;
-
-
-            //変形(回転)後の図形の見た目上でのBoundsを取得
-            Rect transformedBounds = GetTransfromedGeometryRenderBounds(MyPoly, rotate);
-            //MyRectに反映
-            MyRect.Width = transformedBounds.Width;
-            MyRect.Height = transformedBounds.Height;
-            Canvas.SetLeft(MyRect, transformedBounds.Left);
-            Canvas.SetTop(MyRect, transformedBounds.Top);
-
-            Pen myPen = new(Brushes.Transparent, MyPoly.StrokeThickness);
-            Rect geometryRenderBounds = MyPoly.RenderedGeometry.GetRenderBounds(myPen);
-            Rect これは違う = rotate.TransformBounds(geometryRenderBounds);
+            
         }
 
         /// <summary>
@@ -113,7 +94,7 @@ namespace _20250406
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var target    =(Shape)value;
+            var target = (Shape)value;
             return target.RenderedGeometry.Bounds;
         }
 
