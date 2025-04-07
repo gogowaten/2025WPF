@@ -20,6 +20,9 @@ namespace _20250406
     public enum HeadType { None = 0, Arrow, }
     public enum ShapeType { Line = 0, Bezier, }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class GeoShape : Shape
     {
 
@@ -687,6 +690,7 @@ namespace _20250406
             //もしGeometryのTransformにTransformGroupやRenderTransformをそのまま使うと
             //なぜかサイズが小さくなってしまうから
             return result;
+
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

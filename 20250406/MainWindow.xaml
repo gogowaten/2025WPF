@@ -16,10 +16,12 @@
     </Style>
     <Style x:Key="geo" TargetType="local:GeoShape">
       <!--<Setter Property="MyPoints" Value="100,100,200,100"/>-->
-      <Setter Property="MyPoints" Value="100,100,200,100,100,200,200,200"/>
+      <Setter Property="MyPoints" Value="100,100,200,100,100,200"/>
+      <!--<Setter Property="MyPoints" Value="100,100,200,100,100,200,200,200"/>-->
       <Setter Property="Stroke" Value="Red"/>
-      <Setter Property="StrokeThickness" Value="40"/>
+      <Setter Property="StrokeThickness" Value="20"/>
       <Setter Property="Opacity" Value="0.2"/>
+      <Setter Property="MyHeadEndType" Value="Arrow"/>
     </Style>
 
   </Window.Resources>
@@ -29,10 +31,10 @@
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
 
-    <Canvas x:Name="MyCanvas">
+    <Canvas x:Name="MyCanvas" UseLayoutRounding="True">
       <local:GeoShape x:Name="MyPoly1" Style="{StaticResource geo}"/>
       <local:GeoShape x:Name="MyShape" Style="{StaticResource geo}"
-                Stroke="Blue"
+                      Stroke="Blue"
                       MyCenterX="{Binding ElementName=MySliderCenter, Path=Value}"
                       MyCenterY="{Binding ElementName=MySliderCenter, Path=Value}"
                       MyScaleX="{Binding ElementName=MySliderScale, Path=Value}"
@@ -40,6 +42,13 @@
                       
                       />
 
+      <Rectangle x:Name="MyRect0" Stroke="Red" StrokeThickness="1.0"
+                 DataContext="{Binding ElementName=MyPoly1, Path=MyShapeTransformedBounds}"
+                 Width="{Binding Width}"
+                 Height="{Binding Height}"
+                 Canvas.Left="{Binding Left}"
+                 Canvas.Top="{Binding Top}"
+                 />
       <Rectangle x:Name="MyRect" Stroke="Blue" StrokeThickness="1.0"
                  DataContext="{Binding ElementName=MyShape, Path=MyShapeTransformedBounds}"
                  Width="{Binding Width}"
@@ -47,6 +56,7 @@
                  Canvas.Left="{Binding Left}"
                  Canvas.Top="{Binding Top}"
                  />
+
     </Canvas>
 
     <StackPanel Grid.Column="1">
