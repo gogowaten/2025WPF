@@ -1,14 +1,7 @@
-﻿using System.Globalization;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+
+//WPF、回転した子要素の中の回転した複数子要素がピッタリ収まるBoundsの取得 - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/04/03/121228
 
 namespace _20250407_GeoShapeWithBounds
 {

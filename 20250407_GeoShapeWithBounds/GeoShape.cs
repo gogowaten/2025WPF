@@ -199,7 +199,7 @@ namespace _20250407_GeoShapeWithBounds
         public Transform MyRenderTransform
         {
             get { return (Transform)GetValue(MyRenderTransformProperty); }
-            set { SetValue(MyRenderTransformProperty, value); }
+            protected set { SetValue(MyRenderTransformProperty, value); }
         }
         public static readonly DependencyProperty MyRenderTransformProperty =
             DependencyProperty.Register(nameof(MyRenderTransform), typeof(Transform), typeof(GeoShape), new PropertyMetadata(null));
@@ -207,7 +207,7 @@ namespace _20250407_GeoShapeWithBounds
         public RotateTransform MyRotateTransform
         {
             get { return (RotateTransform)GetValue(MyRotateTransformProperty); }
-            set { SetValue(MyRotateTransformProperty, value); }
+            protected set { SetValue(MyRotateTransformProperty, value); }
         }
         public static readonly DependencyProperty MyRotateTransformProperty =
             DependencyProperty.Register(nameof(MyRotateTransform), typeof(RotateTransform), typeof(GeoShape), new PropertyMetadata(new RotateTransform()));
@@ -215,7 +215,7 @@ namespace _20250407_GeoShapeWithBounds
         public ScaleTransform MyScaleTransform
         {
             get { return (ScaleTransform)GetValue(MyScaleTransformProperty); }
-            set { SetValue(MyScaleTransformProperty, value); }
+            protected set { SetValue(MyScaleTransformProperty, value); }
         }
         public static readonly DependencyProperty MyScaleTransformProperty =
             DependencyProperty.Register(nameof(MyScaleTransform), typeof(ScaleTransform), typeof(GeoShape), new PropertyMetadata(new ScaleTransform()));

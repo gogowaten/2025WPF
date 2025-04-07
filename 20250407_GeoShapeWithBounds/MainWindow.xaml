@@ -24,6 +24,7 @@
       <ColumnDefinition/>
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
+   
 
     <Canvas x:Name="MyCanvas" UseLayoutRounding="True">
       <local:GeoShape x:Name="MyShape0" Style="{StaticResource geo}"/>
@@ -73,12 +74,12 @@
       <Slider x:Name="MySliderCenter" Value="{Binding MyCenterX}" Minimum="0.0" Maximum="1.0"
         TickFrequency="0.1" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"/>
       <Separator Margin="10"/>
-      
+
       <TextBlock Text="{Binding MyScaleX, StringFormat=Scale {0:0.00}}"/>
       <Slider x:Name="MySliderScale" Value="1.0" Minimum="0.0" Maximum="2.0"
         TickFrequency="0.1" IsSnapToTickEnabled="True" IsMoveToPointEnabled="False"/>
       <Separator Margin="10"/>
-      
+
 
       <Button Content="HeadType切り替え" Click="Button_Click"/>
       <Button Content="ShapeType切り替え" Click="Button_Click_1"/>
