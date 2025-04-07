@@ -1,3 +1,12 @@
+# 20250407_GeoShapeWithBounds
+https://github.com/gogowaten/2025WPF/tree/main/20250407_GeoShapeWithBounds<br>
+![Animation20250407_143009-ezgif com-optimize](https://github.com/user-attachments/assets/8d56c2a6-f784-4ea8-8472-9746cbe1ef9f)<br>
+WPF、回転した子要素の中の回転した複数子要素がピッタリ収まるBoundsの取得 - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/04/03/121228<br>
+<br><br><br>
+
+
+
 # 20250406_GeometryBoundsTest3
 https://github.com/gogowaten/2025WPF/tree/main/20250406_GeometryBoundsTest3<br>
 ![20250406_170049](https://github.com/user-attachments/assets/e45c3dfd-33da-49be-a26c-6976e91ef4eb)<br>
