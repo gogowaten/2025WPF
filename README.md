@@ -1,3 +1,13 @@
+# 20250408
+https://github.com/gogowaten/2025WPF/tree/main/20250408<br>
+![Animation20250408_131427](https://github.com/user-attachments/assets/bf46eecf-907d-45ab-9554-0a9825ca361e)
+WPF、昨日のは失敗だった、変形時にPoint変化で全体が移動してしまう - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/04/08/133930<br>
+<br><br><br>
+
+
+
+
 # 20250407_GeoShapeWithBounds
 https://github.com/gogowaten/2025WPF/tree/main/20250407_GeoShapeWithBounds<br>
 ![Animation20250407_143009-ezgif com-optimize](https://github.com/user-attachments/assets/8d56c2a6-f784-4ea8-8472-9746cbe1ef9f)<br>
