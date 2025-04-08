@@ -6,6 +6,13 @@
         xmlns:local="clr-namespace:_20250408_01"
         mc:Ignorable="d"
         Title="MainWindow" Height="367" Width="654">
+  <Window.Resources>
+    <Style x:Key="poly" TargetType="{x:Type Polyline}">
+      <Setter Property="Points" Value="100,100,200,100"/>
+      <Setter Property="StrokeThickness" Value="10"/>
+      <Setter Property="Opacity" Value="0.5"/>
+    </Style>
+  </Window.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -13,16 +20,33 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-      <local:GeoShapeWithAnchorHandle x:Name="MyShape0"
+      <Grid x:Name="KisoGrid">
+        <Grid.RenderTransform>
+          <TransformGroup>
+            <RotateTransform x:Name="gridAngle" Angle="40"/>
+            <ScaleTransform ScaleX="{Binding ElementName=scale, Path=Value}"
+                            ScaleY="{Binding ElementName=scale, Path=Value}"/>
+          </TransformGroup>
+        </Grid.RenderTransform>
+        <local:GeoShapeWithAnchorHandle x:Name="MyShape0"
                       MyPoints="100,100,200,100"
                       Stroke="Red"
                       StrokeThickness="40"
-                      >
-        <local:GeoShapeWithAnchorHandle.RenderTransform>
-          <RotateTransform Angle="20"/>
-        </local:GeoShapeWithAnchorHandle.RenderTransform>
-      </local:GeoShapeWithAnchorHandle>
-      
+                      MyAngle="4"
+                      RenderTransformOrigin="0.5,0.5">
+        </local:GeoShapeWithAnchorHandle>
+      </Grid>
+      <Polyline Style="{StaticResource poly}" Stroke="Red"/>
+      <Polyline x:Name="MyPoly" Style="{StaticResource poly}" Stroke="Blue"
+                RenderTransformOrigin="0.5,0.5" Opacity="0.2">
+        <Polyline.RenderTransform>
+          <TransformGroup>
+            <RotateTransform Angle="0"/>
+            <ScaleTransform ScaleX="2" ScaleY="2"/>
+          </TransformGroup>
+        </Polyline.RenderTransform>
+      </Polyline>
+
       <Rectangle x:Name="waku" DataContext="{Binding ElementName=MyShape0, Path=MyShapeTransformedBounds}"
                  Stroke="Blue" StrokeThickness="1"
                  Width="{Binding Width}"
@@ -33,9 +57,11 @@
 
     </Canvas>
 
-        <StackPanel Grid.Column="1">
-      <Button Content="test" Click="Button_Click"/>
-          
+    <StackPanel Grid.Column="1">
+      <Button Content="handle" Click="Button_Click"/>
+      <Button Content="test" Click="Button_Click_1"/>
+      <Slider Value="{Binding ElementName=gridAngle, Path=Angle}" Minimum="0" Maximum="360"/>
+      <Slider x:Name="scale" Maximum="2" Minimum="0" Value="1.0"/>
     </StackPanel>
   </Grid>
 </Window>

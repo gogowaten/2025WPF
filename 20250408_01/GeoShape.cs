@@ -95,7 +95,7 @@ namespace _20250408_01
     public class GeoShape : Shape
     {
         //StrokeThicknessの初期値を押さえておく用、倍率の基礎にする
-        public double MyStrokeThicknessScaleKiso { get;private set; }
+        public double MyStrokeThicknessScaleKiso { get; private set; }
 
         public GeoShape()
         {
@@ -122,11 +122,33 @@ namespace _20250408_01
 
             MyStrokeThicknessScaleKiso = StrokeThickness;
             MyBindPen();
+            //MyBindRenderTransform();
 
-            MyBindRenderTransform2();
-            MyBindShapeRenderTransformBounds2();
-            MyBindStrokeThickness();
+            //MyBindRenderTransform2();
+            //MyBindShapeRenderTransformBounds2();
+            //MyBindStrokeThickness();
         }
+
+        private void MyBindRenderTransform()
+        {
+            //var angle = (double)values[0];
+            //var scaleX = 1.0;
+            //var scaleY = 1.0;
+            //var centerX = 0.0;
+            //var centerY = 0.0;
+
+            MultiBinding mb = new() { Converter = new MyConvRenderTransform() };
+            mb.Bindings.Add(MakeOneWayBind(MyAngleProperty));
+            mb.Bindings.Add(MakeOneWayBind(MyScaleXProperty));
+            mb.Bindings.Add(MakeOneWayBind(MyScaleYProperty));
+            mb.Bindings.Add(MakeOneWayBind(MyCenterXProperty));
+            mb.Bindings.Add(MakeOneWayBind(MyCenterYProperty));
+            _ = SetBinding(MyRenderTransformProperty, mb);
+            _ = SetBinding(RenderTransformProperty, mb);
+
+        }
+
+        #region 失敗
 
         private void MyBindStrokeThickness()
         {
@@ -177,6 +199,7 @@ namespace _20250408_01
             //SetBinding(RenderTransformProperty, mb);
         }
 
+        #endregion 失敗
 
         private void MyBindPen()
         {
@@ -266,7 +289,7 @@ namespace _20250408_01
                 //MyRenderBounds = clone.GetRenderBounds(MyPen);
                 MyGeometryRenderBoundsWithPen = geo.GetRenderBounds(MyPen);
 
-                
+
 
                 return geo;
             }
@@ -671,26 +694,26 @@ namespace _20250408_01
             }
         }
 
-        ///// <summary>
-        ///// 図形が収まるRectを返す
-        ///// </summary>
-        ///// <returns></returns>
-        //public Rect GetRenderBounds()
-        //{
-        //    //自身のGeometryのクローンを使う
-        //    //自身に適用されているRenderTransformとPenをクローンに適用して
-        //    //クローンのGetRenderBoundsで得られる
-        //    Geometry geo = DefiningGeometry.Clone();
-        //    geo.Transform = RenderTransform;
-        //    Pen myPen = new(Brushes.Transparent, StrokeThickness)
-        //    {
-        //        EndLineCap = StrokeEndLineCap,
-        //        StartLineCap = StrokeStartLineCap,
-        //        LineJoin = StrokeLineJoin,
-        //        MiterLimit = StrokeMiterLimit,
-        //    };
-        //    return geo.GetRenderBounds(myPen);
-        //}
+        /// <summary>
+        /// 図形が収まるRectを返す
+        /// </summary>
+        /// <returns></returns>
+        public Rect GetRenderBounds()
+        {
+            //自身のGeometryのクローンを使う
+            //自身に適用されているRenderTransformとPenをクローンに適用して
+            //クローンのGetRenderBoundsで得られる
+            Geometry geo = DefiningGeometry.Clone();
+            geo.Transform = RenderTransform;
+            //Pen myPen = new(Brushes.Transparent, StrokeThickness)
+            //{
+            //    EndLineCap = StrokeEndLineCap,
+            //    StartLineCap = StrokeStartLineCap,
+            //    LineJoin = StrokeLineJoin,
+            //    MiterLimit = StrokeMiterLimit,
+            //};
+            return geo.GetRenderBounds(MyPen);
+        }
 
         #endregion パフリックメソッド
 
@@ -702,6 +725,34 @@ namespace _20250408_01
 
 
     #region コンバーター
+
+    public class MyConvRenderTransform : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var angle = (double)values[0];
+            var scaleX = 1.0;
+            var scaleY = 1.0;
+            var centerX = 0.0;
+            var centerY = 0.0;
+            //var scaleX = (double)values[1];
+            //var scaleY = (double)values[2];
+            //var centerX = (double)values[3];
+            //var centerY = (double)values[4];
+
+            RotateTransform rotate = new(angle, centerX, centerY);
+            ScaleTransform scele = new(scaleX, scaleY, centerX, centerY);
+            TransformGroup group = new();
+            group.Children.Add(rotate);
+            group.Children.Add(scele);
+            return group;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public class MyConvStrokeThicknessScale : IMultiValueConverter
     {

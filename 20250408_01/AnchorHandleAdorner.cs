@@ -322,12 +322,7 @@ namespace _20250408_01
             {
                 int id = (int)thumb.Tag;
                 Point poi = MyTarget.MyPoints[id];
-                Point poi2 = poi;
-                Matrix tfv = MyTarget.MyRenderTransform.Value;
-                GeneralTransform neko = MyTarget.MyRenderTransform.Inverse;
-                Point poi3 = new(e.HorizontalChange, e.VerticalChange);
-                Point point = neko.Transform(poi3);
-                poi2.Offset(point.X, point.Y);
+                
                 MyTarget.MyPoints[id] = new Point(poi.X + e.HorizontalChange, poi.Y + e.VerticalChange);
                 thumb.MyLeft += e.HorizontalChange;
                 thumb.MyTop += e.VerticalChange;

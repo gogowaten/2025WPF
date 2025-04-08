@@ -24,12 +24,18 @@ namespace _20250408_01
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             MyShape0.AnchorHandleSwitch();
-           //var poi= MyShape0.MyPoints;
-           //var tr = MyShape0.GeometryTransform;
-           //var ttr = MyShape0.RenderedGeometry.Transform;
-           //var angle = MyShape0.MyAngle2;
-           // MyShape0.MyAngle2 = 20;
-           // MyShape0.MyPoints.Add(new Point(300, 100));
+            
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var bounds = MyShape0.GetRenderBounds();
+            waku.Width = bounds.Width;
+            waku.Height = bounds.Height;
+            Canvas.SetLeft(waku, bounds.Left);
+            Canvas.SetTop(waku, bounds.Top);
+
+            MyPoly.Points = [new Point(100, 100), new Point(300, 100)];
         }
     }
 }
