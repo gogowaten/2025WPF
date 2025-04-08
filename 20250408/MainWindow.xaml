@@ -1,0 +1,53 @@
+﻿<Window x:Class="_20250408.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_20250408"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="367" Width="654">
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Themes/AnchorHandleThumb.xaml"/>
+        <ResourceDictionary Source="/Themes/Generic.xaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Window.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
+
+    <Canvas x:Name="MyCanvas" VerticalAlignment="Top" HorizontalAlignment="Left">
+      <local:GeoShapeWithAnchorHandle x:Name="MyShape0"
+                                      MyPoints="100,100,200,100"
+                                      Stroke="Red" StrokeThickness="10"
+                                      MyHeadEndType="Arrow"
+                                      MyScaleX="{Binding ElementName=MyScale, Path=Value}"
+                                      MyScaleY="{Binding ElementName=MyScale, Path=Value}"
+                                      MyAngle="0"
+                                      MyCenterX="0.0" MyCenterY="0.0"/>
+      <Rectangle DataContext="{Binding ElementName=MyShape0, Path=MyShapeTransformedBounds}"
+                 Stroke="Blue" StrokeThickness="1"
+                 Width="{Binding Width}"
+                 Height="{Binding Height}"
+                 Canvas.Left="{Binding Left}"
+                 Canvas.Top="{Binding Top}"
+                 />
+    </Canvas>
+
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyShape0}">
+      <Button Content="test" Click="Button_Click"/>
+      <Button Content="test2" Click="Button_Click_1"/>
+      <Slider x:Name="MyScale" Value="1.0" Minimum="1" Maximum="2" TickFrequency="0.1"/>
+      <TextBlock Text="{Binding Path=MyPoints, StringFormat= poi {0:0.0 }}"/>
+      <TextBlock Text="{Binding Path=MyShapeTransformedBounds, StringFormat= rect {0:0.0 }}"/>
+      <TextBlock Text="{Binding Path=MyAngle, StringFormat= angle {0:0.0 }}"/>
+      <TextBlock Text="{Binding Path=MyRenderTransform.Value, StringFormat= TFV {0:0.0 }}"/>
+      <TextBlock Text="{Binding Path=MyCenterX, StringFormat= MyCenterX {0:0.0 }}"/>
+      
+    </StackPanel>
+  </Grid>
+</Window>
