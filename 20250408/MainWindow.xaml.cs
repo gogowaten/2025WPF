@@ -1,14 +1,6 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
+﻿using System.Windows;
+//WPF、昨日のは失敗だった、変形時にPoint変化で全体が移動してしまう - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/04/08/133930
 namespace _20250408
 {
     /// <summary>
@@ -34,7 +26,7 @@ namespace _20250408
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            MyShape0.MyPoints[1] = new Point(300, 100);
+            MyShape0.MyPoints[1] = new Point(200, 000);
         }
     }
 }
