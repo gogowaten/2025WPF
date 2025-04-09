@@ -93,7 +93,8 @@ namespace _20250409
             //各種バインド設定
             if (MyItemData.Type == ItemType.GeoShape)
             {
-                MyBindInsideGeoShapeTransformedBounds();
+                //MyBindInsideGeoShapeTransformedBounds();
+                MyBindInsideGeoShapeTransformedBounds2();
             }
             else
             {
@@ -138,6 +139,29 @@ namespace _20250409
             mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty) });
             SetBinding(MyActualTopProperty, mb);
 
+        }
+
+        /// <summary>
+        /// 中の図形要素の変形後のBounds取得用
+        /// </summary>
+        private void MyBindInsideGeoShapeTransformedBounds2()
+        {
+            var mb = new MultiBinding() { Converter = new MyConvInsideGeoShapeTransformedBounds2() };
+            if (MyInsideElement is GeoShape shape)
+            {
+                mb.Bindings.Add(new Binding() { Source = shape, Path = new PropertyPath(GeoShape.MyGeometryProperty) });
+                mb.Bindings.Add(new Binding() { Source = shape, Path = new PropertyPath(GeoShape.MyPenProperty) });
+
+                mb.Bindings.Add(new Binding(nameof(ItemData.Angle)) { Source = MyItemData });
+                mb.Bindings.Add(new Binding(nameof(ItemData.ScaleX)) { Source = MyItemData });
+                mb.Bindings.Add(new Binding(nameof(ItemData.ScaleY)) { Source = MyItemData });
+                mb.Bindings.Add(new Binding(nameof(ItemData.CenterX)) { Source = MyItemData });
+                mb.Bindings.Add(new Binding(nameof(ItemData.CenterY)) { Source = MyItemData });
+            }
+            //mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualWidthProperty) });
+            //mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualHeightProperty) });
+
+            SetBinding(MyInsideElementTransformedBoundsProperty, mb);
         }
 
         /// <summary>

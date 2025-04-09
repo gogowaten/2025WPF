@@ -14,7 +14,7 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-      
+
       <local:GeoShapeWithAnchorHandle MyPoints="0,0,200,200"
                                       Stroke="Red"/>
       <Rectangle 
@@ -33,14 +33,15 @@
                  Canvas.Top="{Binding MyActualTop}"
                  Panel.ZIndex="1"
                  Opacity="1"/>
-      <Rectangle x:Name="MyRect" Width="80" Height="20" Fill="Red" Canvas.Left="200" Canvas.Top="300">
-        <Rectangle.RenderTransform>
+      <Grid Canvas.Left="200" Canvas.Top="400">
+        <Grid.RenderTransform>
           <TransformGroup>
             <ScaleTransform ScaleX="2" ScaleY="1"/>
-            <RotateTransform Angle="90"/>
+            <RotateTransform Angle="0"/>
           </TransformGroup>
-        </Rectangle.RenderTransform>
-      </Rectangle>
+        </Grid.RenderTransform>
+        <Polyline Points="0,0,100,0" Stroke="Red" StrokeThickness="40"/>
+      </Grid>
     </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding}">
@@ -59,13 +60,13 @@
         <TextBlock Text="{Binding Top, StringFormat=Top 0}"/>
         <TextBlock Text="{Binding Text, StringFormat=Text {0:0}}"/>
         <TextBlock Text="{Binding Angle, StringFormat=Angle 0}"/>
-        <Slider Value="{Binding Angle}" Minimum="0" Maximum="360" TickFrequency="10" IsSnapToTickEnabled="True"/>
+        <Slider Value="{Binding Angle}" Minimum="0" Maximum="360" TickFrequency="5" IsSnapToTickEnabled="True"/>
         <TextBlock Text="{Binding ScaleX, StringFormat=ScaleX 0}"/>
         <Slider x:Name="scaleX" Value="{Binding ScaleX}" Minimum="0" Maximum="5" TickFrequency="1.0" IsSnapToTickEnabled="True"/>
         <Slider Value="{Binding ElementName=scaleX, Path=Value}" Minimum="0" Maximum="5" TickFrequency="0.1" IsSnapToTickEnabled="True" Visibility="Collapsed"/>
         <Slider x:Name="centerX" Value="{Binding CenterX}" Minimum="0" Maximum="1.0" TickFrequency="0.5" IsSnapToTickEnabled="True"/>
         <Slider x:Name="centerY" Value="{Binding CenterY}" Minimum="0" Maximum="1.0" TickFrequency="0.5" IsSnapToTickEnabled="True" />
-        
+
       </StackPanel>
 
       <StackPanel>

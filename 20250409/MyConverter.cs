@@ -128,7 +128,7 @@ namespace _20250409
     //}
 
     #region Bounds
-    
+
     public class MyConvInsideTransformedBounds : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -152,10 +152,10 @@ namespace _20250409
 
             ScaleTransform sc = new(scaleX, scaleY, x, y);
             RotateTransform ro = new(angle, x, y);
-            Rect rr = new(0,0,width, height);
-            rr=sc.TransformBounds(rr);
-            rr=ro.TransformBounds(rr);
-            
+            Rect rr = new(0, 0, width, height);
+            rr = sc.TransformBounds(rr);
+            rr = ro.TransformBounds(rr);
+
             return rr;
         }
 
@@ -164,6 +164,7 @@ namespace _20250409
             throw new NotImplementedException();
         }
     }
+
     public class MyConvInsideGeoShapeTransformedBounds : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -181,11 +182,45 @@ namespace _20250409
 
             ScaleTransform sc = new(scaleX, scaleY, x, y);
             RotateTransform ro = new(angle, x, y);
-            Rect rr = new(0,0,width, height);
-            rr=sc.TransformBounds(rr);
-            rr=ro.TransformBounds(rr);
-            
+            Rect rr = new(0, 0, width, height);
+            rr = sc.TransformBounds(rr);
+            rr = ro.TransformBounds(rr);
+            //rr.Offset(bounds.Left, bounds.Top);
             return rr;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyConvInsideGeoShapeTransformedBounds2 : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Geometry geo = (Geometry)values[0];
+            Pen myPen = (Pen)values[1];
+            double angle = (double)values[2];
+            double scaleX = (double)values[3];
+            double scaleY = (double)values[4];
+            double x = (double)values[5];
+            double y = (double)values[6];
+
+            Rect bounds = geo.GetRenderBounds(myPen);
+            var cx = bounds.Left*x + (bounds.Width * x);//0,100,200
+            var cy = bounds.Top*y + (bounds.Height * y);//-20,0,20
+            ScaleTransform sc = new(scaleX, scaleY, cx, cy);
+            RotateTransform ro = new(angle, cx, cy);
+
+            TransformGroup group = new();
+            group.Children.Add(sc);
+            group.Children.Add(ro);
+            var clone = geo.Clone();
+            clone.Transform = group;
+            Rect rrr = clone.GetRenderBounds(myPen);
+
+            return rrr;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

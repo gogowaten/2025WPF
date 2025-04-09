@@ -20,7 +20,7 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-      <Grid x:Name="KisoGrid">
+      <Grid x:Name="KisoGrid" RenderTransformOrigin="0.5,0.5" Canvas.Left="100" Canvas.Top="100">
         <Grid.RenderTransform>
           <TransformGroup>
             <RotateTransform x:Name="gridAngle" Angle="40"/>
@@ -29,11 +29,10 @@
           </TransformGroup>
         </Grid.RenderTransform>
         <local:GeoShapeWithAnchorHandle x:Name="MyShape0"
-                      MyPoints="100,100,200,100"
+                      MyPoints="00,00,100,00"
                       Stroke="Red"
                       StrokeThickness="40"
-                      MyAngle="4"
-                      RenderTransformOrigin="0.5,0.5">
+                      MyAngle="4">
         </local:GeoShapeWithAnchorHandle>
       </Grid>
       <Polyline Style="{StaticResource poly}" Stroke="Red"/>

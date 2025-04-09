@@ -55,7 +55,7 @@
                 MyPoints="{Binding Points}"
                 Stroke="Red"
                 StrokeThickness="40"
-                MyHeadEndType="Arrow"
+                MyHeadEndType="None"
                 />
             </Grid>
           </Canvas>

@@ -20,7 +20,6 @@
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
 
-    <Canvas x:Name="MyCanvas" VerticalAlignment="Top" HorizontalAlignment="Left">
       <local:GeoShapeWithAnchorHandle x:Name="MyShape0"
                                       MyPoints="100,100,200,100"
                                       Stroke="Red" StrokeThickness="10"
@@ -29,6 +28,7 @@
                                       MyScaleY="{Binding ElementName=MyScale, Path=Value}"
                                       MyAngle="0"
                                       MyCenterX="0.0" MyCenterY="0.0"/>
+    <Canvas x:Name="MyCanvas" VerticalAlignment="Top" HorizontalAlignment="Left">
       <Rectangle DataContext="{Binding ElementName=MyShape0, Path=MyShapeTransformedBounds}"
                  Stroke="Blue" StrokeThickness="1"
                  Width="{Binding Width}"
