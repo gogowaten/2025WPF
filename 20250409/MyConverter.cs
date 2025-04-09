@@ -103,7 +103,7 @@ namespace _20250409
             throw new NotImplementedException();
         }
     }
-    
+
     //public class MyConvRenderTransform : IMultiValueConverter
     //{
     //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -127,6 +127,73 @@ namespace _20250409
     //    }
     //}
 
+    #region Bounds
+    
+    public class MyConvInsideTransformedBounds : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            double angle = (double)values[0];
+            double scaleX = (double)values[1];
+            double scaleY = (double)values[2];
+            double x = (double)values[3];
+            double y = (double)values[4];
+            double width = (double)values[5];
+            double height = (double)values[6];
+            x *= width;
+            y *= height;
+
+            //TransformGroup transformGroup = new();
+            //transformGroup.Children.Add(new ScaleTransform(scaleX, scaleY, x, y));
+            //transformGroup.Children.Add(new RotateTransform(angle, x, y));
+
+            //Rect result = transformGroup.TransformBounds(new Rect(0, 0, width, height));
+            //return result;
+
+            ScaleTransform sc = new(scaleX, scaleY, x, y);
+            RotateTransform ro = new(angle, x, y);
+            Rect rr = new(0,0,width, height);
+            rr=sc.TransformBounds(rr);
+            rr=ro.TransformBounds(rr);
+            
+            return rr;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class MyConvInsideGeoShapeTransformedBounds : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Rect bounds = (Rect)values[0];
+            double angle = (double)values[1];
+            double scaleX = (double)values[2];
+            double scaleY = (double)values[3];
+            double x = (double)values[4];
+            double y = (double)values[5];
+            double width = bounds.Width;
+            double height = bounds.Height;
+            x *= width;
+            y *= height;
+
+            ScaleTransform sc = new(scaleX, scaleY, x, y);
+            RotateTransform ro = new(angle, x, y);
+            Rect rr = new(0,0,width, height);
+            rr=sc.TransformBounds(rr);
+            rr=ro.TransformBounds(rr);
+            
+            return rr;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class MyConvRenderTransormBounds : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -142,4 +209,6 @@ namespace _20250409
             throw new NotImplementedException();
         }
     }
+
+    #endregion Bounds
 }

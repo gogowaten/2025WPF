@@ -70,10 +70,21 @@ namespace _20250409
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-           var rtf = MyThumb.MyInsideGrid.RenderTransform;
-            var tfvalue = rtf.Value;
-            var actwidth = MyThumb.MyInsideGrid.ActualWidth;
-            var width = MyThumb.MyInsideGrid.Width;
+            var rtf = MyRect.RenderTransform;
+            Rect r=new(0,0,MyRect.Width,MyRect.Height);
+           var bounds = rtf.TransformBounds(r);
+            RotateTransform ro = new(90);
+            ScaleTransform scale = new(2, 1);
+            TransformGroup group = new();
+            group.Children.Add(scale);
+            group.Children.Add(ro);
+            var bounds2=group.TransformBounds(r);
+            
+            Rect bounds3 = ro.TransformBounds(r);
+            bounds3= scale.TransformBounds(bounds3);
+
+            Rect bounds4=scale.TransformBounds(r);
+            bounds4 = ro.TransformBounds(bounds4);
         }
     }
 }

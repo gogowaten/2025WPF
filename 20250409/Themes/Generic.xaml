@@ -6,6 +6,7 @@
     <ResourceDictionary Source="/Themes/Dictionary1.xaml"/>
   </ResourceDictionary.MergedDictionaries>
 
+
   <Style TargetType="{x:Type local:AnchorHandleThumb}" BasedOn="{StaticResource anchorHandle}"/>
 
 
@@ -18,34 +19,26 @@
                             Path=MyActualTop}"/>
     <Setter Property="Width"
             Value="{Binding RelativeSource={RelativeSource Mode=Self},
-                            Path=MyInsideElementRenderBounds.Width}"/>
+                            Path=MyInsideElementTransfomedBounds.Width}"/>
     <Setter Property="Height"
             Value="{Binding RelativeSource={RelativeSource Mode=Self},
-                            Path=MyInsideElementRenderBounds.Height}"/>
+                            Path=MyInsideElementTransfomedBounds.Height}"/>
   </Style>
 
 
 
   <Style TargetType="{x:Type local:TextBlockThumb}" BasedOn="{StaticResource kiso}">
-    <Setter Property="Canvas.Left" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MyActualLeft}"/>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:TextBlockThumb}">
-          <Grid x:Name="insideGrid"
-                DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData}"
+          <Canvas DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData}">
+            <Grid x:Name="insideGrid"
                 >
-            <Canvas>
               <TextBlock x:Name="InsideElement" Text="{Binding Text}"
                          Background="MistyRose"
                          FontSize="30"/>
-              <Rectangle x:Name="waku"
-                         DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                         Stroke="Red"
-                         StrokeThickness="1.0"
-                         Width="{Binding MyInsideElementRenderBounds.Width}"
-                         Height="{Binding MyInsideElementRenderBounds.Height}"/>
-            </Canvas>
-          </Grid>
+            </Grid>
+          </Canvas>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
@@ -55,9 +48,8 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:GeoShapeThumb}">
-          <Grid x:Name="insideGrid"
-                DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData}">
-            <Canvas>
+          <Canvas DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData}">
+            <Grid x:Name="insideGrid">
               <local:GeoShapeWithAnchorHandle
                 x:Name="InsideElement"
                 MyPoints="{Binding Points}"
@@ -65,14 +57,8 @@
                 StrokeThickness="40"
                 MyHeadEndType="Arrow"
                 />
-              <Rectangle x:Name="waku"
-                 DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                 Stroke="Red"
-                 StrokeThickness="1.0"
-                 Width="{Binding MyInsideElementRenderBounds.Width}"
-                 Height="{Binding MyInsideElementRenderBounds.Height}"/>
-            </Canvas>
-          </Grid>
+            </Grid>
+          </Canvas>
         </ControlTemplate>
       </Setter.Value>
     </Setter>

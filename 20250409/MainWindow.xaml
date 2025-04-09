@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:_20250409"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:KisoThumb}"
-        Title="MainWindow" Height="367" Width="654">
+        Title="MainWindow" Height="567" Width="654">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -14,16 +14,33 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
+      
       <local:GeoShapeWithAnchorHandle MyPoints="0,0,200,200"
                                       Stroke="Red"/>
-      <Rectangle DataContext="{Binding MyInsideElementRenderBounds}"
-                 Stroke="Blue" StrokeThickness="4.0"
-                 Width="{Binding Width}"
-                 Height="{Binding Height}"
-                 Canvas.Left="{Binding Top}"
-                 Canvas.Top="{Binding Left}"
+      <Rectangle 
+                 Stroke="Blue" StrokeThickness="1.0"
+                 Width="{Binding MyInsideElementTransfomedBounds.Width}"
+                 Height="{Binding MyInsideElementTransfomedBounds.Height}"
+                 Canvas.Left="{Binding MyInsideElementTransfomedBounds.Left}"
+                 Canvas.Top="{Binding MyInsideElementTransfomedBounds.Top}"
                  Panel.ZIndex="1"
-                 Opacity="0.2"/>
+                 Opacity="1"/>
+      <Rectangle 
+                 Stroke="Red" StrokeThickness="1.0"
+                 Width="{Binding ActualWidth}"
+                 Height="{Binding ActualHeight}"
+                 Canvas.Left="{Binding MyActualLeft}"
+                 Canvas.Top="{Binding MyActualTop}"
+                 Panel.ZIndex="1"
+                 Opacity="1"/>
+      <Rectangle x:Name="MyRect" Width="80" Height="20" Fill="Red" Canvas.Left="200" Canvas.Top="300">
+        <Rectangle.RenderTransform>
+          <TransformGroup>
+            <ScaleTransform ScaleX="2" ScaleY="1"/>
+            <RotateTransform Angle="90"/>
+          </TransformGroup>
+        </Rectangle.RenderTransform>
+      </Rectangle>
     </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding}">
@@ -32,8 +49,10 @@
         <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth 0.0}"/>
         <TextBlock Text="{Binding MyActualLeft, StringFormat=MyActualLeft 0.0}"/>
         <TextBlock Text="{Binding MyActualTop, StringFormat=MyActualTop 0.0}"/>
-        <TextBlock Text="{Binding MyInsideElementRenderBounds, StringFormat=elemBounds {0:0}}"/>
+        <TextBlock Text="{Binding MyInsideElementTransfomedBounds, StringFormat=elemBounds {0:0}}"/>
         <TextBlock Text="{Binding MyInsideGrid.ActualWidth, StringFormat=inGridWidth {0:0}}"/>
+        <TextBlock DataContext="{Binding MyInsideGrid}" Text="{Binding (Canvas.Left), StringFormat=gridLeft {0:0}}"/>
+        <TextBlock DataContext="{Binding MyInsideElement}" Text="{Binding (Canvas.Left), StringFormat=inElemLeft {0:0}}"/>
       </StackPanel>
       <StackPanel DataContext="{Binding MyItemData}">
         <TextBlock Text="{Binding Left, StringFormat=Left 0}"/>

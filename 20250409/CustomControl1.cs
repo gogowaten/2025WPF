@@ -90,27 +90,35 @@ namespace _20250409
 
         private void KisoThumb_Loaded(object sender, RoutedEventArgs e)
         {
-            ////各種バインド設定
-            //MyBindInsideGridRenderTransform();
-            ////MyBindInsideElementRenderTransform();
-            //MyBindInsideGridRenderTransformOriginal();
-            //MyBindInsideGridTransformedBounds();
-            //MyBindActualLocate();
-            //MyBindInsideElementLocate();
+            //各種バインド設定
+            if (MyItemData.Type == ItemType.GeoShape)
+            {
+                MyBindInsideGeoShapeTransformedBounds();
+            }
+            else
+            {
+                MyBindInsideElementTransformedBounds();
+            }
+
+
+            MyBindInsideGridRenderTransform();
+            MyBindInsideGridRenderTransformOriginal();
+
+            MyBindActualLocate();
+            MyBindInsideElementLocate();
 
         }
 
         #region 初期バインド設定
 
         /// <summary>
-        /// 中の要素の位置
+        /// 中のGridの位置
         /// 回転拡縮などでの変化する位置の修正用
         /// </summary>
         private void MyBindInsideElementLocate()
         {
-            BindingOperations.SetBinding(MyInsideElement, Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementRenderBoundsProperty), Converter = new MyConvInsideElementLeft() });
-            BindingOperations.SetBinding(MyInsideElement, Canvas.TopProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementRenderBoundsProperty), Converter = new MyConvInsideElementTop() });
-
+            BindingOperations.SetBinding(MyInsideGrid, Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty), Converter = new MyConvInsideElementLeft() });
+            BindingOperations.SetBinding(MyInsideGrid, Canvas.TopProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty), Converter = new MyConvInsideElementTop() });
         }
 
         /// <summary>
@@ -122,28 +130,54 @@ namespace _20250409
         {
             var mb = new MultiBinding() { Converter = new MyConvActualLeft() };
             mb.Bindings.Add(new Binding(nameof(ItemData.Left)) { Source = MyItemData });
-            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyInsideElementRenderBoundsProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty) });
             SetBinding(MyActualLeftProperty, mb);
 
             mb = new() { Converter = new MyConvActualTop() };
             mb.Bindings.Add(new Binding(nameof(ItemData.Top)) { Source = MyItemData });
-            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyInsideElementRenderBoundsProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty) });
             SetBinding(MyActualTopProperty, mb);
 
         }
 
         /// <summary>
-        /// 中のGrid要素のBounds取得用
+        /// 中の図形要素の変形後のBounds取得用
         /// </summary>
-        private void MyBindInsideGridTransformedBounds()
+        private void MyBindInsideGeoShapeTransformedBounds()
         {
-            var mb = new MultiBinding() { Converter = new MyConvRenderTransormBounds() };
-            mb.Bindings.Add(new Binding() { Source = MyInsideGrid, Path = new PropertyPath(RenderTransformProperty) });
-            mb.Bindings.Add(new Binding() { Source = MyInsideGrid, Path = new PropertyPath(ActualWidthProperty) });
-            mb.Bindings.Add(new Binding() { Source = MyInsideGrid, Path = new PropertyPath(ActualHeightProperty) });
-            SetBinding(MyInsideElementRenderBoundsProperty, mb);
+            var mb = new MultiBinding() { Converter = new MyConvInsideGeoShapeTransformedBounds() };
+            if (MyInsideElement is GeoShape shape)
+            {
+                mb.Bindings.Add(new Binding() { Source = shape, Path = new PropertyPath(GeoShape.MyGeometryRenderBoundsProperty) });
+                mb.Bindings.Add(new Binding(nameof(ItemData.Angle)) { Source = MyItemData });
+                mb.Bindings.Add(new Binding(nameof(ItemData.ScaleX)) { Source = MyItemData });
+                mb.Bindings.Add(new Binding(nameof(ItemData.ScaleY)) { Source = MyItemData });
+                mb.Bindings.Add(new Binding(nameof(ItemData.CenterX)) { Source = MyItemData });
+                mb.Bindings.Add(new Binding(nameof(ItemData.CenterY)) { Source = MyItemData });
+            }
+            //mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualWidthProperty) });
+            //mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualHeightProperty) });
+
+            SetBinding(MyInsideElementTransformedBoundsProperty, mb);
         }
-        
+
+        /// <summary>
+        /// 中の通常要素の変形後のBounds取得用
+        /// </summary>
+        private void MyBindInsideElementTransformedBounds()
+        {
+            var mb = new MultiBinding() { Converter = new MyConvInsideTransformedBounds() };
+            mb.Bindings.Add(new Binding(nameof(ItemData.Angle)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding(nameof(ItemData.ScaleX)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding(nameof(ItemData.ScaleY)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding(nameof(ItemData.CenterX)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding(nameof(ItemData.CenterY)) { Source = MyItemData });
+            mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualWidthProperty) });
+            mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualHeightProperty) });
+
+            SetBinding(MyInsideElementTransformedBoundsProperty, mb);
+        }
+
         ///// <summary>
         ///// 中の要素のBounds取得用
         ///// </summary>
@@ -221,15 +255,15 @@ namespace _20250409
             DependencyProperty.Register(nameof(MyActualTop), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
 
         /// <summary>
-        /// 中の要素のBounds。表示されている要素がピッタリ収まるRect
+        /// 中の要素の変形後のBounds。表示されている要素がピッタリ収まるRect
         /// </summary>
-        public Rect MyInsideElementRenderBounds
+        public Rect MyInsideElementTransfomedBounds
         {
-            get { return (Rect)GetValue(MyInsideElementRenderBoundsProperty); }
-            set { SetValue(MyInsideElementRenderBoundsProperty, value); }
+            get { return (Rect)GetValue(MyInsideElementTransformedBoundsProperty); }
+            set { SetValue(MyInsideElementTransformedBoundsProperty, value); }
         }
-        public static readonly DependencyProperty MyInsideElementRenderBoundsProperty =
-            DependencyProperty.Register(nameof(MyInsideElementRenderBounds), typeof(Rect), typeof(KisoThumb), new PropertyMetadata(new Rect()));
+        public static readonly DependencyProperty MyInsideElementTransformedBoundsProperty =
+            DependencyProperty.Register(nameof(MyInsideElementTransfomedBounds), typeof(Rect), typeof(KisoThumb), new PropertyMetadata(new Rect()));
 
 
         public ItemData MyItemData
