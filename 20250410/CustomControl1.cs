@@ -116,9 +116,9 @@ namespace _20250410
 
 
             //MyBindInsideGridRenderTransform();
-            if (MyItemData.Type == ItemType.GeoShape)
+            if (MyInsideElement is GeoShape geo)
             {
-
+                MyBindPanelTransformGeoShape(geo);
             }
             else
             {
@@ -132,6 +132,20 @@ namespace _20250410
         }
 
         #region 初期バインド設定
+
+        private void MyBindPanelTransformGeoShape(GeoShape geo)
+        {
+            var bind = new MultiBinding() { Converter = new MyConvPanelRenderTransformGeo() };
+            bind.Bindings.Add(new Binding(nameof(ItemData.Angle)) { Source = MyItemData });
+            bind.Bindings.Add(new Binding(nameof(ItemData.ScaleX)) { Source = MyItemData });
+            bind.Bindings.Add(new Binding(nameof(ItemData.ScaleY)) { Source = MyItemData });
+            bind.Bindings.Add(new Binding(nameof(ItemData.CenterX)) { Source = MyItemData });
+            bind.Bindings.Add(new Binding(nameof(ItemData.CenterY)) { Source = MyItemData });
+            bind.Bindings.Add(new Binding() { Source = geo, Path = new PropertyPath(GeoShape.MyGeometryRenderBoundsWithPenProperty) });
+            //bind.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualWidthProperty) });
+            //bind.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualHeightProperty) });
+            SetBinding(MyPanelRenderTransformProperty, bind);
+        }
 
         private void MyBindPanelTransform()
         {

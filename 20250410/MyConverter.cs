@@ -118,8 +118,32 @@ namespace _20250410
             width *= cx;
             height *= cy;
             TransformGroup transform = new();
-            transform.Children.Add(new ScaleTransform(scaleX,scaleY,width,height));
-            transform.Children.Add(new RotateTransform(angle,width,height));
+            transform.Children.Add(new ScaleTransform(scaleX, scaleY, width, height));
+            transform.Children.Add(new RotateTransform(angle, width, height));
+            return transform;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyConvPanelRenderTransformGeo : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var angle = (double)values[0];
+            var scaleX = (double)values[1];
+            var scaleY = (double)values[2];
+            var cx = (double)values[3];
+            var cy = (double)values[4];
+            var bounds = (Rect)values[5];
+            double width = bounds.Width * cx;
+            double height = bounds.Height * cy;
+            TransformGroup transform = new();
+            transform.Children.Add(new ScaleTransform(scaleX, scaleY, width, height));
+            transform.Children.Add(new RotateTransform(angle, width, height));
             return transform;
         }
 
