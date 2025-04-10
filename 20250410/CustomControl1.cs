@@ -111,12 +111,20 @@ namespace _20250410
             }
             else
             {
-                MyBindInsideElementTransformedBounds();
+                //MyBindInsideElementTransformedBounds();
             }
 
 
-            MyBindInsideGridRenderTransform();
-            MyBindInsideGridRenderTransformOriginal();
+            //MyBindInsideGridRenderTransform();
+            if (MyItemData.Type == ItemType.GeoShape)
+            {
+
+            }
+            else
+            {
+                MyBindPanelTransform();
+            }
+            MyInsideGrid.SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyPanelRenderTransformProperty) });
 
             MyBindActualLocate();
             MyBindInsideElementLocate();
@@ -124,6 +132,19 @@ namespace _20250410
         }
 
         #region 初期バインド設定
+
+        private void MyBindPanelTransform()
+        {
+            var bind = new MultiBinding() { Converter = new MyConvPanelRenderTransform() };
+            bind.Bindings.Add(new Binding(nameof(ItemData.Angle)) { Source = MyItemData });
+            bind.Bindings.Add(new Binding(nameof(ItemData.ScaleX)) { Source = MyItemData });
+            bind.Bindings.Add(new Binding(nameof(ItemData.ScaleY)) { Source = MyItemData });
+            bind.Bindings.Add(new Binding(nameof(ItemData.CenterX)) { Source = MyItemData });
+            bind.Bindings.Add(new Binding(nameof(ItemData.CenterY)) { Source = MyItemData });
+            bind.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualWidthProperty) });
+            bind.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualHeightProperty) });
+            SetBinding(MyPanelRenderTransformProperty, bind);
+        }
 
         /// <summary>
         /// 中のGridの位置
@@ -177,26 +198,6 @@ namespace _20250410
             SetBinding(MyInsideElementTransformedBoundsProperty, mb);
         }
 
-        /// <summary>
-        /// 中の図形要素の変形後のBounds取得用
-        /// </summary>
-        private void MyBindInsideGeoShapeTransformedBounds()
-        {
-            var mb = new MultiBinding() { Converter = new MyConvInsideGeoShapeTransformedBounds() };
-            if (MyInsideElement is GeoShape shape)
-            {
-                mb.Bindings.Add(new Binding() { Source = shape, Path = new PropertyPath(GeoShape.MyGeometryRenderBoundsProperty) });
-                mb.Bindings.Add(new Binding(nameof(ItemData.Angle)) { Source = MyItemData });
-                mb.Bindings.Add(new Binding(nameof(ItemData.ScaleX)) { Source = MyItemData });
-                mb.Bindings.Add(new Binding(nameof(ItemData.ScaleY)) { Source = MyItemData });
-                mb.Bindings.Add(new Binding(nameof(ItemData.CenterX)) { Source = MyItemData });
-                mb.Bindings.Add(new Binding(nameof(ItemData.CenterY)) { Source = MyItemData });
-            }
-            //mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualWidthProperty) });
-            //mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualHeightProperty) });
-
-            SetBinding(MyInsideElementTransformedBoundsProperty, mb);
-        }
 
         /// <summary>
         /// 中の通常要素の変形後のBounds取得用
@@ -215,47 +216,47 @@ namespace _20250410
             SetBinding(MyInsideElementTransformedBoundsProperty, mb);
         }
 
+
         ///// <summary>
-        ///// 中の要素のBounds取得用
+        ///// 中のGrid要素のRenderTransformOriginal
         ///// </summary>
-        //private void MyBindInsideElementRenderTransformBounds()
+        //private void MyBindInsideGridRenderTransformOriginal()
         //{
-        //    var mb = new MultiBinding() { Converter = new MyConvRenderTransormBounds() };
-        //    mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(RenderTransformProperty) });
-        //    mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualWidthProperty) });
-        //    mb.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualHeightProperty) });
-        //    SetBinding(MyInsideElementRenderBoundsProperty, mb);
+        //    //中心で回転拡縮したいので、縦横サイズも必要
+        //    var mb = new MultiBinding() { Converter = new MyConvPoint() };
+        //    mb.Bindings.Add(new Binding(nameof(ItemData.CenterX)) { Source = MyItemData });
+        //    mb.Bindings.Add(new Binding(nameof(ItemData.CenterY)) { Source = MyItemData });
+        //    MyInsideGrid.SetBinding(RenderTransformOriginProperty, mb);
         //}
 
-        /// <summary>
-        /// 中のGrid要素のRenderTransformOriginal
-        /// </summary>
-        private void MyBindInsideGridRenderTransformOriginal()
-        {
-            //中心で回転拡縮したいので、縦横サイズも必要
-            var mb = new MultiBinding() { Converter = new MyConvPoint() };
-            mb.Bindings.Add(new Binding(nameof(ItemData.CenterX)) { Source = MyItemData });
-            mb.Bindings.Add(new Binding(nameof(ItemData.CenterY)) { Source = MyItemData });
-            MyInsideGrid.SetBinding(RenderTransformOriginProperty, mb);
-        }
-
-        /// <summary>
-        /// 中のGrid要素のRenderTransform
-        /// </summary>
-        private void MyBindInsideGridRenderTransform()
-        {
-            var mb = new MultiBinding() { Converter = new MyConvRenderTransform2() };
-            mb.Bindings.Add(new Binding(nameof(ItemData.Angle)) { Source = MyItemData });
-            mb.Bindings.Add(new Binding(nameof(ItemData.ScaleX)) { Source = MyItemData });
-            mb.Bindings.Add(new Binding(nameof(ItemData.ScaleY)) { Source = MyItemData });
-            MyInsideGrid.SetBinding(RenderTransformProperty, mb);
-        }
+        ///// <summary>
+        ///// 中のGrid要素のRenderTransform
+        ///// </summary>
+        //private void MyBindInsideGridRenderTransform()
+        //{
+        //    var mb = new MultiBinding() { Converter = new MyConvRenderTransform2() };
+        //    mb.Bindings.Add(new Binding(nameof(ItemData.Angle)) { Source = MyItemData });
+        //    mb.Bindings.Add(new Binding(nameof(ItemData.ScaleX)) { Source = MyItemData });
+        //    mb.Bindings.Add(new Binding(nameof(ItemData.ScaleY)) { Source = MyItemData });
+        //    MyInsideGrid.SetBinding(RenderTransformProperty, mb);
+        //}
 
 
         #endregion 初期バインド設定
 
+
         #region 依存関係プロパティ
 
+        /// <summary>
+        /// 内部Gridの変形用
+        /// </summary>
+        public Transform MyPanelRenderTransform
+        {
+            get { return (Transform)GetValue(MyPanelRenderTransformProperty); }
+            set { SetValue(MyPanelRenderTransformProperty, value); }
+        }
+        public static readonly DependencyProperty MyPanelRenderTransformProperty =
+            DependencyProperty.Register(nameof(MyPanelRenderTransform), typeof(Transform), typeof(KisoThumb), new PropertyMetadata(null));
 
         /// <summary>
         /// 実際の表示位置に使う。Canvas.Leftとバインドする

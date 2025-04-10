@@ -80,7 +80,7 @@ namespace _20250410
                 var myGeoGeo = geo.MyGeometry;
                 var myGeoRender = geo.MyGeometryRenderBounds;//geo.Bounds;
                 var myGeoRenderPen = geo.MyGeometryRenderBoundsWithPen;//geo.GetRenderBounds(MyPen);
-
+                var transform = geo.MyRenderTransform;
                 var insideWidth = MyGeoThumb.MyInsideElement.ActualWidth;
                 //geo.PointsMoveToTopLeft();
                 //geo.MyAnchorHandleAdorner?.HandlesLocateToPoints();

@@ -104,28 +104,30 @@ namespace _20250410
         }
     }
 
-    //public class MyConvRenderTransform : IMultiValueConverter
-    //{
-    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-    //    {
-    //        var width = ((double)values[0]) / 2.0;
-    //        var height = ((double)values[1]) / 2.0;
-    //        var scaleX = (double)values[2];
-    //        var scaleY = (double)values[3];
-    //        ScaleTransform scale = new(scaleX, scaleY, width, height);
-    //        var angle = (double)values[4];
-    //        RotateTransform rotate = new(angle, width, height);
-    //        TransformGroup transformGroup = new TransformGroup();
-    //        transformGroup.Children.Add(scale);
-    //        transformGroup.Children.Add(rotate);
-    //        return transformGroup;
-    //    }
+    public class MyConvPanelRenderTransform : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var angle = (double)values[0];
+            var scaleX = (double)values[1];
+            var scaleY = (double)values[2];
+            var cx = (double)values[3];
+            var cy = (double)values[4];
+            var width = (double)values[5];
+            var height = (double)values[6];
+            width *= cx;
+            height *= cy;
+            TransformGroup transform = new();
+            transform.Children.Add(new ScaleTransform(scaleX,scaleY,width,height));
+            transform.Children.Add(new RotateTransform(angle,width,height));
+            return transform;
+        }
 
-    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     #region Bounds
 

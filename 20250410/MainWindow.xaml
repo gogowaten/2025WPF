@@ -44,6 +44,19 @@
                  Opacity="1"/>
 
       <Ellipse Stroke="Blue" Width="11" Height="11" Canvas.Left="195" Canvas.Top="195" Panel.ZIndex="2"/>
+      
+      
+        <!--<Polyline Points="0,0,100,00" Stroke="Red" StrokeThickness="100" Opacity="0.5"/>
+        <Polyline Points="00,0,100,00" Stroke="blue" StrokeThickness="100" Opacity="0.5">
+          <Polyline.RenderTransform>
+            <TransformGroup>
+              <ScaleTransform ScaleX="2" ScaleY="2" CenterX="100" CenterY="-50"/>
+              <RotateTransform Angle="10" CenterX="100" CenterY="-50"/>
+            </TransformGroup>
+          </Polyline.RenderTransform>
+        </Polyline>-->
+      
+      
     </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding}">

@@ -160,15 +160,21 @@ namespace _20250410
 
         private void GeoShape_Loaded(object sender, RoutedEventArgs e)
         {
-
             MyBindPen();
-            //MyBindRenderTransform();
-
-            //MyBindRenderTransform2();
-            //MyBindShapeRenderTransformBounds2();
-            //MyBindStrokeThickness();
+            MyBindMyRenderTransform();
         }
 
+        private void MyBindMyRenderTransform()
+        {
+            var bind = new MultiBinding() { Converter = new MyConvRenderTransform() };
+            bind.Bindings.Add(MakeOneWayBind(MyGeometryRenderBoundsProperty));
+            bind.Bindings.Add(MakeOneWayBind(MyAngleProperty));
+            bind.Bindings.Add(MakeOneWayBind(MyCenterXProperty));
+            bind.Bindings.Add(MakeOneWayBind(MyCenterYProperty));
+            bind.Bindings.Add(MakeOneWayBind(MyScaleXProperty));
+            bind.Bindings.Add(MakeOneWayBind(MyScaleYProperty));
+            _ = SetBinding(MyRenderTransformProperty, bind);
+        }
 
         private void MyBindPen()
         {
@@ -183,10 +189,7 @@ namespace _20250410
 
         }
 
-        private Binding MakeOneWayBind(DependencyProperty property)
-        {
-            return new Binding() { Source = this, Path = new PropertyPath(property), Mode = BindingMode.OneWay };
-        }
+
         #endregion 初期処理
 
         //描画
@@ -273,6 +276,9 @@ namespace _20250410
 
         #region 読み取り用
 
+        /// <summary>
+        /// 専用のTransform、拡大回転のみ、変形の順番は拡大してから回転
+        /// </summary>
         public Transform MyRenderTransform
         {
             get { return (Transform)GetValue(MyRenderTransformProperty); }
@@ -281,21 +287,21 @@ namespace _20250410
         public static readonly DependencyProperty MyRenderTransformProperty =
             DependencyProperty.Register(nameof(MyRenderTransform), typeof(Transform), typeof(GeoShape), new PropertyMetadata(null));
 
-        public RotateTransform MyRotateTransform
-        {
-            get { return (RotateTransform)GetValue(MyRotateTransformProperty); }
-            protected set { SetValue(MyRotateTransformProperty, value); }
-        }
-        public static readonly DependencyProperty MyRotateTransformProperty =
-            DependencyProperty.Register(nameof(MyRotateTransform), typeof(RotateTransform), typeof(GeoShape), new PropertyMetadata(new RotateTransform()));
+        //public RotateTransform MyRotateTransform
+        //{
+        //    get { return (RotateTransform)GetValue(MyRotateTransformProperty); }
+        //    protected set { SetValue(MyRotateTransformProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyRotateTransformProperty =
+        //    DependencyProperty.Register(nameof(MyRotateTransform), typeof(RotateTransform), typeof(GeoShape), new PropertyMetadata(new RotateTransform()));
 
-        public ScaleTransform MyScaleTransform
-        {
-            get { return (ScaleTransform)GetValue(MyScaleTransformProperty); }
-            protected set { SetValue(MyScaleTransformProperty, value); }
-        }
-        public static readonly DependencyProperty MyScaleTransformProperty =
-            DependencyProperty.Register(nameof(MyScaleTransform), typeof(ScaleTransform), typeof(GeoShape), new PropertyMetadata(new ScaleTransform()));
+        //public ScaleTransform MyScaleTransform
+        //{
+        //    get { return (ScaleTransform)GetValue(MyScaleTransformProperty); }
+        //    protected set { SetValue(MyScaleTransformProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyScaleTransformProperty =
+        //    DependencyProperty.Register(nameof(MyScaleTransform), typeof(ScaleTransform), typeof(GeoShape), new PropertyMetadata(new ScaleTransform()));
 
         /// <summary>
         /// Geometryそのまま
@@ -320,16 +326,16 @@ namespace _20250410
         public static readonly DependencyProperty MyGeometryRenderBoundsProperty =
             DependencyProperty.Register(nameof(MyGeometryRenderBounds), typeof(Rect), typeof(GeoShape), new PropertyMetadata(new Rect()));
 
-        ///// <summary>
-        ///// 図形の変形後のBounds
-        ///// </summary>
-        //public Rect MyShapeTransformedBounds
-        //{
-        //    get { return (Rect)GetValue(MyShapeTransformedBoundsProperty); }
-        //    protected set { SetValue(MyShapeTransformedBoundsProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyShapeTransformedBoundsProperty =
-        //    DependencyProperty.Register(nameof(MyShapeTransformedBounds), typeof(Rect), typeof(GeoShape), new PropertyMetadata(new Rect()));
+        /// <summary>
+        /// 図形の変形後のBounds
+        /// </summary>
+        public Rect MyShapeTransformedBounds
+        {
+            get { return (Rect)GetValue(MyShapeTransformedBoundsProperty); }
+            protected set { SetValue(MyShapeTransformedBoundsProperty, value); }
+        }
+        public static readonly DependencyProperty MyShapeTransformedBoundsProperty =
+            DependencyProperty.Register(nameof(MyShapeTransformedBounds), typeof(Rect), typeof(GeoShape), new PropertyMetadata(new Rect()));
 
 
         /// <summary>
@@ -376,13 +382,13 @@ namespace _20250410
             DependencyProperty.Register(nameof(MyCenterX), typeof(double), typeof(GeoShape), new PropertyMetadata(0.0));
 
 
-        public double MyStrokeThicknessScale
-        {
-            get { return (double)GetValue(MyStrokeThicknessScaleProperty); }
-            set { SetValue(MyStrokeThicknessScaleProperty, value); }
-        }
-        public static readonly DependencyProperty MyStrokeThicknessScaleProperty =
-            DependencyProperty.Register(nameof(MyStrokeThicknessScale), typeof(double), typeof(GeoShape), new PropertyMetadata(1.0));
+        //public double MyStrokeThicknessScale
+        //{
+        //    get { return (double)GetValue(MyStrokeThicknessScaleProperty); }
+        //    set { SetValue(MyStrokeThicknessScaleProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyStrokeThicknessScaleProperty =
+        //    DependencyProperty.Register(nameof(MyStrokeThicknessScale), typeof(double), typeof(GeoShape), new PropertyMetadata(1.0));
 
 
 
@@ -636,6 +642,13 @@ namespace _20250410
         }
         #endregion 描画メソッド
 
+        #region その他メソッド
+        private Binding MakeOneWayBind(DependencyProperty property)
+        {
+            return new Binding() { Source = this, Path = new PropertyPath(property), Mode = BindingMode.OneWay };
+        }
+
+        #endregion その他メソッド
 
         #region パフリックメソッド
 
@@ -686,33 +699,6 @@ namespace _20250410
 
     #region コンバーター
 
-    //public class MyConvRenderTransform : IMultiValueConverter
-    //{
-    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-    //    {
-    //        var angle = (double)values[0];
-    //        var scaleX = 1.0;
-    //        var scaleY = 1.0;
-    //        var centerX = 0.0;
-    //        var centerY = 0.0;
-    //        //var scaleX = (double)values[1];
-    //        //var scaleY = (double)values[2];
-    //        //var centerX = (double)values[3];
-    //        //var centerY = (double)values[4];
-
-    //        RotateTransform rotate = new(angle, centerX, centerY);
-    //        ScaleTransform scele = new(scaleX, scaleY, centerX, centerY);
-    //        TransformGroup group = new();
-    //        group.Children.Add(rotate);
-    //        group.Children.Add(scele);
-    //        return group;
-    //    }
-
-    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
 
     public class MyConvStrokeThicknessScale : IMultiValueConverter
     {
@@ -764,6 +750,36 @@ namespace _20250410
         }
     }
 
+
+
+    public class MyConvRenderTransform : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values[0] == null) { return Transform.Identity; }
+            var geoBounds = (Rect)values[0];
+            var angle = (double)values[1];
+            var centerX = (double)values[2];
+            var centerY = (double)values[3];
+            var scaleX = (double)values[4];
+            var scaleY = (double)values[5];
+            double x = geoBounds.Width * centerX;
+            double y = geoBounds.Height * centerY;
+
+            TransformGroup transform = new();
+            transform.Children.Add(new ScaleTransform(scaleX, scaleY, x, y));
+            transform.Children.Add(new RotateTransform(angle, x, y));
+            //centerX = geoBounds.Left + (geoBounds.Width * centerX);
+            //centerY = geoBounds.Top + (geoBounds.Height * centerY);
+
+            return transform;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
 
     public class MyConvScaleTransform : IMultiValueConverter

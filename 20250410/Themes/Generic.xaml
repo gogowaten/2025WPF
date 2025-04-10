@@ -23,6 +23,12 @@
     <Setter Property="Height"
             Value="{Binding RelativeSource={RelativeSource Mode=Self},
                             Path=MyInsideElementTransfomedBounds.Height}"/>
+    <!--<Setter Property="Width"
+            Value="{Binding RelativeSource={RelativeSource Mode=Self},
+                            Path=MyInsideElementTransfomedBounds.Width}"/>
+    <Setter Property="Height"
+            Value="{Binding RelativeSource={RelativeSource Mode=Self},
+                            Path=MyInsideElementTransfomedBounds.Height}"/>-->
   </Style>
 
 
@@ -37,6 +43,13 @@
               <TextBlock x:Name="InsideElement" Text="{Binding Text}"
                          Background="MistyRose"
                          FontSize="30"/>
+              <Rectangle x:Name="waku"
+                         Stroke="Red"
+                         StrokeThickness="1"
+                         Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}"
+                         Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}"
+                         
+                         />
             </Grid>
           </Canvas>
         </ControlTemplate>
