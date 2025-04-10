@@ -1,0 +1,6 @@
+﻿﻿﻿中の要素の名前はInsideElementにする
+	Generic.xamlに追加する基礎Thumbの派生クラスで表示したい要素の名前はInsideElementにする、
+	この名前で検索しているので、もしこれ以外だとエラーになる
+中の要素のGridの名前はinsideGridに統一して、これで検索取得
+	回転拡縮はこのGridに対して行う
+	
