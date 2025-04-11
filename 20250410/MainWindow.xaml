@@ -68,6 +68,7 @@
         <TextBlock Text="{Binding MyItemData.Points, StringFormat=poi {0:0 }}"/>
         <TextBlock Text="{Binding MyInsideElementTransfomedBounds, StringFormat=elemBounds {0:0}}"/>
         <TextBlock Text="{Binding MyInsideGrid.ActualWidth, StringFormat=inGridWidth {0:0}}"/>
+        <TextBlock Text="{Binding MyInsideBounds, StringFormat=MyInsideBounds {0: 0 }}"/>
         <TextBlock DataContext="{Binding MyInsideGrid}" Text="{Binding (Canvas.Left), StringFormat=gridLeft {0:0}}"/>
         <TextBlock DataContext="{Binding MyInsideElement}" Text="{Binding (Canvas.Left), StringFormat=inElemLeft {0:0}}"/>
       </StackPanel>
@@ -76,7 +77,7 @@
         <TextBlock Text="{Binding Top, StringFormat=Top 0}"/>
         <TextBlock Text="{Binding Text, StringFormat=Text {0:0}}"/>
         <TextBlock Text="{Binding Angle, StringFormat=Angle 0}"/>
-        <Slider Value="{Binding Angle}" Minimum="0" Maximum="360" TickFrequency="5" IsSnapToTickEnabled="True"/>
+        <Slider Value="{Binding Angle}" Minimum="0" Maximum="360" TickFrequency="45" IsSnapToTickEnabled="True"/>
         <TextBlock Text="{Binding ScaleX, StringFormat=ScaleX 0}"/>
         <Slider x:Name="scaleX" Value="{Binding ScaleX}" Minimum="0" Maximum="5" TickFrequency="1.0" IsSnapToTickEnabled="True"/>
         <Slider Value="{Binding ElementName=scaleX, Path=Value}" Minimum="0" Maximum="5" TickFrequency="0.1" IsSnapToTickEnabled="True" Visibility="Collapsed"/>

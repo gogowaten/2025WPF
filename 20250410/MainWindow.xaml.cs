@@ -42,7 +42,7 @@ namespace _20250410
         {
             ItemData data = new(ItemType.GeoShape);
             data.Text = "geo";
-            data.Points = [new Point(), new Point(100, 100)];
+            data.Points = [new Point(), new Point(100, 00)];
             data.Left = 200;
             data.Top = 200;
             var thumb = new GeoShapeThumb(data);
@@ -80,10 +80,11 @@ namespace _20250410
                 var myGeoGeo = geo.MyGeometry;
                 var myGeoRender = geo.MyGeometryRenderBounds;//geo.Bounds;
                 var myGeoRenderPen = geo.MyGeometryRenderBoundsWithPen;//geo.GetRenderBounds(MyPen);
-                var transform = geo.MyRenderTransform;
+                //var transform = geo.MyRenderTransform;
                 var insideWidth = MyGeoThumb.MyInsideElement.ActualWidth;
                 //geo.PointsMoveToTopLeft();
                 //geo.MyAnchorHandleAdorner?.HandlesLocateToPoints();
+                Canvas.SetTop(geo, -20);
             }
         }
     }

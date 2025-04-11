@@ -156,25 +156,26 @@ namespace _20250410
             //このバインドの設定はLoadedでは遅いようで正しく描画されない、なのでここで行っている
             _ = SetBinding(MySegmentPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterSegmentPoints() });
 
+            MyBindPen();
         }
 
         private void GeoShape_Loaded(object sender, RoutedEventArgs e)
         {
-            MyBindPen();
-            MyBindMyRenderTransform();
+            
+            //MyBindMyRenderTransform();
         }
 
-        private void MyBindMyRenderTransform()
-        {
-            var bind = new MultiBinding() { Converter = new MyConvRenderTransform() };
-            bind.Bindings.Add(MakeOneWayBind(MyGeometryRenderBoundsProperty));
-            bind.Bindings.Add(MakeOneWayBind(MyAngleProperty));
-            bind.Bindings.Add(MakeOneWayBind(MyCenterXProperty));
-            bind.Bindings.Add(MakeOneWayBind(MyCenterYProperty));
-            bind.Bindings.Add(MakeOneWayBind(MyScaleXProperty));
-            bind.Bindings.Add(MakeOneWayBind(MyScaleYProperty));
-            _ = SetBinding(MyRenderTransformProperty, bind);
-        }
+        //private void MyBindMyRenderTransform()
+        //{
+        //    var bind = new MultiBinding() { Converter = new MyConvRenderTransform() };
+        //    bind.Bindings.Add(MakeOneWayBind(MyGeometryRenderBoundsProperty));
+        //    bind.Bindings.Add(MakeOneWayBind(MyAngleProperty));
+        //    bind.Bindings.Add(MakeOneWayBind(MyCenterXProperty));
+        //    bind.Bindings.Add(MakeOneWayBind(MyCenterYProperty));
+        //    bind.Bindings.Add(MakeOneWayBind(MyScaleXProperty));
+        //    bind.Bindings.Add(MakeOneWayBind(MyScaleYProperty));
+        //    _ = SetBinding(MyRenderTransformProperty, bind);
+        //}
 
         private void MyBindPen()
         {
@@ -276,16 +277,16 @@ namespace _20250410
 
         #region 読み取り用
 
-        /// <summary>
-        /// 専用のTransform、拡大回転のみ、変形の順番は拡大してから回転
-        /// </summary>
-        public Transform MyRenderTransform
-        {
-            get { return (Transform)GetValue(MyRenderTransformProperty); }
-            protected set { SetValue(MyRenderTransformProperty, value); }
-        }
-        public static readonly DependencyProperty MyRenderTransformProperty =
-            DependencyProperty.Register(nameof(MyRenderTransform), typeof(Transform), typeof(GeoShape), new PropertyMetadata(null));
+        ///// <summary>
+        ///// 専用のTransform、拡大回転のみ、変形の順番は拡大してから回転
+        ///// </summary>
+        //public Transform MyRenderTransform
+        //{
+        //    get { return (Transform)GetValue(MyRenderTransformProperty); }
+        //    protected set { SetValue(MyRenderTransformProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyRenderTransformProperty =
+        //    DependencyProperty.Register(nameof(MyRenderTransform), typeof(Transform), typeof(GeoShape), new PropertyMetadata(null));
 
         //public RotateTransform MyRotateTransform
         //{

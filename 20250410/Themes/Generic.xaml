@@ -61,7 +61,8 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:GeoShapeThumb}">
-          <Canvas DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData}">
+          <Canvas DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData}"
+                  HorizontalAlignment="Left" VerticalAlignment="Top">
             <Grid x:Name="insideGrid">
               <local:GeoShapeWithAnchorHandle
                 x:Name="InsideElement"
@@ -85,13 +86,21 @@
                 Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"
                 />
               <Rectangle
+                x:Name="wakuGrid"
+                Stroke="Gray"
+                StrokeThickness="2.0"
+                Width="{Binding ElementName=insideGrid, Path=ActualWidth}"
+                Height="{Binding ElementName=insideGrid, Path=ActualHeight}"
+                
+                />
+              
+              <Rectangle
                 x:Name="wakuggeo"
                 Stroke="Cyan"
                 StrokeThickness="1.0"
                 Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElement.ActualWidth}"
                 Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElement.ActualHeight}"
                 />
-              
             </Grid>
           </Canvas>
         </ControlTemplate>

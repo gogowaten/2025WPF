@@ -139,11 +139,11 @@ namespace _20250410
             var cx = (double)values[3];
             var cy = (double)values[4];
             var bounds = (Rect)values[5];
-            double width = bounds.Width * cx;
-            double height = bounds.Height * cy;
+            double x = bounds.Left + bounds.Width * cx;
+            double y = bounds.Top + bounds.Height * cy;
             TransformGroup transform = new();
-            transform.Children.Add(new ScaleTransform(scaleX, scaleY, width, height));
-            transform.Children.Add(new RotateTransform(angle, width, height));
+            transform.Children.Add(new ScaleTransform(scaleX, scaleY, x, y));
+            transform.Children.Add(new RotateTransform(angle, x, y));
             return transform;
         }
 
@@ -266,6 +266,51 @@ namespace _20250410
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyConvWidthHeightRect : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var w = (double)values[0];
+            var h = (double)values[1];
+            return new Rect(0, 0, w, h);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class MyConvRectWidth : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var r = (Rect)value;
+            return r.Width;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class MyConvRectHeight : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var r = (Rect)value;
+            return r.Height;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
