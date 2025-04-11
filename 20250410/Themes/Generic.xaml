@@ -11,12 +11,14 @@
 
 
   <Style TargetType="{x:Type local:KisoThumb}" x:Key="kiso">
+    
     <Setter Property="Canvas.Left"
             Value="{Binding RelativeSource={RelativeSource Mode=Self},
                             Path=MyItemData.Left}"/>
     <Setter Property="Canvas.Top"
             Value="{Binding RelativeSource={RelativeSource Mode=Self},
                             Path=MyItemData.Top}"/>
+    
     <!--<Setter Property="Canvas.Left"
             Value="{Binding RelativeSource={RelativeSource Mode=Self},
                             Path=MyActualLeft}"/>
@@ -30,6 +32,7 @@
     <Setter Property="Height"
             Value="{Binding RelativeSource={RelativeSource Mode=Self},
                             Path=MyInsideElementTransfomedBounds.Height}"/>
+    
     <!--<Setter Property="Width"
             Value="{Binding RelativeSource={RelativeSource Mode=Self},
                             Path=MyInsideElementTransfomedBounds.Width}"/>
@@ -65,12 +68,13 @@
   </Style>
 
   <Style TargetType="{x:Type local:GeoShapeThumb}" BasedOn="{StaticResource kiso}">
+
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:GeoShapeThumb}">
           <Canvas DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData}"
                   HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Grid x:Name="insideGrid">
+            <Grid>
               <local:GeoShapeWithAnchorHandle
                 x:Name="InsideElement"
                 MyPoints="{Binding Points}"
@@ -82,11 +86,12 @@
                 MyScaleY="{Binding ScaleY}"
                 MyCenterX="{Binding CenterX}"
                 MyCenterY="{Binding CenterY}"
+                
                 />
               <Rectangle
                 x:Name="waku"
                 Stroke="Blue"
-                StrokeThickness="1.0"
+                StrokeThickness="8.0"
                 Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementTransfomedBounds.Width}"
                 Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementTransfomedBounds.Height}"
                 />
@@ -97,14 +102,14 @@
                 Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}"
                 Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualHeight}"
                 />
-              <Rectangle
+              <!--<Rectangle
                 x:Name="wakuGrid"
                 Stroke="Gray"
                 StrokeThickness="2.0"
                 Width="{Binding ElementName=insideGrid, Path=ActualWidth}"
                 Height="{Binding ElementName=insideGrid, Path=ActualHeight}"
                 
-                />
+                />-->
               
               <Rectangle
                 x:Name="wakuggeo"

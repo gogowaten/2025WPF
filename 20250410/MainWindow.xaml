@@ -46,9 +46,12 @@
       <Ellipse Stroke="Blue" Width="11" Height="11" Canvas.Left="195" Canvas.Top="195" Panel.ZIndex="2"/>
 
 
-      <Polyline x:Name="MyPoly" Stroke="Blue" StrokeThickness="10" Canvas.Left="100" Canvas.Top="100"
+      <Canvas>
+        
+        <Polyline x:Name="MyPoly" Stroke="Blue" StrokeThickness="20" Canvas.Left="100" Canvas.Top="100"
                 Points="0,0,100,0"/>
-
+        <Rectangle Stroke="Red"/>
+      </Canvas>
 
     </Canvas>
 
@@ -59,11 +62,15 @@
         <TextBlock Text="{Binding MyActualLeft, StringFormat=MyActualLeft 0.0}"/>
         <TextBlock Text="{Binding MyActualTop, StringFormat=MyActualTop 0.0}"/>
         <TextBlock Text="{Binding MyItemData.Points, StringFormat=poi {0:0 }}"/>
-        <TextBlock Text="{Binding MyInsideElementTransfomedBounds, StringFormat=elemBounds {0:0}}"/>
-        <TextBlock Text="{Binding MyInsideGrid.ActualWidth, StringFormat=inGridWidth {0:0}}"/>
-        <TextBlock Text="{Binding MyInsideBounds, StringFormat=MyInsideBounds {0: 0 }}"/>
-        <TextBlock DataContext="{Binding MyInsideGrid}" Text="{Binding (Canvas.Left), StringFormat=gridLeft {0:0}}"/>
+        <TextBlock Text="{Binding MyInsideElementTransfomedBounds, StringFormat=変形後の内部要素 {0:0}}"/>
+        <!--<TextBlock Text="{Binding MyInsideGrid.ActualWidth, StringFormat=inGridWidth {0:0}}"/>-->
+        <TextBlock Text="{Binding MyInsideBounds, StringFormat=変形前の内部要素 {0: 0 }}"/>
+        <!--<TextBlock DataContext="{Binding MyInsideGrid}" Text="{Binding (Canvas.Left), StringFormat=gridLeft {0:0}}"/>-->
         <TextBlock DataContext="{Binding MyInsideElement}" Text="{Binding (Canvas.Left), StringFormat=inElemLeft {0:0}}"/>
+        <TextBlock DataContext="{Binding MyInsideElement}" Text="{Binding (Canvas.Top), StringFormat=内部要素Top {0:0}}"/>
+        <TextBlock Text="{Binding MyInsideElement.ActualWidth, StringFormat=内部要素実際幅 {0:0}}"/>
+        
+
       </StackPanel>
       <StackPanel DataContext="{Binding MyItemData}">
         <TextBlock Text="{Binding Left, StringFormat=Left 0}"/>

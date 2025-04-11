@@ -11,7 +11,35 @@ using System.Windows.Media;
 
 namespace _20250410
 {
-    public class MyConvInsideElementLeft : IValueConverter
+
+    public class MyConvRectLeft : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var bounds = (Rect)value;
+            return bounds.Left;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class MyConvRectTop : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var bounds = (Rect)value;
+            return bounds.Top;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    
+    public class MyConvRectLeftReverse : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -24,7 +52,7 @@ namespace _20250410
             throw new NotImplementedException();
         }
     }
-    public class MyConvInsideElementTop : IValueConverter
+    public class MyConvRectTopReverse : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -44,7 +72,7 @@ namespace _20250410
         {
             var left = (double)values[0];
             var bounds = (Rect)values[1];
-            return left + bounds.Left;
+            return left - bounds.Left;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -59,7 +87,7 @@ namespace _20250410
         {
             var top = (double)values[0];
             var bounds = (Rect)values[1];
-            return top + bounds.Top;
+            return top - bounds.Top;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -154,34 +182,33 @@ namespace _20250410
     }
 
     #region Bounds
+
+    public class MyConvInsideTransformedBound11 : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var bounds = (Rect)values[0];
+            var tf = (Transform)values[1];
+            return tf.TransformBounds(bounds);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    //GeometryをTransformしてPenを使ったGetRenderBounds
     public class MyConvInsideTransformedBounds2 : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-
-            //Rect GRB = geo.MyGeometryRenderBounds;
-            //Rect GRBWP = geo.MyGeometryRenderBoundsWithPen;
-            //Rect STB = geo.MyShapeTransformedBounds;
-            //Geometry Geo = geo.MyGeometry;
-            //Geometry RG = geo.RenderedGeometry;
-            //Rect RGB = RG.Bounds;
-            //Rect RGRBP = RG.GetRenderBounds(geo.MyPen);
-            //ItemData data = MyGeoThumb.MyItemData;
-            //double x = GRBWP.Left + GRBWP.Width * data.CenterX;
-            //double y = GRBWP.Top + GRBWP.Height * data.CenterY;
-            //TransformGroup transform = new();
-            //transform.Children.Add(new ScaleTransform(data.ScaleX, data.ScaleY, x, y));
-            //transform.Children.Add(new RotateTransform(data.Angle, x, y));
-            //Geometry clone = geo.RenderedGeometry.Clone();
-            //Geometry clone2 = clone.Clone();
-            //clone.Transform = transform;
-            //Rect cloneBounds = clone.Bounds;
-            //Rect clonePenBouds = clone.GetRenderBounds(geo.MyPen);
-            //clone2.Transform = geo.MyRenderTransform;
-            //Rect clone2PenBounds = clone2.GetRenderBounds(geo.MyPen);
-
-            var geo =(Geometry)values[0];
-
+            var geo = (Geometry)values[0];
+            var clone = geo.Clone();
+            var tf = (Transform)values[1];
+            var myPen = (Pen)values[2];
+            clone.Transform = tf;
+            return clone.GetRenderBounds(myPen);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

@@ -59,7 +59,7 @@ namespace _20250410
     public class KisoThumb : Thumb
     {
         public FrameworkElement MyInsideElement { get; private set; } = null!;
-        public Grid MyInsideGrid { get; private set; } = null!;
+        //public Grid MyInsideGrid { get; private set; } = null!;
 
         static KisoThumb()
         {
@@ -95,11 +95,11 @@ namespace _20250410
             {
                 MessageBox.Show("内部要素の取得に失敗");
             }
-            if (GetTemplateChild("insideGrid") is Grid grid)
-            {
-                MyInsideGrid = grid;
-            }
-            else { MessageBox.Show("内部Gridの取得に失敗"); }
+            //if (GetTemplateChild("insideGrid") is Grid grid)
+            //{
+            //    MyInsideGrid = grid;
+            //}
+            //else { MessageBox.Show("内部Gridの取得に失敗"); }
         }
 
         private void KisoThumb_Loaded(object sender, RoutedEventArgs e)
@@ -107,21 +107,21 @@ namespace _20250410
             //各種バインド設定
 
             MyBindInsideBounds();//内部要素の変形前のBounds
-            MyBindInsideTransformBounds();
             MyBindPanelTransform();//Panel要素のTransform作成
+            MyBindInsideTransformBounds();
 
-            //Gridを変形
-            MyInsideGrid.SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyPanelRenderTransformProperty) });
+            ////Gridを変形
+            //MyInsideGrid.SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyPanelRenderTransformProperty) });
             ////Geoを変形
             ////MyInsideElement.SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyPanelRenderTransformProperty) });
 
             MyBindActualLocate();
-            if(MyInsideElement is GeoShape shape)
-            {
-                MyItemData.Angle = 90;
 
-            }
-            //MyBindInsideElementLocate();
+            ////MyBindInsideElementLocate();
+            //MyInsideElement.SetBinding(Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty), Converter = new MyConvRectLeftReverse() });
+            //MyInsideElement.SetBinding(Canvas.TopProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty), Converter = new MyConvRectTopReverse() });
+
+            MyInsideElement.SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyPanelRenderTransformProperty) });
 
         }
 
@@ -133,14 +133,18 @@ namespace _20250410
             if (MyInsideElement is GeoShape geo)
             {
                 //Geometryから計算
-                geo.RenderedGeometry;
-                geo.MyPen;
-
-
+                var bind = new MultiBinding() { Converter = new MyConvInsideTransformedBounds2() };
+                bind.Bindings.Add(new Binding() { Source=geo,Path=new PropertyPath(GeoShape.MyGeometryProperty) });
+                bind.Bindings.Add(new Binding() { Source=this,Path=new PropertyPath(MyPanelRenderTransformProperty) });
+                bind.Bindings.Add(new Binding() { Source=geo,Path=new PropertyPath(GeoShape.MyPenProperty) });
+                SetBinding(MyInsideElementTransformedBoundsProperty, bind);
             }
             else
             {
-
+                var bind = new MultiBinding() { Converter = new MyConvInsideTransformedBound11() };                
+                bind.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyInsideBoundsProperty) });
+                bind.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyPanelRenderTransformProperty) });
+                SetBinding(MyInsideElementTransformedBoundsProperty, bind);
             }
         }
 
@@ -176,15 +180,15 @@ namespace _20250410
         }
 
 
-        /// <summary>
-        /// Gridのオフセット。
-        /// 回転拡縮などでの変化する位置の修正用
-        /// </summary>
-        private void MyBindInsideElementLocate()
-        {
-            BindingOperations.SetBinding(MyInsideGrid, Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty), Converter = new MyConvInsideElementLeft() });
-            BindingOperations.SetBinding(MyInsideGrid, Canvas.TopProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty), Converter = new MyConvInsideElementTop() });
-        }
+        ///// <summary>
+        ///// Gridのオフセット。
+        ///// 回転拡縮などでの変化する位置の修正用
+        ///// </summary>
+        //private void MyBindInsideElementLocate()
+        //{
+        //    BindingOperations.SetBinding(MyInsideGrid, Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty), Converter = new MyConvRectLeftReverse() });
+        //    BindingOperations.SetBinding(MyInsideGrid, Canvas.TopProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty), Converter = new MyConvRectTopReverse() });
+        //}
 
         /// <summary>
         /// 自身の実際の位置設定用

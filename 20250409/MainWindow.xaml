@@ -40,7 +40,7 @@
             <RotateTransform Angle="0"/>
           </TransformGroup>
         </Grid.RenderTransform>
-        <Polyline Points="0,0,100,0" Stroke="Red" StrokeThickness="40"/>
+        <Polyline Points="0,0,100,0" Stroke="Orange" StrokeThickness="40"/>
       </Grid>
     </Canvas>
 
