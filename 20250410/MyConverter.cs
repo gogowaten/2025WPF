@@ -154,6 +154,41 @@ namespace _20250410
     }
 
     #region Bounds
+    public class MyConvInsideTransformedBounds2 : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+
+            //Rect GRB = geo.MyGeometryRenderBounds;
+            //Rect GRBWP = geo.MyGeometryRenderBoundsWithPen;
+            //Rect STB = geo.MyShapeTransformedBounds;
+            //Geometry Geo = geo.MyGeometry;
+            //Geometry RG = geo.RenderedGeometry;
+            //Rect RGB = RG.Bounds;
+            //Rect RGRBP = RG.GetRenderBounds(geo.MyPen);
+            //ItemData data = MyGeoThumb.MyItemData;
+            //double x = GRBWP.Left + GRBWP.Width * data.CenterX;
+            //double y = GRBWP.Top + GRBWP.Height * data.CenterY;
+            //TransformGroup transform = new();
+            //transform.Children.Add(new ScaleTransform(data.ScaleX, data.ScaleY, x, y));
+            //transform.Children.Add(new RotateTransform(data.Angle, x, y));
+            //Geometry clone = geo.RenderedGeometry.Clone();
+            //Geometry clone2 = clone.Clone();
+            //clone.Transform = transform;
+            //Rect cloneBounds = clone.Bounds;
+            //Rect clonePenBouds = clone.GetRenderBounds(geo.MyPen);
+            //clone2.Transform = geo.MyRenderTransform;
+            //Rect clone2PenBounds = clone2.GetRenderBounds(geo.MyPen);
+
+            var geo =(Geometry)values[0];
+
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public class MyConvInsideTransformedBounds : IMultiValueConverter
     {

@@ -106,22 +106,45 @@ namespace _20250410
         {
             //各種バインド設定
 
-            //MyBindInsideBounds();
+            MyBindInsideBounds();//内部要素の変形前のBounds
+            MyBindInsideTransformBounds();
+            MyBindPanelTransform();//Panel要素のTransform作成
 
-            //MyBindPanelTransform();
-
-            ////Gridを変形
-            //MyInsideGrid.SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyPanelRenderTransformProperty) });
+            //Gridを変形
+            MyInsideGrid.SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyPanelRenderTransformProperty) });
             ////Geoを変形
             ////MyInsideElement.SetBinding(RenderTransformProperty, new Binding() { Source = this, Path = new PropertyPath(MyPanelRenderTransformProperty) });
 
             MyBindActualLocate();
+            if(MyInsideElement is GeoShape shape)
+            {
+                MyItemData.Angle = 90;
+
+            }
             //MyBindInsideElementLocate();
 
         }
 
         #region 初期バインド設定
 
+        //内部要素の変形後のBounds
+        private void MyBindInsideTransformBounds()
+        {
+            if (MyInsideElement is GeoShape geo)
+            {
+                //Geometryから計算
+                geo.RenderedGeometry;
+                geo.MyPen;
+
+
+            }
+            else
+            {
+
+            }
+        }
+
+        //内部要素の変形前のBounds
         private void MyBindInsideBounds()
         {
             if (MyInsideElement is GeoShape geo)
@@ -134,7 +157,8 @@ namespace _20250410
                 bind.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualWidthProperty) });
                 bind.Bindings.Add(new Binding() { Source = MyInsideElement, Path = new PropertyPath(ActualHeightProperty) });
                 SetBinding(MyInsideBoundsProperty, bind);
-            }
+            }           
+            
         }
 
 
@@ -151,19 +175,6 @@ namespace _20250410
             SetBinding(MyPanelRenderTransformProperty, bind);
         }
 
-        ////Transform取得
-        //private void MyBindPanelTransform()
-        //{
-        //    var bind = new MultiBinding() { Converter = new MyConvPanelRenderTransform() };
-        //    bind.Bindings.Add(new Binding(nameof(ItemData.Angle)) { Source = MyItemData });
-        //    bind.Bindings.Add(new Binding(nameof(ItemData.ScaleX)) { Source = MyItemData });
-        //    bind.Bindings.Add(new Binding(nameof(ItemData.ScaleY)) { Source = MyItemData });
-        //    bind.Bindings.Add(new Binding(nameof(ItemData.CenterX)) { Source = MyItemData });
-        //    bind.Bindings.Add(new Binding(nameof(ItemData.CenterY)) { Source = MyItemData });
-        //    bind.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyInsideWidthProperty) });
-        //    bind.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyInsideHeightProperty) });
-        //    SetBinding(MyPanelRenderTransformProperty, bind);
-        //}
 
         /// <summary>
         /// Gridのオフセット。
@@ -274,28 +285,6 @@ namespace _20250410
         }
         public static readonly DependencyProperty MyInsideBoundsProperty =
             DependencyProperty.Register(nameof(MyInsideBounds), typeof(Rect), typeof(KisoThumb), new PropertyMetadata(new Rect()));
-
-
-        ///// <summary>
-        ///// 内部要素のWidth、通常要素はActualWidthにバインドする。GeoShapeはRenderBounds
-        ///// </summary>
-        //public double MyInsideWidth
-        //{
-        //    get { return (double)GetValue(MyInsideWidthProperty); }
-        //    protected set { SetValue(MyInsideWidthProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyInsideWidthProperty =
-        //    DependencyProperty.Register(nameof(MyInsideWidth), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
-
-
-        //public double MyInsideHeight
-        //{
-        //    get { return (double)GetValue(MyInsideHeightProperty); }
-        //    protected set { SetValue(MyInsideHeightProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyInsideHeightProperty =
-        //    DependencyProperty.Register(nameof(MyInsideHeight), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
-
 
 
         /// <summary>

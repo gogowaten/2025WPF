@@ -13,10 +13,17 @@
   <Style TargetType="{x:Type local:KisoThumb}" x:Key="kiso">
     <Setter Property="Canvas.Left"
             Value="{Binding RelativeSource={RelativeSource Mode=Self},
+                            Path=MyItemData.Left}"/>
+    <Setter Property="Canvas.Top"
+            Value="{Binding RelativeSource={RelativeSource Mode=Self},
+                            Path=MyItemData.Top}"/>
+    <!--<Setter Property="Canvas.Left"
+            Value="{Binding RelativeSource={RelativeSource Mode=Self},
                             Path=MyActualLeft}"/>
     <Setter Property="Canvas.Top"
             Value="{Binding RelativeSource={RelativeSource Mode=Self},
-                            Path=MyActualTop}"/>
+                            Path=MyActualTop}"/>-->
+    
     <Setter Property="Width"
             Value="{Binding RelativeSource={RelativeSource Mode=Self},
                             Path=MyInsideElementTransfomedBounds.Width}"/>
@@ -70,6 +77,11 @@
                 Stroke="Red"
                 StrokeThickness="40"
                 MyHeadEndType="None"
+                MyAngle="{Binding Angle}"
+                MyScaleX="{Binding ScaleX}"
+                MyScaleY="{Binding ScaleY}"
+                MyCenterX="{Binding CenterX}"
+                MyCenterY="{Binding CenterY}"
                 />
               <Rectangle
                 x:Name="waku"

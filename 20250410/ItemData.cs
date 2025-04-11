@@ -69,10 +69,10 @@ namespace _20250410
         public double ScaleY { get => _ScaleY; set => SetProperty(ref _ScaleY, value); }
 
 
-        private double _CenterX;
+        private double _CenterX = 0.5;
         public double CenterX { get => _CenterX; set => SetProperty(ref _CenterX, value); }
 
-        private double _CenterY;
+        private double _CenterY = 0.5;
         public double CenterY { get => _CenterY; set => SetProperty(ref _CenterY, value); }
 
 

@@ -75,16 +75,45 @@ namespace _20250410
             //MyGeoThumb.MyItemData.Points[0] = new Point(100, 0);
             if (MyGeoThumb.MyInsideElement is GeoShapeWithAnchorHandle geo)
             {
-                var geoGetRenderB = geo.GetRenderBounds();
-                var renderdGeo = geo.RenderedGeometry.Bounds;
-                var myGeoGeo = geo.MyGeometry;
-                var myGeoRender = geo.MyGeometryRenderBounds;//geo.Bounds;
-                var myGeoRenderPen = geo.MyGeometryRenderBoundsWithPen;//geo.GetRenderBounds(MyPen);
-                //var transform = geo.MyRenderTransform;
-                var insideWidth = MyGeoThumb.MyInsideElement.ActualWidth;
-                //geo.PointsMoveToTopLeft();
-                //geo.MyAnchorHandleAdorner?.HandlesLocateToPoints();
-                Canvas.SetTop(geo, -20);
+                Rect GRB = geo.MyGeometryRenderBounds;
+                Rect GRBWP = geo.MyGeometryRenderBoundsWithPen;
+                Rect STB = geo.MyShapeTransformedBounds;
+                Geometry Geo = geo.MyGeometry;
+                Geometry RG = geo.RenderedGeometry;
+                Rect RGB = RG.Bounds;
+                Rect RGRBP = RG.GetRenderBounds(geo.MyPen);
+                ItemData data = MyGeoThumb.MyItemData;
+                double x = GRBWP.Left + GRBWP.Width * data.CenterX;
+                double y = GRBWP.Top + GRBWP.Height * data.CenterY;
+                TransformGroup transform = new();
+                transform.Children.Add(new ScaleTransform(data.ScaleX, data.ScaleY, x, y));
+                transform.Children.Add(new RotateTransform(data.Angle, x, y));
+                Geometry clone = geo.RenderedGeometry.Clone();
+                Geometry clone2 = clone.Clone();
+                clone.Transform = transform;
+                Rect cloneBounds = clone.Bounds;
+                Rect clonePenBouds = clone.GetRenderBounds(geo.MyPen);
+                clone2.Transform = geo.MyRenderTransform;
+                Rect clone2PenBounds = clone2.GetRenderBounds(geo.MyPen);
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            //RotateTransform ro = new(10, 0, 0);
+            //for (int i = 0; i < MyPoly.Points.Count; i++)
+            //{
+            //    MyPoly.Points[i] = ro.Transform(MyPoly.Points[i]);
+            //}
+            if (MyGeoThumb.MyInsideElement is GeoShape shape)
+            {
+                ItemData data = MyGeoThumb.MyItemData;
+                RotateTransform ro = new(data.Angle);
+                for (int i = 0; i < data.Points.Count; i++)
+                {
+                    data.Points[i]=ro.Transform(data.Points[i]);
+                }
+
             }
         }
     }
