@@ -17,11 +17,11 @@
           <Canvas x:Name="canvas">
             <Grid x:Name="grid">
               <local:GeoShapeWithAnchorHandle
-              x:Name="geoshape"
-              MyPoints="0,0,100,100"
-              Stroke="Red"
-              StrokeThickness="40"
-              />
+                x:Name="geoshape"
+                MyPoints="0,0,100,100"
+                Stroke="Red"
+                StrokeThickness="40"
+                />
 
               <Rectangle Stroke="Blue"/>
             </Grid>

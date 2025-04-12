@@ -168,28 +168,56 @@ namespace _20250412
             _ = SetBinding(MySegmentPointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Mode = BindingMode.OneWay, Converter = new MyConverterSegmentPoints() });
 
             MyBindPen();
-            //MyBindMyRenderTransform();
+            MyBindScaleTransform();
+            MyBindRotateTransform();
+            MyBindTransformedBounds();
+            //RenderTransformOrigin = new Point(0.5, 0.5);
+            //MyBindOffset();
         }
 
         private void GeoShape_Loaded(object sender, RoutedEventArgs e)
         {
+           
+        }
+
+
+        private void MyBindOffset()
+        {
+            SetBinding(Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyGeometryRenderBoundsWithPenProperty), Converter = new MyConvRectReverseLeft() });
+            SetBinding(Canvas.TopProperty, new Binding() { Source = this, Path = new PropertyPath(MyGeometryRenderBoundsWithPenProperty), Converter = new MyConvRectReverseTop() });
+
+            //SetBinding(Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyTransformedBoundsProperty), Converter = new MyConvRectReverseLeft() });
+            //SetBinding(Canvas.TopProperty, new Binding() { Source = this, Path = new PropertyPath(MyTransformedBoundsProperty), Converter = new MyConvRectReverseTop() });
 
         }
 
-        private void MyBindMyRenderTransform()
+        private void MyBindTransformedBounds()
         {
-            var bind = new MultiBinding() { Converter = new MyConvRenderTransform() };
-
+            var bind = new MultiBinding() { Converter = new MyConvTransformedBounds() };
             bind.Bindings.Add(MakeOneWayBind(MyGeometryRenderBoundsWithPenProperty));
-            //bind.Bindings.Add(MakeOneWayBind(MyGeometryRenderBoundsProperty));
+            bind.Bindings.Add(MakeOneWayBind(MyScaleTransformProperty));
+            bind.Bindings.Add(MakeOneWayBind(MyRotateTransformProperty));
             bind.Bindings.Add(MakeOneWayBind(MyAngleProperty));
-            bind.Bindings.Add(MakeOneWayBind(MyCenterXProperty));
-            bind.Bindings.Add(MakeOneWayBind(MyCenterYProperty));
+            SetBinding(MyTransformedBoundsProperty, bind);
+        }
+
+        private void MyBindRotateTransform()
+        {
+            var bind = new MultiBinding() { Converter = new MyConvRotateTransform() };
+            bind.Bindings.Add(MakeOneWayBind(MyGeometryRenderBoundsWithPenProperty));
+            bind.Bindings.Add(MakeOneWayBind(MyAngleProperty));
+            _ = SetBinding(MyRotateTransformProperty, bind);
+        }
+
+        private void MyBindScaleTransform()
+        {
+            var bind = new MultiBinding() { Converter = new MyConvScaleTransform() };
+            bind.Bindings.Add(MakeOneWayBind(MyGeometryRenderBoundsWithPenProperty));
             bind.Bindings.Add(MakeOneWayBind(MyScaleXProperty));
             bind.Bindings.Add(MakeOneWayBind(MyScaleYProperty));
-            _ = SetBinding(MyRenderTransformProperty, bind);
-            //_ = SetBinding(RenderTransformProperty, bind);
+            _ = SetBinding(MyScaleTransformProperty, bind);
         }
+
 
         private void MyBindPen()
         {
@@ -291,32 +319,32 @@ namespace _20250412
 
         #region 読み取り用
 
-        /// <summary>
-        /// 専用のTransform、拡大回転のみ、変形の順番は拡大してから回転
-        /// </summary>
-        public Transform MyRenderTransform
+        ///// <summary>
+        ///// 専用のTransform、拡大回転のみ、変形の順番は拡大してから回転
+        ///// </summary>
+        //public Transform MyRenderTransform
+        //{
+        //    get { return (Transform)GetValue(MyRenderTransformProperty); }
+        //    protected set { SetValue(MyRenderTransformProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyRenderTransformProperty =
+        //    DependencyProperty.Register(nameof(MyRenderTransform), typeof(Transform), typeof(GeoShape), new PropertyMetadata(null));
+
+        public RotateTransform MyRotateTransform
         {
-            get { return (Transform)GetValue(MyRenderTransformProperty); }
-            protected set { SetValue(MyRenderTransformProperty, value); }
+            get { return (RotateTransform)GetValue(MyRotateTransformProperty); }
+            protected set { SetValue(MyRotateTransformProperty, value); }
         }
-        public static readonly DependencyProperty MyRenderTransformProperty =
-            DependencyProperty.Register(nameof(MyRenderTransform), typeof(Transform), typeof(GeoShape), new PropertyMetadata(null));
+        public static readonly DependencyProperty MyRotateTransformProperty =
+            DependencyProperty.Register(nameof(MyRotateTransform), typeof(RotateTransform), typeof(GeoShape), new PropertyMetadata(new RotateTransform()));
 
-        //public RotateTransform MyRotateTransform
-        //{
-        //    get { return (RotateTransform)GetValue(MyRotateTransformProperty); }
-        //    protected set { SetValue(MyRotateTransformProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyRotateTransformProperty =
-        //    DependencyProperty.Register(nameof(MyRotateTransform), typeof(RotateTransform), typeof(GeoShape), new PropertyMetadata(new RotateTransform()));
-
-        //public ScaleTransform MyScaleTransform
-        //{
-        //    get { return (ScaleTransform)GetValue(MyScaleTransformProperty); }
-        //    protected set { SetValue(MyScaleTransformProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyScaleTransformProperty =
-        //    DependencyProperty.Register(nameof(MyScaleTransform), typeof(ScaleTransform), typeof(GeoShape), new PropertyMetadata(new ScaleTransform()));
+        public ScaleTransform MyScaleTransform
+        {
+            get { return (ScaleTransform)GetValue(MyScaleTransformProperty); }
+            protected set { SetValue(MyScaleTransformProperty, value); }
+        }
+        public static readonly DependencyProperty MyScaleTransformProperty =
+            DependencyProperty.Register(nameof(MyScaleTransform), typeof(ScaleTransform), typeof(GeoShape), new PropertyMetadata(new ScaleTransform()));
 
         /// <summary>
         /// Geometryそのまま
@@ -344,13 +372,13 @@ namespace _20250412
         /// <summary>
         /// 図形の変形後のBounds
         /// </summary>
-        public Rect MyShapeTransformedBounds
+        public Rect MyTransformedBounds
         {
-            get { return (Rect)GetValue(MyShapeTransformedBoundsProperty); }
-            protected set { SetValue(MyShapeTransformedBoundsProperty, value); }
+            get { return (Rect)GetValue(MyTransformedBoundsProperty); }
+            protected set { SetValue(MyTransformedBoundsProperty, value); }
         }
-        public static readonly DependencyProperty MyShapeTransformedBoundsProperty =
-            DependencyProperty.Register(nameof(MyShapeTransformedBounds), typeof(Rect), typeof(GeoShape), new PropertyMetadata(new Rect()));
+        public static readonly DependencyProperty MyTransformedBoundsProperty =
+            DependencyProperty.Register(nameof(MyTransformedBounds), typeof(Rect), typeof(GeoShape), new PropertyMetadata(new Rect()));
 
 
         /// <summary>
@@ -778,19 +806,45 @@ namespace _20250412
     }
 
 
+    public class MyConvRectReverseTop : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var r = (Rect)value;
+            return -r.Top;
+        }
 
-    public class MyConvTestPoints : IMultiValueConverter
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class MyConvRectReverseLeft : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var r = (Rect)value;
+            return -r.Left;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyConvTransformedBounds : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var pc = (PointCollection)values[0];
-            var tf = (Transform)values[1];
-            PointCollection pcc = new();
-            for (int i = 0; i < pc.Count; i++)
-            {
-                pcc.Add(tf.Transform(pc[i]));
-            }
-            return pc;
+            var bounds = (Rect)values[0];
+            var scale = (ScaleTransform)values[1];
+            var rotate = (RotateTransform)(values[2]);
+            var scr = scale.TransformBounds(bounds);
+            var ror = rotate.TransformBounds(scr);
+            return ror;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -833,15 +887,10 @@ namespace _20250412
         {
             if (values[0] == null) { return Transform.Identity; }
             var geoBounds = (Rect)values[0];
-            var centerX = (double)values[1];
-            var centerY = (double)values[2];
-            var scaleX = (double)values[3];
-            var scaleY = (double)values[4];
+            var scaleX = (double)values[1];
+            var scaleY = (double)values[2];
 
-            centerX = geoBounds.Left + (geoBounds.Width * centerX);
-            centerY = geoBounds.Top + (geoBounds.Height * centerY);
-
-            return new ScaleTransform(scaleX, scaleY, centerX, centerY);
+            return new ScaleTransform(scaleX, scaleY);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -856,14 +905,9 @@ namespace _20250412
         {
             if (values[0] == null) { return Transform.Identity; }
             var geoBounds = (Rect)values[0];
-            var centerX = (double)values[1];
-            var centerY = (double)values[2];
-            var angle = (double)values[3];
-
-            centerX = geoBounds.Left + (geoBounds.Width * centerX);
-            centerY = geoBounds.Top + (geoBounds.Height * centerY);
-
-            return new RotateTransform(angle, centerX, centerY);
+            var angle = (double)values[1];
+            return new RotateTransform(angle);
+            //return new RotateTransform(angle, centerX, centerY);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

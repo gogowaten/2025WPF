@@ -77,6 +77,7 @@ namespace _20250412_01
             SetBinding(RenderTransformProperty, bind);
             //MyGeoShape.SetBinding(RenderTransformProperty, bind);
             //MyGrid.SetBinding(RenderTransformProperty, bind);
+            RenderTransformOrigin = new Point(0.5, 0.5);
         }
 
         private void GeoShapeThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -167,6 +168,7 @@ namespace _20250412_01
             TransformGroup transform = new();
             //transform.Children.Add(new ScaleTransform(scalex, scaley, x, y));
             //transform.Children.Add(new RotateTransform(angle, x, y));//これだと図形が移動してしまう
+            transform.Children.Add(new ScaleTransform(scalex, scaley));
             transform.Children.Add(new RotateTransform(angle));
             return transform;
         }

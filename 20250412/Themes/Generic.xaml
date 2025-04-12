@@ -9,17 +9,31 @@
 
   <Style TargetType="{x:Type local:AnchorHandleThumb}" BasedOn="{StaticResource anchorHandle}"/>
 
-
-  <Style TargetType="{x:Type local:CustomControl1}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:CustomControl1}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+  <Style TargetType="{x:Type local:GeometryThumb}">
+    <Setter Property="Canvas.Left" Value="0"/>
+    <Setter Property="Canvas.Top" Value="0"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:GeometryThumb}">
+          <Grid
+            x:Name="canvas"
+            DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"
+            >
+            <local:GeoShapeWithAnchorHandle
+              x:Name="geo"
+              MyPoints="0,0,100,0" Stroke="Red" StrokeThickness="50"
+              MyAngle="{Binding MyAngle}"
+              MyScaleX="{Binding MyScaleX}"
+              MyScaleY="{Binding MyScaleY}"
+              MyCenterX="{Binding MyCenterX}"
+              MyCenterY="{Binding MyCenterY}"
+              />
+            <Rectangle Stroke="Red"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  
 </ResourceDictionary>

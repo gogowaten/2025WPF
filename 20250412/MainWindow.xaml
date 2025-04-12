@@ -6,6 +6,16 @@
         xmlns:local="clr-namespace:_20250412"
         mc:Ignorable="d"
         Title="MainWindow" Height="367" Width="654">
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+
+        <ResourceDictionary Source="/20250412;component/Themes/Dictionary1.xaml"/>
+        <ResourceDictionary Source="/Themes/Dictionary1.xaml"/>
+        <ResourceDictionary Source="/Themes/Generic.xaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Window.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -13,35 +23,43 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-      <Grid Canvas.Left="10" Canvas.Top="10">
-        <Grid.RenderTransform>
-          <TransformGroup>
-            <ScaleTransform ScaleX="{Binding ElementName=sx, Path=Value}" ScaleY="{Binding ElementName=sy, Path=Value}"/>
-            <RotateTransform Angle="{Binding ElementName=angle, Path=Value}"/>
-          </TransformGroup>
-        </Grid.RenderTransform>
-        <local:GeoShapeWithAnchorHandle x:Name="MyShape" Canvas.Left="100" Canvas.Top="100"
-    MyPoints="0,0,100,100" Stroke="Red" StrokeThickness="50"/>
-      </Grid>
+      <local:GeometryThumb
+        x:Name="MyShape" Canvas.Left="100" Canvas.Top="100"/>
 
-      <!--<local:GeoShapeWithAnchorHandle x:Name="MyShape" Canvas.Left="100" Canvas.Top="100"
-          MyPoints="0,0,100,100" Stroke="Red" StrokeThickness="50">
-        <local:GeoShapeWithAnchorHandle.RenderTransform>
+      <Ellipse Width="11" Height="11" Stroke="Blue" StrokeThickness="1.0"
+               Canvas.Left="95" Canvas.Top="95"/>
+      <Canvas Width="100" Height="100" RenderTransformOrigin="0.5,0.0">
+        <Canvas.RenderTransform>
           <TransformGroup>
-            <ScaleTransform ScaleX="{Binding ElementName=sx, Path=Value}" ScaleY="{Binding ElementName=sy, Path=Value}"/>
-            <RotateTransform Angle="{Binding ElementName=angle, Path=Value}"/>
+            <ScaleTransform ScaleX="1" ScaleY="2"/>
+            <RotateTransform Angle="0"/>
           </TransformGroup>
-        </local:GeoShapeWithAnchorHandle.RenderTransform>
-      </local:GeoShapeWithAnchorHandle>-->
+        </Canvas.RenderTransform>
+        <Polyline Points="0,0,100,0" Stroke="Blue" StrokeThickness="50" Canvas.Top="25">
+          <Polyline.RenderTransform>
+            <RotateTransform Angle="0"/>
+          </Polyline.RenderTransform>
+        </Polyline>
+      </Canvas>
+
 
     </Canvas>
 
     <StackPanel Grid.Column="1">
-      <Button Content="test" Click="Button_Click"/>
-      <TextBlock Text="{Binding ElementName=MyShape, Path=MyPoints}"/>
-      <Slider x:Name="angle" Minimum="0" Maximum="360"/>
-      <Slider x:Name="sx" Minimum="1" Maximum="3" Value="1"/>
-      <Slider x:Name="sy" Minimum="1" Maximum="3" Value="1"/>
+      <StackPanel DataContext="{Binding ElementName=MyShape}">
+        <Button Content="test" Click="Button_Click"/>
+        <TextBlock Text="{Binding Path=MyPoints}"/>
+        <Slider x:Name="angle" Minimum="0" Maximum="360" TickFrequency="45"
+                IsSnapToTickEnabled="True" Value="{Binding Path=MyAngle}"/>
+        <Slider x:Name="sx" Minimum="1" Maximum="3" Value="{Binding MyScaleX}"/>
+        <Slider x:Name="sy" Minimum="1" Maximum="3" Value="{Binding MyScaleY}"/>
+        <Slider Minimum="0.0" Maximum="1.0" Value="{Binding MyCenterX}"/>
+        <Slider Minimum="0.0" Maximum="1.0" Value="{Binding MyCenterY}"/>
+        <Button x:Name="bounds" Content="bounds" Click="Bounds_Click"/>
+        <TextBlock Text="{Binding MyGeoShape.MyTransformedBounds, StringFormat=geoBounds {0:0 }}"/>
+        <TextBlock Text="{Binding MyGeoShape.MyTransformedBounds, StringFormat=geoBounds {0:0 }}"/>
+
+      </StackPanel>
     </StackPanel>
   </Grid>
 </Window>
