@@ -13,17 +13,27 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-      <Grid>
+      <Grid Canvas.Left="10" Canvas.Top="10">
         <Grid.RenderTransform>
           <TransformGroup>
-          <ScaleTransform ScaleX="{Binding ElementName=sx, Path=Value}" ScaleY="{Binding ElementName=sy, Path=Value}"/>
+            <ScaleTransform ScaleX="{Binding ElementName=sx, Path=Value}" ScaleY="{Binding ElementName=sy, Path=Value}"/>
             <RotateTransform Angle="{Binding ElementName=angle, Path=Value}"/>
           </TransformGroup>
         </Grid.RenderTransform>
-
-        <local:GeoShapeWithAnchorHandle x:Name="MyShape"
-          MyPoints="0,0,100,100" Stroke="Red" StrokeThickness="50"/>
+        <local:GeoShapeWithAnchorHandle x:Name="MyShape" Canvas.Left="100" Canvas.Top="100"
+    MyPoints="0,0,100,100" Stroke="Red" StrokeThickness="50"/>
       </Grid>
+
+      <!--<local:GeoShapeWithAnchorHandle x:Name="MyShape" Canvas.Left="100" Canvas.Top="100"
+          MyPoints="0,0,100,100" Stroke="Red" StrokeThickness="50">
+        <local:GeoShapeWithAnchorHandle.RenderTransform>
+          <TransformGroup>
+            <ScaleTransform ScaleX="{Binding ElementName=sx, Path=Value}" ScaleY="{Binding ElementName=sy, Path=Value}"/>
+            <RotateTransform Angle="{Binding ElementName=angle, Path=Value}"/>
+          </TransformGroup>
+        </local:GeoShapeWithAnchorHandle.RenderTransform>
+      </local:GeoShapeWithAnchorHandle>-->
+
     </Canvas>
 
     <StackPanel Grid.Column="1">
