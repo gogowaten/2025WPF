@@ -45,5 +45,20 @@ namespace _20250412
             var geoBoundsSc = sc.TransformBounds(boundsPen);
             var geoBoundsRo = ro.TransformBounds(geoBoundsSc);
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            MyShape.OffsetShape();
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            MyShape.OffsetThumb();
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            MyShape.Offset();
+        }
     }
 }

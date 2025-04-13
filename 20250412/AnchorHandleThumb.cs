@@ -317,21 +317,6 @@ namespace _20250412
 
         private void Thumb_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            //if (e.HorizontalChange != 0 && e.VerticalChange != 0)
-            //{
-            //    //フラグが在ればターゲットのPointsを、すべて左上に移動させる
-            //    if (IsPointsToTopLeftAtDragCompleted)
-            //    {
-            //        PointCollection pc = MyTarget.MyPoints;
-            //        (double x, double y) = GetTopLeft(pc);
-            //        if (x != 0 || y != 0)
-            //        {
-            //            PointsMoveToTopLeft(pc);
-            //            HandlesLocateToPoints();
-            //        }
-            //    }
-            //}
-
             OnAnchorThumbDragCompleted?.Invoke(e);
         }
 
@@ -348,29 +333,6 @@ namespace _20250412
             handle.MyLeft = poi.X - (MyAnchorHandleSize / 2.0);
             handle.MyTop = poi.Y - (MyAnchorHandleSize / 2.0);
         }
-
-        //public static void PointsMoveToTopLeft(PointCollection pc)
-        //{
-        //    (double left, double top) = GetTopLeft(pc);
-        //    for (var i = 0; i < pc.Count; i++)
-        //    {
-        //        Point poi = pc[i];
-        //        poi.Offset(-left, -top);
-        //        pc[i] = poi;
-        //    }
-        //}
-
-        //public static (double left, double top) GetTopLeft(PointCollection pc)
-        //{
-        //    double left = double.MaxValue; double top = double.MaxValue;
-        //    foreach (var item in pc)
-        //    {
-        //        left = Math.Min(left, item.X);
-        //        top = Math.Min(top, item.Y);
-        //    }
-        //    return (left, top);
-        //}
-
 
 
         //マウスドラッグ移動、

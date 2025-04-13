@@ -75,8 +75,8 @@ namespace _20250412
             MyBindOrigin();
             MyBindTransform();
 
-            //MyPanel.SetBinding(WidthProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyTransformedBoundsProperty), Converter = new MyConvRectWidth() });
-            //MyPanel.SetBinding(HeightProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyTransformedBoundsProperty), Converter = new MyConvRectHeight() });
+            MyPanel.SetBinding(WidthProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyTransformedBoundsProperty), Converter = new MyConvRectWidth() });
+            MyPanel.SetBinding(HeightProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyTransformedBoundsProperty), Converter = new MyConvRectHeight() });
 
         }
 
@@ -86,7 +86,7 @@ namespace _20250412
             bind.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyScaleXProperty) });
             bind.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyScaleYProperty) });
             bind.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyAngleProperty) });
-            MyPanel.SetBinding(RenderTransformProperty, bind);
+            //MyPanel.SetBinding(RenderTransformProperty, bind);
             //MyGeoShape.SetBinding(RenderTransformProperty, bind);
         }
 
@@ -177,11 +177,19 @@ namespace _20250412
             if (GetTemplateChild("geo") is GeoShapeWithAnchorHandle geo)
             {
                 MyGeoShape = geo;
+                MyGeoShape.OnAnchorHandleDragCompleted += MyGeoShape_OnAnchorHandleDragCompleted;
             }
-            if( GetTemplateChild("canvas") is Panel panel)
+            if (GetTemplateChild("canvas") is Panel panel)
             {
-                MyPanel= panel;
+                MyPanel = panel;
             }
+        }
+
+        //アンカーハンドルのドラッグ移動終了時
+        private void MyGeoShape_OnAnchorHandleDragCompleted(DragCompletedEventArgs obj)
+        {
+
+
         }
 
         public void AnchorSwitch()
@@ -190,13 +198,37 @@ namespace _20250412
         }
         #endregion 初期設定
 
+        public void OffsetShape()
+        {
+            //図形オフセット
+            Canvas.SetLeft(MyGeoShape, -MyGeoShape.MyTransformedBounds.Left);
+            Canvas.SetTop(MyGeoShape, -MyGeoShape.MyTransformedBounds.Top);
+
+        }
+
+        public void OffsetThumb()
+        {
+            //Thumbオフセット
+            var imaX = Canvas.GetLeft(this);
+            var imaY = Canvas.GetTop(this);
+            Canvas.SetLeft(this, imaX + MyGeoShape.MyTransformedBounds.Left);
+            Canvas.SetTop(this, imaY + MyGeoShape.MyTransformedBounds.Top);
+        }
+        public void Offset()
+        {
+            OffsetShape();
+            Canvas.SetLeft(this, MyGeoShape.MyTransformedBounds.Left);
+            Canvas.SetTop(this, MyGeoShape.MyTransformedBounds.Top);
+        }
     }
+
+
 
     public class MyConvRectHeight : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var r =(Rect)value;
+            var r = (Rect)value;
             return r.Height;
         }
 
@@ -205,12 +237,12 @@ namespace _20250412
             throw new NotImplementedException();
         }
     }
-    
+
     public class MyConvRectWidth : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var r =(Rect)value;
+            var r = (Rect)value;
             return r.Width;
         }
 

@@ -15,13 +15,14 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type local:GeometryThumb}">
-          <Grid
+          <Canvas
             x:Name="canvas"
+            Background="MistyRose"
             DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"
             >
             <local:GeoShapeWithAnchorHandle
               x:Name="geo"
-              MyPoints="0,0,100,0" Stroke="Red" StrokeThickness="50"
+              MyPoints="0,0,100,00" Stroke="Red" StrokeThickness="50"
               MyAngle="{Binding MyAngle}"
               MyScaleX="{Binding MyScaleX}"
               MyScaleY="{Binding MyScaleY}"
@@ -29,7 +30,7 @@
               MyCenterY="{Binding MyCenterY}"
               />
             <Rectangle Stroke="Red"/>
-          </Grid>
+          </Canvas>
         </ControlTemplate>
       </Setter.Value>
     </Setter>

@@ -26,20 +26,27 @@
       <local:GeometryThumb
         x:Name="MyShape" Canvas.Left="100" Canvas.Top="100"/>
 
-      <Ellipse Width="11" Height="11" Stroke="Blue" StrokeThickness="1.0"
+      <Ellipse Width="11" Height="11" Stroke="Cyan" StrokeThickness="1.0"
                Canvas.Left="95" Canvas.Top="95"/>
-      <Canvas Width="100" Height="100" RenderTransformOrigin="0.5,0.0">
-        <Canvas.RenderTransform>
-          <TransformGroup>
-            <ScaleTransform ScaleX="1" ScaleY="2"/>
-            <RotateTransform Angle="0"/>
-          </TransformGroup>
-        </Canvas.RenderTransform>
-        <Polyline Points="0,0,100,0" Stroke="Blue" StrokeThickness="50" Canvas.Top="25">
-          <Polyline.RenderTransform>
-            <RotateTransform Angle="0"/>
-          </Polyline.RenderTransform>
-        </Polyline>
+
+      <Canvas Width="200" Height="100">
+        <Grid RenderTransformOrigin="0.0,0.0">
+          <Grid.RenderTransform>
+            <TransformGroup>
+              <ScaleTransform ScaleX="1" ScaleY="1"/>
+              <RotateTransform Angle="0"/>
+            </TransformGroup>
+          </Grid.RenderTransform>
+          <Polyline Points="0,0,100,0" Stroke="Blue" StrokeThickness="50" Canvas.Top="0"
+                  RenderTransformOrigin="0.5,0.5">
+            <Polyline.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform ScaleX="2" ScaleY="2"/>
+                <RotateTransform Angle="0"/>
+              </TransformGroup>
+            </Polyline.RenderTransform>
+          </Polyline>
+        </Grid>
       </Canvas>
 
 
@@ -58,6 +65,11 @@
         <Button x:Name="bounds" Content="bounds" Click="Bounds_Click"/>
         <TextBlock Text="{Binding MyGeoShape.MyTransformedBounds, StringFormat=geoBounds {0:0 }}"/>
         <TextBlock Text="{Binding MyGeoShape.MyTransformedBounds, StringFormat=geoBounds {0:0 }}"/>
+        <TextBlock Text="{Binding MyGeoShape.MyTransformedBounds}"/>
+        
+        <Button Content="offsetShape" Click="Button_Click_1"/>
+        <Button Content="offsetThumb" Click="Button_Click_2"/>
+        <Button Content="offset" Click="Button_Click_3"/>
 
       </StackPanel>
     </StackPanel>

@@ -32,6 +32,9 @@ namespace _20250412
         //ドラッグ移動終了時にPointsを左上に移動フラグ
         public bool IsMyPointsToTopLeftAtDragCompleted { get; set; } = false;
 
+        public event Action<DragCompletedEventArgs>? OnAnchorHandleDragCompleted;
+
+
         public GeoShapeWithAnchorHandle()
         {
 
@@ -43,6 +46,7 @@ namespace _20250412
             MyAdornerLayer = AdornerLayer.GetAdornerLayer(this);
         }
 
+        #region 左上移動
 
         /// <summary>
         /// 全てのPointを左上にオフセット移動させる
@@ -75,6 +79,8 @@ namespace _20250412
             return (left, top);
         }
 
+        #endregion 左上移動
+
         #region アンカーハンドルの表示切り替え
         public void AnchorHandleSwitch()
         {
@@ -94,7 +100,6 @@ namespace _20250412
             }
         }
 
-
         public void AnchorHandleOff()
         {
             if (MyAnchorHandleAdorner != null)
@@ -106,7 +111,9 @@ namespace _20250412
                 //MyParentThumb?.ReLayout3();
             }
         }
+
         #endregion アンカーハンドルの表示切り替え
+
 
         /// <summary>
         /// アンカーハンドルのドラッグ移動終了時
@@ -115,11 +122,16 @@ namespace _20250412
         /// <param name="obj"></param>
         private void MyAnchorHandleAdorner_OnAnchorThumbDragCompleted(DragCompletedEventArgs obj)
         {
-            //Bounds計算
-            GetBoundskeisan();
+            OnAnchorHandleDragCompleted?.Invoke(obj);
+
+            ////オフセット
+            //Canvas.SetLeft(this, -MyTransformedBounds.Left);
+            //Canvas.SetTop(this,-MyTransformedBounds.Top);
+
+
+            //フラグが在ればPointsを、すべて左上に移動させる
             if ((obj.HorizontalChange != 0 || obj.VerticalChange != 0) && IsMyPointsToTopLeftAtDragCompleted)
             {
-                //フラグが在ればPointsを、すべて左上に移動させる                
                 (double x, double y) = GetTopLeft(MyPoints);
                 if (x != 0 || y != 0)
                 {
@@ -129,12 +141,18 @@ namespace _20250412
             }
         }
 
-        private void GetBoundskeisan()
-        {
-            var bounds = MyGeometryRenderBounds;
+        //private void GetBoundskeisan()
+        //{
+        //    var bounds = MyGeometryRenderBounds;
+        //   var defBounds = this.DefiningGeometry.Bounds;
+        //   var renBounds = this.RenderedGeometry.Bounds;
+        //   var penBounds = RenderedGeometry.GetRenderBounds(MyPen);
 
+        //    var scaleBounds = MyScaleTransform.TransformBounds(penBounds);
+        //    var rocateBounds = MyRotateTransform.TransformBounds(scaleBounds);
+        //    //var neko = MyTransformedBounds;
 
-        }
+        //}
 
     }
 
@@ -148,7 +166,6 @@ namespace _20250412
     /// </summary>
     public class GeoShape : Shape
     {
-
         public GeoShape()
         {
 
@@ -170,35 +187,44 @@ namespace _20250412
             MyBindPen();
             MyBindScaleTransform();
             MyBindRotateTransform();
-            MyBindTransformedBounds();
-            //RenderTransformOrigin = new Point(0.5, 0.5);
-            //MyBindOffset();
+            MyBindRenderTransform();
+            MyBindTransformedBounds2();
+
         }
 
         private void GeoShape_Loaded(object sender, RoutedEventArgs e)
         {
-           
-        }
-
-
-        private void MyBindOffset()
-        {
-            SetBinding(Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyGeometryRenderBoundsWithPenProperty), Converter = new MyConvRectReverseLeft() });
-            SetBinding(Canvas.TopProperty, new Binding() { Source = this, Path = new PropertyPath(MyGeometryRenderBoundsWithPenProperty), Converter = new MyConvRectReverseTop() });
-
-            //SetBinding(Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyTransformedBoundsProperty), Converter = new MyConvRectReverseLeft() });
-            //SetBinding(Canvas.TopProperty, new Binding() { Source = this, Path = new PropertyPath(MyTransformedBoundsProperty), Converter = new MyConvRectReverseTop() });
 
         }
 
-        private void MyBindTransformedBounds()
+
+        private void MyBindTransformedBounds2()
         {
-            var bind = new MultiBinding() { Converter = new MyConvTransformedBounds() };
-            bind.Bindings.Add(MakeOneWayBind(MyGeometryRenderBoundsWithPenProperty));
+            var bind = new MultiBinding() { Converter = new MyConvTransformedBounds3() };
+            bind.Bindings.Add(MakeOneWayBind(MyGeometryProperty));
             bind.Bindings.Add(MakeOneWayBind(MyScaleTransformProperty));
             bind.Bindings.Add(MakeOneWayBind(MyRotateTransformProperty));
-            bind.Bindings.Add(MakeOneWayBind(MyAngleProperty));
+            bind.Bindings.Add(MakeOneWayBind(MyPenProperty));
             SetBinding(MyTransformedBoundsProperty, bind);
+        }
+
+        //private void MyBindTransformedBounds()
+        //{
+        //    var bind = new MultiBinding() { Converter = new MyConvTransformedBounds() };
+        //    bind.Bindings.Add(MakeOneWayBind(MyGeometryRenderBoundsWithPenProperty));
+        //    bind.Bindings.Add(MakeOneWayBind(MyScaleTransformProperty));
+        //    bind.Bindings.Add(MakeOneWayBind(MyRotateTransformProperty));
+        //    bind.Bindings.Add(MakeOneWayBind(MyAngleProperty));
+        //    SetBinding(MyTransformedBoundsProperty, bind);
+        //}
+
+        private void MyBindRenderTransform()
+        {
+            var bind = new MultiBinding() { Converter = new MyConvRenderTransform2() };
+            bind.Bindings.Add(MakeOneWayBind(MyScaleTransformProperty));
+            bind.Bindings.Add(MakeOneWayBind(MyRotateTransformProperty));
+            _ = SetBinding(MyRenderTransformProperty, bind);
+            _ = SetBinding(RenderTransformProperty, bind);
         }
 
         private void MyBindRotateTransform()
@@ -319,16 +345,16 @@ namespace _20250412
 
         #region 読み取り用
 
-        ///// <summary>
-        ///// 専用のTransform、拡大回転のみ、変形の順番は拡大してから回転
-        ///// </summary>
-        //public Transform MyRenderTransform
-        //{
-        //    get { return (Transform)GetValue(MyRenderTransformProperty); }
-        //    protected set { SetValue(MyRenderTransformProperty, value); }
-        //}
-        //public static readonly DependencyProperty MyRenderTransformProperty =
-        //    DependencyProperty.Register(nameof(MyRenderTransform), typeof(Transform), typeof(GeoShape), new PropertyMetadata(null));
+        /// <summary>
+        /// 専用のTransform、拡大回転のみ、変形の順番は拡大してから回転
+        /// </summary>
+        public Transform MyRenderTransform
+        {
+            get { return (Transform)GetValue(MyRenderTransformProperty); }
+            protected set { SetValue(MyRenderTransformProperty, value); }
+        }
+        public static readonly DependencyProperty MyRenderTransformProperty =
+            DependencyProperty.Register(nameof(MyRenderTransform), typeof(Transform), typeof(GeoShape), new PropertyMetadata(null));
 
         public RotateTransform MyRotateTransform
         {
@@ -835,16 +861,29 @@ namespace _20250412
         }
     }
 
-    public class MyConvTransformedBounds : IMultiValueConverter
+    public class MyConvTransformedBounds3 : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var bounds = (Rect)values[0];
+            if (values[0] == null) { return new Rect(); }
+            var geo = (Geometry)values[0];
             var scale = (ScaleTransform)values[1];
-            var rotate = (RotateTransform)(values[2]);
-            var scr = scale.TransformBounds(bounds);
-            var ror = rotate.TransformBounds(scr);
-            return ror;
+            var rotate = (RotateTransform)values[2];
+            var myPen = (Pen)values[3];
+            var clone = geo.Clone();
+            
+            clone.Transform = rotate;
+            var uma = clone.GetRenderBounds(myPen);
+            var ika = scale.TransformBounds(uma);
+
+            
+            var clone2 = geo.Clone();
+            var tako = clone2.GetWidenedPathGeometry(myPen);
+            var saru = tako.Bounds;
+            var neko = clone.GetRenderBounds(myPen);
+            
+            
+            return ika;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -852,6 +891,47 @@ namespace _20250412
             throw new NotImplementedException();
         }
     }
+
+    //public class MyConvTransformedBounds2 : IMultiValueConverter
+    //{
+    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        if (values[0] == null) { return new Rect(); }
+    //        var geo = (Geometry)values[0];
+    //        var scale = (ScaleTransform)values[1];
+    //        var rotate = (RotateTransform)values[2];
+    //        var myPen = (Pen)values[3];
+    //        var clone = geo.Clone();
+    //        var result = clone.GetRenderBounds(myPen);
+    //        result = scale.TransformBounds(result);
+    //        result = rotate.TransformBounds(result);
+    //        return result;
+    //    }
+
+    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
+    //public class MyConvTransformedBounds : IMultiValueConverter
+    //{
+    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        var bounds = (Rect)values[0];
+    //        var scale = (ScaleTransform)values[1];
+    //        var rotate = (RotateTransform)(values[2]);
+    //        var scr = scale.TransformBounds(bounds);
+    //        var ror = rotate.TransformBounds(scr);
+    //        return ror;
+    //    }
+
+    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
 
 
     public class MyConvRenderTransform : IMultiValueConverter
@@ -880,6 +960,23 @@ namespace _20250412
         }
     }
 
+    public class MyConvRenderTransform2 : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var scale = (ScaleTransform)values[0];
+            var rotate = (RotateTransform)values[1];
+            TransformGroup transform = new();
+            transform.Children.Add(scale);
+            transform.Children.Add(rotate);
+            return transform;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public class MyConvScaleTransform : IMultiValueConverter
     {
