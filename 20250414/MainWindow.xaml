@@ -7,23 +7,35 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
   <Window.Resources>
-    <Style x:Key="rect" TargetType="Rectangle">
-      <Setter Property="Width" Value="50"/>
-      <Setter Property="Height" Value="50"/>
-    </Style>
-  </Window.Resources>
-    <Grid>
-    <Canvas>
-      <Rectangle Style="{StaticResource rect}" Fill="Red" Canvas.Left="100">
-        <Rectangle.RenderTransform>
+    <Style x:Key="st1" TargetType="FrameworkElement">
+      <Setter Property="RenderTransform">
+        <Setter.Value>
           <TransformGroup>
-            <RotateTransform Angle="20"/>
+            <RotateTransform Angle="0"/>
             <ScaleTransform ScaleX="2" ScaleY="1"/>
           </TransformGroup>
-        </Rectangle.RenderTransform>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </Window.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
+    <Canvas>
+      <Rectangle x:Name="MyRectRed" Style="{StaticResource st1}" Fill="Red" Canvas.Left="100" Width="50" Height="50">
+        
       </Rectangle>
-      <Rectangle x:Name="MyRectBlue" Style="{StaticResource rect}" Fill="Blue" Canvas.Left="100" Canvas.Top="200"/>
-      <Rectangle x:Name="MyRectCyan" Style="{StaticResource rect}" Fill="Cyan" Canvas.Left="300" Canvas.Top="200"/>
+      <Polyline x:Name="MyPoly" Points="100,0,0,100" Stroke="Blue" Style="{StaticResource st1}" StrokeThickness="50" Opacity="0.5" Canvas.Left="100" Canvas.Top="100">
+      </Polyline>
     </Canvas>
-    </Grid>
+
+    <StackPanel Grid.Column="1">
+      <StackPanel>
+        <Button Content="test" Click="Button_Click"/>
+      </StackPanel>
+    </StackPanel>
+    
+  </Grid>
 </Window>
