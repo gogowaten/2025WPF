@@ -22,14 +22,16 @@
             >
             <local:GeoShapeWithAnchorHandle
               x:Name="geo"
-              MyPoints="0,0,100,00" Stroke="Red" StrokeThickness="50"
+              MyPoints="100,0,00,100" Stroke="Red" StrokeThickness="50"
               MyAngle="{Binding MyAngle}"
               MyScaleX="{Binding MyScaleX}"
               MyScaleY="{Binding MyScaleY}"
               MyCenterX="{Binding MyCenterX}"
               MyCenterY="{Binding MyCenterY}"
               />
-            <Rectangle Stroke="Red"/>
+            <Rectangle Stroke="Blue"
+                       Width="{Binding ElementName=geo, Path=ActualWidth}"
+                       Height="{Binding ElementName=geo, Path=ActualHeight}"/>
           </Canvas>
         </ControlTemplate>
       </Setter.Value>

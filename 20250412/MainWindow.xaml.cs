@@ -58,7 +58,9 @@ namespace _20250412
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            MyShape.Offset();
+            //MyShape.Offset();
+            var neko = MyShape.MyGeoShape.GetRenderBounds();
+            MyShape.GetTransformedBounds();
         }
     }
 }

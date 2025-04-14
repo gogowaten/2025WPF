@@ -37,16 +37,18 @@
               <RotateTransform Angle="0"/>
             </TransformGroup>
           </Grid.RenderTransform>
-          <Polyline Points="0,0,100,0" Stroke="Blue" StrokeThickness="50" Canvas.Top="0"
-                  RenderTransformOrigin="0.5,0.5">
+          <Polyline Points="100,0,00,100" Stroke="Blue" StrokeThickness="50" Canvas.Top="0"
+                  RenderTransformOrigin="0.0,0.0" Opacity="0.5">
             <Polyline.RenderTransform>
               <TransformGroup>
-                <ScaleTransform ScaleX="2" ScaleY="2"/>
-                <RotateTransform Angle="0"/>
+                <TranslateTransform X="0" Y="0"/>
+                <ScaleTransform ScaleX="2" ScaleY="1"/>
+                <RotateTransform Angle="0" CenterX="0" CenterY="0"/>
               </TransformGroup>
             </Polyline.RenderTransform>
           </Polyline>
         </Grid>
+        <Polyline Points="0,0,100,00" Stroke="Red" StrokeThickness="50" Opacity="0.5"/>
       </Canvas>
 
 
@@ -56,7 +58,9 @@
       <StackPanel DataContext="{Binding ElementName=MyShape}">
         <Button Content="test" Click="Button_Click"/>
         <TextBlock Text="{Binding Path=MyPoints}"/>
-        <Slider x:Name="angle" Minimum="0" Maximum="360" TickFrequency="45"
+        <TextBlock Text="{Binding Path=MyTranslateX, StringFormat=MyTranslateX {0:0}}"/>
+        <TextBlock Text="{Binding Path=MyTranslateY, StringFormat=MyTranslateY {0:0}}"/>
+        <Slider x:Name="angle" Minimum="0" Maximum="360" TickFrequency="15"
                 IsSnapToTickEnabled="True" Value="{Binding Path=MyAngle}"/>
         <Slider x:Name="sx" Minimum="1" Maximum="3" Value="{Binding MyScaleX}"/>
         <Slider x:Name="sy" Minimum="1" Maximum="3" Value="{Binding MyScaleY}"/>
@@ -65,7 +69,7 @@
         <Button x:Name="bounds" Content="bounds" Click="Bounds_Click"/>
         <TextBlock Text="{Binding MyGeoShape.MyTransformedBounds, StringFormat=geoBounds {0:0 }}"/>
         <TextBlock Text="{Binding MyGeoShape.MyTransformedBounds, StringFormat=geoBounds {0:0 }}"/>
-        <TextBlock Text="{Binding MyGeoShape.MyTransformedBounds}"/>
+        <TextBlock Text="{Binding MyGeoShapeBounds, StringFormat=bo {0:0.0 }}"/>
         
         <Button Content="offsetShape" Click="Button_Click_1"/>
         <Button Content="offsetThumb" Click="Button_Click_2"/>

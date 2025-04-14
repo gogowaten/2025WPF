@@ -74,10 +74,33 @@ namespace _20250412
         {
             MyBindOrigin();
             MyBindTransform();
+            MyBindTranslateXY();
+            MyBindSetGeoShapeBounds();
 
-            MyPanel.SetBinding(WidthProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyTransformedBoundsProperty), Converter = new MyConvRectWidth() });
-            MyPanel.SetBinding(HeightProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyTransformedBoundsProperty), Converter = new MyConvRectHeight() });
+            //MyPanel.SetBinding(WidthProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyTransformedBoundsProperty), Converter = new MyConvRectWidth() });
+            //MyPanel.SetBinding(HeightProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyTransformedBoundsProperty), Converter = new MyConvRectHeight() });
 
+
+            MyPanel.SetBinding(WidthProperty, new Binding() { Source = this, Path = new PropertyPath(MyGeoShapeBoundsProperty), Converter = new MyConvRectWidth() });
+            MyPanel.SetBinding(HeightProperty, new Binding() { Source = this, Path = new PropertyPath(MyGeoShapeBoundsProperty), Converter = new MyConvRectHeight() });
+
+
+        }
+
+        private void MyBindSetGeoShapeBounds()
+        {
+            var bind = new MultiBinding() { Converter = new MyConvGeoShapeBounds2() };
+            bind.Bindings.Add(new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyGeometryProperty) });
+            bind.Bindings.Add(new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyRotateTransformProperty) });
+            bind.Bindings.Add(new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyScaleTransformProperty) });
+            bind.Bindings.Add(new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyPenProperty) });
+            SetBinding(MyGeoShapeBoundsProperty, bind);
+        }
+
+        private void MyBindTranslateXY()
+        {
+            SetBinding(MyTranslateXProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyGeometryRenderBoundsWithPenProperty), Converter = new MyConvTranslateX() });
+            SetBinding(MyTranslateYProperty, new Binding() { Source = MyGeoShape, Path = new PropertyPath(GeoShape.MyGeometryRenderBoundsWithPenProperty), Converter = new MyConvTranslateY() });
         }
 
         private void MyBindTransform()
@@ -86,8 +109,10 @@ namespace _20250412
             bind.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyScaleXProperty) });
             bind.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyScaleYProperty) });
             bind.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyAngleProperty) });
+            bind.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyTranslateXProperty) });
+            bind.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyTranslateYProperty) });
             //MyPanel.SetBinding(RenderTransformProperty, bind);
-            //MyGeoShape.SetBinding(RenderTransformProperty, bind);
+            MyGeoShape.SetBinding(RenderTransformProperty, bind);
         }
 
         private void MyBindOrigin()
@@ -102,6 +127,30 @@ namespace _20250412
 
         #region 依存関係プロパティ
 
+
+        public Rect MyGeoShapeBounds
+        {
+            get { return (Rect)GetValue(MyGeoShapeBoundsProperty); }
+            set { SetValue(MyGeoShapeBoundsProperty, value); }
+        }
+        public static readonly DependencyProperty MyGeoShapeBoundsProperty =
+            DependencyProperty.Register(nameof(MyGeoShapeBounds), typeof(Rect), typeof(GeometryThumb), new PropertyMetadata(new Rect()));
+
+        public double MyTranslateX
+        {
+            get { return (double)GetValue(MyTranslateXProperty); }
+            set { SetValue(MyTranslateXProperty, value); }
+        }
+        public static readonly DependencyProperty MyTranslateXProperty =
+            DependencyProperty.Register(nameof(MyTranslateX), typeof(double), typeof(GeometryThumb), new PropertyMetadata(0.0));
+
+        public double MyTranslateY
+        {
+            get { return (double)GetValue(MyTranslateYProperty); }
+            set { SetValue(MyTranslateYProperty, value); }
+        }
+        public static readonly DependencyProperty MyTranslateYProperty =
+            DependencyProperty.Register(nameof(MyTranslateY), typeof(double), typeof(GeometryThumb), new PropertyMetadata(0.0));
 
         public Point MyOrigin
         {
@@ -201,8 +250,8 @@ namespace _20250412
         public void OffsetShape()
         {
             //図形オフセット
-            Canvas.SetLeft(MyGeoShape, -MyGeoShape.MyTransformedBounds.Left);
-            Canvas.SetTop(MyGeoShape, -MyGeoShape.MyTransformedBounds.Top);
+            Canvas.SetLeft(MyGeoShape, -MyGeoShapeBounds.Left);
+            Canvas.SetTop(MyGeoShape, -MyGeoShapeBounds.Top);
 
         }
 
@@ -220,9 +269,171 @@ namespace _20250412
             Canvas.SetLeft(this, MyGeoShape.MyTransformedBounds.Left);
             Canvas.SetTop(this, MyGeoShape.MyTransformedBounds.Top);
         }
+
+        public void GetTransformedBounds()
+        {
+            var ro = MyGeoShape.MyRotateTransform; var sc = MyGeoShape.MyScaleTransform;
+            var pen = MyGeoShape.MyPen;
+            var geo2 = MyGeoShape.MyGeometry.Clone(); var bou = MyGeoShape.MyGeometry.Clone().Bounds;
+
+            var bou1 = sc.TransformBounds(bou);
+            var bou2 = ro.TransformBounds(bou1);
+            var bou3 = ro.TransformBounds(bou);
+            var bou4 = sc.TransformBounds(bou3);
+            var bou50 = geo2.GetRenderBounds(pen);
+            var bou51 = sc.TransformBounds(bou50);
+            var bou52 = ro.TransformBounds(bou51);
+
+
+            geo2.Transform = ro;
+            var ropen = geo2.GetRenderBounds(pen);
+            var rosc = sc.TransformBounds(ropen);
+
+            geo2.Transform = sc;
+            var scpen = geo2.GetRenderBounds(pen);
+            var scro = ro.TransformBounds(scpen);
+
+            geo2.Transform = MyGeoShape.MyRenderTransform;
+            var repen = geo2.GetRenderBounds(pen);
+
+
+        }
     }
 
 
+
+    //public class MyConvGeoShapeBounds5 : IMultiValueConverter
+    //{
+    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        var geo = (Geometry)values[0];
+    //        var ro = (Transform)values[1];
+    //        var sc = (Transform)values[2];
+    //        var pen = (Pen)values[3];
+    //        var clone = geo.Clone();
+    //        var rr = clone.GetRenderBounds(pen);
+    //        var cb= clone.Bounds;
+    //        var r = clone.GetRenderBounds(pen);
+    //        return r;
+    //    }
+
+    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
+    public class MyConvGeoShapeBounds4 : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var geo = (Geometry)values[0];
+            var ro = (Transform)values[1];
+            var sc = (Transform)values[2];
+            var pen = (Pen)values[3];
+            var clone = geo.Clone();
+            TransformGroup tra = new();
+            clone.Transform = tra;
+            tra.Children.Add(sc);
+            tra.Children.Add(ro);
+            var r = clone.GetRenderBounds(pen);
+            return r;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyConvGeoShapeBounds3 : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var geo = (Geometry)values[0];
+            var ro = (Transform)values[1];
+            var sc = (Transform)values[2];
+            var pen = (Pen)values[3];
+            var clone = geo.Clone();
+            clone.Transform = sc;
+            var r = clone.GetRenderBounds(pen);
+            r = ro.TransformBounds(r);
+            return r;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyConvGeoShapeBounds2 : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var geo = (Geometry)values[0];
+            var ro = (Transform)values[1];
+            var sc = (Transform)values[2];
+            var pen = (Pen)values[3];
+            var clone = geo.Clone();
+            clone.Transform = ro;
+            var r = clone.GetRenderBounds(pen);
+            r = sc.TransformBounds(r);
+            return r;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    //public class MyConvGeoShapeBounds : IMultiValueConverter
+    //{
+    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        var geo = (Geometry)values[0];
+    //        var tra = (Transform)values[1];
+    //        var pen = (Pen)values[2];
+    //        var clone = geo.Clone();
+    //        clone.Transform = tra;
+    //        return clone.GetRenderBounds(pen);
+    //    }
+
+    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
+    public class MyConvTranslateX : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var geo = (Rect)value;
+            return -geo.X;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyConvTranslateY : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var geo = (Rect)value;
+            return -geo.Y;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public class MyConvRectHeight : IValueConverter
     {
@@ -259,7 +470,10 @@ namespace _20250412
             var scalex = (double)values[0];
             var scaley = (double)values[1];
             var angle = (double)values[2];
+            var tx = (double)values[3];
+            var ty = (double)values[4];
             TransformGroup transform = new();
+            //transform.Children.Add(new TranslateTransform(tx, ty));
             transform.Children.Add(new ScaleTransform(scalex, scaley));
             transform.Children.Add(new RotateTransform(angle));
             return transform;

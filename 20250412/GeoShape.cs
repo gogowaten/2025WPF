@@ -188,7 +188,8 @@ namespace _20250412
             MyBindScaleTransform();
             MyBindRotateTransform();
             MyBindRenderTransform();
-            MyBindTransformedBounds2();
+            //_ = SetBinding(RenderTransformProperty, bind);
+            //MyBindTransformedBounds2();
 
         }
 
@@ -224,7 +225,6 @@ namespace _20250412
             bind.Bindings.Add(MakeOneWayBind(MyScaleTransformProperty));
             bind.Bindings.Add(MakeOneWayBind(MyRotateTransformProperty));
             _ = SetBinding(MyRenderTransformProperty, bind);
-            _ = SetBinding(RenderTransformProperty, bind);
         }
 
         private void MyBindRotateTransform()
@@ -754,18 +754,19 @@ namespace _20250412
         /// <returns></returns>
         public Rect GetRenderBounds()
         {
+            var geo2 = DefiningGeometry.Clone();
+            geo2.Transform = MyRotateTransform;
+            var geo2RotatePneBounds = geo2.GetRenderBounds(MyPen);
+           var roScBounds = MyScaleTransform.TransformBounds(geo2RotatePneBounds);
+            geo2.Transform = MyScaleTransform;
+            var geo2ScalePenBounds=geo2.GetRenderBounds(MyPen);
+            var scRoBounds = MyRotateTransform.TransformBounds(geo2ScalePenBounds);
+
             //自身のGeometryのクローンを使う
             //自身に適用されているRenderTransformとPenをクローンに適用して
             //クローンのGetRenderBoundsで得られる
             Geometry geo = DefiningGeometry.Clone();
             geo.Transform = RenderTransform;
-            //Pen myPen = new(Brushes.Transparent, StrokeThickness)
-            //{
-            //    EndLineCap = StrokeEndLineCap,
-            //    StartLineCap = StrokeStartLineCap,
-            //    LineJoin = StrokeLineJoin,
-            //    MiterLimit = StrokeMiterLimit,
-            //};
             return geo.GetRenderBounds(MyPen);
         }
 
@@ -781,20 +782,6 @@ namespace _20250412
     #region コンバーター
 
 
-    public class MyConvStrokeThicknessScale : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            var kiso = (double)values[0];
-            var scale = (double)values[1];
-            return kiso * scale;
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
 
     /// <summary>
     /// 図形(見た目上)のBoundsを取得する
@@ -870,20 +857,32 @@ namespace _20250412
             var scale = (ScaleTransform)values[1];
             var rotate = (RotateTransform)values[2];
             var myPen = (Pen)values[3];
-            var clone = geo.Clone();
-            
-            clone.Transform = rotate;
-            var uma = clone.GetRenderBounds(myPen);
-            var ika = scale.TransformBounds(uma);
 
-            
+            var clone = geo.Clone();
+            var gb = geo.Bounds;
+
+            clone.Transform = rotate; var uma = clone.GetRenderBounds(myPen); var inu = scale.TransformBounds(uma);
+            var clone4 = geo.Clone();
+            clone.Transform = scale; var uma2 = clone.GetRenderBounds(myPen); var inu2 = rotate.TransformBounds(uma2);
+            var clone6 = geo.Clone();
+           var pengeo = clone6.GetWidenedPathGeometry(myPen);
+            var pengeoBounds = pengeo.Bounds;
+            var outline = pengeo.GetOutlinedPathGeometry();
+            var outlineBound = outline.Bounds;
+
             var clone2 = geo.Clone();
-            var tako = clone2.GetWidenedPathGeometry(myPen);
-            var saru = tako.Bounds;
-            var neko = clone.GetRenderBounds(myPen);
-            
-            
-            return ika;
+            var tako = clone2.GetRenderBounds(myPen);
+            var saru = scale.TransformBounds(tako); var neko = rotate.TransformBounds(saru);
+            var clone5 = geo.Clone();
+            var tako2 = clone2.GetRenderBounds(myPen);
+            var saru2 = rotate.TransformBounds(tako2); var neko4 = scale.TransformBounds(saru2);
+
+            var clone3 = geo.Clone();
+            TransformGroup transform = new(); transform.Children.Add(scale); transform.Children.Add(rotate);
+            clone3.Transform = transform;
+            var neko2 = clone3.GetRenderBounds(myPen);
+            var neko3 = clone3.Bounds;
+            return inu;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
