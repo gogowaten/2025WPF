@@ -24,6 +24,7 @@
       <Button x:Name="test" Content="test" Click="test_Click"/>
       <Button x:Name="Bai" Content="2bai" Click="Bai_Click"/>
       <Button x:Name="Half" Content="Half" Click="Half_Click"/>
+      <Button x:Name="Right" Content="Right" Click="Right_Click"/>
       <Button x:Name="GetBounds" Content="GetBounds" Click="GetBounds_Click"/>
       <StackPanel>
         
