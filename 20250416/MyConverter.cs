@@ -130,4 +130,23 @@ namespace _20250416
             throw new NotImplementedException();
         }
     }
+
+    public class MyConvRenderGeometryPenBounds : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var geo = (Geometry)values[0];
+            var pen = (Pen)values[1];
+            var sx = (double)values[2];
+            var sy = (double)values[3];
+            var angle = (double)values[4];
+            return geo.GetRenderBounds(pen);
+        kk}
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

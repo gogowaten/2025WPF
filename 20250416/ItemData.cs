@@ -6,9 +6,13 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace _20250416
 {
+
+    public enum ItemType { None = 0, TextBlock, GeoShape }
+
     /// <summary>
     /// シリアライズするData
     /// </summary>
@@ -27,7 +31,26 @@ namespace _20250416
         }
 
         #endregion 必要
-        public ItemData() { }
+        //public ItemData() { }
+        public ItemData(ItemType type) { this.Type = type; }
+
+
+        //図形
+
+        private double _strokeThickness;
+        public double StrokeThickness { get => _strokeThickness; set => SetProperty(ref _strokeThickness, value); }
+
+
+
+        public PointCollection MyPoints
+        {
+            get { return (PointCollection)GetValue(MyPointsProperty); }
+            set { SetValue(MyPointsProperty, value); }
+        }
+        public static readonly DependencyProperty MyPointsProperty =
+            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(ItemData), new PropertyMetadata(new PointCollection()));
+
+
 
         /// <summary>
         /// 横位置の指定
@@ -62,6 +85,10 @@ namespace _20250416
 
         private double _myCenterY;
         public double MyCenterY { get => _myCenterY; set => SetProperty(ref _myCenterY, value); }
+
+
+        private ItemType _type;
+        public ItemType Type { get => _type; set => SetProperty(ref _type, value); }
 
     }
 }

@@ -45,7 +45,7 @@ namespace _20250415
             var geo = MyGeo.RenderedGeometry;
             var geo2 = MyGeo.MyGeometry;
             var bounds = MyGeo.RenderedGeometry.GetRenderBounds(MyGeo.MyPen);
-
+            MessageBox.Show($"{bounds}");
         }
 
         private void Right_Click(object sender, RoutedEventArgs e)

@@ -14,6 +14,7 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
+      <Ellipse Width="21" Height="21" StrokeThickness="1" Stroke="Blue" Canvas.Left="190" Canvas.Top="190"/>
     </Canvas>
 
     <StackPanel Grid.Column="1" DataContext="{Binding}">
@@ -29,14 +30,18 @@
         <TextBlock Text="{Binding MyTop, StringFormat=MyTop 0}"/>
         <TextBlock Text="{Binding MyText, StringFormat=MyText {0:0}}"/>
         <TextBlock Text="{Binding MyAngle, StringFormat=MyAngle 0}"/>
-        <Slider Value="{Binding MyAngle}" Minimum="0" Maximum="360" TickFrequency="10" IsSnapToTickEnabled="True"/>
-        <TextBlock Text="{Binding MyScaleX, StringFormat=MyScaleX 0}"/>
-        <Slider Value="{Binding MyScaleX}" Minimum="0" Maximum="5" TickFrequency="1" IsSnapToTickEnabled="True"/>
+        <Slider x:Name="MyScaleX" Value="{Binding MyAngle}" Minimum="0" Maximum="360" TickFrequency="10" IsSnapToTickEnabled="True"/>
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding MyScaleX, StringFormat=MyScaleX 0.0}"/>
+          <Button x:Name="SetScaleX" Content="Set" Click="SetScaleX_Click"/>
+        </UniformGrid>
+        <Slider Value="{Binding MyScaleX}" Minimum="0" Maximum="5" TickFrequency="0.5" IsSnapToTickEnabled="True"/>
         <TextBlock Text="{Binding MyCenterX, StringFormat=MyCenterX 0.0}"/>
         <Slider Value="{Binding MyCenterX}" Minimum="0" Maximum="1.0" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
         <TextBlock Text="{Binding MyCenterY, StringFormat=MyCenterY 0.0}"/>
         <Slider Value="{Binding MyCenterY}" Minimum="0" Maximum="1.0" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
-
+        <Button x:Name="Handle" Content="Handle" Click="Handle_Click"/>
+        <Button x:Name="GeoTest" Content="GeoTest" Click="GeoTest_Click"/>
       </StackPanel>
     </StackPanel>
   </Grid>

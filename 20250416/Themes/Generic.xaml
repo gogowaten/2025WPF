@@ -2,6 +2,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:_20250416">
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary Source="/Themes/Dictionary1.xaml"/>
+  </ResourceDictionary.MergedDictionaries>
+
+  <Style TargetType="{x:Type local:AnchorHandleThumb}" BasedOn="{StaticResource anchorHandle}"/>
 
   <Style TargetType="{x:Type local:KisoThumb}" x:Key="kiso">
     <Setter Property="Canvas.Left"
@@ -44,6 +49,72 @@
     </Setter>
   </Style>
 
+  <Style TargetType="{x:Type local:GeoShapeThumb}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:GeoShapeThumb}">
+          <Grid DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData}">
+            <Canvas>
+              <local:GeoShapeWithAnchorHandle
+                x:Name="InsideElement"
+                MyPoints="{Binding MyPoints}"
+                Stroke="Red"
+                StrokeThickness="{Binding StrokeThickness}"
+                MyAngle="{Binding MyAngle}"
+                MyScaleX="{Binding MyScaleX}"
+                MyScaleY="{Binding MyScaleY}"
+                />
+              <Rectangle
+                x:Name="waku"
+                DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                Stroke="Blue" StrokeThickness="1.0"
+                Width="{Binding MyInsideElementTransformedBounds.Width}"
+                Height="{Binding MyInsideElementTransformedBounds.Height}"
+                />
+            </Canvas>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 
+  <!--<Style TargetType="{x:Type local:GeoShapePanel}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:GeoShapePanel}">
+          <Grid
+            x:Name="InsideElement"
+            DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData}"
+            >
+            <local:GeoShapeWithAnchorHandle
+              x:Name="geo"
+              MyPoints="{Binding MyPoints}"
+              Stroke="Red"
+              StrokeThickness="{Binding StrokeThickness}"
+              />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>-->
+
+
+  <!--<Style TargetType="{x:Type local:GeoShapePanelThumb}" BasedOn="{StaticResource kiso}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:GeoShapePanelThumb}">
+          <Grid DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData}">
+            <Canvas>
+              <local:GeoShapePanel
+                x:Name="InsideElement"
+                MyItemData="{Binding}"
+                />
+              <Rectangle x:Name="waku"/>
+            </Canvas>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>-->
 
 </ResourceDictionary>

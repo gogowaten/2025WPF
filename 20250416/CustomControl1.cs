@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,6 +17,170 @@ using System.Windows.Shapes;
 
 namespace _20250416
 {
+
+
+    public class GeoShapePanel : Control
+    {
+        public GeoShapeWithAnchorHandle MyGeoShapeWithAnchor { get; set; } = null!;
+
+        static GeoShapePanel()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoShapePanel), new FrameworkPropertyMetadata(typeof(GeoShapePanel)));
+        }
+        public GeoShapePanel()
+        {
+
+        }
+        public GeoShapePanel(ItemData data)
+        {
+            MyItemData = data;
+            DataContext = MyItemData;
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            if (GetTemplateChild("geo") is GeoShapeWithAnchorHandle geo)
+            {
+                MyGeoShapeWithAnchor = geo;
+            }
+        }
+
+
+        public ItemData MyItemData
+        {
+            get { return (ItemData)GetValue(MyItemDataProperty); }
+            set { SetValue(MyItemDataProperty, value); }
+        }
+        public static readonly DependencyProperty MyItemDataProperty =
+            DependencyProperty.Register(nameof(MyItemData), typeof(ItemData), typeof(GeoShapePanel), new PropertyMetadata(null));
+
+    }
+
+
+    //public class GeoShapePanelThumb : KisoThumb
+    //{
+    //    public GeoShapePanel GeoShapePanel { get; set; } = null!;
+    //    public GeoShapeWithAnchorHandle GeoShapeWithAnchorHandle { get; set; } = null!;
+
+    //    static GeoShapePanelThumb()
+    //    {
+    //        DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoShapePanelThumb), new FrameworkPropertyMetadata(typeof(GeoShapePanelThumb)));
+    //    }
+    //    public GeoShapePanelThumb(ItemData data) : base(data)
+    //    {
+
+    //    }
+    //    public override void OnApplyTemplate()
+    //    {
+    //        base.OnApplyTemplate();
+    //        if (MyInsideElement is GeoShapePanel panel)
+    //        {
+    //            this.GeoShapePanel = panel;
+
+    //        }
+    //    }
+    //}
+
+    public class GeoShapeThumb : KisoThumb
+    {
+        public GeoShapeWithAnchorHandle MyGeoShape { get; private set; } = null!;
+
+        static GeoShapeThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoShapeThumb), new FrameworkPropertyMetadata(typeof(GeoShapeThumb)));
+        }
+        public GeoShapeThumb() { }
+
+        private void GeoShapeThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            var neko = MyGeoShape.RenderedGeometry.GetRenderBounds(MyGeoShape.MyPen);
+            
+            //MyInsideElementTransformedBounds = neko;
+            MyBindActualLocate();
+            MyBindInsideElementLocate();
+        }
+
+        public GeoShapeThumb(ItemData data) : base(data)
+        {
+            Loaded += GeoShapeThumb_Loaded;
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            if (MyInsideElement is GeoShapeWithAnchorHandle geo)
+            {
+                this.MyGeoShape = geo;
+            }
+            else { throw new ArgumentException("TemplateからGeoShapeWithAnchorHandleが見つからなかった"); }
+        }
+
+        public void SetScaleX(double scale)
+        {
+            MyPointsTransform(MakeScaleTransform(), MyGeoShape.MyPoints);
+            //SetMyInsideElementTransformedBounds();
+        }
+
+        private ScaleTransform MakeScaleTransform()
+        {
+            var (cx, cy) = MakeCenterXY();
+            return new ScaleTransform(MyItemData.MyScaleX, MyItemData.MyScaleY, cx, cy);
+        }
+
+        private RotateTransform MakeRotateTransform()
+        {
+            var (cx, cy) = MakeCenterXY();
+            return new RotateTransform(MyItemData.MyAngle, cx, cy);
+        }
+
+        private (double cx, double cy) MakeCenterXY()
+        {
+            var (x, y) = GetCenterXY(MyGeoShape.RenderedGeometry, MyGeoShape.MyPen, MyItemData.MyCenterX, MyItemData.MyCenterY);
+            double cx = MyInsideElementTransformedBounds.Width * MyItemData.MyCenterX + MyInsideElementTransformedBounds.Left;
+            double cy = MyInsideElementTransformedBounds.Height * MyItemData.MyCenterY + MyInsideElementTransformedBounds.Top;
+            return (cx, cy);
+        }
+
+        /// <summary>
+        /// 中心座標
+        /// </summary>
+        /// <param name="geo"></param>
+        /// <param name="pen"></param>
+        /// <returns></returns>
+        private static (double x, double y) GetCenterXY(Geometry geo, Pen pen, double cx, double cy)
+        {
+            var penBounds = geo.GetRenderBounds(pen);
+            double x = penBounds.Width * cx + penBounds.Left;
+            double y = penBounds.Height * cy + penBounds.Top;
+            return (x, y);
+        }
+        private static (double x, double y) GetCenterXY(Geometry geo, Pen pen)
+        {
+            var penBounds = geo.GetRenderBounds(pen);
+            double x = penBounds.Width / 2.0 + penBounds.Left;
+            double y = penBounds.Height / 2.0 + penBounds.Top;
+            return (x, y);
+        }
+
+        private void MyPointsTransform(Transform transform, PointCollection pois)
+        {
+            for (int i = 0; i < pois.Count; i++)
+            {
+                pois[i] = transform.Transform(pois[i]);
+            }
+        }
+
+        private void SetMyInsideElementTransformedBounds()
+        {
+            //MyInsideElementTransformedBounds = MyGeoShape.RenderedGeometry.GetRenderBounds(MyGeoShape.MyPen);
+        }
+
+        public void GeoTest()
+        {
+            SetMyInsideElementTransformedBounds();
+        }
+    }
 
     public class TextBlockThumb : KisoThumb
     {
@@ -71,21 +236,44 @@ namespace _20250416
 
         private void KisoThumb_Loaded(object sender, RoutedEventArgs e)
         {
-            //各種バインド設定
-            MyBindInsideElementRenderTransform();
-            MyBindInsideElementRenderTransformBounds();
-            MyBindActualLocate();
-            MyBindInsideElementLocate();
+            if (MyInsideElement is GeoShape geo)
+            {
+                MyGeoBinds(geo);
+            }
+            else
+            {
+                //各種バインド設定
+                MyBindInsideElementRenderTransform();
+                MyBindInsideElementRenderTransformBounds();
+                MyBindActualLocate();
+                MyBindInsideElementLocate();
+            }
 
         }
 
+        private void MyGeoBinds(GeoShape geo)
+        {
+            MyBindGeoPenBounds(geo);
+        }
+
         #region 初期バインド設定
+
+        private void MyBindGeoPenBounds(GeoShape geo)
+        {
+            var bind = new MultiBinding() { Converter = new MyConvRenderGeometryPenBounds() };
+            bind.Bindings.Add(new Binding() { Source = geo, Path = new PropertyPath(GeoShape.MyGeometryProperty) });
+            bind.Bindings.Add(new Binding() { Source = geo, Path = new PropertyPath(GeoShape.MyPenProperty) });
+            bind.Bindings.Add(new Binding(nameof(ItemData.MyScaleX)) { Source = MyItemData });
+            bind.Bindings.Add(new Binding(nameof(ItemData.MyScaleY)) { Source = MyItemData });
+            bind.Bindings.Add(new Binding(nameof(ItemData.MyAngle)) { Source = MyItemData });
+            SetBinding(MyInsideElementTransformedBoundsProperty, bind);
+        }
 
         /// <summary>
         /// 中の要素の位置
         /// 回転拡縮などでの変化する位置の修正用
         /// </summary>
-        private void MyBindInsideElementLocate()
+        protected void MyBindInsideElementLocate()
         {
             BindingOperations.SetBinding(MyInsideElement, Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty), Converter = new MyConvInsideElementLeft() });
             BindingOperations.SetBinding(MyInsideElement, Canvas.TopProperty, new Binding() { Source = this, Path = new PropertyPath(MyInsideElementTransformedBoundsProperty), Converter = new MyConvInsideElementTop() });
@@ -97,7 +285,7 @@ namespace _20250416
         /// 回転拡縮などでの変化する位置修正後を実際の位置とする(canvas.leftなどとバインドする)
         /// 指定横位置(myleft)と中の要素のBoundsのLeftから取得
         /// </summary>
-        private void MyBindActualLocate()
+        protected void MyBindActualLocate()
         {
             var mb = new MultiBinding() { Converter = new MyConvActualLeft() };
             mb.Bindings.Add(new Binding(nameof(ItemData.MyLeft)) { Source = MyItemData });

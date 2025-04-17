@@ -16,7 +16,7 @@
       <Polyline x:Name="MyPoly" Points="0,0,100,0" Canvas.Left="100" Canvas.Top="100"
                 Stroke="Red" StrokeThickness="20"/>
       <local:GeoShapeWithAnchorHandle
-        x:Name="MyGeo" MyPoints="0,0,100,0" Stroke="Blue" StrokeThickness="20"
+        x:Name="MyGeo" MyPoints="0,0,100,0" Stroke="Blue" StrokeThickness="40"
         Canvas.Left="100" Canvas.Top="100" Opacity="0.5"/>
     </Canvas>
 
