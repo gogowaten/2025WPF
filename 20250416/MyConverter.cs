@@ -141,7 +141,7 @@ namespace _20250416
             var sy = (double)values[3];
             var angle = (double)values[4];
             return geo.GetRenderBounds(pen);
-        kk}
+        }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
