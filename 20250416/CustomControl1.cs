@@ -94,9 +94,6 @@ namespace _20250416
 
         private void GeoShapeThumb_Loaded(object sender, RoutedEventArgs e)
         {
-            var neko = MyGeoShape.RenderedGeometry.GetRenderBounds(MyGeoShape.MyPen);
-            
-            //MyInsideElementTransformedBounds = neko;
             MyBindActualLocate();
             MyBindInsideElementLocate();
         }
@@ -116,16 +113,33 @@ namespace _20250416
             else { throw new ArgumentException("TemplateからGeoShapeWithAnchorHandleが見つからなかった"); }
         }
 
-        public void SetScaleX(double scale)
+        #region 変形メソッド
+
+        public void SetScaleX()
         {
             MyPointsTransform(MakeScaleTransform(), MyGeoShape.MyPoints);
-            //SetMyInsideElementTransformedBounds();
         }
 
         private ScaleTransform MakeScaleTransform()
         {
             var (cx, cy) = MakeCenterXY();
             return new ScaleTransform(MyItemData.MyScaleX, MyItemData.MyScaleY, cx, cy);
+        }
+
+        public void SetAngle(bool isRotateRight = true)
+        {
+            if (isRotateRight)
+            {
+                //右回転
+                MyPointsTransform(MakeRotateTransform(), MyGeoShape.MyPoints);
+            }
+            else
+            {
+                //左回転
+                var ro = MakeRotateTransform();
+                ro.Angle = 360.0 - ro.Angle;
+                MyPointsTransform(ro, MyGeoShape.MyPoints);
+            }
         }
 
         private RotateTransform MakeRotateTransform()
@@ -136,50 +150,20 @@ namespace _20250416
 
         private (double cx, double cy) MakeCenterXY()
         {
-            var (x, y) = GetCenterXY(MyGeoShape.RenderedGeometry, MyGeoShape.MyPen, MyItemData.MyCenterX, MyItemData.MyCenterY);
             double cx = MyInsideElementTransformedBounds.Width * MyItemData.MyCenterX + MyInsideElementTransformedBounds.Left;
             double cy = MyInsideElementTransformedBounds.Height * MyItemData.MyCenterY + MyInsideElementTransformedBounds.Top;
             return (cx, cy);
         }
 
-        /// <summary>
-        /// 中心座標
-        /// </summary>
-        /// <param name="geo"></param>
-        /// <param name="pen"></param>
-        /// <returns></returns>
-        private static (double x, double y) GetCenterXY(Geometry geo, Pen pen, double cx, double cy)
-        {
-            var penBounds = geo.GetRenderBounds(pen);
-            double x = penBounds.Width * cx + penBounds.Left;
-            double y = penBounds.Height * cy + penBounds.Top;
-            return (x, y);
-        }
-        private static (double x, double y) GetCenterXY(Geometry geo, Pen pen)
-        {
-            var penBounds = geo.GetRenderBounds(pen);
-            double x = penBounds.Width / 2.0 + penBounds.Left;
-            double y = penBounds.Height / 2.0 + penBounds.Top;
-            return (x, y);
-        }
-
-        private void MyPointsTransform(Transform transform, PointCollection pois)
+        private static void MyPointsTransform(Transform transform, PointCollection pois)
         {
             for (int i = 0; i < pois.Count; i++)
             {
                 pois[i] = transform.Transform(pois[i]);
             }
         }
+        #endregion 変形メソッド
 
-        private void SetMyInsideElementTransformedBounds()
-        {
-            //MyInsideElementTransformedBounds = MyGeoShape.RenderedGeometry.GetRenderBounds(MyGeoShape.MyPen);
-        }
-
-        public void GeoTest()
-        {
-            SetMyInsideElementTransformedBounds();
-        }
     }
 
     public class TextBlockThumb : KisoThumb
@@ -238,11 +222,12 @@ namespace _20250416
         {
             if (MyInsideElement is GeoShape geo)
             {
-                MyGeoBinds(geo);
+                //Geometry図形要素用のバインド
+                MyBindGeoShapePenBounds(geo);
             }
             else
             {
-                //各種バインド設定
+                //通常要素用の各種バインド設定
                 MyBindInsideElementRenderTransform();
                 MyBindInsideElementRenderTransformBounds();
                 MyBindActualLocate();
@@ -251,14 +236,9 @@ namespace _20250416
 
         }
 
-        private void MyGeoBinds(GeoShape geo)
-        {
-            MyBindGeoPenBounds(geo);
-        }
-
         #region 初期バインド設定
 
-        private void MyBindGeoPenBounds(GeoShape geo)
+        private void MyBindGeoShapePenBounds(GeoShape geo)
         {
             var bind = new MultiBinding() { Converter = new MyConvRenderGeometryPenBounds() };
             bind.Bindings.Add(new Binding() { Source = geo, Path = new PropertyPath(GeoShape.MyGeometryProperty) });

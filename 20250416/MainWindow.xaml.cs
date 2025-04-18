@@ -67,13 +67,22 @@ namespace _20250416
 
         private void SetScaleX_Click(object sender, RoutedEventArgs e)
         {
-            var v = MyScaleX.Value;
-            MyThumb2.SetScaleX(v);
+            MyThumb2.SetScaleX();
         }
 
         private void GeoTest_Click(object sender, RoutedEventArgs e)
         {
-            MyThumb2.GeoTest();
+            
+        }
+
+        private void SetAngle_Click(object sender, RoutedEventArgs e)
+        {
+            MyThumb2.SetAngle();
+        }
+
+        private void SetAngleToLeft_Click(object sender, RoutedEventArgs e)
+        {
+            MyThumb2.SetAngle(false);
         }
     }
 }
