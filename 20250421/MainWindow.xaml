@@ -8,7 +8,7 @@
         d:DataContext="{d:DesignInstance local:RootThumb}"
         Title="MainWindow" Height="647" Width="654">
 
-  <Grid x:Name="MyGrid" UseLayoutRounding="True">
+  <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
       <ColumnDefinition Width="260"/>
@@ -19,10 +19,15 @@
                   VerticalAlignment="Top"
                   VerticalScrollBarVisibility="Auto"
                   >
+      <local:ExCanvas x:Name="MyPanel" IsAutoResize="True" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Rectangle x:Name="MyRange" Fill="Blue" Opacity="0.5" Stroke="Red" StrokeThickness="1" Width="100" Height="100" Panel.ZIndex="1" Canvas.Top="10" Canvas.Left="10"/>
+      </local:ExCanvas>
     </ScrollViewer>
 
-
     <StackPanel Grid.Column="1" DataContext="{Binding}">
+      <TextBlock Text="{Binding ElementName=MyPanel, Path=ActualHeight}"/>
+      <TextBlock Text="{Binding ElementName=MyPanel, Path=Height}"/>
+      <TextBlock Text="{Binding ElementName=MyScrollViewer, Path=ActualHeight}"/>
       <UniformGrid Columns="2">
         <Button x:Name="AddTextThumb2" Content="AddTextThumb" Click="AddTextThumb_Click"/>
         <Button x:Name="AddEllipseThumb" Content="AddEllipseThumb" Click="AddEllipseThumb_Click"/>

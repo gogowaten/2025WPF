@@ -37,6 +37,13 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         MyInitialize();
+        Loaded += MainWindow_Loaded;
+    }
+
+    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        SwitchAdorner(MyRange);
+
     }
 
     #region 初期処理
@@ -50,9 +57,11 @@ public partial class MainWindow : Window
         {
             MyRoot = root;
         }
-        MyScrollViewer.Content = MyRoot;
+        //MyScrollViewer.Content = MyRoot;
+        MyPanel.Children.Add(MyRoot);
         DataContext = MyRoot;
 
+        
     }
 
     private void MainWindow_Drop(object sender, DragEventArgs e)
@@ -68,6 +77,36 @@ public partial class MainWindow : Window
 
     #region メソッド
 
+
+    /// <summary>
+    /// 対象にリサイズ用のハンドル(装飾)を付け外しする
+    /// </summary>
+    /// <param name="elem">対象要素</param>
+    /// <returns>装飾</returns>
+    private static ResizeHandleAdorner? SwitchAdorner(FrameworkElement elem)
+    {
+        if (AdornerLayer.GetAdornerLayer(elem) is AdornerLayer layer)
+        {
+            var items = layer.GetAdorners(elem);
+            if (items != null)
+            {
+                foreach (var item in items.OfType<ResizeHandleAdorner>())
+                {
+                    layer.Remove(item);
+                }
+                return null;
+            }
+            else
+            {
+                var adorner = new ResizeHandleAdorner(elem);
+                adorner.MyHandleLayout = HandleLayoutType.Inside;
+                //adorner.MyHandleLayout = HandleLayoutType.Online;
+                layer.Add(adorner);
+                return adorner;
+            }
+        }
+        return null;
+    }
 
 
     #endregion メソッド
