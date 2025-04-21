@@ -113,6 +113,16 @@ namespace _20250416
             else { throw new ArgumentException("TemplateからGeoShapeWithAnchorHandleが見つからなかった"); }
         }
 
+
+        public Point MyTestCenterPoint
+        {
+            get { return (Point)GetValue(MyTestCenterPointProperty); }
+            set { SetValue(MyTestCenterPointProperty, value); }
+        }
+        public static readonly DependencyProperty MyTestCenterPointProperty =
+            DependencyProperty.Register(nameof(MyTestCenterPoint), typeof(Point), typeof(GeoShapeThumb), new PropertyMetadata(new Point()));
+
+
         #region 変形メソッド
 
         public void SetScaleX()
@@ -144,7 +154,7 @@ namespace _20250416
 
         private RotateTransform MakeRotateTransform()
         {
-            var (cx, cy) = MakeCenterXY();
+            (double cx, double cy) = MakeCenterXY();
             return new RotateTransform(MyItemData.MyAngle, cx, cy);
         }
 

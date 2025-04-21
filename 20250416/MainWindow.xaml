@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:_20250416"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:KisoThumb}"
-        Title="MainWindow" Height="367" Width="654">
+        Title="MainWindow" Height="467" Width="654">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -46,6 +46,7 @@
         <Slider Value="{Binding MyCenterY}" Minimum="0" Maximum="1.0" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
         <Button x:Name="Handle" Content="Handle" Click="Handle_Click"/>
         <Button x:Name="GeoTest" Content="GeoTest" Click="GeoTest_Click"/>
+        <TextBlock Text="{Binding MyPoints, StringFormat=pois {0:0 }}"/>
       </StackPanel>
     </StackPanel>
   </Grid>

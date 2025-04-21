@@ -24,7 +24,13 @@ namespace _20250416
             MyThumb = Test1();
             MyThumb2 = Test2();
             DataContext = MyThumb2;
+            PreviewMouseDown += MainWindow_PreviewMouseDown;
+        }
 
+
+        private void MainWindow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(e.Source is KisoThumb kiso) { DataContext = kiso; }
         }
 
         private TextBlockThumb Test1()
@@ -72,7 +78,7 @@ namespace _20250416
 
         private void GeoTest_Click(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void SetAngle_Click(object sender, RoutedEventArgs e)
