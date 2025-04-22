@@ -77,9 +77,13 @@ namespace _20250421
 
     }
 
+    /// <summary>
+    /// 範囲選択用Thumb
+    /// </summary>
     public class RangeThumb : Thumb
     {
         private ExCanvas MyParentExCanvas = null!;
+        private ContextMenu MyContextMenu= null!;
         static RangeThumb()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RangeThumb), new FrameworkPropertyMetadata(typeof(RangeThumb)));
@@ -90,6 +94,12 @@ namespace _20250421
             DragDelta += RangeThumb_DragDelta;
             DragStarted += RangeThumb_DragStarted;
             DragCompleted += RangeThumb_DragCompleted;
+            //ContextMenuOpening += RangeThumb_ContextMenuOpening;
+        }
+
+        private void RangeThumb_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            ContextMenu = MyContextMenu;
         }
 
         private void RangeThumb_DragCompleted(object sender, DragCompletedEventArgs e)
@@ -114,6 +124,34 @@ namespace _20250421
 
         private void RangeThumb_Loaded(object sender, RoutedEventArgs e)
         {
+            InitializeAdorner();
+            
+            if(Parent is ExCanvas ex)
+            {
+                MyParentExCanvas = ex;
+            }
+            InitializeContextMenu();
+
+        }
+
+        private void InitializeContextMenu()
+        {
+            MyContextMenu = new();
+            this.ContextMenu = MyContextMenu;
+            MenuItem item;
+            item = new() { Header = "範囲を画像として保存" }; MyContextMenu.Items.Add(item);
+            item.Click += Item_Click;
+        }
+
+        private void Item_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+
+
+        private void InitializeAdorner()
+        {
             if (AdornerLayer.GetAdornerLayer(this) is AdornerLayer layer)
             {
                 var adorner = new ResizeHandleAdorner(this);
@@ -128,12 +166,9 @@ namespace _20250421
             {
                 throw new ArgumentException("AdornerLayer取得失敗");
             }
-
-            if(Parent is ExCanvas ex)
-            {
-                MyParentExCanvas = ex;
-            }
         }
+
+
 
     }
 
@@ -1365,6 +1400,8 @@ namespace _20250421
     {
         //シリアライズ時の内部ファイル名
         private const string XML_FILE_NAME = "Data.xml";
+        private readonly RangeThumb MyRangeThumb = null!;
+
 
         static RootThumb()
         {
@@ -1384,6 +1421,8 @@ namespace _20250421
             PreviewMouseDown -= KisoThumb_PreviewMouseDown2;
             KeyUp -= KisoThumb_KeyUp;
             Loaded += RootThumb_Loaded;
+
+            MyRangeThumb = new();
         }
         #region イベントでの処理
 

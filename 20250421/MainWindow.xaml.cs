@@ -26,6 +26,7 @@ namespace _20250421;
 /// </summary>
 public partial class MainWindow : Window
 {
+    //private ContextMenu MyContextMenu = null!;
     private RootThumb MyRoot { get; set; } = null!;
     string SaveFileName = "E:\\" + DateTime.Now.ToString("yyyyMMdd") + ".xml";
     string SaveRootFileName = "E:\\" + DateTime.Now.ToString("yyyyMMdd") + "Root.xml";
@@ -53,16 +54,17 @@ public partial class MainWindow : Window
         Drop += MainWindow_Drop;
 
         ItemData data = new(ThumbType.Root) { MyBackground = Brushes.SkyBlue };
-        if (new RootThumb(data) is RootThumb root)
-        {
-            MyRoot = root;
-        }
+        //if (new RootThumb(data) is RootThumb root)
+        //{
+        //    MyRoot = root;
+        //}
+        MyRoot = new RootThumb(data);
         //MyScrollViewer.Content = MyRoot;
         MyPanel.Children.Add(MyRoot);
         DataContext = MyRoot;
 
-        
     }
+
 
     private void MainWindow_Drop(object sender, DragEventArgs e)
     {
@@ -73,7 +75,40 @@ public partial class MainWindow : Window
         }
     }
 
+    #region 右クリックメニュー
+    private ContextMenu MakeContext()
+    {
+        ContextMenu menu = new();
+        MenuItem item;
+        item = new() { Header = "グループ化" }; menu.Items.Add(item);
+        //item.Click += (s, e) => { MyRoot.AddGroup(); };
+        //item = new() { Header = "画像で複製" }; menu.Items.Add(item);
+        //item.Click += (s, e) => { MyRoot.DuplicateImageSelectedThumbs(); };
+        //item = new() { Header = "Dataで複製" }; menu.Items.Add(item);
+        //item.Click += (s, e) => { MyRoot.DuplicateDataSelectedThumbs(); };
+
+        //menu.Items.Add(new Separator() { Height = 10 });
+        //item = new() { Header = "削除" }; menu.Items.Add(item);
+        //item.Click += (s, e) => { MyRoot.RemoveThumb(); };
+        //menu.Items.Add(new Separator() { Height = 10 });
+
+        ////item = new() { Header = "Z移動" };
+        //menu.Items.Add(MakeMenuItemZMove());
+
+        //item = new() { Header = "複数選択解除" }; menu.Items.Add(item);
+        //item.Click += (s, e) => { throw new ArgumentException(); };
+
+        return menu;
+    }
+
+
+    #endregion 右クリックメニュー
+
+
     #endregion 初期処理
+
+
+
 
     #region メソッド
 
