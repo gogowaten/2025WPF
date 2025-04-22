@@ -41,6 +41,10 @@ namespace _20250421
         private readonly HandleThumb BottomLeft = new();
         private readonly HandleThumb BottomRight = new();
 
+        //ハンドルの移動開始と終了の通知用イベント
+        public event Action<DragStartedEventArgs>? OnHandleDragStarted;
+        public event Action<DragCompletedEventArgs>? OnHandleDragCompleted;
+
         public ResizeHandleAdorner(FrameworkElement adornedElement) : base(adornedElement)
         {
             MyTarget = adornedElement;
@@ -70,10 +74,14 @@ namespace _20250421
             {
                 item.Cursor = Cursors.Hand;
                 item.DragDelta += Handle_DragDelta;
+                item.DragCompleted += (sender, e) => { OnHandleDragCompleted?.Invoke(e); };
+                item.DragStarted += (sender, e) => { OnHandleDragStarted?.Invoke(e); };
                 MyCanvas.Children.Add(item);
 
                 item.SetBinding(WidthProperty, new Binding() { Source = this, Path = new PropertyPath(MyHandleSizeProperty) });
                 item.SetBinding(HeightProperty, new Binding() { Source = this, Path = new PropertyPath(MyHandleSizeProperty) });
+
+
             }
 
             //装飾ターゲットの親要素がCanvasではない場合は、

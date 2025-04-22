@@ -5,7 +5,18 @@
 
 
 
-
+  <Style TargetType="{x:Type local:RangeThumb}">
+    <Setter Property="Canvas.Left" Value="0"/>
+    <Setter Property="Canvas.Top" Value="0"/>
+    <Setter Property="Focusable" Value="False"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:RangeThumb}">
+          <Rectangle Fill="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Background}"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 
   <Style TargetType="{x:Type local:HandleThumb}">
     <Setter Property="Canvas.Left"

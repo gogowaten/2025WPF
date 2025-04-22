@@ -19,8 +19,9 @@
                   VerticalAlignment="Top"
                   VerticalScrollBarVisibility="Auto"
                   >
-      <local:ExCanvas x:Name="MyPanel" IsAutoResize="True" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <Rectangle x:Name="MyRange" Fill="Blue" Opacity="0.5" Stroke="Red" StrokeThickness="1" Width="100" Height="100" Panel.ZIndex="1" Canvas.Top="10" Canvas.Left="10"/>
+      <local:ExCanvas x:Name="MyPanel" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <!--<Rectangle x:Name="MyRange" Fill="Blue" Opacity="0.5" Stroke="Red" StrokeThickness="1" Width="100" Height="100" Panel.ZIndex="1" Canvas.Top="10" Canvas.Left="10"/>-->
+        <local:RangeThumb Width="100" Height="100" Background="Red" Panel.ZIndex="1" Opacity="0.5"/>
       </local:ExCanvas>
     </ScrollViewer>
 

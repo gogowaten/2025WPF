@@ -246,17 +246,25 @@ namespace _20250421
                 });
             thumb.DragDelta += Thumb_DragDelta;
             thumb.DragCompleted += Thumb_DragCompleted;
+            thumb.DragStarted += Thumb_DragStarted;
             return thumb;
         }
+
 
         /// <summary>
         /// ハンドル移動終了時にそれを知らせるためのイベント、
         /// DragCompletedEventArgsを送っているけどいらないかも
         /// </summary>
-        public event Action<DragCompletedEventArgs>? OnAnchorThumbDragCompleted;
+        public event Action<DragCompletedEventArgs>? OnHandleThumbDragCompleted;
         private void Thumb_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            OnAnchorThumbDragCompleted?.Invoke(e);
+            OnHandleThumbDragCompleted?.Invoke(e);
+        }
+
+        public event Action<DragStartedEventArgs>? OnHandleThumbDragStarted;
+        private void Thumb_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            OnHandleThumbDragStarted?.Invoke(e);
         }
 
         //ハンドルThumbのマウスドラッグ移動、対応するPointも更新する

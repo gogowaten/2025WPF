@@ -7,6 +7,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,7 +77,65 @@ namespace _20250421
 
     }
 
+    public class RangeThumb : Thumb
+    {
+        private ExCanvas MyParentExCanvas = null!;
+        static RangeThumb()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(RangeThumb), new FrameworkPropertyMetadata(typeof(RangeThumb)));
+        }
+        public RangeThumb()
+        {
+            Loaded += RangeThumb_Loaded;
+            DragDelta += RangeThumb_DragDelta;
+            DragStarted += RangeThumb_DragStarted;
+            DragCompleted += RangeThumb_DragCompleted;
+        }
 
+        private void RangeThumb_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            MyParentExCanvas.IsAutoResize = true;
+        }
+
+        private void RangeThumb_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            MyParentExCanvas.IsAutoResize = false;
+        }
+
+        private void RangeThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            if(sender is Thumb t)
+            {
+                Canvas.SetLeft(t, Canvas.GetLeft(t) + e.HorizontalChange);
+                Canvas.SetTop(t, Canvas.GetTop(t) + e.VerticalChange);
+                e.Handled = true;
+            }
+        }
+
+        private void RangeThumb_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (AdornerLayer.GetAdornerLayer(this) is AdornerLayer layer)
+            {
+                var adorner = new ResizeHandleAdorner(this);
+                adorner.MyHandleLayout = HandleLayoutType.Inside;
+                //adorner.MyHandleLayout = HandleLayoutType.Online;
+                layer.Add(adorner);
+                //サイズ変更ハンドルの移動中はCanvasのオートリサイズを無効にしてすっ飛び防止
+                adorner.OnHandleDragStarted += (a) => { MyParentExCanvas.IsAutoResize = false; };
+                adorner.OnHandleDragCompleted += (a) => { MyParentExCanvas.IsAutoResize = true; };
+            }
+            else
+            {
+                throw new ArgumentException("AdornerLayer取得失敗");
+            }
+
+            if(Parent is ExCanvas ex)
+            {
+                MyParentExCanvas = ex;
+            }
+        }
+
+    }
 
 
 
@@ -466,6 +525,7 @@ namespace _20250421
                 {
                     if (focus.MyParentThumb?.MyExCanvas is ExCanvas canvas)
                     {
+                        //parentのオートリサイズを有効に戻す
                         canvas.IsAutoResize = true;
                         focus.MyParentThumb?.ReLayout3();
                     }
@@ -962,7 +1022,7 @@ namespace _20250421
             if (MyAnchorHandleAdorner is null)
             {
                 MyAnchorHandleAdorner = new(MyGeoShape);
-                MyAnchorHandleAdorner.OnAnchorThumbDragCompleted += MyAnchorHandleAdorner_OnDragCompleted;
+                MyAnchorHandleAdorner.OnHandleThumbDragCompleted += MyAnchorHandleAdorner_OnDragCompleted;
                 MyShepeAdornerLayer.Add(MyAnchorHandleAdorner);
                 UpdateLocateAndSize();
                 MyParentThumb?.ReLayout3();
@@ -972,7 +1032,7 @@ namespace _20250421
         {
             if (MyAnchorHandleAdorner != null)
             {
-                MyAnchorHandleAdorner.OnAnchorThumbDragCompleted -= MyAnchorHandleAdorner_OnDragCompleted;
+                MyAnchorHandleAdorner.OnHandleThumbDragCompleted -= MyAnchorHandleAdorner_OnDragCompleted;
                 MyShepeAdornerLayer.Remove(MyAnchorHandleAdorner);
                 MyAnchorHandleAdorner = null;
                 UpdateLocateAndSize();
