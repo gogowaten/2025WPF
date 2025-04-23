@@ -25,7 +25,11 @@
       </local:ExCanvas>-->
     </ScrollViewer>
 
-    <StackPanel Grid.Column="1" DataContext="{Binding}">
+    <StackPanel Grid.Column="1" DataContext="{Binding}"
+                TextOptions.TextFormattingMode="Display"
+                TextOptions.TextHintingMode="Fixed"
+                TextOptions.TextRenderingMode="ClearType"
+                >
       <TextBlock Text="{Binding ElementName=MyScrollViewer, Path=ActualHeight}"/>
       <UniformGrid Columns="2">
         <Button x:Name="AddTextThumb2" Content="AddTextThumb" Click="AddTextThumb_Click"/>
@@ -73,7 +77,7 @@
           <UniformGrid Columns="2">
             <TextBlock Text="{Binding MyItemData.MyThumbType, StringFormat=datatype {0}}"/>
             <TextBlock Text="{Binding MyThumbType, StringFormat=type {0}}"/>
-            <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=left 0}"/>
+            <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=left 0.0}"/>
             <TextBlock Text="{Binding MyItemData.MyTop, StringFormat=top 0}"/>
             <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth 0}"/>
             <TextBlock Text="{Binding ActualHeight, StringFormat=ActualHeight 0}"/>

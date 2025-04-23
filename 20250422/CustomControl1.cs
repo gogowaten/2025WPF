@@ -1564,7 +1564,7 @@ namespace _20250422
         /// </summary>
         /// <param name="thumb">Bitmapにする要素</param>
         /// <returns></returns>
-        private static RenderTargetBitmap? MakeBitmapFromThumb(KisoThumb? thumb)
+        public RenderTargetBitmap? MakeBitmapFromThumb(KisoThumb? thumb)
         {
             if (thumb == null) { return null; }
             if (thumb.ActualHeight == 0 || thumb.ActualWidth == 0) { return null; }
@@ -1599,7 +1599,7 @@ namespace _20250422
         /// </summary>
         /// <param name="bitmap"></param>
         /// <returns></returns>
-        public bool SaveBitmap(BitmapSource bitmap, int jpegQuality)
+        public static bool SaveBitmap(BitmapSource bitmap, int jpegQuality)
         {
             Microsoft.Win32.SaveFileDialog dialog = new()
             {
@@ -1624,7 +1624,7 @@ namespace _20250422
             }
             return false;
         }
-        private bool SaveBitmap(BitmapSource bitmap, ItemData data)
+        private static bool SaveBitmap(BitmapSource bitmap, ItemData data)
         {
             return SaveBitmap(bitmap, data.MyJpegQuality);
         }

@@ -129,7 +129,7 @@ public partial class MainWindow : Window
         //data.MyBitmapSource = bmp;
         //MyRoot.AddNewThumbFromItemData(data, MyRoot);
 
-
+        
     }
 
     private void AddTextThumb()
@@ -138,7 +138,7 @@ public partial class MainWindow : Window
         {
             MyText = "TextBlock",
             MyFontSize = 30,
-            MyForeground = Brushes.RosyBrown,
+            //MyForeground = Brushes.RosyBrown,
             MyBackground = Brushes.SeaShell,
         };
         MyRoot.AddNewThumbFromItemData(data, MyRoot.MyActiveGroupThumb);

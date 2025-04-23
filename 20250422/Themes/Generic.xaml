@@ -151,6 +151,7 @@
                          FontSize="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyFontSize}"
                          Canvas.Left="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementOffsetLeft}"
                          Canvas.Top="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyInsideElementOffsetTop}"
+                         Padding="10"
                          >
                 <TextBlock.RenderTransform>
                   <RotateTransform x:Name="angle" Angle="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyItemData.MyAngle}"/>
