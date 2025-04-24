@@ -11,12 +11,23 @@
       <ColumnDefinition/>
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
-
     <Canvas x:Name="MyCanvas" UseLayoutRounding="True">
-      <TextBlock x:Name="MyTextBlock" Text="TextBlock" FontSize="30"
-                 Foreground="RosyBrown" Background="SeaShell"
-                 />
+      <TextBlock x:Name="MyUC" Canvas.Left="10" Canvas.Top="50"
+                 Text="TextBlock" FontSize="30" Background="MistyRose"
+                 Padding="1"/>
+      <TextBlock Text="tttttttt" FontSize="30">
+        <TextBlock.LayoutTransform>
+          <RotateTransform Angle="40"/>
+        </TextBlock.LayoutTransform>
+      </TextBlock>
+      <TextBlock Text="tttttttt" FontSize="30">
+        <TextBlock.RenderTransform>
+          <RotateTransform Angle="40"/>
+        </TextBlock.RenderTransform>
+      </TextBlock>
+      
     </Canvas>
+
 
     <StackPanel Grid.Column="1">
       <Button Content="test" Click="Button_Click"/>
