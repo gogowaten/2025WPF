@@ -9,6 +9,9 @@ using System.Xml.Linq;
 
 namespace _20250422
 {
+    /// <summary>
+    /// RootThumbとAreaThumbを管理するCanvas
+    /// </summary>
     public class ManageExCanvas : ExCanvas
     {
         public RootThumb MyRootThumb { get; set; }
@@ -42,15 +45,81 @@ namespace _20250422
 
         private void Item_Click(object sender, RoutedEventArgs e)
         {
-            var bmp = GetAreaBitmap2();
+            //var bmp = GetRootBitmap();
+            //var bmp = GetElementBitmap(MyRootThumb, false);
+            //var bmp = GetFocusThumbBitmap(MyRootThumb.MyFocusThumb, false);
+            var bmp = GetAreaBitmap3(false);
             RootThumb.SaveBitmap(bmp, 90);
         }
+
+        /// <summary>
+        /// 要素を画像として取得する
+        /// </summary>
+        /// <param name="element">要素</param>
+        /// <param name="fontClearTyoe">フォント(文字列)の描画時にClearTypeを使用する。通常はfalseでいいと思う</param>
+        /// <returns></returns>
+        private RenderTargetBitmap GetElementBitmap(FrameworkElement element, bool fontClearTyoe)
+        {
+            CacheMode tempCM = element.CacheMode;
+            BitmapCache bc = new() { EnableClearType = fontClearTyoe };
+            element.CacheMode = bc;
+
+            var bounds = new Rect(0, 0, element.ActualWidth, element.ActualHeight);
+            DrawingVisual dv = new();
+            using (var context = dv.RenderOpen())
+            {
+                BitmapCacheBrush brush = new(element);
+                context.DrawRectangle(brush, null, bounds);
+            }
+            RenderTargetBitmap bmp = new((int)bounds.Width, (int)bounds.Height, 96, 96, PixelFormats.Pbgra32);
+            bmp.Render(dv);
+
+            element.CacheMode = tempCM;
+            return bmp;
+        }
+
 
         //WPF/C# コントロールの要素をキャプチャする #C# - Qiita
         //https://qiita.com/Sakurai-Shinya/items/81a9c413c3265f0e8587
 
         //AreaThumb用、選択範囲の画像作成
-        private RenderTargetBitmap GetAreaBitmap2()
+        private RenderTargetBitmap GetAreaBitmap3(bool clearType)
+        {
+            //AreaThumbの位置とサイズ、選択(切り抜き)範囲のRect取得
+            //Rect getArea = MyAreaThumb.TransformToVisual(MyRootThumb)
+            //    .TransformBounds(VisualTreeHelper.GetDescendantBounds(MyAreaThumb));
+
+            Rect getArea = new(GetLeft(MyAreaThumb), GetTop(MyAreaThumb), MyAreaThumb.ActualWidth, MyAreaThumb.ActualHeight);
+
+            DrawingVisual dv = new() { Offset = new Vector(-getArea.X, -getArea.Y) };
+            using (var context = dv.RenderOpen())
+            {
+                Rect rootBounds = new(MyRootThumb.RenderSize);
+                //Rect rrootBounds = VisualTreeHelper.GetDescendantBounds(MyRootThumb);
+                BitmapCacheBrush brush = new(MyRootThumb);
+                context.DrawRectangle(brush, null, rootBounds);
+            }
+
+            //RootThumbのキャッシュモードのフォントのClearTypeを有効にする
+            CacheMode tempCM = MyRootThumb.CacheMode;
+            BitmapCache bc = new() { EnableClearType = clearType };
+            MyRootThumb.CacheMode = bc;
+
+            //Bitmap作成
+            RenderTargetBitmap bitmap = new(
+                (int)Math.Ceiling(getArea.Width),
+                (int)Math.Ceiling(getArea.Height)
+                , 96, 96, PixelFormats.Pbgra32);
+            bitmap.Render(dv);
+
+            //キャッシュモードを元に戻す
+            MyRootThumb.CacheMode = tempCM;
+            return bitmap;
+        }
+
+
+        //AreaThumb用、選択範囲の画像作成
+        private RenderTargetBitmap GetAreaBitmap2(bool clearType)
         {
             //描画のRect取得
             var bounds = MyAreaThumb.TransformToVisual(MyRootThumb)
@@ -70,19 +139,21 @@ namespace _20250422
             //RenderOptions.SetCachingHint(MyRootThumb, CachingHint.Cache);
             //RenderOptions.SetClearTypeHint(MyRootThumb, ClearTypeHint.Enabled);
 
-            //RootThumbのキャッシュモードのフォントのClearTypeを有効にする
-            BitmapCache bc = new() { EnableClearType = true };
-            MyRootThumb.CacheMode = bc;
             DrawingVisual dv = new() { Offset = new Vector(-bounds.X, -bounds.Y) };
             using (var context = dv.RenderOpen())
             {
                 Rect drect = VisualTreeHelper.GetDescendantBounds(MyRootThumb);
+                //drect = new Rect(0, 0, MyRootThumb.ActualWidth, ActualHeight);
                 BitmapCacheBrush vb = new(MyRootThumb);
                 //VisualBrush vb = new(MyRootThumb) { Stretch = Stretch.None };
                 context.DrawRectangle(vb, null, drect);
-                //dvc = dv.ContentBounds;
             }
-            //dvc = dv.ContentBounds;
+            //RootThumbのキャッシュモードのフォントのClearTypeを有効にする
+            if (clearType)
+            {
+                BitmapCache bc = new() { EnableClearType = true };
+                MyRootThumb.CacheMode = bc;
+            }
             RenderTargetBitmap bitmap = new(
                 (int)Math.Ceiling(bounds.Width),
                 (int)Math.Ceiling(bounds.Height)
@@ -143,24 +214,24 @@ namespace _20250422
             return bitmap;
         }
 
-        public RenderTargetBitmap GetRenderTargetBitmap(FrameworkElement element)
-        {
-            //描画のRect取得
-            var bounds = element.TransformToVisual(MyRootThumb)
-                .TransformBounds(VisualTreeHelper.GetDescendantBounds(element));
-            DrawingVisual dv = new() { Offset = new Vector(-bounds.X, -bounds.Y) };
-            using (var context = dv.RenderOpen())
-            {
-                BitmapCacheBrush vb = new(MyRootThumb);
-                //VisualBrush vb = new(MyRootThumb) { Stretch = Stretch.None };
-                context.DrawRectangle(vb, null, VisualTreeHelper.GetDescendantBounds(MyRootThumb));
-            }
-            RenderTargetBitmap bitmap = new(
-                (int)Math.Ceiling(bounds.Width), (int)Math.Ceiling(bounds.Height)
-                , 96, 96, PixelFormats.Pbgra32);
-            bitmap.Render(dv);
-            return bitmap;
-        }
+        //public RenderTargetBitmap GetRenderTargetBitmap(FrameworkElement element)
+        //{
+        //    //描画のRect取得
+        //    var bounds = element.TransformToVisual(MyRootThumb)
+        //        .TransformBounds(VisualTreeHelper.GetDescendantBounds(element));
+        //    DrawingVisual dv = new() { Offset = new Vector(-bounds.X, -bounds.Y) };
+        //    using (var context = dv.RenderOpen())
+        //    {
+        //        BitmapCacheBrush vb = new(MyRootThumb);
+        //        //VisualBrush vb = new(MyRootThumb) { Stretch = Stretch.None };
+        //        context.DrawRectangle(vb, null, VisualTreeHelper.GetDescendantBounds(MyRootThumb));
+        //    }
+        //    RenderTargetBitmap bitmap = new(
+        //        (int)Math.Ceiling(bounds.Width), (int)Math.Ceiling(bounds.Height)
+        //        , 96, 96, PixelFormats.Pbgra32);
+        //    bitmap.Render(dv);
+        //    return bitmap;
+        //}
 
         #region 画像保存
 

@@ -1563,15 +1563,12 @@ namespace _20250422
         /// ThumbをBitmapに変換したものを返す
         /// </summary>
         /// <param name="thumb">Bitmapにする要素</param>
+        /// <param name="clearType">フォントのClearTypeを有効にして保存</param>
         /// <returns></returns>
-        public RenderTargetBitmap? MakeBitmapFromThumb(KisoThumb? thumb)
+        public RenderTargetBitmap? MakeBitmapFromThumb(KisoThumb? thumb, bool clearType = false)
         {
             if (thumb == null) { return null; }
             if (thumb.ActualHeight == 0 || thumb.ActualWidth == 0) { return null; }
-
-            ////枠を一時的に非表示にする
-            //IsWakuVisible = Visibility.Collapsed;
-            //UpdateLayout();//再描画？これで枠が消える
 
             Rect bounds = VisualTreeHelper.GetDescendantBounds(thumb);
             bounds = thumb.RenderTransform.TransformBounds(bounds);
@@ -1581,15 +1578,18 @@ namespace _20250422
             bounds.Height = Math.Round(bounds.Height, MidpointRounding.AwayFromZero);
             using (DrawingContext context = dVisual.RenderOpen())
             {
-                VisualBrush vBrush = new(thumb) { Stretch = Stretch.None };
-                context.DrawRectangle(vBrush, null, new Rect(bounds.Size));
+                var bru = new BitmapCacheBrush(thumb);
+                context.DrawRectangle(bru, null, new Rect(bounds.Size));
             }
             RenderTargetBitmap bitmap
                 = new((int)Math.Ceiling(bounds.Width), (int)Math.Ceiling(bounds.Height), 96.0, 96.0, PixelFormats.Pbgra32);
+            if (clearType)
+            {
+                BitmapCache bc = new() { EnableClearType = true };
+                thumb.CacheMode = bc;
+            }
             bitmap.Render(dVisual);
-
-            ////枠表示を元に戻す
-            //IsWakuVisible = Visibility.Visible;
+            thumb.CacheMode = null;
 
             return bitmap;
         }
