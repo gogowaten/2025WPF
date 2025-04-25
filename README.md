@@ -1,6 +1,16 @@
+# 20250424
+https://github.com/gogowaten/2025WPF/tree/main/20250424<br>
+![20250424_Test2_](https://github.com/user-attachments/assets/7b62f3c6-d031-46bc-85ea-e92bccdb70c0)<br>
+WPF、Paddingが0(既定値)のTextBlockを画像として保存すると、左端が半透明になることがある - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/04/25/144611<br>
+<br><br><br>
+
+
+
+
 # 20250408
 https://github.com/gogowaten/2025WPF/tree/main/20250408<br>
-![Animation20250408_131427](https://github.com/user-attachments/assets/bf46eecf-907d-45ab-9554-0a9825ca361e)
+![Animation20250408_131427](https://github.com/user-attachments/assets/bf46eecf-907d-45ab-9554-0a9825ca361e)<br>
 WPF、昨日のは失敗だった、変形時にPoint変化で全体が移動してしまう - 午後わてんのブログ<br>
 https://gogowaten.hatenablog.com/entry/2025/04/08/133930<br>
 <br><br><br>
