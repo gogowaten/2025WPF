@@ -150,18 +150,23 @@ namespace _20250422
         }
 
 
-
+        //サイズ変更ハンドルの初期設定
         private void InitializeAdorner()
         {
             if (AdornerLayer.GetAdornerLayer(this) is AdornerLayer layer)
             {
-                var adorner = new ResizeHandleAdorner(this);
-                adorner.MyHandleLayout = HandleLayoutType.Inside;
-                //adorner.MyHandleLayout = HandleLayoutType.Online;
+                var adorner = new ResizeHandleAdorner(this)
+                {
+                    MyHandleLayout = HandleLayoutType.Inside
+                };
                 layer.Add(adorner);
-                //サイズ変更ハンドルの移動中はCanvasのオートリサイズを無効にしてすっ飛び防止
+
+                //ハンドルのドラッグ移動中はCanvasのオートリサイズを無効にしてすっ飛び防止
                 adorner.OnHandleDragStarted += (a) => { MyParentExCanvas.IsAutoResize = false; };
                 adorner.OnHandleDragCompleted += (a) => { MyParentExCanvas.IsAutoResize = true; };
+
+                //ハンドルの表示の有無はAreaThumbと同期させる
+                adorner.SetBinding(VisibilityProperty, new Binding() { Source = this, Path = new PropertyPath(VisibilityProperty) });
             }
             else
             {
@@ -1579,17 +1584,16 @@ namespace _20250422
             using (DrawingContext context = dVisual.RenderOpen())
             {
                 var bru = new BitmapCacheBrush(thumb);
+                if (clearType)
+                {
+                    BitmapCache bc = new() { EnableClearType = true };
+                    bru.BitmapCache = bc;
+                }
                 context.DrawRectangle(bru, null, new Rect(bounds.Size));
             }
             RenderTargetBitmap bitmap
                 = new((int)Math.Ceiling(bounds.Width), (int)Math.Ceiling(bounds.Height), 96.0, 96.0, PixelFormats.Pbgra32);
-            if (clearType)
-            {
-                BitmapCache bc = new() { EnableClearType = true };
-                thumb.CacheMode = bc;
-            }
             bitmap.Render(dVisual);
-            thumb.CacheMode = null;
 
             return bitmap;
         }

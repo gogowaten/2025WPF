@@ -20,13 +20,13 @@ namespace _20250422
     //Thumbの種類の識別用
     public enum ThumbType { None = 0, Root, Group, Text, Ellipse, Rect, GeoShape, Image }
 
-    //[DataContract]
-    [KnownType(typeof(ItemData))]
-    [KnownType(typeof(SolidColorBrush))]
-    [KnownType(typeof(MatrixTransform))]
 
-    [DebuggerDisplay("{MyThumbType}")]
-    public class ItemData : DependencyObject, IExtensibleDataObject, INotifyPropertyChanged
+
+
+
+    //[KnownType(typeof(SolidColorBrush))]
+    //[KnownType(typeof(MatrixTransform))]
+    public class ItemDataKiso : DependencyObject, IExtensibleDataObject, INotifyPropertyChanged
     {
         #region 必要
         public ExtensionDataObject? ExtensionData { get; set; }
@@ -42,6 +42,85 @@ namespace _20250422
 
         #endregion 必要
 
+    }
+
+
+    /// <summary>
+    /// ManageExCanvas用の設定保存データ
+    /// </summary>
+    public class ManageData : ItemDataKiso
+    {
+        public ManageData() { MyBindBrushes(); }
+
+        #region 通知プロパティ、依存関係プロパティ
+
+        #region 範囲選択Thumb用
+
+        private double _areaLeft;
+        public double AreaLeft { get => _areaLeft; set => SetProperty(ref _areaLeft, value); }
+
+        private double _areaTop;
+        public double AreaTop { get => _areaTop; set => SetProperty(ref _areaTop, value); }
+
+        private double _areaThumbWidth = 100.0;
+        public double AreaThumbWidth { get => _areaThumbWidth; set => SetProperty(ref _areaThumbWidth, value); }
+
+        private double _areaThumbHeight = 100.0;
+        public double AreaThumbHeight { get => _areaThumbHeight; set => SetProperty(ref _areaThumbHeight, value); }
+
+        private Visibility _areaThumbVisibility = Visibility.Collapsed;
+        public Visibility AreaThumbVisibility { get => _areaThumbVisibility; set => SetProperty(ref _areaThumbVisibility, value); }
+
+        private double _areaThumbOpacity = 0.3;
+        public double AreaThumbOpacity { get => _areaThumbOpacity; set => SetProperty(ref _areaThumbOpacity, value); }
+
+
+        private byte _areaThumbBackgroundA = 255;
+        [DataMember] public byte AreaThumbBackgroundA { get => _areaThumbBackgroundA; set => SetProperty(ref _areaThumbBackgroundA, value); }
+        private byte _areaThumbBackgroundR;
+        [DataMember] public byte AreaThumbBackgroundR { get => _areaThumbBackgroundR; set => SetProperty(ref _areaThumbBackgroundR, value); }
+        private byte _areaThumbBackgroundG;
+        [DataMember] public byte AreaThumbBackgroundG { get => _areaThumbBackgroundG; set => SetProperty(ref _areaThumbBackgroundG, value); }
+        private byte _areaThumbBackgroundB;
+        [DataMember] public byte AreaThumbBackgroundB { get => _areaThumbBackgroundB; set => SetProperty(ref _areaThumbBackgroundB, value); }
+
+        //オプションでBindsTwoWayByDefault必須、Binding時にはTwoWayに設定しても反映されないので、ここで指定
+        [IgnoreDataMember]
+        public Brush AreaThumbBackground
+        {
+            get { return (Brush)GetValue(AreaThumbBackgroundProperty); }
+            set { SetValue(AreaThumbBackgroundProperty, value); }
+        }
+        public static readonly DependencyProperty AreaThumbBackgroundProperty =
+            DependencyProperty.Register(nameof(AreaThumbBackground), typeof(Brush), typeof(ManageData),
+                new FrameworkPropertyMetadata(null,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        #endregion 範囲選択Thumb用
+        #endregion 通知プロパティ、依存関係プロパティ
+
+        private void MyBindBrushes()
+        {
+            var mb = new MultiBinding() { Converter = new MyConverterARGBtoSolidBrush() };
+            mb.Bindings.Add(new Binding(nameof(AreaThumbBackgroundA)) { Source = this });
+            mb.Bindings.Add(new Binding(nameof(AreaThumbBackgroundR)) { Source = this });
+            mb.Bindings.Add(new Binding(nameof(AreaThumbBackgroundG)) { Source = this });
+            mb.Bindings.Add(new Binding(nameof(AreaThumbBackgroundB)) { Source = this });
+            _ = BindingOperations.SetBinding(this, AreaThumbBackgroundProperty, mb);
+        }
+
+    }
+
+
+    //[DataContract]
+    [KnownType(typeof(ItemData))]
+
+    [DebuggerDisplay("{MyThumbType}")]
+    //public class ItemData : DependencyObject, IExtensibleDataObject, INotifyPropertyChanged
+    public class ItemData : ItemDataKiso
+    {
 
         public ItemData()
         {

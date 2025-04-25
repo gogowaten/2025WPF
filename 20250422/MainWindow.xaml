@@ -65,6 +65,7 @@
         <Button x:Name="RemovePoint" Content="末尾のPoint削除" Click="RemovePoint_Click"/>
         <Button x:Name="WakuVisible" Content="枠の表示切り替え" Click="WakuVisible_Click"/>
         <Button x:Name="MyTest2" Content="Test2" Click="MyTest2_Click"/>
+        
         <UniformGrid Columns="2">
           <Button x:Name="Remove" Content="削除" Click="Remove_Click"/>
           <Button x:Name="RemoveAll" Content="全削除" Click="RemoveAll_Click"/>

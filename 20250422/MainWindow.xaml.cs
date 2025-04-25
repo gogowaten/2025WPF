@@ -28,7 +28,7 @@ public partial class MainWindow : Window
 {
     //private ContextMenu MyContextMenu = null!;
     private RootThumb MyRoot { get; set; } = null!;
-    private ManageExCanvas MyManageExCanvas { get; set; }=null!;
+    private ManageExCanvas MyManageExCanvas { get; set; } = null!;
 
     string SaveFileName = "E:\\" + DateTime.Now.ToString("yyyyMMdd") + ".xml";
     string SaveRootFileName = "E:\\" + DateTime.Now.ToString("yyyyMMdd") + "Root.xml";
@@ -56,19 +56,19 @@ public partial class MainWindow : Window
         Drop += MainWindow_Drop;
 
         ItemData data = new(ThumbType.Root) { MyBackground = Brushes.SkyBlue };
-        //if (new RootThumb(data) is RootThumb root)
-        //{
-        //    MyRoot = root;
-        //}
         MyRoot = new RootThumb(data);
-        //MyScrollViewer.Content = MyRoot;
-        //MyPanel.Children.Add(MyRoot);
-        MyManageExCanvas = new(MyRoot);
+
+        MyManageExCanvas = new ManageExCanvas(MyRoot, new ManageData());
         MyScrollViewer.Content = MyManageExCanvas;
         DataContext = MyRoot;
 
     }
 
+    private void ManagaDataTEst()
+    {
+        var data = new ManageData();
+
+    }
 
     private void MainWindow_Drop(object sender, DragEventArgs e)
     {
@@ -128,8 +128,9 @@ public partial class MainWindow : Window
         //var bmp = MyRoot.GetBitmap("D:\\ブログ用\\テスト用画像\\hueRectT000.png");
         //data.MyBitmapSource = bmp;
         //MyRoot.AddNewThumbFromItemData(data, MyRoot);
-
-        
+        MyManageExCanvas.AreaThumbVisibleSwitch();
+        var neko = Canvas.GetTop(MyManageExCanvas.MyAreaThumb);
+        var inu = MyManageExCanvas.MyManageData.AreaTop;
     }
 
     private void AddTextThumb()
