@@ -21,6 +21,10 @@ using System.Windows.Shapes;
 //VisualTreeHelper.GetDescendantBounds(element);
 //これで得られるRectのX座標がマイナスの値だとずれる、0ならずれない
 
+
+//WPF、Paddingが0(既定値)のTextBlockを画像として保存すると、左端が半透明になることがある - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/04/25/144611
+
 namespace _20250424
 {
     /// <summary>
@@ -152,7 +156,7 @@ namespace _20250424
             using (var context = dv.RenderOpen())
             {
                 BitmapCacheBrush bru = new(element);
-                BitmapCache bcMode = new() { EnableClearType = true };
+                BitmapCache bcMode = new() { EnableClearType = true, SnapsToDevicePixels = true };
                 bru.BitmapCache = bcMode;
                 context.DrawRectangle(bru, null, bounds);
             }

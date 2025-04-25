@@ -13,18 +13,9 @@
     </Grid.ColumnDefinitions>
     <Canvas x:Name="MyCanvas" UseLayoutRounding="True">
       <TextBlock x:Name="MyUC" Canvas.Left="10" Canvas.Top="50"
-                 Text="TextBlock" FontSize="30" Background="MistyRose"
+                 FontSize="30" Background="MistyRose"
+                 Text="TekitohBlock"
                  Padding="1"/>
-      <TextBlock Text="tttttttt" FontSize="30">
-        <TextBlock.LayoutTransform>
-          <RotateTransform Angle="40"/>
-        </TextBlock.LayoutTransform>
-      </TextBlock>
-      <TextBlock Text="tttttttt" FontSize="30">
-        <TextBlock.RenderTransform>
-          <RotateTransform Angle="40"/>
-        </TextBlock.RenderTransform>
-      </TextBlock>
       
     </Canvas>
 
