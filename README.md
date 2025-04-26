@@ -1,3 +1,11 @@
+# 20250422
+https://github.com/gogowaten/2025WPF/tree/main/20250422<br>
+![Animation20250426_142756](https://github.com/user-attachments/assets/4e0510d1-f0a9-4908-bcf5-7e05e7e40f09)<br>
+<br><br><br>
+
+
+
+
 # 20250424
 https://github.com/gogowaten/2025WPF/tree/main/20250424<br>
 ![20250424_Test2_](https://github.com/user-attachments/assets/7b62f3c6-d031-46bc-85ea-e92bccdb70c0)<br>
