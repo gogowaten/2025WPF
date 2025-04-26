@@ -128,9 +128,7 @@ public partial class MainWindow : Window
         //var bmp = MyRoot.GetBitmap("D:\\ブログ用\\テスト用画像\\hueRectT000.png");
         //data.MyBitmapSource = bmp;
         //MyRoot.AddNewThumbFromItemData(data, MyRoot);
-        MyManageExCanvas.AreaThumbVisibleSwitch();
-        var neko = Canvas.GetTop(MyManageExCanvas.MyAreaThumb);
-        var inu = MyManageExCanvas.MyManageData.AreaTop;
+        
     }
 
     private void AddTextThumb()
@@ -403,4 +401,8 @@ public partial class MainWindow : Window
         MyRoot.SaveMyFocusThumbToImageFile();
     }
 
+    private void AreaThumb_Click(object sender, RoutedEventArgs e)
+    {
+        MyManageExCanvas.AreaThumbVisibleSwitch();
+    }
 }

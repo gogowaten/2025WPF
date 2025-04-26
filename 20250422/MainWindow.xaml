@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:_20250422"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:RootThumb}"
-        Title="MainWindow" Height="647" Width="654">
+        Title="MainWindow" Height="347" Width="654">
 
   <Grid UseLayoutRounding="True">
     <Grid.ColumnDefinitions>
@@ -30,7 +30,6 @@
                 TextOptions.TextHintingMode="Fixed"
                 TextOptions.TextRenderingMode="ClearType"
                 >
-      <TextBlock Text="{Binding ElementName=MyScrollViewer, Path=ActualHeight}"/>
       <UniformGrid Columns="2">
         <Button x:Name="AddTextThumb2" Content="AddTextThumb" Click="AddTextThumb_Click"/>
         <Button x:Name="AddEllipseThumb" Content="AddEllipseThumb" Click="AddEllipseThumb_Click"/>
@@ -65,7 +64,7 @@
         <Button x:Name="RemovePoint" Content="末尾のPoint削除" Click="RemovePoint_Click"/>
         <Button x:Name="WakuVisible" Content="枠の表示切り替え" Click="WakuVisible_Click"/>
         <Button x:Name="MyTest2" Content="Test2" Click="MyTest2_Click"/>
-        
+        <Button x:Name="AreaThumb" Content="範囲選択Thumb" Click="AreaThumb_Click"/>
         <UniformGrid Columns="2">
           <Button x:Name="Remove" Content="削除" Click="Remove_Click"/>
           <Button x:Name="RemoveAll" Content="全削除" Click="RemoveAll_Click"/>

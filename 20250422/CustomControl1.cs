@@ -1603,7 +1603,7 @@ namespace _20250422
         /// </summary>
         /// <param name="bitmap"></param>
         /// <returns></returns>
-        public static bool SaveBitmap(BitmapSource bitmap, int jpegQuality)
+        public static bool SaveBitmap(BitmapSource bitmap, int jpegQuality = 90)
         {
             Microsoft.Win32.SaveFileDialog dialog = new()
             {
@@ -1824,8 +1824,7 @@ namespace _20250422
             {
                 if (GetBitmap(path) is BitmapSource bmp)
                 {
-                    var data = new ItemData(ThumbType.Image) { MyBitmapSource = bmp };
-                    AddNewThumbFromItemData(data);
+                    AddImageThumb(bmp);
                 }
                 else
                 {
@@ -1835,6 +1834,17 @@ namespace _20250422
             //開けなかったファイルリストを表示
             ShowMessageBoxStringList(errorList);
         }
+
+        /// <summary>
+        /// BitmapSourceをImageThumbとして追加
+        /// </summary>
+        /// <param name="bitmap"></param>
+        public void AddImageThumb(BitmapSource bitmap)
+        {
+            var data = new ItemData(ThumbType.Image) { MyBitmapSource = bitmap };
+            AddNewThumbFromItemData(data);
+        }
+
 
         /// <summary>
         /// 文字列リストをメッセージボックスに表示

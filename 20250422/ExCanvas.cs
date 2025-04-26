@@ -27,11 +27,7 @@ namespace _20250422
             Children.Add(MyRootThumb);
             Children.Add(MyAreaThumb);
 
-            //MyAreaThumb.Visibility = Visibility.Collapsed;
-            //MyAreaThumb.Width = 100;
-            //MyAreaThumb.Height = 100;
-            //MyAreaThumb.Opacity = 0.5;
-            //MyAreaThumb.Background = Brushes.Red;
+
             InitializeContextMenu();
             MyAreaThumb.ContextMenu = MyContextMenuForAreaThumb;
             MyManageData = manageData;
@@ -42,10 +38,11 @@ namespace _20250422
 
         private void ManageExCanvas_Loaded(object sender, RoutedEventArgs e)
         {
-            MyBind();
+            MyBindAreaThumb();
         }
 
-        private void MyBind()
+        //範囲選択Thumbのバインド設定
+        private void MyBindAreaThumb()
         {
             SetBind(VisibilityProperty, nameof(ManageData.AreaThumbVisibility));
             SetBind(WidthProperty, nameof(ManageData.AreaThumbWidth));
@@ -66,13 +63,21 @@ namespace _20250422
             MenuItem item;
             item = new() { Header = "範囲を画像として保存" };
             MyContextMenuForAreaThumb.Items.Add(item);
+            item.Click += ItemAreaToImageFile_Click;
+            item = new() { Header = "範囲を画像として複製" };
+            MyContextMenuForAreaThumb.Items.Add(item);
             item.Click += Item_Click;
         }
 
         private void Item_Click(object sender, RoutedEventArgs e)
         {
             var bmp = GetAreaBitmap3(false);
-            RootThumb.SaveBitmap(bmp, 90);
+            MyRootThumb.AddImageThumb(bmp);
+        }
+
+        private void ItemAreaToImageFile_Click(object sender, RoutedEventArgs e)
+        {
+            RootThumb.SaveBitmap(GetAreaBitmap3(false));
         }
 
 
