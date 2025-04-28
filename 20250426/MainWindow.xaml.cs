@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -434,5 +435,25 @@ public partial class MainWindow : Window
     private void AreaThumb_Click(object sender, RoutedEventArgs e)
     {
         MyManageExCanvas.AreaThumbVisibleSwitch();
+    }
+
+    private void Line_Click(object sender, RoutedEventArgs e)
+    {
+        Grid panel = new();
+        Grid.SetColumn(panel, 0);
+        MyGrid.Children.Add(panel);
+        Polyline line = new()
+        {
+            Stroke = Brushes.Black,
+            StrokeThickness = 10,
+        };
+        panel.Children.Add(line);
+
+        panel.MouseLeftButtonDown += Panel_MouseLeftButtonDown;
+    }
+
+    private void Panel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        throw new NotImplementedException();
     }
 }

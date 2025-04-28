@@ -64,6 +64,7 @@
         <Button x:Name="WakuVisible" Content="枠の表示切り替え" Click="WakuVisible_Click"/>
         <Button x:Name="MyTest2" Content="Test2" Click="MyTest2_Click"/>
         <Button x:Name="AreaThumb" Content="範囲選択Thumb" Click="AreaThumb_Click"/>
+        <Button x:Name="Line" Content="Line" Click="Line_Click"/>
         <UniformGrid Columns="2">
           <Button x:Name="Remove" Content="削除" Click="Remove_Click"/>
           <Button x:Name="RemoveAll" Content="全削除" Click="RemoveAll_Click"/>
