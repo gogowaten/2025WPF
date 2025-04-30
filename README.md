@@ -1,3 +1,14 @@
+# 20250430
+https://github.com/gogowaten/2025WPF/tree/main/20250430<br>
+![20250430_221103_](https://github.com/user-attachments/assets/9227370f-9d74-470d-b16f-bff93b68925d)<br>
+右クリックメニューのテスト<br>
+iconにはobjectを指定できる、画像ファイルでもいいし、その他の要素でもいい<br>
+TemplateをTabControlにしてみた<br>
+<br><br><br>
+
+
+
+
 # 20250422
 https://github.com/gogowaten/2025WPF/tree/main/20250422<br>
 ![Animation20250426_142756](https://github.com/user-attachments/assets/4e0510d1-f0a9-4908-bcf5-7e05e7e40f09)<br>
