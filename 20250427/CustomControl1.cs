@@ -38,7 +38,6 @@ namespace _20250427
         {
             IsDrawing = false;
             MyPoints.RemoveAt(MyPoints.Count - 1);
-            var neko = MyPoints;
         }
 
         private void DrawPanel_Loaded(object sender, RoutedEventArgs e)
