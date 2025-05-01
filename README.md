@@ -2,6 +2,8 @@
 https://github.com/gogowaten/2025WPF/tree/main/20250501<br>
 ![20250501_123410](https://github.com/user-attachments/assets/8beeabea-3aee-44c5-9523-049bee63706d)<br>
 井形枠のTextBlockテスト<br>
+canvasにTextBlockと4つのRectangle<br>
+<br><br><br>
 
 
 
