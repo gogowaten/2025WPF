@@ -56,7 +56,7 @@ namespace _20250501_01
 
     public class TexxtBox : TextBox
     {
-        private FrameworkElement MyTextB = null!;
+        //private FrameworkElement MyTextB = null!;
         static TexxtBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TexxtBox), new FrameworkPropertyMetadata(typeof(TexxtBox)));
@@ -79,8 +79,9 @@ namespace _20250501_01
             base.OnApplyTemplate();
             if (GetTemplateChild("textB") is FrameworkElement text)
             {
-                MyTextB = text;
+                //MyTextB = text;
                 var hige = new Binding() { Source = this, Path = new PropertyPath(MyHigeProperty) };
+                var higeThickness = new Binding() { Source = this, Path = new PropertyPath(MyHigeThicknessProperty) };
                 var textHeight = new Binding() { Source = text, Path = new PropertyPath(ActualHeightProperty) };
                 var textWidth = new Binding() { Source = text, Path = new PropertyPath(ActualWidthProperty) };
                 MultiBinding mb;
@@ -89,9 +90,13 @@ namespace _20250501_01
                 mbHeight.Bindings.Add(hige);
                 mbHeight.Bindings.Add(textHeight);
 
-                if (GetTemplateChild("left") is Rectangle r)
+                if (GetTemplateChild("left") is Rectangle left)
                 {
-                    r.SetBinding(HeightProperty, mbHeight);
+                    left.SetBinding(HeightProperty, mbHeight);
+                    mb = new() { Converter = new MyConvTopLeft(), ConverterParameter = "left" };
+                    mb.Bindings.Add(hige);
+                    mb.Bindings.Add(higeThickness);
+                    left.SetBinding(Canvas.LeftProperty, mb);
                 }
                 if (GetTemplateChild("right") is Rectangle right)
                 {
@@ -109,6 +114,10 @@ namespace _20250501_01
                 if (GetTemplateChild("top") is Rectangle top)
                 {
                     top.SetBinding(WidthProperty, mbWidth);
+                    mb = new() { Converter = new MyConvTopLeft(), ConverterParameter = "top" };
+                    mb.Bindings.Add(hige);
+                    mb.Bindings.Add(higeThickness);
+                    top.SetBinding(Canvas.TopProperty, mb);
                 }
                 if (GetTemplateChild("bottom") is Rectangle bottom)
                 {
@@ -149,6 +158,35 @@ namespace _20250501_01
         public static readonly DependencyProperty MyHigeProperty =
             DependencyProperty.Register(nameof(MyHige), typeof(double), typeof(TexxtBox), new PropertyMetadata(10.0));
 
+    }
+
+
+
+    public class MyConvTopLeft : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var hige = (double)values[0];
+            var thickness = (Thickness)values[1];
+            var locate = (string)parameter;
+            if (locate == "left")
+            {
+                return hige - thickness.Left;
+            }
+            else if (locate == "top")
+            {
+                return hige - thickness.Top;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class MyConvHige : IMultiValueConverter

@@ -33,10 +33,10 @@
                        TextWrapping="{TemplateBinding TextWrapping}"/>
             <Rectangle x:Name="left" Fill="{TemplateBinding MyHigeBrush}"
                        Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyHigeThickness.Left}"
-                       Canvas.Left="{TemplateBinding MyHige}"/>
+                       />
             <Rectangle x:Name="top" Fill="{TemplateBinding MyHigeBrush}"
                        Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyHigeThickness.Top}"
-                       Canvas.Top="{TemplateBinding MyHige}"/>
+                       />
             <Rectangle x:Name="right" Fill="{TemplateBinding MyHigeBrush}"
                        Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyHigeThickness.Right}"
                        />

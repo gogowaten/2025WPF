@@ -25,12 +25,15 @@
       </local:TexxtBox>
 
       <local:TexxtBox Text="井桁枠のTextBlock"/>
+      <local:TexxtBox Text="個別の太さ" Canvas.Top="200" Canvas.Left="20"
+                      FontSize="20" MyHigeThickness="1,2,4,8" Padding="10"/>
+      
     </Canvas>
 
     <StackPanel Grid.Column="1" UseLayoutRounding="True">
       <local:TexxtBox Text="StackPanelに"/>
       <local:TexxtBox Text="積んでみる"/>
-      <local:TexxtBox Text="太さ8" MyHigeThickness="8" FontSize="30"/>
+      <local:TexxtBox Text="太さ4" MyHigeThickness="4" FontSize="30"/>
       <local:TexxtBox Text="Padding=10" Padding="10"/>
       <local:TexxtBox Text="MyHige=2" MyHige="2"/>
       <local:TexxtBox Text="MyHige=1" FontSize="20" TextWrapping="Wrap" MyHige="1"/>
