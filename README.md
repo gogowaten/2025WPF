@@ -1,3 +1,11 @@
+# 20250501
+https://github.com/gogowaten/2025WPF/tree/main/20250501<br>
+![20250501_123410](https://github.com/user-attachments/assets/8beeabea-3aee-44c5-9523-049bee63706d)<br>
+井形枠のTextBlockテスト<br>
+
+
+
+
 # 20250430
 https://github.com/gogowaten/2025WPF/tree/main/20250430<br>
 ![20250430_221103_](https://github.com/user-attachments/assets/9227370f-9d74-470d-b16f-bff93b68925d)<br>
