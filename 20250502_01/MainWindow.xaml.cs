@@ -25,29 +25,6 @@ namespace _20250502_01
         }
     }
 
-    //[MarkupExtensionReturnType(typeof(LinearGradientBrush))]
-    //public class AbsoluteBrushExtension : MarkupExtension
-    //{
-    //    //public FrameworkElement Element { get; set; } = null!;
-    //    public Color StartColor { get; set; }
-    //    public Color EndColor { get; set; }
-    //    public double Width { get; set; }
-
-    //    public AbsoluteBrushExtension() { }
-    //    public AbsoluteBrushExtension( Color start, Color end, double width)
-    //    {
-    //        Width = width;
-    //        StartColor = start; EndColor = end;
-
-    //    }
-    //    public override object ProvideValue(IServiceProvider serviceProvider)
-    //    {            
-    //        LinearGradientBrush brush = new(StartColor, EndColor, new Point(), new Point(Width, 0));
-    //        brush.MappingMode = BrushMappingMode.Absolute;
-    //        return brush;
-    //    }
-    //}
-
 
     public class MyEndPoint : MarkupExtension, IValueConverter
     {
@@ -68,7 +45,7 @@ namespace _20250502_01
             return this;
         }
     }
-    
+
     public class MyEndPoint2 : MarkupExtension, IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -88,25 +65,28 @@ namespace _20250502_01
             return this;
         }
     }
-    
+
     public class MyAbsBrush : MarkupExtension, IValueConverter
     {
-        Color c1;
-        Color c2;
-        FrameworkElement fe;
+        public Color C1 { get; set; } = Colors.White;
+        public Color C2 { get; set; } = Colors.Blue;
+        //public FrameworkElement fe { get; set; }
 
-        public MyAbsBrush(Color c1,Color c2, FrameworkElement fe)
+        public MyAbsBrush() { }
+        public MyAbsBrush(Color c1, Color c2)
         {
-            this.c1 = c1;
-            this.c2 = c2;
-            this.fe = fe;
+            this.C1 = c1;
+            this.C2 = c2;
         }
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var end = (FrameworkElement)value;
-            LinearGradientBrush brush = new(c1, c2, new Point(), new Point(100, 0));
-            brush.MappingMode = BrushMappingMode.Absolute;
-            return brush;            
+            //var end = (FrameworkElement)value;
+            var end = (double)value;
+            LinearGradientBrush brush = new(C1, C2, new Point(), new Point(end, 0))
+            {
+                MappingMode = BrushMappingMode.Absolute
+            };
+            return brush;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
