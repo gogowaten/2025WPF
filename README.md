@@ -1,3 +1,12 @@
+# 20250501_01
+https://github.com/gogowaten/2025WPF/tree/main/20250501_01<br>
+![20250502_114903](https://github.com/user-attachments/assets/146b926e-48af-45f5-adfb-43b367b90e16)<br>
+CustomControlにしてみた<br>
+中の構造は、Canvasの中に、TextBlock、枠表示用のRectangleが4つ<br>
+<br><br><br>
+
+
+
 # 20250501
 https://github.com/gogowaten/2025WPF/tree/main/20250501<br>
 ![20250501_123410](https://github.com/user-attachments/assets/8beeabea-3aee-44c5-9523-049bee63706d)<br>
