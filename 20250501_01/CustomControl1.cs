@@ -56,23 +56,15 @@ namespace _20250501_01
 
     public class TexxtBox : TextBox
     {
-        //private FrameworkElement MyTextB = null!;
         static TexxtBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TexxtBox), new FrameworkPropertyMetadata(typeof(TexxtBox)));
         }
         public TexxtBox()
         {
-            Loaded += TexxtBox_Loaded;
-        }
-
-        private void TexxtBox_Loaded(object sender, RoutedEventArgs e)
-        {
-
-
-            //MyTextB.SetBinding(Canvas.LeftProperty, new Binding() { Source = this, Path = new PropertyPath(MyHigeProperty) });
 
         }
+
 
         public override void OnApplyTemplate()
         {
