@@ -48,35 +48,4 @@ namespace _20250502
     }
 
 
-    //[MarkupExtensionReturnType(typeof(LinearGradientBrush))]
-    //public class LinearGradientBrushExtension : MarkupExtension
-    //{
-    //    public LinearGradientBrushExtension()
-    //    {
-    //        StartColor = Colors.White;
-    //        EndColor = Colors.Black;
-    //        Angle = 0;
-    //    }
-
-    //    public LinearGradientBrushExtension(Color startColor, Color endColor, double angle)
-    //    {
-    //        StartColor = startColor;
-    //        EndColor = endColor;
-    //        Angle = angle;
-    //    }
-
-    //    public Color StartColor { get; set; }
-    //    public Color EndColor { get; set; }
-    //    public double Angle { get; set; }
-
-    //    public override object ProvideValue(IServiceProvider serviceProvider)
-    //    {
-    //        return new LinearGradientBrushExtension(StartColor, EndColor, Angle);
-    //        LinearGradientBrush brush = new(StartColor, EndColor, Angle);
-    //        return brush;
-    //    }
-    //}
-
-
-
 }

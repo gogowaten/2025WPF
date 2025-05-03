@@ -14,19 +14,19 @@
 
     <Canvas x:Name="MyCanvas">
       <Rectangle x:Name="MyRect" Width="100" Height="100" Canvas.Left="20" Canvas.Top="100"
-                 Fill="{local:LinearGradientBrush Angle=0}"/>
+                 Fill="{local:LinearGradientBrush Angle=0, StartColor=DodgerBlue, EndColor=Tomato}"/>
       <TextBlock Text="マークアップ拡張で指定" FontSize="50"
-                 Foreground="{local:LinearGradientBrush Angle=0, StartColor=MistyRose, EndColor=Tomato}"/>
+                 Foreground="{local:LinearGradientBrush Angle=0, StartColor=DodgerBlue, EndColor=Tomato}"/>
       <TextBlock Text="aaaaa" FontSize="50" Canvas.Top="50" Canvas.Left="200" Foreground="AliceBlue"/>
       <TextBlock Text="普通に指定" FontSize="50" Canvas.Top="200">
         <TextBlock.Foreground>
           <LinearGradientBrush StartPoint="0, 0" EndPoint="1, 0">
-            <GradientStop Color="AliceBlue" Offset="0"/>
+            <GradientStop Color="DodgerBlue" Offset="0"/>
             <GradientStop Color="Tomato" Offset="1"/>
           </LinearGradientBrush>
         </TextBlock.Foreground>
       </TextBlock>
-      <TextBox Text="テキストボックスでは？" Foreground="{local:LinearGradientBrush}" Canvas.Left="200" Canvas.Top="150" FontSize="30"/>
+      <TextBox Text="テキストボックスでは？" Foreground="{local:LinearGradientBrush StartColor=DodgerBlue, EndColor=Tomato}" Canvas.Left="200" Canvas.Top="150" FontSize="30"/>
 
       <TextBlock Text="ビットマップブラシで指定" FontSize="30" Canvas.Left="200" Canvas.Top="100">
         <TextBlock.Foreground>

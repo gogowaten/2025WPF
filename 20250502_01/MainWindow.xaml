@@ -13,7 +13,7 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-      <TextBlock x:Name="MyText1" Text="テスト用文字列" FontSize="30">
+      <TextBlock x:Name="MyText1" Text="1.テスト用文字列" FontSize="30">
         <TextBlock.Foreground>
           <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
             <GradientStop Color="Red" Offset="0"/>
@@ -22,16 +22,16 @@
         </TextBlock.Foreground>
       </TextBlock>
       
-      <TextBlock x:Name="MyText2" Text="テスト用文字列" FontSize="30" Canvas.Left="0" Canvas.Top="50">
+      <TextBlock x:Name="MyText2" Text="2.テスト用文字列" FontSize="30" Canvas.Left="0" Canvas.Top="50">
         <TextBlock.Foreground>
-          <LinearGradientBrush StartPoint="0,0" EndPoint="186,0" MappingMode="Absolute">
+          <LinearGradientBrush StartPoint="0,0" EndPoint="208.7,0" MappingMode="Absolute">
             <GradientStop Color="Red" Offset="0"/>
             <GradientStop Color="White" Offset="1"/>
           </LinearGradientBrush>
         </TextBlock.Foreground>
       </TextBlock>
 
-      <TextBlock x:Name="MyText3" Text="テスト用文字列" FontSize="30" Canvas.Left="0" Canvas.Top="100">
+      <TextBlock x:Name="MyText3" Text="3.テスト用文字列" FontSize="30" Canvas.Left="0" Canvas.Top="100">
         <TextBlock.Foreground>
           <LinearGradientBrush
             MappingMode="Absolute" SpreadMethod="Reflect"
@@ -46,7 +46,7 @@
       </TextBlock>
 
       <TextBlock
-        x:Name="MyText4" Text="テスト用文字列" FontSize="30" Canvas.Left="0" Canvas.Top="150"
+        x:Name="MyText4" Text="4.テスト用文字列" FontSize="30" Canvas.Left="0" Canvas.Top="150"
         Foreground="{Binding RelativeSource={RelativeSource Mode=Self},
         Path=ActualWidth,
         UpdateSourceTrigger=Default,
@@ -55,7 +55,7 @@
       </TextBlock>
 
       <TextBlock
-        x:Name="MyText5" Text="テスト用文字列" FontSize="30" Canvas.Left="0" Canvas.Top="200"
+        x:Name="MyText5" Text="5.テスト用文字列" FontSize="30" Canvas.Left="0" Canvas.Top="200"
         Foreground="{Binding RelativeSource={RelativeSource Mode=Self},
         Path=ActualWidth,
         UpdateSourceTrigger=Default,
@@ -73,7 +73,7 @@
         UpdateSourceTrigger=Default,
         Converter={local:MyAbsBrush C1=Orange, C2=DodgerBlue}}"
         >
-        テスト用文字列<LineBreak/>
+        6.テスト用文字列<LineBreak/>
         改行だと？
       </TextBlock>
 
