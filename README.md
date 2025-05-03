@@ -1,3 +1,13 @@
+# 20250502
+https://github.com/gogowaten/2025WPF/tree/main/20250502<br>
+![20250503_090738](https://github.com/user-attachments/assets/4dc1f75d-1d09-4117-b31b-296b371277a8)<br>
+マークアップ拡張を使ってグラデーション<br>
+文字列にグラデーションを使うと単語ごとに適用されてしまう、これはマークアップ拡張関係ない<br>
+<br><br><br>
+
+
+
+
 # 20250501_01
 https://github.com/gogowaten/2025WPF/tree/main/20250501_01<br>
 ![20250502_114903](https://github.com/user-attachments/assets/146b926e-48af-45f5-adfb-43b367b90e16)<br>
