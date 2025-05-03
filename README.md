@@ -1,3 +1,25 @@
+# 20250502_01
+https://github.com/gogowaten/2025WPF/tree/main/20250502_01<br>
+![20250503_091916](https://github.com/user-attachments/assets/f36af6e8-2e68-4c2f-89c2-eb89cd6e143e)
+TextBlock全体にグラデーションできた、1番目以外がそれ<br>
+グラデーションのプロパティMappingMode="Absolute"にしておいて、EndPointでTextBlockの横幅を指定する<br>
+それとは別にわかったのが文字色が背景と同じ色になるときに、文字の輪郭が出ること、これはClearTypeの影響？<br>
+解消するにはTextOptionの設定を適当にする必要があった、5番目がそれ<br>
+<br><br><br>
+
+
+
+
+# 20250502
+https://github.com/gogowaten/2025WPF/tree/main/20250502<br>
+![20250503_090738](https://github.com/user-attachments/assets/4dc1f75d-1d09-4117-b31b-296b371277a8)<br>
+マークアップ拡張を使ってグラデーション<br>
+TextBlockにグラデーションを使うと単語ごと？に適用されてしまう、これはマークアップ拡張関係ない<br>
+<br><br><br>
+
+
+
+
 # 20250501_01
 https://github.com/gogowaten/2025WPF/tree/main/20250501_01<br>
 ![20250502_114903](https://github.com/user-attachments/assets/146b926e-48af-45f5-adfb-43b367b90e16)<br>
