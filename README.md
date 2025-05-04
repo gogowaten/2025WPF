@@ -1,3 +1,11 @@
+# 20250504
+https://github.com/gogowaten/2025WPF/tree/main/20250504<br>
+![20250504_124737](https://github.com/user-attachments/assets/16b209b5-a19d-43a0-b4fd-adf9a97a2521)<br>
+DockPanelのDockPanel.Bottomは下から積み上がる<br>
+<br><br><br>
+
+
+
 # 20250503_01
 https://github.com/gogowaten/2025WPF/tree/main/20250503_01<br>
 ![20250503_201855](https://github.com/user-attachments/assets/ccfb680f-e568-42bd-97ae-9570f0c3b96f)<br>
