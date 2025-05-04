@@ -1,6 +1,14 @@
+# 20250503_01
+https://github.com/gogowaten/2025WPF/tree/main/20250503_01<br>
+![20250503_201855](https://github.com/user-attachments/assets/ccfb680f-e568-42bd-97ae-9570f0c3b96f)<br>
+文字列のGeometryはFormattedTextクラスのBuildGeometryから作成<br>
+<br><br><br>
+
+
+
 # 20250502_01
 https://github.com/gogowaten/2025WPF/tree/main/20250502_01<br>
-![20250503_091916](https://github.com/user-attachments/assets/f36af6e8-2e68-4c2f-89c2-eb89cd6e143e)
+![20250503_091916](https://github.com/user-attachments/assets/f36af6e8-2e68-4c2f-89c2-eb89cd6e143e)<br>
 TextBlock全体にグラデーションできた、1番目以外がそれ<br>
 グラデーションのプロパティMappingMode="Absolute"にしておいて、EndPointでTextBlockの横幅を指定する<br>
 それとは別にわかったのが文字色が背景と同じ色になるときに、文字の輪郭が出ること、これはClearTypeの影響？<br>
