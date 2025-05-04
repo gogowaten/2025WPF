@@ -1,3 +1,12 @@
+# 20250504_01
+https://github.com/gogowaten/2025WPF/tree/main/20250504_01<br>
+![20250504_150828_](https://github.com/user-attachments/assets/1befdd43-cb84-4b8b-b570-a71177a46192)<br>
+Expanderはなんか違った<br>
+Visual Studioのサイドにあるようなのがいい<br>
+<br><br><br>
+
+
+
 # 20250504
 https://github.com/gogowaten/2025WPF/tree/main/20250504<br>
 ![20250504_124737](https://github.com/user-attachments/assets/16b209b5-a19d-43a0-b4fd-adf9a97a2521)<br>
