@@ -1,0 +1,61 @@
+﻿<Window x:Class="_20250504_01.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_20250504_01"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="400">
+  <Grid>
+    <StackPanel>
+    <Expander Background="MistyRose" ExpandDirection="Right" Height="auto">
+      <Expander.Header>
+        <TextBlock Text="expander" TextOptions.TextFormattingMode="Display">
+          <TextBlock.LayoutTransform>
+            <RotateTransform Angle="90"/>
+          </TextBlock.LayoutTransform>
+        </TextBlock>
+      </Expander.Header>
+      <TabControl>
+        <TabItem Header="item1">
+          <StackPanel>
+            <TextBlock Text="item" Height="100"/>
+            <TextBlock>
+              Expanderはヘッダーを縦書きにはできるけど<LineBreak/>
+              Expanderを横に並べることはできない<LineBreak/>
+              というか<LineBreak/>
+              横幅を指定すればできるけど<LineBreak/>
+              開いたときに、中身の幅で開かれるので<LineBreak/>
+              隣のExpanderがその分追いやられてしまう<LineBreak/>
+              期待したい動きは隣のExpanderが留まることなので、これは違う<LineBreak/>
+            </TextBlock>
+          </StackPanel>
+        </TabItem>
+        <TabItem Header="item2">
+          <StackPanel>
+            <TextBlock Text="item"/>
+            <TextBlock>
+              <Run Background="AliceBlue">text</Run>
+              <Run Background="Cyan">text</Run>
+            </TextBlock>
+          </StackPanel>
+        </TabItem>
+        
+      </TabControl>
+    </Expander>
+    <Expander ExpandDirection="Right" Background="LightBlue">
+      <Expander.Header>
+        <TextBlock Text="Expander2" TextOptions.TextFormattingMode="Display">
+          <TextBlock.LayoutTransform>
+            <RotateTransform Angle="90"/>
+          </TextBlock.LayoutTransform>
+        </TextBlock>
+      </Expander.Header>
+        <StackPanel>
+          <TextBlock Text="ExpanderTest" FontSize="30"/>
+        </StackPanel>
+    </Expander>
+    </StackPanel>
+    
+  </Grid>
+</Window>
