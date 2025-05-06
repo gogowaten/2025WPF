@@ -1,3 +1,13 @@
+# 20250504_02
+https://github.com/gogowaten/2025WPF/tree/main/20250504_02<br>
+![Animation20250504_210530](https://github.com/user-attachments/assets/0b9de377-081a-4c56-9974-6f0698b0a53f)<br>
+レイアウトテスト<br>
+左のボタンを並べているところは、Menuコントロールで、右側はStatusBarコントロール<br>
+MenuのほうはWindowのサイズが小さくなると、Menuが2段組3段組と広がるけど、StatusBarはボタンが見えなくなるっていう違いがある<br>
+<br><br><br>
+
+
+
 # 20250504_01
 https://github.com/gogowaten/2025WPF/tree/main/20250504_01<br>
 ![20250504_150828_](https://github.com/user-attachments/assets/1befdd43-cb84-4b8b-b570-a71177a46192)<br>
