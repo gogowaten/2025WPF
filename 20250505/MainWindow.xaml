@@ -5,79 +5,110 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250505"
         mc:Ignorable="d"
-                Title="MainWindow" Height="300" Width="400"
-        ResizeMode="CanResizeWithGrip">
+        Title="MainWindow" Height="367" Width="654">
   <Grid>
-    <DockPanel>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="200"/>
+    </Grid.ColumnDefinitions>
 
-      <DockPanel DockPanel.Dock="Top">
-        <Grid Height="100">
-          <TabControl>
-            <TabItem Header="tab1">
-              <StackPanel Orientation="Horizontal">
-                <Button Content="button"/>
-                <Button Content="button"/>
-                <TextBlock>
-                ここはリボンメニューぽい感じで<LineBreak/>
-                ボタンと文字列<LineBreak/>
-                アイコンと文字列とかにしたい<LineBreak/>
-                </TextBlock>
-              </StackPanel>
-            </TabItem>
-            <TabItem Header="tab2">
-              <StackPanel Orientation="Horizontal">
-                <UniformGrid Rows="2">
-                  <Button Content="button"/>
-                  <TextBlock Text="text"/>
-                </UniformGrid>
-              </StackPanel>
-            </TabItem>
-          </TabControl>
-        </Grid>
-      </DockPanel>
+    <Canvas x:Name="MyCanvas" Background="White" UseLayoutRounding="True">
+      <local:Togoole Width="100" Height="30" IsChecked="True"/>
+      <TextBlock Text="333" Canvas.Top="50"/>
+      <Button Content="button" Canvas.Top="100" IsEnabled="False"/>
+      <Button Content="button" Canvas.Top="130" IsEnabled="True"/>
+      
+      <Grid Canvas.Left="150" Canvas.Top="20" Width="40" Height="30" Background="Gray">
+        <Border Background="Gainsboro" Margin="2">
+          <Border Background="Red" Margin="2">
+            <TextBlock Text=""
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          </Border>
+        </Border>
+      </Grid>
+      <Grid Canvas.Left="200" Canvas.Top="20" Width="40" Height="30" Background="Gainsboro">
+        <Border Background="Gray" Margin="1">
+          <Border Background="Gainsboro" Margin="1">
+            <TextBlock Text=""
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          </Border>
+        </Border>
+      </Grid>
+      <Grid Canvas.Left="250" Canvas.Top="20" Width="40" Height="30" Background="Gainsboro">
+        <Border Background="Silver" Padding="0" Margin="2"/>
+      </Grid>
+      <Grid Canvas.Left="300" Canvas.Top="20" Width="40" Height="30" Background="Gainsboro">
+        <Border Background="Gainsboro" Padding="0" Margin="2"/>
+      </Grid>
+      <Grid Canvas.Left="300" Canvas.Top="60" Width="40" Height="30">
+        <Border Background="Gray" Padding="0" Margin="0,0,1,1"/>
+        <Border Background="Silver" Padding="0" Margin="1,1,1,1"/>
+        <Border Background="Silver" Padding="0" Margin="2,2,0,0"/>
+        <Border Background="White" Padding="0" Margin="2,2,1,1"/>
+        <Border Background="Red" Padding="0" Margin="2,2,2,2"/>
+      </Grid>
+      <Grid Canvas.Left="250" Canvas.Top="60" Width="40" Height="30">
+        <Border Background="White" Padding="0" Margin="0,0,1,1"/>
+        <Border Background="Silver" Padding="0" Margin="1,1,1,1"/>
+        <Border Background="Silver" Padding="0" Margin="2,2,0,0"/>
+        <Border Background="Gray" Padding="0" Margin="2,2,1,1"/>
+        <Border Background="Red" Padding="0" Margin="2"/>
+      </Grid>
 
-      <DockPanel DockPanel.Dock="Bottom">
-        <StatusBar>
-          <TextBlock Text="statusbar" Background="Orange"/>
-        </StatusBar>
-      </DockPanel>
+      <Grid Canvas.Left="200" Canvas.Top="60" Width="40" Height="30">
+        <!--<Border Background="White" Padding="0" Margin="0,0,1,1"/>-->
+        <Border Background="Silver" Padding="0" Margin="1,1,0,0"/>
+        <Border Background="Gray" Padding="0" Margin="2,2,1,1"/>
+        <Border Background="Red" Padding="0" Margin="0,0,2,2"/>
+      </Grid>
 
-      <DockPanel DockPanel.Dock="Bottom">
-        <Menu DockPanel.Dock="Left">
-          <Menu.LayoutTransform>
-            <RotateTransform Angle="90"/>
-          </Menu.LayoutTransform>
-          <Button Content="Menu"/>
-          <Button Content="button1"/>
-          <Button Content="button2"/>
-          <Button Content="button3"/>
-        </Menu>
+      <Grid Canvas.Left="150" Canvas.Top="60" Width="40" Height="30">
+        <Border Background="Gray" Padding="0" Margin="0,0,0,0"/>
+        <Border Background="Silver" Padding="0" Margin="1"/>
+        <Border Background="Red" Padding="0" Margin="2,2,1,1"/>
+      </Grid>
+      <ToggleButton Canvas.Left="150" Canvas.Top="120" Width="40" Height="30" Content="toggle" IsChecked="False"/>
+      <ToggleButton Canvas.Left="200" Canvas.Top="120" Width="40" Height="30" Content="toggle" IsChecked="True"/>
 
-        <Canvas x:Name="MySpace"/>
-        
-        <StatusBar DockPanel.Dock="Right">
-          <StatusBar.LayoutTransform>
-            <RotateTransform Angle="90"/>
-          </StatusBar.LayoutTransform>
-          <StatusBarItem Content="item"/>
-          <Button Content="StatusBar"/>
-          <Button Content="button1"/>
-          <Button Content="button2"/>
-          <Button Content="button3"/>
-        </StatusBar>
+      <Grid Canvas.Left="250" Canvas.Top="120" Width="40" Height="30">
+        <Border Background="Gray"/>
+        <Border Background="Red" Margin="2,2,0,0"/>
+      </Grid>
 
-        <ScrollViewer DockPanel.Dock="Right" HorizontalScrollBarVisibility="Auto">
-          <Canvas Width="400" Height="400" Background="AliceBlue">
-            <TextBlock>
-               ScrollViewerの中の、ここがメインのパネルになる<LineBreak/>
-               左右のボタンを押すとそれぞれのウィンドウが出るようにしたいけど<LineBreak/>
-               Windowの中に直接Windowは置けないみたいでエラーになる<LineBreak/>
-            </TextBlock>
-          </Canvas>
-        </ScrollViewer>
-      </DockPanel>
+      <local:Togoole2 Canvas.Left="300" Canvas.Top="120" Width="40" Height="30" IsChecked="False"/>
+      <local:Togoole2 Canvas.Left="300" Canvas.Top="160" Width="40" Height="30" IsChecked="True"/>
 
-    </DockPanel>
+      <Grid Canvas.Left="250" Canvas.Top="160" Height="30" Width="40">
+        <Border Background="Gray"/>
+        <Border Background="Silver" Margin="1,1,0,0"/>
+        <Border Background="Gainsboro" Margin="2,2,1,1"/>
+        <Border Background="Orange" Margin="2,2,2,2"/>
+      </Grid>
+      <Grid Canvas.Left="200" Canvas.Top="160" Height="30" Width="40">
+        <Border Background="Gray"/>
+        <Border Background="Gainsboro" Margin="0,0,1,1"/>
+        <Border Background="White" Margin="1,1,2,2"/>
+        <Border Background="Silver" Margin="2,2,1,1"/>
+      </Grid>
+      <Grid Canvas.Left="150" Canvas.Top="160" Height="30" Width="30">
+        <Ellipse Fill="Gray"/>
+        <Ellipse Fill="Gainsboro" Margin="0,0,1,1"/>
+        <Ellipse Fill="White" Margin="1,1,2,2"/>
+        <Ellipse Fill="Silver" Margin="2,2,1,1"/>
+      </Grid>
+      <Grid Canvas.Left="100" Canvas.Top="160" Height="30" Width="30">
+        <Ellipse Fill="Gray"/>
+        <Ellipse Fill="Silver" Margin="2,2,0,0"/>
+        <Ellipse Fill="Gainsboro" Margin="2,2,1,1"/>
+        <Ellipse Fill="Orange" Margin="2"/>
+      </Grid>
 
+      <local:Togoole3 Canvas.Left="20" Canvas.Top="200" Width="30" Height="30" IsChecked="True"/>
+      <local:Togoole3 Canvas.Left="60" Canvas.Top="200" Width="30" Height="30" IsChecked="False" MyBrush="Magenta"/>
+    </Canvas>
+
+    <StackPanel Grid.Column="1">
+
+    </StackPanel>
   </Grid>
 </Window>

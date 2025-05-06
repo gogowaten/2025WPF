@@ -4,28 +4,168 @@
     xmlns:local="clr-namespace:_20250505">
 
 
-    <Style TargetType="{x:Type local:CustomControl1}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:CustomControl1}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-  <Style TargetType="{x:Type Window}">
+  <Style TargetType="{x:Type local:CustomControl1}">
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="{x:Type Window}">
-          <Grid>
-            <TextBlock Text="test"/>
-          </Grid>
+        <ControlTemplate TargetType="{x:Type local:CustomControl1}">
+          <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+          </Border>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
   </Style>
+
+
+  <Style TargetType="{x:Type local:Togoole3}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:Togoole3}">
+          <Grid>
+            <Ellipse Fill="Gray"/>
+            <Ellipse x:Name="waku1"/>
+            <Ellipse x:Name="waku2"/>
+            <Ellipse x:Name="exte"/>
+          </Grid>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="False">
+              <Setter TargetName="waku1" Property="Fill" Value="Gainsboro"/>
+              <Setter TargetName="waku1" Property="Margin" Value="0,0,1,1"/>
+              <Setter TargetName="waku2" Property="Fill" Value="White"/>
+              <Setter TargetName="waku2" Property="Margin" Value="1,1,2,2"/>
+              <Setter TargetName="exte" Property="Fill" Value="Silver"/>
+              <Setter TargetName="exte" Property="Margin" Value="2,2,1,1"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="waku1" Property="Fill" Value="Silver"/>
+              <Setter TargetName="waku1" Property="Margin" Value="2,2,0,0"/>
+              <Setter TargetName="waku2" Property="Fill" Value="Gainsboro"/>
+              <Setter TargetName="waku2" Property="Margin" Value="2,2,1,1"/>
+              <Setter TargetName="exte" Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=MyBrush}"/>
+              <Setter TargetName="exte" Property="Margin" Value="2"/>
+            </Trigger>
+            
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="{x:Type local:Togoole2}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:Togoole2}">
+          <Border x:Name="outside" Background="Gray" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Padding="2,2,0,0" BorderBrush="Black" BorderThickness="0">
+            <Grid x:Name="inside"/>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter Property="Background" Value="Magenta" TargetName="inside"/>
+              <Setter Property="Margin" Value="0"/>
+              <Setter TargetName="outside" Property="Padding" Value="2,2,1,1"/>
+              <Setter TargetName="outside" Property="Background" Value="Silver"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="False">
+              <Setter Property="Background" Value="Silver" TargetName="inside"/>
+              <Setter TargetName="outside" Property="Padding" Value="0,0,1,1"/>
+              <Setter TargetName="outside" Property="Background" Value="Gray"/>
+            </Trigger>
+            
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+        
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  
+  <Style TargetType="{x:Type local:Togoole}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:Togoole}">
+          <UniformGrid Columns="2">
+            <TextBlock x:Name="On" Text="on"/>
+            <TextBlock x:Name="Off" Text="off"/>
+          </UniformGrid>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="On" Property="Background" Value="Red"/>
+              <Setter TargetName="Off" Property="Background" Value="LightGray"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="False">
+              <Setter TargetName="On" Property="Background" Value="LightGray"/>
+              <Setter TargetName="Off" Property="Background" Value="Gray"/>
+            </Trigger>
+            
+          </ControlTemplate.Triggers>
+          <!--<ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="maru" Property="HorizontalAlignment" Value="Left"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="False">
+              <Setter TargetName="maru" Property="HorizontalAlignment" Value="Right"/>
+            </Trigger>
+
+          </ControlTemplate.Triggers>-->
+        </ControlTemplate>
+
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!--<Style x:Key="ToggleControlDefaultStyle" TargetType="{x:Type local:ToggleControl}">
+
+    <Setter Property="SnapsToDevicePixels" Value="True" />
+    <Setter Property="UseLayoutRounding" Value="True" />
+    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Top" />
+
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:ToggleControl}">
+          <Border Name="_Box"
+                                Height="20" Width="40"
+                                CornerRadius="10"
+                                BorderThickness="1" Padding="2">
+            <Border Name="_CheckMark" 
+                                    Width="14"
+                                    Height="14"
+                                    HorizontalAlignment="Left"
+                                    CornerRadius="10">
+              <ContentPresenter />
+            </Border>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="_CheckMark" Property="HorizontalAlignment" Value="Right" />
+              <Setter TargetName="_CheckMark" Property="Background" Value="Red" />
+              <Setter TargetName="_CheckMark" Property="BorderBrush" Value="#FF0067C0" />
+              <Setter TargetName="_Box" Property="Background" Value="#FF0067C0" />
+              <Setter TargetName="_Box" Property="BorderBrush" Value="#FF0067C0" />
+              <Setter TargetName="_Box" Property="BorderThickness" Value="0" />
+
+            </Trigger>
+            <Trigger Property="IsChecked" Value="False">
+              <Setter TargetName="_CheckMark" Property="HorizontalAlignment" Value="Left" />
+              <Setter TargetName="_CheckMark" Property="Background" Value="#FF5B5B5C" />
+              <Setter TargetName="_Box" Property="Background" Value="Transparent" />
+              <Setter TargetName="_Box" Property="BorderBrush" Value="#FF868688" />
+              <Setter TargetName="_Box" Property="BorderThickness" Value="1" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter TargetName="_CheckMark" Property="Background" Value="#FFFFFFFF" />
+              <Setter TargetName="_CheckMark" Property="BorderBrush" Value="#FFCCCCCC" />
+              <Setter TargetName="_Box" Property="Background" Value="#FFCCCCCC" />
+              <Setter TargetName="_Box" Property="BorderBrush" Value="#FFCCCCCC" />
+              <Setter TargetName="_Box" Property="BorderThickness" Value="0" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+
+  </Style>-->
+
 </ResourceDictionary>

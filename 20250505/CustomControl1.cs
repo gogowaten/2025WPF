@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -52,16 +53,59 @@ namespace _20250505
         }
     }
 
-    public class Waku : Window
+    public class Togoole : ToggleButton
     {
-        static Waku()
+        static Togoole()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(Waku), new FrameworkPropertyMetadata(typeof(Waku)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Togoole), new FrameworkPropertyMetadata(typeof(Togoole)));
         }
-        public Waku()
+        public Togoole()
         {
 
         }
+    }
+    
+    public class Togoole2 : ToggleButton
+    {
+        static Togoole2()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Togoole2), new FrameworkPropertyMetadata(typeof(Togoole2)));
+        }
+        public Togoole2()
+        {
+
+        }
+    }
+    
+    public class Togoole3 : ToggleButton
+    {
+        static Togoole3()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Togoole3), new FrameworkPropertyMetadata(typeof(Togoole3)));
+        }
+        public Togoole3()
+        {
+
+        }
+
+
+        public Brush MyBrush
+        {
+            get { return (Brush)GetValue(MyBrushProperty); }
+            set { SetValue(MyBrushProperty, value); }
+        }
+        public static readonly DependencyProperty MyBrushProperty =
+            DependencyProperty.Register(nameof(MyBrush), typeof(Brush), typeof(Togoole3), new PropertyMetadata(Brushes.Tomato));
+
+    }
+
+    public class ToggleControl : ToggleButton
+    {
+        static ToggleControl()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(ToggleControl), new FrameworkPropertyMetadata(typeof(ToggleControl)));
+        }
+        public ToggleControl() { }
     }
 
 }
