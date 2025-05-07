@@ -65,7 +65,7 @@
         </StatusBar>
 
         <ScrollViewer x:Name="MyScrollViewer" UseLayoutRounding="True" DockPanel.Dock="Right" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
-          <Canvas Width="400" Height="400" Background="AliceBlue">
+          <Canvas Width="2000" Height="1000" Background="AliceBlue">
             <TextBlock>
                ScrollViewerの中の、ここがメインのパネルになる<LineBreak/>
             </TextBlock>
