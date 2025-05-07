@@ -15,13 +15,11 @@
           <TabControl>
             <TabItem Header="tab1">
               <StackPanel Orientation="Horizontal">
-                <Button Content="button"/>
-                <Button Content="button"/>
-                <TextBlock>
-                ここはリボンメニューぽい感じで<LineBreak/>
-                ボタンと文字列<LineBreak/>
-                アイコンと文字列とかにしたい<LineBreak/>
-                </TextBlock>
+                <Button Content="ウィンドウの位置とサイズをリセット" Click="Button_Click_1"/>
+                <Button Content="Dataで保存"/>
+                <Button Content="画像で保存"/>
+                <Button Content="開く"/>
+                <Button Content="確認" Click="Button_Click"/>
               </StackPanel>
             </TabItem>
             <TabItem Header="tab2">
@@ -53,14 +51,6 @@
           <Button Content="button3"/>
         </Menu>
 
-        <!--これはエラーになる、Windowの中に直接Windowは入れられないみたい-->
-        <!--<Window DockPanel.Dock="Left">
-          <TabControl>
-            <TabItem Header="win1"/>
-            <TabItem Header="win2"/>
-          </TabControl>
-        </Window>-->
-
         <StatusBar DockPanel.Dock="Right">
           <StatusBar.LayoutTransform>
             <RotateTransform Angle="90"/>
@@ -76,8 +66,6 @@
           <Canvas Width="400" Height="400" Background="AliceBlue">
             <TextBlock>
                ScrollViewerの中の、ここがメインのパネルになる<LineBreak/>
-               左右のボタンを押すとそれぞれのウィンドウが出るようにしたいけど<LineBreak/>
-               Windowの中に直接Windowは置けないみたいでエラーになる<LineBreak/>
             </TextBlock>
           </Canvas>
         </ScrollViewer>

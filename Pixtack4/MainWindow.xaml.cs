@@ -27,25 +27,96 @@ namespace Pixtack4
         private string MyAppVersion = null!;
         //アプリのフォルダパス
         private string MyAppDirectory = null!;
+        //アプリのウィンドウData
+        private AppWindowData MyAppWindowData { get; set; } = null!;
+        //アプリのウィンドウDataファイル名
+        private const string APP_WINDOW_DATA_FILE_NAME = "AppWindowData.xml";
+
 
         public MainWindow()
         {
             InitializeComponent();
             MyInitialize();
             MyInitialize2();
+            Closing += MainWindow_Closing;
+        }
 
+        private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            string filePath = System.IO.Path.Combine(MyAppDirectory, APP_WINDOW_DATA_FILE_NAME);
+            if (!MyAppWindowData.Serialize(filePath))
+            {
+                MessageBox.Show("アプリの設定を保存できなかった");
+            }
         }
 
         #region 初期処理
-        
+
         private void MyInitialize()
         {
             MyAppDirectory = Environment.CurrentDirectory;
             MyAppVersion = GetAppVersion();
+
         }
+
         private void MyInitialize2()
         {
             this.Title = APP_NAME + "_" + MyAppVersion;
+            LoadAppWindowData();// ウィンドウ設定ファイルの読み込み
+            MyBindWindowData();// ウィンドウのバインド設定
+        }
+
+        /// <summary>
+        /// ウィンドウ設定ファイルの読み込み
+        /// </summary>
+        private void LoadAppWindowData()
+        {
+            //アプリのフォルダから設定ファイルを読み込む、ファイルがなかったら新規作成
+            string filePath = System.IO.Path.Combine(MyAppDirectory, APP_WINDOW_DATA_FILE_NAME);
+            if (AppWindowData.Deserialize(filePath) is AppWindowData data)
+            {
+                MyAppWindowData = data;
+            }
+            else
+            {
+                MyAppWindowData = new AppWindowData();
+            }
+        }
+
+        /// <summary>
+        /// ウィンドウのバインド設定
+        /// </summary>
+        private void MyBindWindowData()
+        {
+            //バインド設定、ウィンドウの最大化も？
+            SetBinding(LeftProperty, new Binding(nameof(AppWindowData.Left)) { Source = MyAppWindowData, Mode = BindingMode.TwoWay });
+            SetBinding(TopProperty, new Binding(nameof(AppWindowData.Top)) { Source = MyAppWindowData, Mode = BindingMode.TwoWay });
+            SetBinding(WidthProperty, new Binding() { Source = MyAppWindowData, Path = new PropertyPath(AppWindowData.WidthProperty), Mode = BindingMode.TwoWay });
+            SetBinding(HeightProperty, new Binding() { Source = MyAppWindowData, Path = new PropertyPath(AppWindowData.HeightProperty), Mode = BindingMode.TwoWay });
+            SetBinding(WindowStateProperty, new Binding() { Source = MyAppWindowData, Path = new PropertyPath(AppWindowData.WindowStateProperty), Mode = BindingMode.TwoWay });
+
+            FixWindowLocate();// ウィンドウ位置設定が画面外だった場合は0(左上)にする
+            //最小化されていた場合はNormalに戻す
+            if (WindowState == WindowState.Minimized) { WindowState = WindowState.Normal; }
+        }
+
+        /// <summary>
+        /// ウィンドウ位置設定が画面外だった場合は0(左上)にする
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        private void FixWindowLocate()
+        {
+            if (MyAppWindowData.Left < -10 ||
+                MyAppWindowData.Left > SystemParameters.VirtualScreenWidth - 100)
+            {
+                MyAppWindowData.Left = 0;
+            }
+            if (MyAppWindowData.Top < -10 ||
+                MyAppWindowData.Top > SystemParameters.VirtualScreenHeight - 100)
+            {
+                MyAppWindowData.Top = 0;
+            }
         }
 
         /// <summary>
@@ -65,25 +136,25 @@ namespace Pixtack4
             else { return string.Empty; }
         }
 
-        ///// <summary>
-        ///// ウィンドウ位置設定が画面外だった場合は0にする
-        ///// </summary>
-        ///// <param name="config"></param>
-        ///// <returns></returns>
-        //private void FixWindowLocate()
-        //{
-        //    if (MyAppData.AppLeft < -10 ||
-        //        MyAppData.AppLeft > SystemParameters.VirtualScreenWidth - 100)
-        //    {
-        //        MyAppData.AppLeft = 0;
-        //    }
-        //    if (MyAppData.AppTop < -10 ||
-        //        MyAppData.AppTop > SystemParameters.VirtualScreenHeight - 100)
-        //    {
-        //        MyAppData.AppTop = 0;
-        //    }
-        //}
-
         #endregion 初期処理
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var neko = MyAppWindowData;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            ResetWindowState();// ウィンドウの位置とサイズをリセット
+        }
+
+        /// <summary>
+        /// ウィンドウの位置とサイズをリセット
+        /// </summary>
+        private void ResetWindowState()
+        {
+            MyAppWindowData = new AppWindowData();
+            MyBindWindowData();
+        }
     }
 }

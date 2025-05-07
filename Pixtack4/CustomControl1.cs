@@ -2547,12 +2547,13 @@ namespace Pixtack4
             using FileStream stream = File.OpenRead(path);
             using ZipArchive archive = new(stream, ZipArchiveMode.Read);
             ZipArchiveEntry? entry = archive.GetEntry(XML_FILE_NAME);
-            if (entry == null) return null;
-            using Stream entryStream = entry.Open();
+            if (entry == null) { return null; }
+
+            using Stream zipStream = entry.Open();
             DataContractSerializer serializer = new(typeof(ItemData));
-            using XmlReader reader = XmlReader.Create(entryStream);
+            using XmlReader reader = XmlReader.Create(zipStream);
             ItemData? data = (ItemData?)serializer.ReadObject(reader);
-            if (data == null) return null;
+            if (data == null) { return null; }
 
             SubSetImageSource(data, archive);
             SubLoop(data, archive);

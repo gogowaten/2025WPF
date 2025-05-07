@@ -27,6 +27,10 @@ namespace Pixtack4
 
     //[KnownType(typeof(SolidColorBrush))]
     //[KnownType(typeof(MatrixTransform))]
+    /// <summary>
+    /// Data基礎
+    /// </summary>
+    
     public class ItemDataKiso : DependencyObject, IExtensibleDataObject, INotifyPropertyChanged
     {
         #region 必要
@@ -45,6 +49,7 @@ namespace Pixtack4
 
     }
 
+
     /// <summary>
     /// アプリのウィンドウ設定用Data
     /// </summary>
@@ -52,13 +57,62 @@ namespace Pixtack4
     {
         public AppWindowData() { }
 
+
+        /// <summary>
+        /// シリアル化
+        /// </summary>
+        /// <param name="filePath">保存ファイルパス</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public bool Serialize(string filePath)
+        {
+            DataContractSerializer serializer = new(typeof(AppWindowData));
+            XmlWriterSettings settings = new()
+            {
+                Indent = true,
+                Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)
+            };
+
+            try
+            {
+                using XmlWriter writer = XmlWriter.Create(filePath, settings);
+                serializer.WriteObject(writer, this);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        public static AppWindowData? Deserialize(string filePath)
+        {
+            if (!System.IO.File.Exists(filePath))
+            {
+                return null;
+            }
+            DataContractSerializer serializer = new(typeof(AppWindowData));
+            using XmlReader reader = XmlReader.Create(filePath);            
+            try
+            {
+                return serializer.ReadObject(reader) is AppWindowData data ? data : null;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+                //throw;
+            }
+        }
+
+
         //位置とサイズ
         private double _left;
-        public double Left { get => _left; set => SetProperty(ref _left, value); }
+        [DataMember] public double Left { get => _left; set => SetProperty(ref _left, value); }
 
         private double _top;
-        public double Top { get => _top; set => SetProperty(ref _top, value); }
+        [DataMember] public double Top { get => _top; set => SetProperty(ref _top, value); }
 
+        [DataMember]
         public double Width
         {
             get { return (double)GetValue(WidthProperty); }
@@ -71,6 +125,7 @@ namespace Pixtack4
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        [DataMember]
         public double Height
         {
             get { return (double)GetValue(HeightProperty); }
@@ -84,6 +139,7 @@ namespace Pixtack4
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         //ウィンドウの状態、最大化、最小化
+        [DataMember]
         public WindowState WindowState
         {
             get { return (WindowState)GetValue(WindowStateProperty); }
