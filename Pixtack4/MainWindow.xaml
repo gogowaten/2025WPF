@@ -1,0 +1,89 @@
+﻿<Window x:Class="Pixtack4.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pixtack4"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="800"
+        ResizeMode="CanResizeWithGrip">
+  <Grid>
+    <DockPanel>
+
+      <DockPanel DockPanel.Dock="Top">
+        <Grid Height="100">
+          <TabControl>
+            <TabItem Header="tab1">
+              <StackPanel Orientation="Horizontal">
+                <Button Content="button"/>
+                <Button Content="button"/>
+                <TextBlock>
+                ここはリボンメニューぽい感じで<LineBreak/>
+                ボタンと文字列<LineBreak/>
+                アイコンと文字列とかにしたい<LineBreak/>
+                </TextBlock>
+              </StackPanel>
+            </TabItem>
+            <TabItem Header="tab2">
+              <StackPanel Orientation="Horizontal">
+                <UniformGrid Rows="2">
+                  <Button Content="button"/>
+                  <TextBlock Text="text"/>
+                </UniformGrid>
+              </StackPanel>
+            </TabItem>
+          </TabControl>
+        </Grid>
+      </DockPanel>
+
+      <DockPanel DockPanel.Dock="Bottom">
+        <StatusBar>
+          <TextBlock Text="statusbar" Background="Orange"/>
+        </StatusBar>
+      </DockPanel>
+
+      <DockPanel DockPanel.Dock="Bottom">
+        <Menu DockPanel.Dock="Left">
+          <Menu.LayoutTransform>
+            <RotateTransform Angle="90"/>
+          </Menu.LayoutTransform>
+          <Button Content="Menu"/>
+          <Button Content="button1"/>
+          <Button Content="button2"/>
+          <Button Content="button3"/>
+        </Menu>
+
+        <!--これはエラーになる、Windowの中に直接Windowは入れられないみたい-->
+        <!--<Window DockPanel.Dock="Left">
+          <TabControl>
+            <TabItem Header="win1"/>
+            <TabItem Header="win2"/>
+          </TabControl>
+        </Window>-->
+
+        <StatusBar DockPanel.Dock="Right">
+          <StatusBar.LayoutTransform>
+            <RotateTransform Angle="90"/>
+          </StatusBar.LayoutTransform>
+          <StatusBarItem Content="item"/>
+          <Button Content="StatusBar"/>
+          <Button Content="button1"/>
+          <Button Content="button2"/>
+          <Button Content="button3"/>
+        </StatusBar>
+
+        <ScrollViewer DockPanel.Dock="Right" HorizontalScrollBarVisibility="Auto">
+          <Canvas Width="400" Height="400" Background="AliceBlue">
+            <TextBlock>
+               ScrollViewerの中の、ここがメインのパネルになる<LineBreak/>
+               左右のボタンを押すとそれぞれのウィンドウが出るようにしたいけど<LineBreak/>
+               Windowの中に直接Windowは置けないみたいでエラーになる<LineBreak/>
+            </TextBlock>
+          </Canvas>
+        </ScrollViewer>
+      </DockPanel>
+
+    </DockPanel>
+
+  </Grid>
+</Window>
