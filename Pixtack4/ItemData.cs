@@ -112,45 +112,15 @@ namespace Pixtack4
         private double _top;
         [DataMember] public double Top { get => _top; set => SetProperty(ref _top, value); }
 
-        [DataMember]
-        public double Width
-        {
-            get { return (double)GetValue(WidthProperty); }
-            set { SetValue(WidthProperty, value); }
-        }
-        public static readonly DependencyProperty WidthProperty =
-            DependencyProperty.Register(nameof(Width), typeof(double), typeof(AppWindowData),
-                new FrameworkPropertyMetadata(800.0,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        private double _width = 800.0;
+        [DataMember] public double Width { get => _width; set => SetProperty(ref _width, value); }
 
-        [DataMember]
-        public double Height
-        {
-            get { return (double)GetValue(HeightProperty); }
-            set { SetValue(HeightProperty, value); }
-        }
-        public static readonly DependencyProperty HeightProperty =
-            DependencyProperty.Register(nameof(Height), typeof(double), typeof(AppWindowData),
-                new FrameworkPropertyMetadata(600.0,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        private double _height = 600.0;
+        [DataMember] public double Height { get => _height; set => SetProperty(ref _height, value); }
 
-        //ウィンドウの状態、最大化、最小化
-        [DataMember]
-        public WindowState WindowState
-        {
-            get { return (WindowState)GetValue(WindowStateProperty); }
-            set { SetValue(WindowStateProperty, value); }
-        }
-        public static readonly DependencyProperty WindowStateProperty =
-            DependencyProperty.Register(nameof(WindowState), typeof(WindowState), typeof(AppWindowData),
-                new FrameworkPropertyMetadata(WindowState.Normal,
-                    FrameworkPropertyMetadataOptions.AffectsRender |
-                    FrameworkPropertyMetadataOptions.AffectsMeasure |
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        //ウィンドウの状態、最大化、最小化とか
+        private WindowState _windowState = WindowState.Normal;
+        [DataMember] public WindowState WindowState { get => _windowState; set => SetProperty(ref _windowState, value); }
 
     }
 

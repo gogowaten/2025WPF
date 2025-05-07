@@ -289,13 +289,13 @@ namespace Pixtack4
             //透明
             MyBrushList.Add(BitmapImageBrushMaker.MakeBrush2ColorsDash(1, Color.FromArgb(0, 0, 0, 0), Color.FromArgb(0, 0, 0, 0)));
             //青DodgerBlue:IsFocus
-            MyBrushList.Add(BitmapImageBrushMaker.MakeBrush2ColorsDash(8, Color.FromArgb(255, 30, 144, 255), Color.FromArgb(255, 255, 255, 255)));
+            MyBrushList.Add(BitmapImageBrushMaker.MakeBrush2ColorsDash(4, Color.FromArgb(255, 30, 144, 255), Color.FromArgb(255, 255, 255, 255)));
             //青:IsSelected
-            MyBrushList.Add(BitmapImageBrushMaker.MakeBrush2ColorsDash(8, Color.FromArgb(255, 135, 206, 250), Color.FromArgb(255, 255, 255, 255)));
+            MyBrushList.Add(BitmapImageBrushMaker.MakeBrush2ColorsDash(4, Color.FromArgb(255, 135, 206, 250), Color.FromArgb(255, 255, 255, 255)));
             //半透明灰色:IsSelectable
-            MyBrushList.Add(BitmapImageBrushMaker.MakeBrush2ColorsDash(8, Color.FromArgb(64, 0, 0, 0), Color.FromArgb(64, 255, 255, 255)));
+            MyBrushList.Add(BitmapImageBrushMaker.MakeBrush2ColorsDash(4, Color.FromArgb(64, 0, 0, 0), Color.FromArgb(64, 255, 255, 255)));
             //黄色:
-            MyBrushList.Add(BitmapImageBrushMaker.MakeBrush2ColorsDash(8, Color.FromArgb(255, 186, 85, 211), Color.FromArgb(255, 255, 255, 255)));
+            MyBrushList.Add(BitmapImageBrushMaker.MakeBrush2ColorsDash(4, Color.FromArgb(255, 186, 85, 211), Color.FromArgb(255, 255, 255, 255)));
 
         }
 
@@ -2471,6 +2471,7 @@ namespace Pixtack4
         /// <exception cref="ArgumentException"></exception>
         public bool SaveItemData(ItemData data, string filePath)
         {
+            if (data.MyThumbsItemData.Count < 1) { return false; }
             if (!CheckFilePathValidated(filePath)) { return false; }
 
             using FileStream zipStream = File.Create(filePath);

@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:Pixtack4"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="800"
-        ResizeMode="CanResizeWithGrip">
+        ResizeMode="CanResizeWithGrip"
+        AllowDrop="True"
+        Drop="Window_Drop">
   <Grid>
     <DockPanel>
 
@@ -16,7 +18,7 @@
             <TabItem Header="tab1">
               <StackPanel Orientation="Horizontal">
                 <Button Content="ウィンドウの位置とサイズをリセット" Click="Button_Click_1"/>
-                <Button Content="Dataで保存"/>
+                <Button Content="Dataで保存" Click="Button_Click_SaveRootData"/>
                 <Button Content="画像で保存"/>
                 <Button Content="開く"/>
                 <Button Content="確認" Click="Button_Click"/>
@@ -35,8 +37,8 @@
       </DockPanel>
 
       <DockPanel DockPanel.Dock="Bottom">
-        <StatusBar>
-          <TextBlock Text="statusbar" Background="Orange"/>
+        <StatusBar x:Name="MyStatusBar">
+          <TextBlock x:Name="MyStatusMessage" Text="statusbar" Foreground="White" Background="DodgerBlue" Padding="4,2" Margin="-1"/>
         </StatusBar>
       </DockPanel>
 
@@ -62,7 +64,7 @@
           <Button Content="button3"/>
         </StatusBar>
 
-        <ScrollViewer DockPanel.Dock="Right" HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer x:Name="MyScrollViewer" UseLayoutRounding="True" DockPanel.Dock="Right" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
           <Canvas Width="400" Height="400" Background="AliceBlue">
             <TextBlock>
                ScrollViewerの中の、ここがメインのパネルになる<LineBreak/>

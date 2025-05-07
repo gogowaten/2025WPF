@@ -20,6 +20,8 @@ namespace Pixtack4
         private RootThumb MyRoot { get; set; } = null!;
         private ManageExCanvas MyManageExCanvas { get; set; } = null!;
 
+        //
+        private string ROOT_DATA_FILE_NAME = "RootData.px4";
 
         //アプリ名
         private const string APP_NAME = "Pixtack4";
@@ -32,6 +34,8 @@ namespace Pixtack4
         //アプリのウィンドウDataファイル名
         private const string APP_WINDOW_DATA_FILE_NAME = "AppWindowData.xml";
 
+        //datetime.tostringの書式、これを既定値にする
+        private const string DATE_TIME_STRING_FORMAT = "yyyMMdd'_'HHmmss'.'fff";
 
         public MainWindow()
         {
@@ -57,6 +61,12 @@ namespace Pixtack4
             MyAppDirectory = Environment.CurrentDirectory;
             MyAppVersion = GetAppVersion();
 
+            var data = new ItemData(ThumbType.Root);
+            MyRoot = new RootThumb(data);
+
+            var manager = new ManageExCanvas(MyRoot, new ManageData());
+            MyManageExCanvas = manager;
+            MyScrollViewer.Content = MyManageExCanvas;
         }
 
         private void MyInitialize2()
@@ -65,6 +75,8 @@ namespace Pixtack4
             LoadAppWindowData();// ウィンドウ設定ファイルの読み込み
             MyBindWindowData();// ウィンドウのバインド設定
         }
+
+        #region アプリのウィンドウ設定
 
         /// <summary>
         /// ウィンドウ設定ファイルの読み込み
@@ -91,9 +103,9 @@ namespace Pixtack4
             //バインド設定、ウィンドウの最大化も？
             SetBinding(LeftProperty, new Binding(nameof(AppWindowData.Left)) { Source = MyAppWindowData, Mode = BindingMode.TwoWay });
             SetBinding(TopProperty, new Binding(nameof(AppWindowData.Top)) { Source = MyAppWindowData, Mode = BindingMode.TwoWay });
-            SetBinding(WidthProperty, new Binding() { Source = MyAppWindowData, Path = new PropertyPath(AppWindowData.WidthProperty), Mode = BindingMode.TwoWay });
-            SetBinding(HeightProperty, new Binding() { Source = MyAppWindowData, Path = new PropertyPath(AppWindowData.HeightProperty), Mode = BindingMode.TwoWay });
-            SetBinding(WindowStateProperty, new Binding() { Source = MyAppWindowData, Path = new PropertyPath(AppWindowData.WindowStateProperty), Mode = BindingMode.TwoWay });
+            SetBinding(WidthProperty, new Binding(nameof(AppWindowData.Width)) { Source = MyAppWindowData, Mode = BindingMode.TwoWay });
+            SetBinding(HeightProperty, new Binding(nameof(AppWindowData.Height)) { Source = MyAppWindowData, Mode = BindingMode.TwoWay });
+            SetBinding(WindowStateProperty, new Binding(nameof(AppWindowData.WindowState)) { Source = MyAppWindowData, Mode = BindingMode.TwoWay });
 
             FixWindowLocate();// ウィンドウ位置設定が画面外だった場合は0(左上)にする
             //最小化されていた場合はNormalに戻す
@@ -118,6 +130,8 @@ namespace Pixtack4
                 MyAppWindowData.Top = 0;
             }
         }
+
+        #endregion アプリのウィンドウ設定
 
         /// <summary>
         /// アプリのバージョン取得
@@ -148,6 +162,45 @@ namespace Pixtack4
             ResetWindowState();// ウィンドウの位置とサイズをリセット
         }
 
+        private void Button_Click_SaveRootData(object sender, RoutedEventArgs e)
+        {
+            string filePath = System.IO.Path.Combine(MyAppDirectory, ROOT_DATA_FILE_NAME);
+            if (SaveRootData(filePath)) { MyStatusMessage.Text = MakeStringNowTime()+ "_" + "保存完了"; }
+        }
+
+        //ウィンドウにファイルドロップ時
+        private void Window_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop);
+                MyRoot.OpenFiles(paths);
+            }
+        }
+
+        #region メソッド
+        
+        //今の日時をStringで作成
+        private string MakeStringNowTime()
+        {
+            DateTime dt = DateTime.Now;
+            //string str = dt.ToString("yyyyMMdd");            
+            //string str = dt.ToString("yyyyMMdd" + "_" + "HHmmssfff");
+            string str = dt.ToString(DATE_TIME_STRING_FORMAT);
+            //string str = dt.ToString("yyyyMMdd" + "_" + "HH" + "_" + "mm" + "_" + "ss" + "_" + "fff");
+            return str;
+        }
+
+        /// <summary>
+        /// RootThumbのDataをファイルに保存
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        private bool SaveRootData(string filePath)
+        {
+            return MyRoot.SaveItemData(MyRoot.MyItemData, filePath);
+        }
+
         /// <summary>
         /// ウィンドウの位置とサイズをリセット
         /// </summary>
@@ -156,5 +209,8 @@ namespace Pixtack4
             MyAppWindowData = new AppWindowData();
             MyBindWindowData();
         }
+
+        #endregion メソッド
+
     }
 }
