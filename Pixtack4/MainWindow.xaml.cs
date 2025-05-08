@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace Pixtack4
 {
@@ -20,6 +22,9 @@ namespace Pixtack4
         private RootThumb MyRoot { get; set; } = null!;
         private ManageExCanvas MyManageExCanvas { get; set; } = null!;
 
+        //今開いているファイルパスを保持
+        private string CurrentOpenFilePath = string.Empty;
+
         //
         private string ROOT_DATA_FILE_NAME = "RootData.px4";
 
@@ -29,10 +34,17 @@ namespace Pixtack4
         private string MyAppVersion = null!;
         //アプリのフォルダパス
         private string MyAppDirectory = null!;
+
         //アプリのウィンドウData
         private AppWindowData MyAppWindowData { get; set; } = null!;
         //アプリのウィンドウDataファイル名
         private const string APP_WINDOW_DATA_FILE_NAME = "AppWindowData.xml";
+
+        //アプリの設定Data
+        private AppData MyAppData { get; set; } = null!;
+        //アプリのDataファイル名
+        private const string APP_DATA_FILE_NAME = "AppData.xml";
+
 
         //datetime.tostringの書式、これを既定値にする
         private const string DATE_TIME_STRING_FORMAT = "yyyMMdd'_'HHmmss'.'fff";
@@ -50,23 +62,36 @@ namespace Pixtack4
             string filePath = System.IO.Path.Combine(MyAppDirectory, APP_WINDOW_DATA_FILE_NAME);
             if (!MyAppWindowData.Serialize(filePath))
             {
+                MessageBox.Show("アプリのWindow設定を保存できなかった");
+            }
+
+            filePath = System.IO.Path.Combine(MyAppDirectory, APP_DATA_FILE_NAME);
+            if (!MyAppData.Serialize(filePath, MyAppData))
+            {
                 MessageBox.Show("アプリの設定を保存できなかった");
             }
         }
+
 
         #region 初期処理
 
         private void MyInitialize()
         {
+            //アプリのパスとバージョン取得
             MyAppDirectory = Environment.CurrentDirectory;
             MyAppVersion = GetAppVersion();
 
+            //アプリの設定の読み込み
+            LoadAppData();
+
+            
+            //RootThumbとManegeExCanvasを展開
             var data = new ItemData(ThumbType.Root);
             MyRoot = new RootThumb(data);
-
             var manager = new ManageExCanvas(MyRoot, new ManageData());
             MyManageExCanvas = manager;
             MyScrollViewer.Content = MyManageExCanvas;
+
         }
 
         private void MyInitialize2()
@@ -74,7 +99,33 @@ namespace Pixtack4
             this.Title = APP_NAME + "_" + MyAppVersion;
             LoadAppWindowData();// ウィンドウ設定ファイルの読み込み
             MyBindWindowData();// ウィンドウのバインド設定
+            
+            //前回に開いていたファイルをアプリの設定から読み取って開く
+            var filePath = MyAppData.CurrentOpenFilePath;
+            if (filePath != string.Empty)
+            {
+
+            }
+
+            //初回起動時はRootThumbを新規作成
+
         }
+
+
+        /// <summary>
+        /// アプリ設定ファイルの読み込み
+        /// </summary>
+        private void LoadAppData()
+        {
+            //アプリのフォルダから設定ファイルを読み込む、ファイルがなかったら新規作成
+            string filePath = System.IO.Path.Combine(MyAppDirectory, APP_DATA_FILE_NAME);
+            if (ItemDataKiso.Deserialize<AppData>(filePath) is AppData data)
+            {
+                MyAppData = data;
+            }
+            else { MyAppData = new AppData(); }
+        }
+
 
         #region アプリのウィンドウ設定
 
@@ -152,9 +203,46 @@ namespace Pixtack4
 
         #endregion 初期処理
 
+
+
+
+
+        #region ボタンクリック        
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var neko = MyAppWindowData;
+        }
+
+        private void Button_Click_AddNewFile(object sender, RoutedEventArgs e)
+        {
+            CreateNewFile();// ファイルを新規作成
+        }
+
+        /// <summary>
+        /// ファイルを新規作成
+        /// </summary>
+        private void CreateNewFile()
+        {
+            string ms = "今の編集状態を保存する";
+            if (MyRoot.MyThumbs.Count > 0)
+            {
+                MessageBoxResult result = MessageBox.Show("aaa", "bbb", MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.Cancel);
+                if (result == MessageBoxResult.Yes)
+                {
+
+                }
+            }
+
+            Microsoft.Win32.SaveFileDialog dialog = new()
+            {
+                Filter = "*.px4|*.px4",
+                AddExtension = true,
+            };
+            if (dialog.ShowDialog() == true)
+            {
+                MyRoot.SaveItemData(MyRoot.MyItemData, dialog.FileName);
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -165,8 +253,11 @@ namespace Pixtack4
         private void Button_Click_SaveRootData(object sender, RoutedEventArgs e)
         {
             string filePath = System.IO.Path.Combine(MyAppDirectory, ROOT_DATA_FILE_NAME);
-            if (SaveRootData(filePath)) { MyStatusMessage.Text = MakeStringNowTime()+ "_" + "保存完了"; }
+            if (SaveRootData(filePath)) { MyStatusMessage.Text = MakeStringNowTime() + "_" + "保存完了"; }
         }
+
+        #endregion ボタンクリック
+
 
         //ウィンドウにファイルドロップ時
         private void Window_Drop(object sender, DragEventArgs e)
@@ -179,7 +270,7 @@ namespace Pixtack4
         }
 
         #region メソッド
-        
+
         //今の日時をStringで作成
         private string MakeStringNowTime()
         {
@@ -199,6 +290,24 @@ namespace Pixtack4
         private bool SaveRootData(string filePath)
         {
             return MyRoot.SaveItemData(MyRoot.MyItemData, filePath);
+        }
+
+        private void SaveRootData()
+        {
+            Microsoft.Win32.SaveFileDialog saveFileDialog = new();
+            if (saveFileDialog.ShowDialog().Value == true)
+            {
+
+            }
+            Microsoft.Win32.SaveFileDialog dialog = new()
+            {
+                Filter = "*.px4|*.px4",
+                AddExtension = true,
+            };
+            if (dialog.ShowDialog() == true)
+            {
+                MyRoot.SaveItemData(MyRoot.MyItemData, dialog.FileName);
+            }
         }
 
         /// <summary>

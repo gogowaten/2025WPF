@@ -16,12 +16,17 @@
         <Grid Height="100">
           <TabControl>
             <TabItem Header="tab1">
-              <StackPanel Orientation="Horizontal">
-                <Button Content="ウィンドウの位置とサイズをリセット" Click="Button_Click_1"/>
-                <Button Content="Dataで保存" Click="Button_Click_SaveRootData"/>
-                <Button Content="画像で保存"/>
-                <Button Content="開く"/>
-                <Button Content="確認" Click="Button_Click"/>
+              <StackPanel Orientation="Vertical">
+                <WrapPanel>
+                  <Button Content="ウィンドウのリセット" Click="Button_Click_1"/>
+                  <Button Content="RootDataを上書き保存" Click="Button_Click_SaveRootData"/>
+                  <Separator Width="10"/>
+                  <Button Content="新規作成" Click="Button_Click_AddNewFile"/>
+                  <Button Content="RootDataを名前をつけて保存"/>
+                  <Button Content="画像で保存"/>
+                  <Button Content="開く"/>
+                  <Button Content="確認" Click="Button_Click"/>
+                </WrapPanel>
               </StackPanel>
             </TabItem>
             <TabItem Header="tab2">
@@ -48,7 +53,7 @@
             <RotateTransform Angle="90"/>
           </Menu.LayoutTransform>
           <Button Content="Menu"/>
-          <Button Content="button1"/>
+          <Button Content="テスト用確認" Click="Button_Click"/>
           <Button Content="button2"/>
           <Button Content="button3"/>
         </Menu>
@@ -59,7 +64,7 @@
           </StatusBar.LayoutTransform>
           <StatusBarItem Content="item"/>
           <Button Content="StatusBar"/>
-          <Button Content="button1"/>
+          <Button Content="テスト用確認" Click="Button_Click" Background="MidnightBlue" Foreground="White"/>
           <Button Content="button2"/>
           <Button Content="button3"/>
         </StatusBar>

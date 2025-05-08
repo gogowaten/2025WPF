@@ -30,7 +30,7 @@ namespace Pixtack4
     /// <summary>
     /// Data基礎
     /// </summary>
-    
+
     public class ItemDataKiso : DependencyObject, IExtensibleDataObject, INotifyPropertyChanged
     {
         #region 必要
@@ -47,7 +47,66 @@ namespace Pixtack4
 
         #endregion 必要
 
+        public bool Serialize(string filePath, ItemDataKiso data)
+        {
+            DataContractSerializer serializer = new(data.GetType());
+            XmlWriterSettings settings = new()
+            {
+                Indent = true,
+                Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)
+            };
+
+            try
+            {
+                using XmlWriter writer = XmlWriter.Create(filePath, settings);
+                serializer.WriteObject(writer, data);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        public static T? Deserialize<T>(string filePath)
+        {
+            if (!System.IO.File.Exists(filePath))
+            {
+                return default;
+            }
+            DataContractSerializer serializer = new(typeof(T));
+            using XmlReader reader = XmlReader.Create(filePath);
+            try
+            {
+                if(serializer.ReadObject(reader) is T result)
+                {
+                    return result;
+                }
+                object? neko = serializer.ReadObject(reader);
+                return serializer.ReadObject(reader) is T data ? data : default;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+                //throw;
+            }
+        }
+        
     }
+
+
+
+
+    public class AppData : ItemDataKiso
+    {
+        public AppData() { }
+
+        private string _currentOpenFilePath = string.Empty;
+        [DataMember] public string CurrentOpenFilePath { get => _currentOpenFilePath; set => SetProperty(ref _currentOpenFilePath, value); }
+
+    }
+
+
 
 
     /// <summary>
@@ -92,7 +151,7 @@ namespace Pixtack4
                 return null;
             }
             DataContractSerializer serializer = new(typeof(AppWindowData));
-            using XmlReader reader = XmlReader.Create(filePath);            
+            using XmlReader reader = XmlReader.Create(filePath);
             try
             {
                 return serializer.ReadObject(reader) is AppWindowData data ? data : null;

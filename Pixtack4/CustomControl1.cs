@@ -2471,7 +2471,7 @@ namespace Pixtack4
         /// <exception cref="ArgumentException"></exception>
         public bool SaveItemData(ItemData data, string filePath)
         {
-            if (data.MyThumbsItemData.Count < 1) { return false; }
+            //if (data.MyThumbsItemData.Count < 1) { return false; }
             if (!CheckFilePathValidated(filePath)) { return false; }
 
             using FileStream zipStream = File.Create(filePath);
