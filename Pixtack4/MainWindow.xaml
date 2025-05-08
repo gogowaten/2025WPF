@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixtack4"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800"
+        Title="MainWindow" Height="300" Width="600"
         ResizeMode="CanResizeWithGrip"
         AllowDrop="True"
         Drop="Window_Drop">
@@ -19,10 +19,12 @@
               <StackPanel Orientation="Vertical">
                 <WrapPanel>
                   <Button Content="ウィンドウのリセット" Click="Button_Click_1"/>
-                  <Button Content="RootDataを上書き保存" Click="Button_Click_SaveRootData"/>
-                  <Separator Width="10"/>
-                  <Button Content="新規作成" Click="Button_Click_AddNewFile"/>
-                  <Button Content="RootDataを名前をつけて保存"/>
+                  <Button Content="Rootをリセット" Click="Button_Click_ResetRoot"/>
+                  <Button Content="名前を付けて保存" Click="Button_Click_SaveData"/>
+                  <Button Content="上書き保存" Click="Button_Click_OverwriteSave"/>
+                  
+                  <TextBlock Text="👈️できた｜まだ👉️"/>
+                  
                   <Button Content="画像で保存"/>
                   <Button Content="開く"/>
                   <Button Content="確認" Click="Button_Click"/>
@@ -44,6 +46,8 @@
       <DockPanel DockPanel.Dock="Bottom">
         <StatusBar x:Name="MyStatusBar">
           <TextBlock x:Name="MyStatusMessage" Text="statusbar" Foreground="White" Background="DodgerBlue" Padding="4,2" Margin="-1"/>
+          <TextBlock x:Name="MyStatusCurrentFileName" Text="開いているファイル名" Foreground="White" Background="DodgerBlue" Padding="4,2" Margin="-1"/>
+          
         </StatusBar>
       </DockPanel>
 

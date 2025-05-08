@@ -258,7 +258,7 @@ namespace Pixtack4
 
         public KisoThumb(ItemData data) : this()
         {
-            //MyThumbType = data.MyThumbType;
+            MyThumbType = data.MyThumbType;
             MyItemData = data;
             //MyItemData.PropertyChanged += MyItemData_PropertyChanged;
 

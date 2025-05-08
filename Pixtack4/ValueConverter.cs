@@ -7,6 +7,22 @@ using System.Collections.ObjectModel;
 namespace Pixtack4
 {
 
+    /// <summary>
+    /// フルパスからファイル名だけにする
+    /// </summary>
+    public class MyConvPathFileName : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var path = (string)value;
+            return System.IO.Path.GetFileName(path);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public class MyConvRectToOffsetLeft : IValueConverter
     {

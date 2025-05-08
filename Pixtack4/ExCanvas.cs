@@ -24,6 +24,7 @@ namespace Pixtack4
         {
             MyRootThumb = rootThumb;
             MyAreaThumb = new();
+            Panel.SetZIndex(MyAreaThumb, 1);
             Children.Add(MyRootThumb);
             Children.Add(MyAreaThumb);
 
@@ -151,6 +152,14 @@ namespace Pixtack4
         #endregion 画像保存
 
         #region メソッド
+
+        public void ChangeRootThumb(RootThumb thumb)
+        {
+            Children.Remove(MyRootThumb);
+            MyRootThumb = thumb;
+            Children.Add(MyRootThumb);
+        }
+
         public void AreaThumbVisibleSwitch()
         {
             if (MyManageData.AreaThumbVisibility == Visibility.Visible)
