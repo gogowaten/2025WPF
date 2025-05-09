@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Win32;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows;
@@ -19,7 +20,7 @@ namespace Pixtack4
     /// </summary>
     public partial class MainWindow : Window
     {
-        private RootThumb MyRoot { get; set; } = null!;
+        public RootThumb MyRoot { get;private set; } = null!;// 確認用でパブリックにしている
         private ManageExCanvas MyManageExCanvas { get; set; } = null!;
 
         //今開いているファイルパスを保持
@@ -27,6 +28,8 @@ namespace Pixtack4
 
         //
         //private string ROOT_DATA_FILE_NAME = "RootData.px4";
+        //RootのDataの拡張子はpx4
+        //それ以外のDataの拡張子はpx4item
 
         //アプリ名
         private const string APP_NAME = "Pixtack4";
@@ -41,7 +44,7 @@ namespace Pixtack4
         private const string APP_WINDOW_DATA_FILE_NAME = "AppWindowData.xml";
 
         //アプリの設定Data
-        private AppData MyAppData { get; set; } = null!;
+        public AppData MyAppData { get;private set; } = null!;// 確認用でパブリックにしている
         //アプリのDataファイル名
         private const string APP_DATA_FILE_NAME = "AppData.xml";
 
@@ -55,11 +58,12 @@ namespace Pixtack4
             MyInitialize();
             MyInitialize2();
             Closing += MainWindow_Closing;
+            DataContext = this;
         }
 
         private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
-            
+
             AppClosing(e);// アプリ終了直前の処理
         }
 
@@ -122,8 +126,11 @@ namespace Pixtack4
             if (LoadAppData() is AppData appData) { MyAppData = appData; }
             else { MyAppData = new AppData(); }
 
-            // RootThumbとManageExCanvasの初期化
-            MyInitializeRootThumb();
+
+
+
+
+
         }
 
 
@@ -133,25 +140,18 @@ namespace Pixtack4
             LoadAppWindowData();// ウィンドウ設定ファイルの読み込み
             MyBindWindowData();// ウィンドウのバインド設定
 
-            //前回に開いていたファイルをアプリの設定から読み取って開く
-            var filePath = MyAppData.CurrentOpenFilePath;
-            if (filePath != string.Empty)
-            {
-                if (MyRoot.LoadItemData(filePath) is ItemData data)
-                {
-                    if (MyBuilder.MakeThumb(data) is RootThumb root)
-                    {
-                        MyManageExCanvas.ChangeRootThumb(root);
-                        MyRoot = root;
-                    }
-                }
-            }
+            // RootThumbとManageExCanvasの初期化
+            MyInitializeRootThumb();
+
+            //前回に開いていたファイルを開く
+            OpenPx4FileRootThumb(MyAppData.CurrentOpenFilePath);
 
             MyBind();
 
             //初回起動時はRootThumbを新規作成
 
         }
+
 
         private void MyBind()
         {
@@ -240,15 +240,97 @@ namespace Pixtack4
 
 
 
-        #region ボタンクリック        
 
+
+
+        #region ボタンクリック        
+        //確認テスト用
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var neko = MyAppWindowData;
         }
 
 
+        private void Button_Click_OpenPx4File(object sender, RoutedEventArgs e)
+        {
+            MyStatusMessage.Text = OpenPx4File();
+        }
 
+        /// <summary>
+        /// px4ファイルを開く
+        /// </summary>
+        private string OpenPx4File()
+        {
+            if (MyRoot.MyThumbs.Count > 0)
+            {
+                MessageBoxResult result = MessageBox.Show(
+                   "今の状態を保存してから開く？\n\n\n" +
+                   "はい＿：保存してから開く\n\n" +
+                   "いいえ：保存しないで開く\n\n" +
+                   "キャンセル：開くのををキャンセル",
+                   "px4ファイルを開く前の確認",
+                   MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.Cancel);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    return MakeStatusMessage("ファイルを開くのをキャンセルした");
+                }
+                else if (result == MessageBoxResult.Yes)
+                {
+                    OverwriteSaveData();// 上書き保存
+                }
+            }
+
+            return OpenPx4File2();
+        }
+
+        /// <summary>
+        /// ダイアログからpx4ファイルを開く
+        /// </summary>
+        /// <returns></returns>
+        private string OpenPx4File2()
+        {
+            OpenFileDialog dialog = new()
+            {
+                InitialDirectory = MyAppData.InitialDirectory,
+                Multiselect = false,
+                Filter = "対応ファイル | *.px4;"
+            };
+            if (dialog.ShowDialog() == true)
+            {
+                if (OpenPx4FileRootThumb(dialog.FileName))
+                {
+                    return MakeStatusMessage("px4ファイルを開いた");
+                }
+                return MakeStatusMessage("ファイルを開けなかった");
+            }
+            return MakeStatusMessage("ファイルを開くのをキャンセルした");
+        }
+
+        private void Button_Click_OpenFile(object sender, RoutedEventArgs e)
+        {
+            OpenFile();
+        }
+
+        /// <summary>
+        /// ファイルを開く
+        /// pc4の単一ファイルなら
+        /// </summary>
+        private void OpenFile()
+        {
+            var dialog = new OpenFileDialog();
+            dialog.InitialDirectory = MyAppData.InitialDirectory;
+            dialog.Multiselect = true;
+            dialog.Filter = "対応ファイル | *.bmp; *.jpg; *.png; *.gif; *.tiff; *.px4; | すべて | *.* ";
+            if (dialog.ShowDialog() == true)
+            {
+                string[] paths = dialog.FileNames;
+                Array.Sort(paths);//ファイル名でソート
+                if (MyAppData.IsFileNameDescendingOrder) { Array.Reverse(paths); }
+
+            }
+
+        }
 
         private void Button_Click_ResetRoot(object sender, RoutedEventArgs e)
         {
@@ -263,16 +345,6 @@ namespace Pixtack4
         private void Button_Click_OverwriteSave(object sender, RoutedEventArgs e)
         {
             MyStatusMessage.Text = OverwriteSaveData();// 上書き保存
-        }
-
-        /// <summary>
-        /// 上書き保存
-        /// </summary>
-        /// <returns></returns>
-        private string OverwriteSaveData()
-        {
-            string filePath = MyAppData.CurrentOpenFilePath;
-            return SaveData(filePath);
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -294,6 +366,8 @@ namespace Pixtack4
         }
 
         #region メソッド
+
+        #region 初期化、リセット系
 
         /// <summary>
         /// RootThumbを新規作成してリセット
@@ -343,7 +417,29 @@ namespace Pixtack4
         }
 
         /// <summary>
-        /// 名前を付けてData保存
+        /// ウィンドウの位置とサイズをリセット
+        /// </summary>
+        private void ResetWindowState()
+        {
+            MyAppWindowData = new AppWindowData();
+            MyBindWindowData();
+        }
+
+        #endregion 初期化、リセット系
+
+        #region Save
+
+        /// <summary>
+        /// 上書き保存
+        /// </summary>
+        /// <returns></returns>
+        private string OverwriteSaveData()
+        {
+            return SaveData(MyAppData.CurrentOpenFilePath);
+        }
+
+        /// <summary>
+        /// Saveダイアログを開いて名前を付けてData保存
         /// </summary>
         private string SaveData()
         {
@@ -363,19 +459,20 @@ namespace Pixtack4
         /// <summary>
         /// 指定パスにData保存、パスがない場合はSaveFileDialog
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="filePath"></param>
         /// <returns></returns>
-        private string SaveData(string fileName)
+        private string SaveData(string filePath)
         {
-            if (fileName == string.Empty) { return SaveData(); }
-            if (MyRoot.SaveItemData(MyRoot.MyItemData, fileName))
+            if (filePath == string.Empty) { return SaveData(); }
+            if (MyRoot.SaveItemData(MyRoot.MyItemData, filePath))
             {
-                MyAppData.CurrentOpenFilePath = fileName;
+                MyAppData.CurrentOpenFilePath = filePath;// 今開いているファイルのパス更新
                 return MakeStatusMessage("保存完了");
             }
             else { return MakeStatusMessage("保存に失敗"); }
         }
 
+        #endregion Save
 
         /// <summary>
         /// メッセージに現在時刻を付けて返す
@@ -398,37 +495,55 @@ namespace Pixtack4
             return str;
         }
 
-        /// <summary>
-        /// RootThumbのDataをpx4ファイルに保存
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        private bool SaveRootData(string filePath)
-        {
-            return MyRoot.SaveItemData(MyRoot.MyItemData, filePath);
-        }
+        ///// <summary>
+        ///// RootThumbのDataをpx4ファイルに保存
+        ///// </summary>
+        ///// <param name="filePath"></param>
+        ///// <returns></returns>
+        //private bool SaveRootData(string filePath)
+        //{
+        //    return MyRoot.SaveItemData(MyRoot.MyItemData, filePath);
+        //}
 
-        private void SaveRootData()
+        ///// <summary>
+        ///// Saveダイアログを開いて保存
+        ///// </summary>
+        //private void SaveRootData()
+        //{
+        //    Microsoft.Win32.SaveFileDialog dialog = new()
+        //    {
+        //        Filter = "*.px4|*.px4",
+        //        AddExtension = true,
+        //    };
+        //    if (dialog.ShowDialog() == true)
+        //    {
+        //        MyRoot.SaveItemData(MyRoot.MyItemData, dialog.FileName);
+        //    }
+        //}
+
+        #region Load、Open、読み込み系
+
+        /// <summary>
+        /// px4ファイルを開いて、今のRootと入れ替える
+        /// </summary>
+        private bool OpenPx4FileRootThumb(string filePath)
         {
-            Microsoft.Win32.SaveFileDialog dialog = new()
+            if (filePath != string.Empty)
             {
-                Filter = "*.px4|*.px4",
-                AddExtension = true,
-            };
-            if (dialog.ShowDialog() == true)
-            {
-                MyRoot.SaveItemData(MyRoot.MyItemData, dialog.FileName);
+                if (MyRoot.LoadItemData(filePath) is ItemData data)
+                {
+                    if (new RootThumb(data) is RootThumb root)
+                    {
+                        MyManageExCanvas.ChangeRootThumb(root);
+                        MyRoot = root;
+                        MyAppData.CurrentOpenFilePath = filePath;
+                        return true;
+                    }
+                }
             }
+            return false;
         }
 
-        /// <summary>
-        /// ウィンドウの位置とサイズをリセット
-        /// </summary>
-        private void ResetWindowState()
-        {
-            MyAppWindowData = new AppWindowData();
-            MyBindWindowData();
-        }
 
 
         /// <summary>
@@ -449,6 +564,8 @@ namespace Pixtack4
             string filePath = System.IO.Path.Combine(MyAppDirectory, APP_DATA_FILE_NAME);
             return LoadAppData(filePath);
         }
+
+        #endregion Load、Open、読み込み系
 
         #endregion メソッド
 

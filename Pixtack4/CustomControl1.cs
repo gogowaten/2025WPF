@@ -1416,6 +1416,7 @@ namespace Pixtack4
         //public RootThumb() { }
         public RootThumb(ItemData data) : base(data)
         {
+            MyThumbType = ThumbType.Root;
             Focusable = true;
             //MyThumbType = ThumbType.Root;
             //MyItemData.MyThumbType = ThumbType.Root;

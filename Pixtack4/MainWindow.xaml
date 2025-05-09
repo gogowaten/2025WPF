@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixtack4"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:MainWindow}"
         Title="MainWindow" Height="300" Width="600"
         ResizeMode="CanResizeWithGrip"
         AllowDrop="True"
@@ -26,17 +27,16 @@
                   <TextBlock Text="👈️できた｜まだ👉️"/>
                   
                   <Button Content="画像で保存"/>
-                  <Button Content="開く"/>
+                  <Button Content="px4ファイルを開く" Click="Button_Click_OpenPx4File"/>
                   <Button Content="確認" Click="Button_Click"/>
                 </WrapPanel>
               </StackPanel>
             </TabItem>
-            <TabItem Header="tab2">
-              <StackPanel Orientation="Horizontal">
-                <UniformGrid Rows="2">
-                  <Button Content="button"/>
-                  <TextBlock Text="text"/>
-                </UniformGrid>
+            <TabItem Header="tab2" DataContext="{Binding MyAppData}">
+              <StackPanel Orientation="Vertical">
+                <TextBlock Text="{Binding CurrentOpenFilePath}"/>
+                <TextBlock Text="{Binding InitialDirectory}"/>
+                <TextBlock Text="{Binding IsFileNameDescendingOrder}"/>
               </StackPanel>
             </TabItem>
           </TabControl>
@@ -58,10 +58,20 @@
           </Menu.LayoutTransform>
           <Button Content="Menu"/>
           <Button Content="テスト用確認" Click="Button_Click"/>
-          <Button Content="button2"/>
+          <Button Content="Root"/>
           <Button Content="button3"/>
         </Menu>
 
+        <Grid x:Name="MyGridRootCheck" DockPanel.Dock="Left" DataContext="{Binding MyRoot}" Visibility="Visible">
+          <StackPanel>
+            <GroupBox Header="Root状態確認用" DataContext="{Binding }">
+              <StackPanel>
+                <TextBlock Text="{Binding }"/>
+              </StackPanel>
+            </GroupBox>
+          </StackPanel>
+        </Grid>
+        
         <StatusBar DockPanel.Dock="Right">
           <StatusBar.LayoutTransform>
             <RotateTransform Angle="90"/>

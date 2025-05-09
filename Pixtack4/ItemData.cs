@@ -78,7 +78,7 @@ namespace Pixtack4
             using XmlReader reader = XmlReader.Create(filePath);
             try
             {
-                if(serializer.ReadObject(reader) is T result)
+                if (serializer.ReadObject(reader) is T result)
                 {
                     return result;
                 }
@@ -91,7 +91,7 @@ namespace Pixtack4
                 //throw;
             }
         }
-        
+
     }
 
 
@@ -101,6 +101,16 @@ namespace Pixtack4
     {
         public AppData() { }
 
+        //複数ファイルを開くときにファイル名の降順で開く
+
+        private bool _isFileNameDescendingOrder;
+        public bool IsFileNameDescendingOrder { get => _isFileNameDescendingOrder; set => SetProperty(ref _isFileNameDescendingOrder, value); }
+
+        //OpenFileDialogの初期フォルダ、初期値はマイドキュメント
+        private string _initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        [DataMember] public string InitialDirectory { get => _initialDirectory; set => SetProperty(ref _initialDirectory, value); }
+
+        //今開いているファイルのパス
         private string _currentOpenFilePath = string.Empty;
         [DataMember] public string CurrentOpenFilePath { get => _currentOpenFilePath; set => SetProperty(ref _currentOpenFilePath, value); }
 
