@@ -23,10 +23,10 @@ namespace Pixtack4
         private ManageExCanvas MyManageExCanvas { get; set; } = null!;
 
         //今開いているファイルパスを保持
-        private string CurrentOpenFilePath = string.Empty;
+        //private string CurrentOpenFilePath = string.Empty;
 
         //
-        private string ROOT_DATA_FILE_NAME = "RootData.px4";
+        //private string ROOT_DATA_FILE_NAME = "RootData.px4";
 
         //アプリ名
         private const string APP_NAME = "Pixtack4";
@@ -59,6 +59,39 @@ namespace Pixtack4
 
         private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
+            
+            AppClosing(e);// アプリ終了直前の処理
+        }
+
+
+        #region アプリ終了時の処理
+        /// <summary>
+        /// アプリ終了直前の処理
+        /// </summary>
+        private void AppClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            //ダイアログ表示、保存するかを聞く
+            if (MyRoot.MyThumbs.Count > 0)
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    "ファイルに保存してから終了する？\n\n\n" +
+                    "はい：保存して終了\n\n" +
+                    "いいえ：保存しないで終了\n\n" +
+                    "キャンセル：終了をキャンセル",
+                    "アプリ終了前の確認",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.Cancel);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;// 終了をキャンセル
+                }
+                else if (result == MessageBoxResult.Yes)
+                {
+                    OverwriteSaveData();// 上書き保存
+                }
+            }
+
+
             string filePath = System.IO.Path.Combine(MyAppDirectory, APP_WINDOW_DATA_FILE_NAME);
             if (!MyAppWindowData.Serialize(filePath))
             {
@@ -75,7 +108,7 @@ namespace Pixtack4
                 MessageBox.Show("アプリの設定を保存できなかった");
             }
         }
-
+        #endregion アプリ終了前の処理
 
         #region 初期処理
 
@@ -122,26 +155,8 @@ namespace Pixtack4
 
         private void MyBind()
         {
+            //今開いているファイルのフルパスからファイル名だけを表示
             MyStatusCurrentFileName.SetBinding(TextBlock.TextProperty, new Binding(nameof(MyAppData.CurrentOpenFilePath)) { Source = MyAppData, Converter = new MyConvPathFileName() });
-        }
-
-        /// <summary>
-        /// アプリ設定ファイルの読み込み
-        /// </summary>
-        private AppData? LoadAppData(string filePath)
-        {
-            //アプリのフォルダから設定ファイルを読み込む、ファイルがなかったら新規作成
-            if (ItemDataKiso.Deserialize<AppData>(filePath) is AppData data)
-            {
-                return data;
-            }
-            return null;
-        }
-        private AppData? LoadAppData()
-        {
-            //アプリのフォルダから設定ファイルを読み込む、ファイルがなかったら新規作成
-            string filePath = System.IO.Path.Combine(MyAppDirectory, APP_DATA_FILE_NAME);
-            return LoadAppData(filePath);
         }
 
 
@@ -247,11 +262,13 @@ namespace Pixtack4
 
         private void Button_Click_OverwriteSave(object sender, RoutedEventArgs e)
         {
-            MyStatusMessage.Text = OverwriteSaveData();
-            //string filePath = System.IO.Path.Combine(MyAppDirectory, ROOT_DATA_FILE_NAME);
-            //if (SaveRootData(filePath)) { MyStatusMessage.Text = MakeStatusMessage("保存完了"); }
+            MyStatusMessage.Text = OverwriteSaveData();// 上書き保存
         }
 
+        /// <summary>
+        /// 上書き保存
+        /// </summary>
+        /// <returns></returns>
         private string OverwriteSaveData()
         {
             string filePath = MyAppData.CurrentOpenFilePath;
@@ -287,11 +304,11 @@ namespace Pixtack4
             if (MyRoot.MyThumbs.Count > 0)
             {
                 MessageBoxResult result = MessageBox.Show(
-                    "今の状態を保存してからリセットする？\n\n" +
-                    "はい＿：保存してからリセット\n" +
-                    "いいえ：保存しないでリセット\n" +
-                    "キャンセル：リセット中止",
-                    "確認", MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.Cancel);
+                    "今の状態を保存してからリセットする？\n\n\n" +
+                    "はい＿：保存してからリセット\n\n" +
+                    "いいえ：保存しないでリセット\n\n" +
+                    "キャンセル：リセットをキャンセル",
+                    "リセット前の確認", MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.Cancel);
                 if (result == MessageBoxResult.Yes)
                 {
                     MyStatusMessage.Text = SaveData(MyAppData.CurrentOpenFilePath);
@@ -344,7 +361,7 @@ namespace Pixtack4
         }
 
         /// <summary>
-        /// 指定パスにData保存
+        /// 指定パスにData保存、パスがない場合はSaveFileDialog
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
@@ -411,6 +428,26 @@ namespace Pixtack4
         {
             MyAppWindowData = new AppWindowData();
             MyBindWindowData();
+        }
+
+
+        /// <summary>
+        /// アプリ設定ファイルの読み込み
+        /// </summary>
+        private AppData? LoadAppData(string filePath)
+        {
+            //アプリのフォルダから設定ファイルを読み込む、ファイルがなかったら新規作成
+            if (ItemDataKiso.Deserialize<AppData>(filePath) is AppData data)
+            {
+                return data;
+            }
+            return null;
+        }
+        private AppData? LoadAppData()
+        {
+            //アプリのフォルダから設定ファイルを読み込む、ファイルがなかったら新規作成
+            string filePath = System.IO.Path.Combine(MyAppDirectory, APP_DATA_FILE_NAME);
+            return LoadAppData(filePath);
         }
 
         #endregion メソッド
