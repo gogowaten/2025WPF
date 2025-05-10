@@ -23,31 +23,32 @@
                   <Button Content="Rootをリセット" Click="Button_Click_ResetRoot"/>
                   <Button Content="名前を付けて保存" Click="Button_Click_SaveData"/>
                   <Button Content="上書き保存" Click="Button_Click_OverwriteSave"/>
-                  
-                  <TextBlock Text="👈️できた｜まだ👉️"/>
-                  
-                  <Button Content="画像で保存"/>
                   <Button Content="px4ファイルを開く" Click="Button_Click_OpenPx4File"/>
+
+                  <TextBlock Text="👈️できた｜まだ👉️"/>
+
+                  <Button Content="画像で保存"/>
                   <Button Content="確認" Click="Button_Click"/>
                 </WrapPanel>
               </StackPanel>
             </TabItem>
             <TabItem Header="tab2" DataContext="{Binding MyAppData}">
               <StackPanel Orientation="Vertical">
-                <TextBlock Text="{Binding CurrentOpenFilePath}"/>
-                <TextBlock Text="{Binding InitialDirectory}"/>
-                <TextBlock Text="{Binding IsFileNameDescendingOrder}"/>
+                <TextBlock Text="{Binding CurrentOpenFilePath, StringFormat=CurrentOpenFilePath _ {0:0}}"/>
+                <TextBlock Text="{Binding InitialDirectory, StringFormat=InitialDirectory _ {0:0}}"/>
+                <TextBlock Text="{Binding IsFileNameDescendingOrder, StringFormat=IsFileNameDescendingOrder _ {0:0}}"/>
               </StackPanel>
             </TabItem>
           </TabControl>
         </Grid>
       </DockPanel>
 
+      <!--最下段のStatusBar-->
       <DockPanel DockPanel.Dock="Bottom">
         <StatusBar x:Name="MyStatusBar">
           <TextBlock x:Name="MyStatusMessage" Text="statusbar" Foreground="White" Background="DodgerBlue" Padding="4,2" Margin="-1"/>
           <TextBlock x:Name="MyStatusCurrentFileName" Text="開いているファイル名" Foreground="White" Background="DodgerBlue" Padding="4,2" Margin="-1"/>
-          
+
         </StatusBar>
       </DockPanel>
 
@@ -62,16 +63,50 @@
           <Button Content="button3"/>
         </Menu>
 
+        <Grid x:Name="MyGridMyItemsTree" DockPanel.Dock="Left" DataContext="{Binding MyRoot.MyThumbs}">
+          <ScrollViewer>
+            <TreeView ItemsSource="{Binding}">
+              <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="local:RootThumb" ItemsSource="{Binding}">
+                  <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding MyThumbType}" VerticalAlignment="Center" Margin="10"/>
+                    <!--<TextBlock Text="{Binding MyItemData.MyZIndex, StringFormat=z {0:0}}"/>
+        <TextBlock Text="{Binding IsSelectable, StringFormat=selectable {0:0}}"/>
+        <TextBlock Text="{Binding IsSelected, StringFormat=selected {0:0}}"/>-->
+                    <Rectangle Width="50" Height="50">
+                      <Rectangle.Fill>
+                        <VisualBrush Visual="{Binding}" Stretch="Uniform"/>
+                      </Rectangle.Fill>
+                    </Rectangle>
+                  </StackPanel>
+                </HierarchicalDataTemplate>
+              </TreeView.ItemTemplate>
+            </TreeView>
+          </ScrollViewer>
+        </Grid>
+        
         <Grid x:Name="MyGridRootCheck" DockPanel.Dock="Left" DataContext="{Binding MyRoot}" Visibility="Visible">
           <StackPanel>
             <GroupBox Header="Root状態確認用" DataContext="{Binding }">
               <StackPanel>
-                <TextBlock Text="{Binding }"/>
+                <TextBlock Text="{Binding MyThumbs.Count, StringFormat=ItemsCount _ {0:0}}"/>
+                <TextBlock Text="{Binding MyFocusThumb, StringFormat=FocusItem _ {0:0}}"/>
+                <Rectangle Width="100" Height="100">
+                  <Rectangle.Fill>
+                    <VisualBrush Stretch="Uniform" Visual="{Binding MyFocusThumb}"/>
+                    <!--<BitmapCacheBrush Target="{Binding MyFocusThumb, UpdateSourceTrigger=PropertyChanged}"/>-->
+                  </Rectangle.Fill>
+                </Rectangle>
+                <Rectangle Width="100" Height="100" UseLayoutRounding="False">
+                  <Rectangle.Fill>
+                    <VisualBrush Stretch="Uniform" Visual="{Binding}"/>
+                  </Rectangle.Fill>
+                </Rectangle>
               </StackPanel>
             </GroupBox>
           </StackPanel>
         </Grid>
-        
+
         <StatusBar DockPanel.Dock="Right">
           <StatusBar.LayoutTransform>
             <RotateTransform Angle="90"/>

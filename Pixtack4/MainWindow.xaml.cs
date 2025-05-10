@@ -74,7 +74,7 @@ namespace Pixtack4
         /// </summary>
         private void AppClosing(System.ComponentModel.CancelEventArgs e)
         {
-            //ダイアログ表示、保存するかを聞く
+            //Itemがある場合は、保存するかを確認する
             if (MyRoot.MyThumbs.Count > 0)
             {
                 MessageBoxResult result = MessageBox.Show(
