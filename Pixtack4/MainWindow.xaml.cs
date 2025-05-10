@@ -91,7 +91,7 @@ namespace Pixtack4
                 }
                 else if (result == MessageBoxResult.Yes)
                 {
-                    OverwriteSaveData();// 上書き保存
+                    SaveItemOverwriteCurrentFilePath();// 上書き保存
                 }
             }
 
@@ -248,13 +248,371 @@ namespace Pixtack4
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var neko = MyAppWindowData;
+
         }
 
+        private void Button_Click_SaveFocusItem(object sender, RoutedEventArgs e)
+        {
+            if (MyRoot.MyFocusThumb != null)
+            {
+                // Dataを名前を付けて保存
+                (_, string message) = SaveItem(MyRoot.MyFocusThumb);
+                MyStatusMessage.Text = message;
+            }
+        }
+
+        private void Button_Click_MyRootStatusPanelVisible(object sender, RoutedEventArgs e)
+        {
+            MyRootStatusPanelVisible();
+        }
 
         private void Button_Click_OpenPx4File(object sender, RoutedEventArgs e)
         {
-            MyStatusMessage.Text = OpenPx4File();
+            MyStatusMessage.Text = OpenPx4File();// px4ファイルを開く
         }
+
+        private void Button_Click_OpenFile(object sender, RoutedEventArgs e)
+        {
+            OpenItemFile();// 対応ファイルを開いて、今のRootに追加する
+        }
+
+
+        private void Button_Click_ResetRoot(object sender, RoutedEventArgs e)
+        {
+            MyStatusMessage.Text = ResetRootThumb();// RootThumbを新規作成してリセット
+        }
+
+        private void Button_Click_SaveData(object sender, RoutedEventArgs e)
+        {   
+            SaveItem(MyRoot);// Dataを名前を付けて保存
+        }
+
+
+        private void Button_Click_OverwriteSave(object sender, RoutedEventArgs e)
+        {
+            SaveItemOverwriteCurrentFilePath();// 上書き保存
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            ResetWindowState();// ウィンドウの位置とサイズをリセット
+        }
+
+        #endregion ボタンクリック
+
+
+        //ウィンドウにファイルドロップ時
+        private void Window_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                //パスはファイル名でソートする
+                string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop);
+                OpenFiles(paths);
+            }
+        }
+
+        #region メソッド
+
+        #region 初期化、リセット系
+
+        /// <summary>
+        /// RootThumbを新規作成してリセット
+        /// </summary>
+        private string ResetRootThumb()
+        {
+            if (MyRoot.MyThumbs.Count == 0)
+            {
+                return MakeStatusMessage("Item数が0だったのでリセットされなかった");
+            }
+
+            MessageBoxResult result = MessageBox.Show(
+                "今の状態を保存してからリセットする？\n\n\n" +
+                "はい＿：保存してからリセット\n\n" +
+                "いいえ：保存しないでリセット\n\n" +
+                "キャンセル：リセットをキャンセル",
+                "リセット前の確認", MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.Cancel);
+            if (result == MessageBoxResult.Cancel)
+            {
+                return MakeStatusMessage("リセットは中止された");
+            }
+            else if (result == MessageBoxResult.Yes)
+            {
+                //ファイルに保存
+                //SaveData(MyAppData.CurrentOpenFilePath, MyRoot.MyItemData);
+                SaveItem(MyRoot);
+            }
+            MyInitializeRootThumb();
+            MyAppData.CurrentOpenFilePath = string.Empty;//今開いているファイルパスもリセット
+            return MakeStatusMessage("リセット完了");
+        }
+
+        /// <summary>
+        /// RootThumbとManageExCanvasの初期化
+        /// </summary>
+        private void MyInitializeRootThumb()
+        {
+            var data = new ItemData(ThumbType.Root);
+            MyRoot = new RootThumb(data);
+            var manager = new ManageExCanvas(MyRoot, new ManageData());
+            MyManageExCanvas = manager;
+            MyScrollViewer.Content = MyManageExCanvas;
+            //MyGridMyItemsTree.DataContext = MyRoot.MyThumbs;
+
+        }
+
+        /// <summary>
+        /// ウィンドウの位置とサイズをリセット
+        /// </summary>
+        private void ResetWindowState()
+        {
+            MyAppWindowData = new AppWindowData();
+            MyBindWindowData();
+        }
+
+        #endregion 初期化、リセット系
+
+        #region Save
+
+
+        /// <summary>
+        /// Dataを名前を付けて保存
+        /// </summary>
+        /// <param name="thumb"></param>
+        /// <returns></returns>
+        private (bool result,string message) SaveItem(KisoThumb thumb)
+        {
+            SaveFileDialog dialog = MakeSaveFileDialog(thumb);
+            if (dialog.ShowDialog() == true)
+            {
+                if (MyRoot.SaveItemData(thumb.MyItemData, dialog.FileName))
+                {
+                    // Rootの場合はCurrentの変更もする
+                    if (thumb.MyItemData.MyThumbType == ThumbType.Root)
+                    {
+                        MyAppData.CurrentOpenFilePath = dialog.FileName;
+                    }
+                    return (true, MakeStatusMessage("保存完了"));
+                    //MyStatusMessage.Text = MakeStatusMessage("保存完了");
+                }
+                else
+                {
+                    return (false, MakeStatusMessage("保存に失敗"));
+                    //MyStatusMessage.Text = MakeStatusMessage("保存できなかった");
+                }
+            }
+            else
+            {
+                return (false, MakeStatusMessage("保存はキャンセルされた"));
+                //MyStatusMessage.Text = MakeStatusMessage("保存はキャンセルされた");
+            }
+        }
+
+
+        /// <summary>
+        /// RootDataをCurrentFileに上書き保存
+        /// </summary>
+        /// <returns></returns>
+        private bool SaveItemOverwriteCurrentFilePath()
+        {
+            string filePath = MyAppData.CurrentOpenFilePath;
+            //CurrentFilePathがないときは、ダイアログ表示して取得
+            if (filePath == string.Empty)
+            {
+                var dialog = MakeSaveFileDialog(MyRoot);
+                if (dialog.ShowDialog() == true)
+                {
+                    filePath = dialog.FileName;
+                }
+                MyStatusMessage.Text = MakeStatusMessage("保存はキャンセルされた");
+                return false;
+            }
+
+            //保存
+            if (MyRoot.SaveItemData(MyRoot.MyItemData, filePath))
+            {
+                MyAppData.CurrentOpenFilePath = filePath;
+                MyStatusMessage.Text = MakeStatusMessage("保存完了");
+                return true;
+            }
+            MyStatusMessage.Text = MakeStatusMessage("保存できなかった");
+            return false;
+        }
+
+
+        /// <summary>
+        /// ItemDataの保存用ダイアログ作成、Rootとそれ以外のDataで拡張子が異なる
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        private SaveFileDialog MakeSaveFileDialog(ItemData data)
+        {
+            SaveFileDialog dialog = new();
+            if (data.MyThumbType == ThumbType.Root)
+            {
+                dialog.Filter = "*.px4|*.px4";
+                dialog.AddExtension = true;
+            }
+            else
+            {
+                dialog.Filter = "*.px4item|*.px4item";
+                dialog.AddExtension = true;
+            }
+            return dialog;
+        }
+        private SaveFileDialog MakeSaveFileDialog(KisoThumb thumb)
+        {
+            return MakeSaveFileDialog(thumb.MyItemData);
+        }
+
+
+        ///// <summary>
+        ///// 名前を付けてRootData保存
+        ///// </summary>
+        //private string SaveRootItemData()
+        //{
+        //    //Microsoft.Win32.SaveFileDialog dialog = new()
+        //    //{
+        //    //    Filter = "*.px4|*.px4",
+        //    //    AddExtension = true,
+        //    //};
+
+        //    if (dialog.ShowDialog() == true)
+        //    {
+        //        return SaveData(dialog.FileName, MyRoot.MyItemData);
+        //    }
+        //    else { return MakeStatusMessage("保存はキャンセルされた"); }
+        //}
+
+        ///// <summary>
+        ///// 名前を付けて通常Itemを保存
+        ///// </summary>
+        ///// <param name="data"></param>
+        ///// <returns></returns>
+        //private string SaveNormalItemData(ItemData data)
+        //{
+        //    SaveFileDialog dialog = new()
+        //    {
+        //        Filter = "*.px4item|*.px4item",
+        //        AddExtension = true,
+        //    };
+        //    if (dialog.ShowDialog() == true)
+        //    {
+        //        return SaveData(dialog.FileName, data);
+        //    }
+        //    else { return MakeStatusMessage("保存はキャンセルされた"); }
+        //}
+
+        ///// <summary>
+        ///// 指定パスにData保存、パスがない場合はSaveFileDialog
+        ///// </summary>
+        ///// <param name="filePath"></param>
+        ///// <returns></returns>
+        //private string SaveData(string filePath, KisoThumb thumb)
+        //{
+        //    if (filePath == string.Empty) { return SaveRootData(); }
+        //    if (MyRoot.SaveItemData(thumb.MyItemData, filePath))
+        //    {
+        //        MyAppData.CurrentOpenFilePath = filePath;// 今開いているファイルのパス更新
+        //        return MakeStatusMessage("保存完了");
+        //    }
+        //    else { return MakeStatusMessage("保存に失敗"); }
+        //}
+
+        ///// <summary>
+        ///// Dataをファイルに保存
+        ///// </summary>
+        ///// <param name="filePath">ファイルのフルパス</param>
+        ///// <param name="data">保存するデータ</param>
+        ///// <returns></returns>
+        ///// <exception cref="ApplicationException"></exception>
+        //private string SaveData(string filePath, ItemData data)
+        //{
+        //    try
+        //    {
+        //        MyRoot.SaveItemData(data, filePath);
+        //        //Rootの保存時は、今のファイルを更新
+        //        if (data.MyThumbType == ThumbType.Root)
+        //        {
+        //            MyAppData.CurrentOpenFilePath = filePath;
+        //        }
+        //        return MakeStatusMessage("保存完了");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return MakeStatusMessage("保存に失敗");
+        //        throw new ApplicationException(ex.Message);
+        //        //throw;
+        //    }
+        //}
+
+
+        #endregion Save
+
+        #region その他
+
+        /// <summary>
+        /// メッセージに現在時刻を付けて返す
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        private string MakeStatusMessage(string message)
+        {
+            return MakeStringNowTime() + "_" + message;
+        }
+
+        //今の日時をStringで作成
+        private string MakeStringNowTime()
+        {
+            DateTime dt = DateTime.Now;
+            //string str = dt.ToString("yyyyMMdd");            
+            //string str = dt.ToString("yyyyMMdd" + "_" + "HHmmssfff");
+            string str = dt.ToString(DATE_TIME_STRING_FORMAT);
+            //string str = dt.ToString("yyyyMMdd" + "_" + "HH" + "_" + "mm" + "_" + "ss" + "_" + "fff");
+            return str;
+        }
+
+        #endregion その他
+
+        #region Load、Open、読み込み系
+
+
+        /// <summary>
+        /// 対応ファイルを開いて、今のRootに追加する
+        /// 対応ファイルは画像ファイルとpx4item、px4でpx4はGroupItemとして追加
+        /// </summary>
+        private void OpenItemFile()
+        {
+            OpenFileDialog dialog = new()
+            {
+                InitialDirectory = MyAppData.InitialDirectory,
+                Multiselect = true,
+                Filter =
+                    "対応ファイル | *.bmp; *.jpg; *.png; *.gif; *.tiff; *.px4item; *.px4;" +
+                    "| Pixtack4 | *.px4item; *.px4;" +
+                    "| 画像系 | *.bmp; *.jpg; *.png; *.gif; *.tiff;" +
+                    " | すべて | *.* "
+            };
+
+            //取得したファイルパスはファイル名でソート
+            if (dialog.ShowDialog() == true)
+            {
+                OpenFiles(dialog.FileNames);
+            }
+
+        }
+
+        /// <summary>
+        /// ファイルパスをソートしてから開く、RootにItemとして追加
+        /// </summary>
+        /// <param name="paths">ファイルパスリスト</param>
+        private void OpenFiles(string[] paths)
+        {
+            Array.Sort(paths);//ファイル名でソート
+            if (MyAppData.IsFileNameDescendingOrder) { Array.Reverse(paths); }
+            MyRoot.OpenFiles(paths);
+        }
+
 
         /// <summary>
         /// px4ファイルを開く
@@ -277,7 +635,7 @@ namespace Pixtack4
                 }
                 else if (result == MessageBoxResult.Yes)
                 {
-                    OverwriteSaveData();// 上書き保存
+                    SaveItemOverwriteCurrentFilePath();// 上書き保存
                 }
             }
 
@@ -307,233 +665,7 @@ namespace Pixtack4
             return MakeStatusMessage("ファイルを開くのをキャンセルした");
         }
 
-        private void Button_Click_OpenFile(object sender, RoutedEventArgs e)
-        {
-            OpenItemFile();
-        }
 
-        /// <summary>
-        /// 対応ファイルを開いて、今のRootに追加する
-        /// 対応ファイルは画像ファイルとpx4item、px4でpx4はGroupItemとして追加
-        /// </summary>
-        private void OpenItemFile()
-        {
-            var dialog = new OpenFileDialog();
-            dialog.InitialDirectory = MyAppData.InitialDirectory;
-            dialog.Multiselect = true;
-            dialog.Filter =
-                "対応ファイル | *.bmp; *.jpg; *.png; *.gif; *.tiff; *.px4item; *.px4;" +
-                "| Pixtack4 | *.px4item; *.px4;" +
-                "| 画像系 | *.bmp; *.jpg; *.png; *.gif; *.tiff;" +
-                " | すべて | *.* ";
-
-            //取得したファイルパスはファイル名でソート
-            if (dialog.ShowDialog() == true)
-            {
-                string[] paths = dialog.FileNames;
-                Array.Sort(paths);//ファイル名でソート
-                if (MyAppData.IsFileNameDescendingOrder) { Array.Reverse(paths); }
-
-                MyRoot.OpenFiles(paths);
-            }
-
-        }
-
-
-
-        private void Button_Click_ResetRoot(object sender, RoutedEventArgs e)
-        {
-            MyStatusMessage.Text = ResetRootThumb();// RootThumbを新規作成してリセット
-        }
-
-        private void Button_Click_SaveData(object sender, RoutedEventArgs e)
-        {
-            MyStatusMessage.Text = SaveData();// 名前をつけて保存
-        }
-
-        private void Button_Click_OverwriteSave(object sender, RoutedEventArgs e)
-        {
-            MyStatusMessage.Text = OverwriteSaveData();// 上書き保存
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            ResetWindowState();// ウィンドウの位置とサイズをリセット
-        }
-
-        #endregion ボタンクリック
-
-
-        //ウィンドウにファイルドロップ時
-        private void Window_Drop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                //パスはファイル名でソートする
-                string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop);
-                Array.Sort(paths);
-                if (MyAppData.IsFileNameDescendingOrder) { Array.Reverse(paths); }
-                MyRoot.OpenFiles(paths);
-            }
-        }
-
-        #region メソッド
-
-        #region 初期化、リセット系
-
-        /// <summary>
-        /// RootThumbを新規作成してリセット
-        /// </summary>
-        private string ResetRootThumb()
-        {
-            string message = "Item数が0だったのでリセットされなかった";
-            if (MyRoot.MyThumbs.Count > 0)
-            {
-                MessageBoxResult result = MessageBox.Show(
-                    "今の状態を保存してからリセットする？\n\n\n" +
-                    "はい＿：保存してからリセット\n\n" +
-                    "いいえ：保存しないでリセット\n\n" +
-                    "キャンセル：リセットをキャンセル",
-                    "リセット前の確認", MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.Cancel);
-                if (result == MessageBoxResult.Yes)
-                {
-                    MyStatusMessage.Text = SaveData(MyAppData.CurrentOpenFilePath);
-                    MyInitializeRootThumb();
-                    message = "リセット完了";
-                    MyAppData.CurrentOpenFilePath = string.Empty;//今開いているファイルパスもリセット
-                }
-                else if (result == MessageBoxResult.No)
-                {
-                    MyInitializeRootThumb();
-                    message = "リセット完了";
-                    MyAppData.CurrentOpenFilePath = string.Empty;//今開いているファイルパスもリセット
-                }
-                else
-                {
-                    message = "リセットは中止された";
-                }
-            }
-            return MakeStatusMessage(message);
-        }
-
-        /// <summary>
-        /// RootThumbとManageExCanvasの初期化
-        /// </summary>
-        private void MyInitializeRootThumb()
-        {
-            var data = new ItemData(ThumbType.Root);
-            MyRoot = new RootThumb(data);
-            var manager = new ManageExCanvas(MyRoot, new ManageData());
-            MyManageExCanvas = manager;
-            MyScrollViewer.Content = MyManageExCanvas;
-        }
-
-        /// <summary>
-        /// ウィンドウの位置とサイズをリセット
-        /// </summary>
-        private void ResetWindowState()
-        {
-            MyAppWindowData = new AppWindowData();
-            MyBindWindowData();
-        }
-
-        #endregion 初期化、リセット系
-
-        #region Save
-
-        /// <summary>
-        /// 上書き保存
-        /// </summary>
-        /// <returns></returns>
-        private string OverwriteSaveData()
-        {
-            return SaveData(MyAppData.CurrentOpenFilePath);
-        }
-
-        /// <summary>
-        /// Saveダイアログを開いて名前を付けてData保存
-        /// </summary>
-        private string SaveData()
-        {
-            Microsoft.Win32.SaveFileDialog dialog = new()
-            {
-                Filter = "*.px4|*.px4",
-                AddExtension = true,
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                return SaveData(dialog.FileName);
-            }
-            else { return MakeStatusMessage("保存はキャンセルされた"); }
-        }
-
-        /// <summary>
-        /// 指定パスにData保存、パスがない場合はSaveFileDialog
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        private string SaveData(string filePath)
-        {
-            if (filePath == string.Empty) { return SaveData(); }
-            if (MyRoot.SaveItemData(MyRoot.MyItemData, filePath))
-            {
-                MyAppData.CurrentOpenFilePath = filePath;// 今開いているファイルのパス更新
-                return MakeStatusMessage("保存完了");
-            }
-            else { return MakeStatusMessage("保存に失敗"); }
-        }
-
-        #endregion Save
-
-        /// <summary>
-        /// メッセージに現在時刻を付けて返す
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        private string MakeStatusMessage(string message)
-        {
-            return MakeStringNowTime() + "_" + message;
-        }
-
-        //今の日時をStringで作成
-        private string MakeStringNowTime()
-        {
-            DateTime dt = DateTime.Now;
-            //string str = dt.ToString("yyyyMMdd");            
-            //string str = dt.ToString("yyyyMMdd" + "_" + "HHmmssfff");
-            string str = dt.ToString(DATE_TIME_STRING_FORMAT);
-            //string str = dt.ToString("yyyyMMdd" + "_" + "HH" + "_" + "mm" + "_" + "ss" + "_" + "fff");
-            return str;
-        }
-
-        ///// <summary>
-        ///// RootThumbのDataをpx4ファイルに保存
-        ///// </summary>
-        ///// <param name="filePath"></param>
-        ///// <returns></returns>
-        //private bool SaveRootData(string filePath)
-        //{
-        //    return MyRoot.SaveItemData(MyRoot.MyItemData, filePath);
-        //}
-
-        ///// <summary>
-        ///// Saveダイアログを開いて保存
-        ///// </summary>
-        //private void SaveRootData()
-        //{
-        //    Microsoft.Win32.SaveFileDialog dialog = new()
-        //    {
-        //        Filter = "*.px4|*.px4",
-        //        AddExtension = true,
-        //    };
-        //    if (dialog.ShowDialog() == true)
-        //    {
-        //        MyRoot.SaveItemData(MyRoot.MyItemData, dialog.FileName);
-        //    }
-        //}
-
-        #region Load、Open、読み込み系
 
         /// <summary>
         /// px4ファイルを開いて、今のRootと入れ替える
@@ -581,5 +713,15 @@ namespace Pixtack4
 
         #endregion メソッド
 
+        #region テスト用
+        private void MyRootStatusPanelVisible()
+        {
+            if (MyRootStatusView.Visibility == Visibility.Visible)
+            {
+                MyRootStatusView.Visibility = Visibility.Collapsed;
+            }
+            else { MyRootStatusView.Visibility = Visibility.Visible; }
+        }
+        #endregion テスト用
     }
 }

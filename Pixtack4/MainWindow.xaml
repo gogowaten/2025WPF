@@ -10,7 +10,7 @@
         ResizeMode="CanResizeWithGrip"
         AllowDrop="True"
         Drop="Window_Drop">
-  <Grid>
+  <Grid x:Name="MyRootGrid">
     <DockPanel>
 
       <DockPanel DockPanel.Dock="Top">
@@ -24,10 +24,12 @@
                   <Button Content="名前を付けて保存" Click="Button_Click_SaveData"/>
                   <Button Content="上書き保存" Click="Button_Click_OverwriteSave"/>
                   <Button Content="px4ファイルを開く" Click="Button_Click_OpenPx4File"/>
+                  <Button Content="ファイルから追加" Click="Button_Click_OpenFile"/>
+                  <Button Content="FocusItemを名前を付けて保存" Click="Button_Click_SaveFocusItem"/>
 
                   <TextBlock Text="👈️できた｜まだ👉️"/>
-                  <Button Content="ファイルから追加" Click="Button_Click_OpenFile"/>
-                  <Button Content="画像で保存"/>
+                  <Button Content="Rootを画像で保存"/>
+                  <Button Content="選択Itemを画像で保存"/>
                   <Button Content="確認" Click="Button_Click"/>
                 </WrapPanel>
               </StackPanel>
@@ -59,11 +61,11 @@
           </Menu.LayoutTransform>
           <Button Content="Menu"/>
           <Button Content="テスト用確認" Click="Button_Click"/>
-          <Button Content="Root"/>
+          <Button Content="Root" Click="Button_Click_MyRootStatusPanelVisible"/>
           <Button Content="button3"/>
         </Menu>
 
-        <Grid x:Name="MyGridMyItemsTree" DockPanel.Dock="Left" DataContext="{Binding MyRoot.MyThumbs}">
+        <Grid x:Name="MyGridMyItemsTree" DockPanel.Dock="Left" DataContext="{Binding MyRoot.MyThumbs, UpdateSourceTrigger=PropertyChanged}">
           <ScrollViewer>
             <TreeView ItemsSource="{Binding}">
               <TreeView.ItemTemplate>
@@ -85,9 +87,9 @@
           </ScrollViewer>
         </Grid>
         
-        <Grid x:Name="MyGridRootCheck" DockPanel.Dock="Left" DataContext="{Binding MyRoot}" Visibility="Visible">
+        <Grid x:Name="MyRootStatusView" DockPanel.Dock="Left" DataContext="{Binding MyRoot, UpdateSourceTrigger=PropertyChanged}" Visibility="Visible">
           <StackPanel>
-            <GroupBox Header="Root状態確認用" DataContext="{Binding }">
+            <GroupBox Header="Root状態確認用" DataContext="{Binding UpdateSourceTrigger=PropertyChanged}">
               <StackPanel>
                 <TextBlock Text="{Binding MyThumbs.Count, StringFormat=ItemsCount _ {0:0}}"/>
                 <TextBlock Text="{Binding MyFocusThumb, StringFormat=FocusItem _ {0:0}}"/>
@@ -96,13 +98,13 @@
                 <TextBlock Text="{Binding MyFocusThumb.MyThumbType, StringFormat=type {0}}"/>
                 <Rectangle Width="100" Height="100">
                   <Rectangle.Fill>
-                    <VisualBrush Stretch="Uniform" Visual="{Binding MyFocusThumb}"/>
+                    <VisualBrush Stretch="Uniform" Visual="{Binding MyFocusThumb, UpdateSourceTrigger=PropertyChanged}"/>
                     <!--<BitmapCacheBrush Target="{Binding MyFocusThumb, UpdateSourceTrigger=PropertyChanged}"/>-->
                   </Rectangle.Fill>
                 </Rectangle>
                 <Rectangle Width="100" Height="100" UseLayoutRounding="False">
                   <Rectangle.Fill>
-                    <VisualBrush Stretch="Uniform" Visual="{Binding}"/>
+                    <VisualBrush Stretch="Uniform" Visual="{Binding UpdateSourceTrigger=PropertyChanged}"/>
                   </Rectangle.Fill>
                 </Rectangle>
               </StackPanel>

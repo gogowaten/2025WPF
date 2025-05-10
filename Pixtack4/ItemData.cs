@@ -102,7 +102,6 @@ namespace Pixtack4
         public AppData() { }
 
         //複数ファイルを開くときにファイル名の降順で開く
-
         private bool _isFileNameDescendingOrder;
         public bool IsFileNameDescendingOrder { get => _isFileNameDescendingOrder; set => SetProperty(ref _isFileNameDescendingOrder, value); }
 

@@ -1542,6 +1542,10 @@ namespace Pixtack4
 
         #region 画像として保存
 
+        /// <summary>
+        /// FocusThumbを画像として保存する
+        /// </summary>
+        /// <returns></returns>
         public bool SaveMyFocusThumbToImageFile()
         {
             if (MyFocusThumb != null)
@@ -1551,6 +1555,29 @@ namespace Pixtack4
                 UpdateLayout();//再描画？これで枠が消える
 
                 if (MakeBitmapFromThumb(MyFocusThumb) is RenderTargetBitmap bitmap)
+                {
+                    //枠表示を元に戻す
+                    IsWakuVisible = Visibility.Visible;
+
+                    //bitmap保存
+                    return SaveBitmap(bitmap, MyFocusThumb.MyItemData);
+                }
+
+                //枠表示を元に戻す
+                IsWakuVisible = Visibility.Visible;
+            }
+            return false;
+        }
+        
+        public bool SaveMyRootThumbToImageFile()
+        {
+            if (MyFocusThumb != null)
+            {
+                //枠を一時的に非表示にする
+                IsWakuVisible = Visibility.Collapsed;
+                UpdateLayout();//再描画？これで枠が消える
+
+                if (MakeBitmapFromThumb(this) is RenderTargetBitmap bitmap)
                 {
                     //枠表示を元に戻す
                     IsWakuVisible = Visibility.Visible;
