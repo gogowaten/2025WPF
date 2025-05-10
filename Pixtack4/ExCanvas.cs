@@ -208,14 +208,16 @@ namespace Pixtack4
 
         public ExCanvas()
         {
-            Loaded += ExCanvas_Loaded;
-        }
-
-        private void ExCanvas_Loaded(object sender, RoutedEventArgs e)
-        {
+            //Loaded += ExCanvas_Loaded;
             SetBinding(WidthProperty, new Binding() { Source = this, Path = new PropertyPath(ActualWidthProperty) });
             SetBinding(HeightProperty, new Binding() { Source = this, Path = new PropertyPath(ActualHeightProperty) });
         }
+
+        //private void ExCanvas_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    SetBinding(WidthProperty, new Binding() { Source = this, Path = new PropertyPath(ActualWidthProperty) });
+        //    SetBinding(HeightProperty, new Binding() { Source = this, Path = new PropertyPath(ActualHeightProperty) });
+        //}
 
         protected override Size ArrangeOverride(Size arrangeSize)
         {

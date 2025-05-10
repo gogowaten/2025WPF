@@ -26,7 +26,7 @@
                   <Button Content="px4ファイルを開く" Click="Button_Click_OpenPx4File"/>
 
                   <TextBlock Text="👈️できた｜まだ👉️"/>
-
+                  <Button Content="ファイルから追加" Click="Button_Click_OpenFile"/>
                   <Button Content="画像で保存"/>
                   <Button Content="確認" Click="Button_Click"/>
                 </WrapPanel>
@@ -91,6 +91,9 @@
               <StackPanel>
                 <TextBlock Text="{Binding MyThumbs.Count, StringFormat=ItemsCount _ {0:0}}"/>
                 <TextBlock Text="{Binding MyFocusThumb, StringFormat=FocusItem _ {0:0}}"/>
+                <TextBlock Text="{Binding MyFocusThumb.ActualWidth, StringFormat=width {0:0}}"/>
+                <TextBlock Text="{Binding MyFocusThumb.ActualHeight, StringFormat=height {0:0}}"/>
+                <TextBlock Text="{Binding MyFocusThumb.MyThumbType, StringFormat=type {0}}"/>
                 <Rectangle Width="100" Height="100">
                   <Rectangle.Fill>
                     <VisualBrush Stretch="Uniform" Visual="{Binding MyFocusThumb}"/>

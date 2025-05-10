@@ -20,7 +20,7 @@ namespace Pixtack4
     /// </summary>
     public partial class MainWindow : Window
     {
-        public RootThumb MyRoot { get;private set; } = null!;// 確認用でパブリックにしている
+        public RootThumb MyRoot { get; private set; } = null!;// 確認用でパブリックにしている
         private ManageExCanvas MyManageExCanvas { get; set; } = null!;
 
         //今開いているファイルパスを保持
@@ -44,7 +44,7 @@ namespace Pixtack4
         private const string APP_WINDOW_DATA_FILE_NAME = "AppWindowData.xml";
 
         //アプリの設定Data
-        public AppData MyAppData { get;private set; } = null!;// 確認用でパブリックにしている
+        public AppData MyAppData { get; private set; } = null!;// 確認用でパブリックにしている
         //アプリのDataファイル名
         private const string APP_DATA_FILE_NAME = "AppData.xml";
 
@@ -309,28 +309,37 @@ namespace Pixtack4
 
         private void Button_Click_OpenFile(object sender, RoutedEventArgs e)
         {
-            OpenFile();
+            OpenItemFile();
         }
 
         /// <summary>
-        /// ファイルを開く
-        /// pc4の単一ファイルなら
+        /// 対応ファイルを開いて、今のRootに追加する
+        /// 対応ファイルは画像ファイルとpx4item、px4でpx4はGroupItemとして追加
         /// </summary>
-        private void OpenFile()
+        private void OpenItemFile()
         {
             var dialog = new OpenFileDialog();
             dialog.InitialDirectory = MyAppData.InitialDirectory;
             dialog.Multiselect = true;
-            dialog.Filter = "対応ファイル | *.bmp; *.jpg; *.png; *.gif; *.tiff; *.px4; | すべて | *.* ";
+            dialog.Filter =
+                "対応ファイル | *.bmp; *.jpg; *.png; *.gif; *.tiff; *.px4item; *.px4;" +
+                "| Pixtack4 | *.px4item; *.px4;" +
+                "| 画像系 | *.bmp; *.jpg; *.png; *.gif; *.tiff;" +
+                " | すべて | *.* ";
+
+            //取得したファイルパスはファイル名でソート
             if (dialog.ShowDialog() == true)
             {
                 string[] paths = dialog.FileNames;
                 Array.Sort(paths);//ファイル名でソート
                 if (MyAppData.IsFileNameDescendingOrder) { Array.Reverse(paths); }
 
+                MyRoot.OpenFiles(paths);
             }
 
         }
+
+
 
         private void Button_Click_ResetRoot(object sender, RoutedEventArgs e)
         {
@@ -360,7 +369,10 @@ namespace Pixtack4
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
+                //パスはファイル名でソートする
                 string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop);
+                Array.Sort(paths);
+                if (MyAppData.IsFileNameDescendingOrder) { Array.Reverse(paths); }
                 MyRoot.OpenFiles(paths);
             }
         }

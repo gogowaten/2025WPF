@@ -1172,9 +1172,10 @@ namespace Pixtack4
         }
         //public GroupThumb() { }
 
-        public GroupThumb(ItemData data)
+        public GroupThumb(ItemData data) : base(data)
         {
             MyItemData = data;
+            //MyThumbType = data.MyThumbType;
             MyThumbs = [];
             Loaded += GroupThumb_Loaded;
             MyThumbs.CollectionChanged += MyThumbs_CollectionChanged;
@@ -1814,21 +1815,35 @@ namespace Pixtack4
         #region 追加
         /// <summary>
         /// ファイルパスリストからThumbを追加、対応外ファイルはメッセージボックスに表示
+        /// 拡張子がpx4とpx4itemはItemDataとして開いてRootTypeならGroupとして追加する
         /// </summary>
         /// <param name="paths">フルパスの配列</param>
         public void OpenFiles(string[] paths)
         {
-            List<string> errorList = new();
-            Array.Sort(paths);
+            List<string> errorList = [];
 
-            foreach (var path in paths)
+            foreach (string path in paths)
             {
-                if (GetBitmap(path) is BitmapSource bmp)
+                var extension = System.IO.Path.GetExtension(path).TrimStart('.');
+                if (extension == "px4" || extension == "px4item")
+                {
+                    if (LoadItemData(path) is ItemData data)
+                    {
+                        //RootはGroupに変更
+                        if (data.MyThumbType == ThumbType.Root)
+                        {
+                            data.MyThumbType = ThumbType.Group;
+                        }
+                        AddNewThumbFromItemData(data);
+                    }
+                }
+                else if (GetBitmap(path) is BitmapSource bmp)
                 {
                     AddImageThumb(bmp);
                 }
                 else
                 {
+                    //開けなかったらファイルリストに追加
                     errorList.Add(path);
                 }
             }
