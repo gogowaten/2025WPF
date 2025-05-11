@@ -1546,178 +1546,205 @@ namespace Pixtack4
         /// FocusThumbを画像として保存する
         /// </summary>
         /// <returns></returns>
-        public bool SaveMyFocusThumbToImageFile()
-        {
-            if (MyFocusThumb != null)
-            {
-                //枠を一時的に非表示にする
-                IsWakuVisible = Visibility.Collapsed;
-                UpdateLayout();//再描画？これで枠が消える
+        //public bool SaveMyFocusThumbToImageFile()
+        //{
+        //    if (MyFocusThumb != null)
+        //    {
+        //        //枠を一時的に非表示にする
+        //        IsWakuVisible = Visibility.Collapsed;
+        //        UpdateLayout();//再描画？これで枠が消える
 
-                if (MakeBitmapFromThumb(MyFocusThumb) is RenderTargetBitmap bitmap)
-                {
-                    //枠表示を元に戻す
-                    IsWakuVisible = Visibility.Visible;
+        //        if (MakeBitmapFromThumb(MyFocusThumb) is RenderTargetBitmap bitmap)
+        //        {
+        //            //枠表示を元に戻す
+        //            IsWakuVisible = Visibility.Visible;
 
-                    //bitmap保存
-                    return SaveBitmap(bitmap, MyFocusThumb.MyItemData);
-                }
+        //            //bitmap保存
+        //            return SaveBitmap(bitmap, MyFocusThumb.MyItemData);
+        //        }
 
-                //枠表示を元に戻す
-                IsWakuVisible = Visibility.Visible;
-            }
-            return false;
-        }
+        //        //枠表示を元に戻す
+        //        IsWakuVisible = Visibility.Visible;
+        //    }
+        //    return false;
+        //}
         
-        public bool SaveMyRootThumbToImageFile()
-        {
-            if (MyFocusThumb != null)
-            {
-                //枠を一時的に非表示にする
-                IsWakuVisible = Visibility.Collapsed;
-                UpdateLayout();//再描画？これで枠が消える
+        //public bool SaveMyRootThumbToImageFile()
+        //{
+        //    if (MyFocusThumb != null)
+        //    {
+        //        //枠を一時的に非表示にする
+        //        IsWakuVisible = Visibility.Collapsed;
+        //        UpdateLayout();//再描画？これで枠が消える
 
-                if (MakeBitmapFromThumb(this) is RenderTargetBitmap bitmap)
-                {
-                    //枠表示を元に戻す
-                    IsWakuVisible = Visibility.Visible;
+        //        if (MakeBitmapFromThumb(this) is RenderTargetBitmap bitmap)
+        //        {
+        //            //枠表示を元に戻す
+        //            IsWakuVisible = Visibility.Visible;
 
-                    //bitmap保存
-                    return SaveBitmap(bitmap, MyFocusThumb.MyItemData);
-                }
+        //            //bitmap保存
+        //            return SaveBitmap(bitmap, MyFocusThumb.MyItemData);
+        //        }
 
-                //枠表示を元に戻す
-                IsWakuVisible = Visibility.Visible;
-            }
-            return false;
-        }
+        //        //枠表示を元に戻す
+        //        IsWakuVisible = Visibility.Visible;
+        //    }
+        //    return false;
+        //}
 
+        //public bool SaveItemToImageFile(KisoThumb item,int jepgQuality = 90)
+        //{
+        //    if(item is null) { return false; }
 
-        /// <summary>
-        /// ThumbをBitmapに変換したものを返す
-        /// </summary>
-        /// <param name="thumb">Bitmapにする要素</param>
-        /// <param name="clearType">フォントのClearTypeを有効にして保存</param>
-        /// <returns></returns>
-        public RenderTargetBitmap? MakeBitmapFromThumb(KisoThumb? thumb, bool clearType = false)
-        {
-            if (thumb == null) { return null; }
-            if (thumb.ActualHeight == 0 || thumb.ActualWidth == 0) { return null; }
+        //    //枠を一時的に非表示にする
+        //    IsWakuVisible = Visibility.Collapsed;
+        //    UpdateLayout();//再描画？これで枠が消える
 
-            Rect bounds = VisualTreeHelper.GetDescendantBounds(thumb);
-            bounds = thumb.RenderTransform.TransformBounds(bounds);
-            DrawingVisual dVisual = new();
-            //サイズを四捨五入
-            bounds.Width = Math.Round(bounds.Width, MidpointRounding.AwayFromZero);
-            bounds.Height = Math.Round(bounds.Height, MidpointRounding.AwayFromZero);
-            using (DrawingContext context = dVisual.RenderOpen())
-            {
-                var bru = new BitmapCacheBrush(thumb);
-                if (clearType)
-                {
-                    BitmapCache bc = new() { EnableClearType = true };
-                    bru.BitmapCache = bc;
-                }
-                context.DrawRectangle(bru, null, new Rect(bounds.Size));
-            }
-            RenderTargetBitmap bitmap
-                = new((int)Math.Ceiling(bounds.Width), (int)Math.Ceiling(bounds.Height), 96.0, 96.0, PixelFormats.Pbgra32);
-            bitmap.Render(dVisual);
+        //    //Bitmap作成
+        //    if (MakeBitmapFromThumb(item) is RenderTargetBitmap bitmap)
+        //    {
+        //        //枠表示を元に戻す
+        //        IsWakuVisible = Visibility.Visible;
 
-            return bitmap;
-        }
+        //        //bitmap保存
+        //        return SaveBitmap(bitmap, jepgQuality);
+        //    }
 
-        /// <summary>
-        /// ファイル保存ダイアログ
-        /// </summary>
-        /// <param name="bitmap"></param>
-        /// <returns></returns>
-        public static bool SaveBitmap(BitmapSource bitmap, int jpegQuality = 90)
-        {
-            Microsoft.Win32.SaveFileDialog dialog = new()
-            {
-                Filter = "*.png|*.png|*.jpg|*.jpg;*.jpeg|*.bmp|*.bmp|*.gif|*.gif|*.tiff|*.tiff",
-                AddExtension = true,
-            };
-            if (dialog.ShowDialog() == true)
-            {
-                (BitmapEncoder? encoder, BitmapMetadata? meta) = GetEncoderWithMetaData(dialog.FilterIndex, jpegQuality);
-                if (encoder is null) { return false; }
-                encoder.Frames.Add(BitmapFrame.Create(bitmap, null, meta, null));
-                try
-                {
-                    using FileStream stream = new(dialog.FileName, FileMode.Create, FileAccess.Write);
-                    encoder.Save(stream);
-                    return true;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-            }
-            return false;
-        }
-        private static bool SaveBitmap(BitmapSource bitmap, ItemData data)
-        {
-            return SaveBitmap(bitmap, data.MyJpegQuality);
-        }
+        //    //枠表示を元に戻す
+        //    IsWakuVisible = Visibility.Visible;
+        //    return false;
+        //}
 
 
-        /// <summary>
-        /// 画像エンコーダー作成
-        /// </summary>
-        /// <param name="filterIndex"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
 
-        private static (BitmapEncoder? encoder, BitmapMetadata? meta) GetEncoderWithMetaData(int filterIndex, int jpegQuality)
-        {
-            BitmapMetadata? meta = null;
-            //string software = APP_NAME + "_" + AppVersion;
-            string software = "Pixtack4";
+        ///// <summary>
+        ///// ThumbをBitmapに変換したものを返す
+        ///// </summary>
+        ///// <param name="thumb">Bitmapにする要素</param>
+        ///// <param name="clearType">フォントのClearTypeを有効にして保存</param>
+        ///// <returns></returns>
+        //public RenderTargetBitmap? MakeBitmapFromThumb(KisoThumb? thumb, bool clearType = false)
+        //{
+        //    if (thumb == null) { return null; }
+        //    if (thumb.ActualHeight == 0 || thumb.ActualWidth == 0) { return null; }
 
-            switch (filterIndex)
-            {
-                case 1:
-                    meta = new BitmapMetadata("png");
-                    meta.SetQuery("/tEXt/Software", software);
-                    return (new PngBitmapEncoder(), meta);
-                case 2:
-                    meta = new BitmapMetadata("jpg");
-                    meta.SetQuery("/app1/ifd/{ushort=305}", software);
-                    var jpeg = new JpegBitmapEncoder
-                    {
-                        //QualityLevel = MyItemData.MyJpegQuality,
-                        //QualityLevel = jpegQuality
-                        QualityLevel = jpegQuality
-                        //QualityLevel = MyAppData.JpegQuality,
-                    };
-                    return (jpeg, meta);
-                case 3:
-                    return (new BmpBitmapEncoder(), meta);
-                case 4:
-                    meta = new BitmapMetadata("Gif");
-                    //tData.SetQuery("/xmp/xmp:CreatorTool", "Pixtrim2");
-                    //tData.SetQuery("/XMP/XMP:CreatorTool", "Pixtrim2");
-                    meta.SetQuery("/XMP/XMP:CreatorTool", software);
+        //    Rect bounds = VisualTreeHelper.GetDescendantBounds(thumb);
+        //    bounds = thumb.RenderTransform.TransformBounds(bounds);
+        //    DrawingVisual dVisual = new();
+        //    //サイズを四捨五入
+        //    bounds.Width = Math.Round(bounds.Width, MidpointRounding.AwayFromZero);
+        //    bounds.Height = Math.Round(bounds.Height, MidpointRounding.AwayFromZero);
+        //    using (DrawingContext context = dVisual.RenderOpen())
+        //    {
+        //        var bru = new BitmapCacheBrush(thumb);
+        //        if (clearType)
+        //        {
+        //            BitmapCache bc = new() { EnableClearType = true };
+        //            bru.BitmapCache = bc;
+        //        }
+        //        context.DrawRectangle(bru, null, new Rect(bounds.Size));
+        //    }
+        //    RenderTargetBitmap bitmap
+        //        = new((int)Math.Ceiling(bounds.Width), (int)Math.Ceiling(bounds.Height), 96.0, 96.0, PixelFormats.Pbgra32);
+        //    bitmap.Render(dVisual);
 
-                    return (new GifBitmapEncoder(), meta);
-                case 5:
-                    meta = new BitmapMetadata("tiff")
-                    {
-                        ApplicationName = software
-                    };
-                    return (new TiffBitmapEncoder(), meta);
-                default:
-                    throw new Exception();
-            }
+        //    return bitmap;
+        //}
 
-        }
+        ///// <summary>
+        ///// ファイル保存ダイアログ
+        ///// </summary>
+        ///// <param name="bitmap"></param>
+        ///// <returns></returns>
+        //public static bool SaveBitmap(BitmapSource bitmap, int jpegQuality = 90)
+        //{
+        //    Microsoft.Win32.SaveFileDialog dialog = new()
+        //    {
+        //        Filter = "*.png|*.png|*.jpg|*.jpg;*.jpeg|*.bmp|*.bmp|*.gif|*.gif|*.tiff|*.tiff",
+        //        AddExtension = true,
+        //    };
+        //    if (dialog.ShowDialog() == true)
+        //    {
+        //        (BitmapEncoder? encoder, BitmapMetadata? meta) = GetEncoderWithMetaData(dialog.FilterIndex, jpegQuality);
+        //        if (encoder is null) { return false; }
+        //        encoder.Frames.Add(BitmapFrame.Create(bitmap, null, meta, null));
+        //        try
+        //        {
+        //            using FileStream stream = new(dialog.FileName, FileMode.Create, FileAccess.Write);
+        //            encoder.Save(stream);
+        //            return true;
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //    return false;
+        //}
 
-        private static (BitmapEncoder? encoder, BitmapMetadata? meta) GetEncoderWithMetaData(int filterIndex, ItemData data)
-        {
-            return GetEncoderWithMetaData((int)filterIndex, data.MyJpegQuality);
-        }
+
+        //private static bool SaveBitmap(BitmapSource bitmap, ItemData data)
+        //{
+        //    return SaveBitmap(bitmap, data.MyJpegQuality);
+        //    //return SaveBitmap(bitmap, data.MyJpegQuality);
+        //}
+
+
+        ///// <summary>
+        ///// 画像エンコーダー作成
+        ///// </summary>
+        ///// <param name="filterIndex"></param>
+        ///// <returns></returns>
+        ///// <exception cref="Exception"></exception>
+
+        //private static (BitmapEncoder? encoder, BitmapMetadata? meta) GetEncoderWithMetaData(int filterIndex, int jpegQuality)
+        //{
+        //    BitmapMetadata? meta = null;
+        //    //string software = APP_NAME + "_" + AppVersion;
+        //    string software = "Pixtack4";
+
+        //    switch (filterIndex)
+        //    {
+        //        case 1:
+        //            meta = new BitmapMetadata("png");
+        //            meta.SetQuery("/tEXt/Software", software);
+        //            return (new PngBitmapEncoder(), meta);
+        //        case 2:
+        //            meta = new BitmapMetadata("jpg");
+        //            meta.SetQuery("/app1/ifd/{ushort=305}", software);
+        //            var jpeg = new JpegBitmapEncoder
+        //            {
+        //                //QualityLevel = MyItemData.MyJpegQuality,
+        //                //QualityLevel = jpegQuality
+        //                QualityLevel = jpegQuality
+        //                //QualityLevel = MyAppData.JpegQuality,
+        //            };
+        //            return (jpeg, meta);
+        //        case 3:
+        //            return (new BmpBitmapEncoder(), meta);
+        //        case 4:
+        //            meta = new BitmapMetadata("Gif");
+        //            //tData.SetQuery("/xmp/xmp:CreatorTool", "Pixtrim2");
+        //            //tData.SetQuery("/XMP/XMP:CreatorTool", "Pixtrim2");
+        //            meta.SetQuery("/XMP/XMP:CreatorTool", software);
+
+        //            return (new GifBitmapEncoder(), meta);
+        //        case 5:
+        //            meta = new BitmapMetadata("tiff")
+        //            {
+        //                ApplicationName = software
+        //            };
+        //            return (new TiffBitmapEncoder(), meta);
+        //        default:
+        //            throw new Exception();
+        //    }
+
+        //}
+
+        //private static (BitmapEncoder? encoder, BitmapMetadata? meta) GetEncoderWithMetaData(int filterIndex, ItemData data)
+        //{
+        //    return GetEncoderWithMetaData(filterIndex, data.MyJpegQuality);
+        //}
 
         #endregion 画像として保存
 
@@ -1841,8 +1868,8 @@ namespace Pixtack4
 
         #region 追加
         /// <summary>
-        /// ファイルパスリストからThumbを追加、対応外ファイルはメッセージボックスに表示
-        /// 拡張子がpx4とpx4itemはItemDataとして開いてRootTypeならGroupとして追加する
+        /// ファイルパスリストからThumbを追加、非対応ファイルはメッセージボックスで表示
+        /// 拡張子がpx4(Root)のファイルはGroupに変換して追加する
         /// </summary>
         /// <param name="paths">フルパスの配列</param>
         public void OpenFiles(string[] paths)
@@ -1864,6 +1891,7 @@ namespace Pixtack4
                         AddNewThumbFromItemData(data);
                     }
                 }
+                //px4とpx4item以外は画像として開いてImageItemとして追加する
                 else if (GetBitmap(path) is BitmapSource bmp)
                 {
                     AddImageThumb(bmp);
@@ -1934,10 +1962,11 @@ namespace Pixtack4
 
         public void AddThumb(KisoThumb thumb, GroupThumb parent)
         {
+            thumb.MyItemData.MyLeft = 0;
+            thumb.MyItemData.MyTop = 0;
             if (MyFocusThumb is null)
             {
                 parent.MyThumbs.Add(thumb);
-
             }
             else
             {

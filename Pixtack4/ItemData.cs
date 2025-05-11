@@ -101,9 +101,17 @@ namespace Pixtack4
     {
         public AppData() { }
 
+        //保存ファイル名の既定値
+        private string _defaultSaveFileName = string.Empty;
+        [DataMember] public string DefaultSaveFileName { get => _defaultSaveFileName; set => SetProperty(ref _defaultSaveFileName, value); }
+
+        //jpeg保存時の品質
+        private int _myJpegQuality = 90;
+        [DataMember] public int MyJpegQuality { get => _myJpegQuality; set => SetProperty(ref _myJpegQuality, value); }
+
         //複数ファイルを開くときにファイル名の降順で開く
         private bool _isFileNameDescendingOrder;
-        public bool IsFileNameDescendingOrder { get => _isFileNameDescendingOrder; set => SetProperty(ref _isFileNameDescendingOrder, value); }
+        [DataMember] public bool IsFileNameDescendingOrder { get => _isFileNameDescendingOrder; set => SetProperty(ref _isFileNameDescendingOrder, value); }
 
         //OpenFileDialogの初期フォルダ、初期値はマイドキュメント
         private string _initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -548,8 +556,8 @@ namespace Pixtack4
 
         #region Root用
 
-        private int _myJpegQuality;
-        public int MyJpegQuality { get => _myJpegQuality; set => SetProperty(ref _myJpegQuality, value); }
+        //private int _myJpegQuality;
+        //public int MyJpegQuality { get => _myJpegQuality; set => SetProperty(ref _myJpegQuality, value); }
 
         private double _myAddOffsetLeft = 32;
         public double MyAddOffsetLeft { get => _myAddOffsetLeft; set => SetProperty(ref _myAddOffsetLeft, value); }

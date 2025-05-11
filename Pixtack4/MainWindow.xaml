@@ -26,10 +26,14 @@
                   <Button Content="px4ファイルを開く" Click="Button_Click_OpenPx4File"/>
                   <Button Content="ファイルから追加" Click="Button_Click_OpenFile"/>
                   <Button Content="FocusItemを名前を付けて保存" Click="Button_Click_SaveFocusItem"/>
+                  <Button Content="破線枠の表示切替" Click="Button_Click_SwitchWaku"/>
+                  <Button Content="Rootを画像で保存" Click="Button_Click_RootToImageFile"/>
+                  <Button Content="Focusを画像で保存" Click="Button_Click_FocusItemToImageFile"/>
 
-                  <TextBlock Text="👈️できた｜まだ👉️"/>
-                  <Button Content="Rootを画像で保存"/>
-                  <Button Content="選択Itemを画像で保存"/>
+                  <TextBlock Text="👈️👆️できた｜まだ👇️👉️"/>
+
+                  <Button Content="Focusを削除"/>
+                  <Button Content="全削除"/>
                   <Button Content="確認" Click="Button_Click"/>
                 </WrapPanel>
               </StackPanel>

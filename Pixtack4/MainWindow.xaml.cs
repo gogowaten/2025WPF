@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows;
@@ -251,6 +252,29 @@ namespace Pixtack4
 
         }
 
+
+        private void Button_Click_FocusItemToImageFile(object sender, RoutedEventArgs e)
+        {
+            // FocusItemを画像として保存する
+            if (MyRoot.MyFocusThumb != null)
+            {
+                if (SaveItemToImageFile(MyRoot.MyFocusThumb)) { MyStatusMessage.Text = MakeStatusMessage("保存完了"); }
+            }
+        }
+        
+        private void Button_Click_RootToImageFile(object sender, RoutedEventArgs e)
+        {
+            // RootItemを画像として保存する
+            if (SaveItemToImageFile(MyRoot)) { MyStatusMessage.Text = MakeStatusMessage("保存完了"); }
+        }
+
+        //破線枠の表示切替
+        private void Button_Click_SwitchWaku(object sender, RoutedEventArgs e)
+        {
+            if (MyRoot.IsWakuVisible == Visibility.Visible) { MyRoot.IsWakuVisible = Visibility.Collapsed; }
+            else { MyRoot.IsWakuVisible = Visibility.Visible; }
+        }
+
         private void Button_Click_SaveFocusItem(object sender, RoutedEventArgs e)
         {
             if (MyRoot.MyFocusThumb != null)
@@ -283,7 +307,7 @@ namespace Pixtack4
         }
 
         private void Button_Click_SaveData(object sender, RoutedEventArgs e)
-        {   
+        {
             SaveItem(MyRoot);// Dataを名前を付けて保存
         }
 
@@ -372,6 +396,187 @@ namespace Pixtack4
 
         #endregion 初期化、リセット系
 
+        #region 画像保存
+
+        /// <summary>
+        /// ThumbItemを画像として保存する
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private bool SaveItemToImageFile(KisoThumb item)
+        {
+            if (MakeBitmapFromThumb(item) is RenderTargetBitmap bb)// ThumbをBitmapに変換
+            {
+                // Bitmapをファイル保存
+                var (result, filePath) = SaveBitmap(bb, MyAppData.DefaultSaveFileName, MyAppData.MyJpegQuality);
+                if (result)
+                {
+                    MyAppData.DefaultSaveFileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        /// <summary>
+        /// ThumbをBitmapに変換
+        /// </summary>
+        /// <param name="thumb">Bitmapにする要素</param>
+        /// <param name="clearType">フォントのClearTypeを有効にして保存</param>
+        /// <returns></returns>
+        public RenderTargetBitmap? MakeBitmapFromThumb(KisoThumb? thumb, bool clearType = false)
+        {
+            if (thumb == null) { return null; }
+            if (thumb.ActualHeight == 0 || thumb.ActualWidth == 0) { return null; }
+
+            Rect bounds = VisualTreeHelper.GetDescendantBounds(thumb);
+            bounds = thumb.RenderTransform.TransformBounds(bounds);
+            DrawingVisual dVisual = new();
+            //サイズを四捨五入
+            bounds.Width = Math.Round(bounds.Width, MidpointRounding.AwayFromZero);
+            bounds.Height = Math.Round(bounds.Height, MidpointRounding.AwayFromZero);
+            using (DrawingContext context = dVisual.RenderOpen())
+            {
+                var bru = new BitmapCacheBrush(thumb);
+                if (clearType)
+                {
+                    BitmapCache bc = new() { EnableClearType = true };
+                    bru.BitmapCache = bc;
+                }
+                context.DrawRectangle(bru, null, new Rect(bounds.Size));
+            }
+            RenderTargetBitmap bitmap
+                = new((int)Math.Ceiling(bounds.Width), (int)Math.Ceiling(bounds.Height), 96.0, 96.0, PixelFormats.Pbgra32);
+            bitmap.Render(dVisual);
+
+            return bitmap;
+        }
+
+
+        /// <summary>
+        /// Bitmapをファイル保存ダイアログから保存する
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="fileName">ダイアログに表示する規定のファイル名</param>
+        /// <param name="jpegQuality">jpeg画像の品質値、jpeg以外で保存するときは無視される</param>
+        /// <returns></returns>
+        //public static bool SaveBitmap(BitmapSource bitmap, string fileName = "", int jpegQuality = 90)
+        //{
+        //    SaveFileDialog dialog = new()
+        //    {
+        //        Filter = "*.png|*.png|*.jpg|*.jpg;*.jpeg|*.bmp|*.bmp|*.gif|*.gif|*.tiff|*.tiff",
+        //        AddExtension = true,
+        //        FileName = fileName,
+        //    };
+
+        //    if (dialog.ShowDialog() == true)
+        //    {
+        //        //エンコーダー取得
+        //        (BitmapEncoder? encoder, BitmapMetadata? meta) = GetEncoderWithMetaData(dialog.FilterIndex, jpegQuality);
+        //        if (encoder is null) { return false; }
+        //        //保存
+        //        encoder.Frames.Add(BitmapFrame.Create(bitmap, null, meta, null));
+        //        try
+        //        {
+        //            using FileStream stream = new(dialog.FileName, FileMode.Create, FileAccess.Write);
+        //            encoder.Save(stream);                    
+        //            return true;
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //    return false;
+        //}
+
+        public static (bool result, string filePath) SaveBitmap(BitmapSource bitmap, string fileName = "", int jpegQuality = 90)
+        {
+            SaveFileDialog dialog = new()
+            {
+                Filter = "*.png|*.png|*.jpg|*.jpg;*.jpeg|*.bmp|*.bmp|*.gif|*.gif|*.tiff|*.tiff",
+                FileName = fileName,
+                AddExtension = true,
+            };
+            
+            if (dialog.ShowDialog() == true)
+            {
+                //エンコーダー取得
+                (BitmapEncoder? encoder, BitmapMetadata? meta) = GetEncoderWithMetaData(dialog.FilterIndex, jpegQuality);
+                if (encoder is null) { return (false, string.Empty); }
+                //保存
+                encoder.Frames.Add(BitmapFrame.Create(bitmap, null, meta, null));
+                try
+                {
+                    using FileStream stream = new(dialog.FileName, FileMode.Create, FileAccess.Write);
+                    encoder.Save(stream);
+                    return (true, dialog.FileName);
+                }
+                catch (Exception)
+                {
+                    return (false, string.Empty);
+                }
+            }
+            return (false, string.Empty);
+        }
+
+
+
+        /// <summary>
+        /// 画像エンコーダー作成
+        /// </summary>
+        /// <param name="filterIndex"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+
+        private static (BitmapEncoder? encoder, BitmapMetadata? meta) GetEncoderWithMetaData(int filterIndex, int jpegQuality)
+        {
+            BitmapMetadata? meta = null;
+            //string software = APP_NAME + "_" + AppVersion;
+            string software = APP_NAME;// "Pixtack4";
+
+            switch (filterIndex)
+            {
+                case 1:
+                    meta = new BitmapMetadata("png");
+                    meta.SetQuery("/tEXt/Software", software);
+                    return (new PngBitmapEncoder(), meta);
+                case 2:
+                    meta = new BitmapMetadata("jpg");
+                    meta.SetQuery("/app1/ifd/{ushort=305}", software);
+                    var jpeg = new JpegBitmapEncoder
+                    {
+                        //QualityLevel = MyItemData.MyJpegQuality,
+                        //QualityLevel = jpegQuality
+                        QualityLevel = jpegQuality
+                        //QualityLevel = MyAppData.JpegQuality,
+                    };
+                    return (jpeg, meta);
+                case 3:
+                    return (new BmpBitmapEncoder(), meta);
+                case 4:
+                    meta = new BitmapMetadata("Gif");
+                    //tData.SetQuery("/xmp/xmp:CreatorTool", "Pixtrim2");
+                    //tData.SetQuery("/XMP/XMP:CreatorTool", "Pixtrim2");
+                    meta.SetQuery("/XMP/XMP:CreatorTool", software);
+
+                    return (new GifBitmapEncoder(), meta);
+                case 5:
+                    meta = new BitmapMetadata("tiff")
+                    {
+                        ApplicationName = software
+                    };
+                    return (new TiffBitmapEncoder(), meta);
+                default:
+                    throw new Exception();
+            }
+
+        }
+
+
+        #endregion 画像保存
+
         #region Save
 
 
@@ -380,14 +585,16 @@ namespace Pixtack4
         /// </summary>
         /// <param name="thumb"></param>
         /// <returns></returns>
-        private (bool result,string message) SaveItem(KisoThumb thumb)
+        private (bool result, string message) SaveItem(KisoThumb thumb)
         {
             SaveFileDialog dialog = MakeSaveFileDialog(thumb);
             if (dialog.ShowDialog() == true)
             {
                 if (MyRoot.SaveItemData(thumb.MyItemData, dialog.FileName))
                 {
-                    // Rootの場合はCurrentの変更もする
+                    //保存ファイル名の既定値更新
+                    MyAppData.DefaultSaveFileName = System.IO.Path.GetFileNameWithoutExtension(dialog.FileName);
+                    // Rootの場合はCurrentPath更新
                     if (thumb.MyItemData.MyThumbType == ThumbType.Root)
                     {
                         MyAppData.CurrentOpenFilePath = dialog.FileName;
@@ -433,6 +640,7 @@ namespace Pixtack4
             {
                 MyAppData.CurrentOpenFilePath = filePath;
                 MyStatusMessage.Text = MakeStatusMessage("保存完了");
+                MyAppData.DefaultSaveFileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
                 return true;
             }
             MyStatusMessage.Text = MakeStatusMessage("保存できなかった");
@@ -448,6 +656,7 @@ namespace Pixtack4
         private SaveFileDialog MakeSaveFileDialog(ItemData data)
         {
             SaveFileDialog dialog = new();
+            dialog.FileName = MyAppData.DefaultSaveFileName;
             if (data.MyThumbType == ThumbType.Root)
             {
                 dialog.Filter = "*.px4|*.px4";
@@ -464,87 +673,6 @@ namespace Pixtack4
         {
             return MakeSaveFileDialog(thumb.MyItemData);
         }
-
-
-        ///// <summary>
-        ///// 名前を付けてRootData保存
-        ///// </summary>
-        //private string SaveRootItemData()
-        //{
-        //    //Microsoft.Win32.SaveFileDialog dialog = new()
-        //    //{
-        //    //    Filter = "*.px4|*.px4",
-        //    //    AddExtension = true,
-        //    //};
-
-        //    if (dialog.ShowDialog() == true)
-        //    {
-        //        return SaveData(dialog.FileName, MyRoot.MyItemData);
-        //    }
-        //    else { return MakeStatusMessage("保存はキャンセルされた"); }
-        //}
-
-        ///// <summary>
-        ///// 名前を付けて通常Itemを保存
-        ///// </summary>
-        ///// <param name="data"></param>
-        ///// <returns></returns>
-        //private string SaveNormalItemData(ItemData data)
-        //{
-        //    SaveFileDialog dialog = new()
-        //    {
-        //        Filter = "*.px4item|*.px4item",
-        //        AddExtension = true,
-        //    };
-        //    if (dialog.ShowDialog() == true)
-        //    {
-        //        return SaveData(dialog.FileName, data);
-        //    }
-        //    else { return MakeStatusMessage("保存はキャンセルされた"); }
-        //}
-
-        ///// <summary>
-        ///// 指定パスにData保存、パスがない場合はSaveFileDialog
-        ///// </summary>
-        ///// <param name="filePath"></param>
-        ///// <returns></returns>
-        //private string SaveData(string filePath, KisoThumb thumb)
-        //{
-        //    if (filePath == string.Empty) { return SaveRootData(); }
-        //    if (MyRoot.SaveItemData(thumb.MyItemData, filePath))
-        //    {
-        //        MyAppData.CurrentOpenFilePath = filePath;// 今開いているファイルのパス更新
-        //        return MakeStatusMessage("保存完了");
-        //    }
-        //    else { return MakeStatusMessage("保存に失敗"); }
-        //}
-
-        ///// <summary>
-        ///// Dataをファイルに保存
-        ///// </summary>
-        ///// <param name="filePath">ファイルのフルパス</param>
-        ///// <param name="data">保存するデータ</param>
-        ///// <returns></returns>
-        ///// <exception cref="ApplicationException"></exception>
-        //private string SaveData(string filePath, ItemData data)
-        //{
-        //    try
-        //    {
-        //        MyRoot.SaveItemData(data, filePath);
-        //        //Rootの保存時は、今のファイルを更新
-        //        if (data.MyThumbType == ThumbType.Root)
-        //        {
-        //            MyAppData.CurrentOpenFilePath = filePath;
-        //        }
-        //        return MakeStatusMessage("保存完了");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return MakeStatusMessage("保存に失敗");
-        //        throw new ApplicationException(ex.Message);
-        //        //throw;
-        //    }
-        //}
 
 
         #endregion Save
@@ -589,9 +717,9 @@ namespace Pixtack4
                 Multiselect = true,
                 Filter =
                     "対応ファイル | *.bmp; *.jpg; *.png; *.gif; *.tiff; *.px4item; *.px4;" +
-                    "| Pixtack4 | *.px4item; *.px4;" +
-                    "| 画像系 | *.bmp; *.jpg; *.png; *.gif; *.tiff;" +
-                    " | すべて | *.* "
+                    "|Pixtack4 | *.px4item; *.px4;" +
+                    "|画像系 | *.bmp; *.jpg; *.png; *.gif; *.tiff;" +
+                    "|すべて | *.* "
             };
 
             //取得したファイルパスはファイル名でソート

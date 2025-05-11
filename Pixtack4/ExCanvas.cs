@@ -78,7 +78,8 @@ namespace Pixtack4
 
         private void ItemAreaToImageFile_Click(object sender, RoutedEventArgs e)
         {
-            RootThumb.SaveBitmap(GetAreaBitmap3(false));
+            MainWindow.SaveBitmap(GetAreaBitmap3(false));
+            //RootThumb.SaveBitmap(GetAreaBitmap3(false));
         }
 
 
