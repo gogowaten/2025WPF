@@ -252,6 +252,16 @@ namespace Pixtack4
 
         }
 
+        private void Button_Click_RemoveSelectedItems(object sender, RoutedEventArgs e)
+        {
+            MyRoot.RemoveSelectedThumbs();
+
+        }
+
+        
+
+        #region 完了
+        
 
         private void Button_Click_FocusItemToImageFile(object sender, RoutedEventArgs e)
         {
@@ -321,7 +331,8 @@ namespace Pixtack4
         {
             ResetWindowState();// ウィンドウの位置とサイズをリセット
         }
-
+        #endregion 完了
+        
         #endregion ボタンクリック
 
 

@@ -19,20 +19,29 @@
             <TabItem Header="tab1">
               <StackPanel Orientation="Vertical">
                 <WrapPanel>
+                  <WrapPanel.Resources>
+                    <Style TargetType="{x:Type Button}">
+                      <Setter Property="Margin" Value="2"/>
+                    </Style>
+                  </WrapPanel.Resources>
                   <Button Content="ウィンドウのリセット" Click="Button_Click_1"/>
                   <Button Content="Rootをリセット" Click="Button_Click_ResetRoot"/>
+                  <Grid Background="Red" Width="10"/>
                   <Button Content="名前を付けて保存" Click="Button_Click_SaveData"/>
                   <Button Content="上書き保存" Click="Button_Click_OverwriteSave"/>
-                  <Button Content="px4ファイルを開く" Click="Button_Click_OpenPx4File"/>
-                  <Button Content="ファイルから追加" Click="Button_Click_OpenFile"/>
                   <Button Content="FocusItemを名前を付けて保存" Click="Button_Click_SaveFocusItem"/>
-                  <Button Content="破線枠の表示切替" Click="Button_Click_SwitchWaku"/>
+                  <Grid Background="Red" Width="10"/>
+                  <Button Content="ファイルを開く(px4)" Click="Button_Click_OpenPx4File"/>
+                  <Button Content="ファイルから追加" Click="Button_Click_OpenFile"/>
+                  <Grid Background="Red" Width="10"/>
                   <Button Content="Rootを画像で保存" Click="Button_Click_RootToImageFile"/>
                   <Button Content="Focusを画像で保存" Click="Button_Click_FocusItemToImageFile"/>
+                  <Grid Background="Red" Width="10"/>
+                  <Button Content="破線枠の表示切替" Click="Button_Click_SwitchWaku"/>
+                  <Button Content="選択Itemを削除" Click="Button_Click_RemoveSelectedItems"/>
 
                   <TextBlock Text="👈️👆️できた｜まだ👇️👉️"/>
 
-                  <Button Content="Focusを削除"/>
                   <Button Content="全削除"/>
                   <Button Content="確認" Click="Button_Click"/>
                 </WrapPanel>

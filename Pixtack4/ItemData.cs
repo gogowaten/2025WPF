@@ -101,6 +101,8 @@ namespace Pixtack4
     {
         public AppData() { }
 
+        
+
         //保存ファイル名の既定値
         private string _defaultSaveFileName = string.Empty;
         [DataMember] public string DefaultSaveFileName { get => _defaultSaveFileName; set => SetProperty(ref _defaultSaveFileName, value); }
@@ -112,6 +114,11 @@ namespace Pixtack4
         //複数ファイルを開くときにファイル名の降順で開く
         private bool _isFileNameDescendingOrder;
         [DataMember] public bool IsFileNameDescendingOrder { get => _isFileNameDescendingOrder; set => SetProperty(ref _isFileNameDescendingOrder, value); }
+
+
+        //
+
+        //ファイルから追加のときのフォルダ
 
         //OpenFileDialogの初期フォルダ、初期値はマイドキュメント
         private string _initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);

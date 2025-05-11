@@ -2076,7 +2076,7 @@ namespace Pixtack4
         /// SelectedThumbsをすべて削除、
         /// 削除処理の基本はこれを使う
         /// </summary>
-        public void RemoveThumb()
+        public void RemoveSelectedThumbs()
         {
             if (MySelectedThumbs.Count == 0) { return; }
 
@@ -2130,8 +2130,13 @@ namespace Pixtack4
             }
         }
 
-        //基本的には使わない、
-        //FocusThumb以外のThumbを削除するとき用
+        //
+        //
+        /// <summary>
+        /// 指定Thumbを削除するけど、これは基本的には使わないでRemoveSelectedThumbsを使う
+        /// </summary>
+        /// <param name="thumb"></param>
+        /// <param name="withRelayout"></param>
         public void RemoveThumb(KisoThumb? thumb, bool withRelayout = true)
         {
             //ParentがRootの場合
