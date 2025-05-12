@@ -141,8 +141,31 @@
         </StatusBar>
 
         <Grid x:Name="MyPanelSelectedItemsProperty" DockPanel.Dock="Right" Width="200" DataContext="{Binding MyRoot.MySelectedThumbs}" Visibility="Visible">
+          <ListBox ItemsSource="{Binding}" >
+            <ListBox.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal"/>
+              </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+
+                <Rectangle Width="50" Height="50">
+                  <Rectangle.Fill>
+                    <VisualBrush Stretch="Uniform" Visual="{Binding}"/>
+                  </Rectangle.Fill>
+                </Rectangle>
+
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+              <Style TargetType="{x:Type ListBoxItem}">
+                <Setter Property="Padding" Value="0"/>
+              </Style>
+            </ListBox.ItemContainerStyle>
+          </ListBox>
           <GroupBox Header="SelectedItems">
-            <ListBox ItemsSource="{Binding}">
+            <!--<ListBox ItemsSource="{Binding}">
               <ListBox.Template>
                 <ControlTemplate TargetType="{x:Type ListBox}">
                   <Border BorderBrush="Red" BorderThickness="1">
@@ -161,13 +184,8 @@
                     </Rectangle.Fill>
                   </Rectangle>
                 </DataTemplate>
-              </ListBox.ItemTemplate>
-              <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <WrapPanel Width="10" Orientation="Horizontal" IsItemsHost="False"/>
-                </ItemsPanelTemplate>
-              </ListBox.ItemsPanel>
-            </ListBox>
+              </ListBox.ItemTemplate>           
+            </ListBox>-->
             <!--<ScrollViewer>
               <TreeView ItemsSource="{Binding}">
                 <TreeView.ItemTemplate>
