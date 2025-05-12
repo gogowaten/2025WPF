@@ -592,13 +592,13 @@ namespace Pixtack4
         public static readonly DependencyProperty MyActualLeftProperty =
             DependencyProperty.Register(nameof(MyActualLeft), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
 
-        public double MyActalTop
+        public double MyActualTop
         {
-            get { return (double)GetValue(MyActalTopProperty); }
-            set { SetValue(MyActalTopProperty, value); }
+            get { return (double)GetValue(MyActualTopProperty); }
+            set { SetValue(MyActualTopProperty, value); }
         }
-        public static readonly DependencyProperty MyActalTopProperty =
-            DependencyProperty.Register(nameof(MyActalTop), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
+        public static readonly DependencyProperty MyActualTopProperty =
+            DependencyProperty.Register(nameof(MyActualTop), typeof(double), typeof(KisoThumb), new PropertyMetadata(0.0));
 
         //内部表示要素のオフセット表示に使う
         public double MyInsideElementOffsetTop

@@ -39,10 +39,10 @@
                   <Grid Background="Red" Width="10"/>
                   <Button Content="破線枠の表示切替" Click="Button_Click_SwitchWaku"/>
                   <Button Content="選択Itemを削除" Click="Button_Click_RemoveSelectedItems"/>
+                  <Button Content="全削除" Click="Button_Click_RemoveAllItems"/>
 
                   <TextBlock Text="👈️👆️できた｜まだ👇️👉️"/>
 
-                  <Button Content="全削除"/>
                   <Button Content="確認" Click="Button_Click"/>
                 </WrapPanel>
               </StackPanel>
@@ -99,8 +99,11 @@
             </TreeView>
           </ScrollViewer>
         </Grid>
-        
-        <Grid x:Name="MyRootStatusView" DockPanel.Dock="Left" DataContext="{Binding MyRoot, UpdateSourceTrigger=PropertyChanged}" Visibility="Visible">
+
+        <Grid x:Name="MyRootStatusView" DockPanel.Dock="Left"
+              Width="200"
+              DataContext="{Binding MyRoot, UpdateSourceTrigger=PropertyChanged}"
+              Visibility="Visible">
           <StackPanel>
             <GroupBox Header="Root状態確認用" DataContext="{Binding UpdateSourceTrigger=PropertyChanged}">
               <StackPanel>
@@ -125,23 +128,131 @@
           </StackPanel>
         </Grid>
 
-        <StatusBar DockPanel.Dock="Right">
+        <StatusBar DockPanel.Dock="Right" TextOptions.TextFormattingMode="Display">
           <StatusBar.LayoutTransform>
             <RotateTransform Angle="90"/>
           </StatusBar.LayoutTransform>
           <StatusBarItem Content="item"/>
           <Button Content="StatusBar"/>
           <Button Content="テスト用確認" Click="Button_Click" Background="MidnightBlue" Foreground="White"/>
-          <Button Content="button2"/>
-          <Button Content="button3"/>
+          <Button Content="FocusItemPanel" Click="Button_Click_FocusItemPropertyPanelVisible"/>
+          <Button Content="ActiveGroupItemPanel" Click="Button_Click_ActiveGroupItemPropertyPanelVisible"/>
+          <Button Content="SelectedItemsPanel" Click="Button_Click_SelectedItemsPropertyPanelVisible"/>
         </StatusBar>
 
+        <Grid x:Name="MyPanelSelectedItemsProperty" DockPanel.Dock="Right" Width="200" DataContext="{Binding MyRoot.MySelectedThumbs}" Visibility="Visible">
+          <GroupBox Header="SelectedItems">
+            <ListBox ItemsSource="{Binding}">
+              <ListBox.Template>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                  <Border BorderBrush="Red" BorderThickness="1">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                      <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
+
+                    </ScrollViewer>
+                  </Border>
+                </ControlTemplate>
+              </ListBox.Template>
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                  <Rectangle Width="50" Height="50">
+                    <Rectangle.Fill>
+                      <VisualBrush Stretch="Uniform" Visual="{Binding}"/>
+                    </Rectangle.Fill>
+                  </Rectangle>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+              <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel Width="10" Orientation="Horizontal" IsItemsHost="False"/>
+                </ItemsPanelTemplate>
+              </ListBox.ItemsPanel>
+            </ListBox>
+            <!--<ScrollViewer>
+              <TreeView ItemsSource="{Binding}">
+                <TreeView.ItemTemplate>
+                  <HierarchicalDataTemplate DataType="local:RootThumb" ItemsSource="{Binding}">
+                    <StackPanel Orientation="Vertical">
+                      <TextBlock Text="{Binding MyThumbType}" VerticalAlignment="Center" Margin="10"/>
+                      <Rectangle Width="50" Height="50">
+                        <Rectangle.Fill>
+                          <VisualBrush Visual="{Binding}" Stretch="Uniform"/>
+                        </Rectangle.Fill>
+                      </Rectangle>
+                    </StackPanel>
+                  </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+              </TreeView>
+            </ScrollViewer>-->
+            <!--<ListBox ItemsSource="{Binding}" d:ItemsSource="{d:SampleData ItemCount=5}">
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                  <WrapPanel Orientation="Horizontal">
+                    <Rectangle Width="50" Height="50">
+                      <Rectangle.Fill>
+                        <VisualBrush Visual="{Binding}" Stretch="Uniform"/>
+                      </Rectangle.Fill>
+                    </Rectangle>
+                  </WrapPanel>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+              <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel Orientation="Horizontal" VerticalAlignment="Top"/>
+                </ItemsPanelTemplate>
+              </ListBox.ItemsPanel>
+            </ListBox>-->
+          </GroupBox>
+        </Grid>
+
+        <Grid x:Name="MyPanelActiveGroupItemProperty" DockPanel.Dock="Right" Width="200" DataContext="{Binding MyRoot.MyActiveGroupThumb}" Visibility="Collapsed">
+          <GroupBox Header="ActiveGroupItem">
+            <StackPanel>
+              <Canvas Width="100" Height="100">
+                <Canvas.Background>
+                  <VisualBrush Visual="{Binding}" Stretch="Uniform"/>
+                </Canvas.Background>
+              </Canvas>
+              <TextBlock Text="{Binding MyThumbType, StringFormat=MyThumbType  {0}}"/>
+              <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth  {0:0}}"/>
+              <TextBlock Text="{Binding ActualHeight, StringFormat=ActualHeight  {0:0}}"/>
+              <TextBlock Text="{Binding MyActualTop, StringFormat=ActualTop  {0:0}}"/>
+              <TextBlock Text="{Binding MyActualLeft, StringFormat=ActualLeft  {0:0}}"/>
+              <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=MyLeft  {0:0}}"/>
+              <TextBlock Text="{Binding MyItemData.MyTop, StringFormat=MyTop  {0:0}}"/>
+              <TextBlock Text="{Binding MyItemData.MyZIndex, StringFormat=MyZIndex  {0:0}}"/>
+            </StackPanel>
+          </GroupBox>
+        </Grid>
+
+
+
+        <Grid x:Name="MyPanelFocusItemProperty" DockPanel.Dock="Right" Width="200" DataContext="{Binding MyRoot.MyFocusThumb}" Visibility="Collapsed">
+          <GroupBox Header="FocusItem">
+            <StackPanel>
+              <Canvas Width="100" Height="100">
+                <Canvas.Background>
+                  <VisualBrush Visual="{Binding}" Stretch="Uniform"/>
+                </Canvas.Background>
+              </Canvas>
+              <TextBlock Text="{Binding MyThumbType, StringFormat=MyThumbType  {0}}"/>
+              <TextBlock Text="{Binding ActualWidth, StringFormat=ActualWidth  {0:0}}"/>
+              <TextBlock Text="{Binding ActualHeight, StringFormat=ActualHeight  {0:0}}"/>
+              <TextBlock Text="{Binding MyActualTop, StringFormat=ActualTop  {0:0}}"/>
+              <TextBlock Text="{Binding MyActualLeft, StringFormat=ActualLeft  {0:0}}"/>
+              <TextBlock Text="{Binding MyItemData.MyLeft, StringFormat=MyLeft  {0:0}}"/>
+              <TextBlock Text="{Binding MyItemData.MyTop, StringFormat=MyTop  {0:0}}"/>
+              <TextBlock Text="{Binding MyItemData.MyZIndex, StringFormat=MyZIndex  {0:0}}"/>
+            </StackPanel>
+          </GroupBox>
+        </Grid>
+
         <ScrollViewer x:Name="MyScrollViewer" UseLayoutRounding="True" DockPanel.Dock="Right" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
-          <Canvas Width="2000" Height="1000" Background="AliceBlue">
+          <!--<Canvas Width="2000" Height="1000" Background="AliceBlue">
             <TextBlock>
                ScrollViewerの中の、ここがメインのパネルになる<LineBreak/>
             </TextBlock>
-          </Canvas>
+          </Canvas>-->
         </ScrollViewer>
       </DockPanel>
 

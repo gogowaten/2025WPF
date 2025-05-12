@@ -248,20 +248,40 @@ namespace Pixtack4
         //確認テスト用
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            
             var neko = MyAppWindowData;
 
         }
 
-        private void Button_Click_RemoveSelectedItems(object sender, RoutedEventArgs e)
-        {
-            MyRoot.RemoveSelectedThumbs();
 
-        }
 
-        
 
         #region 完了
+
+        private void Button_Click_SelectedItemsPropertyPanelVisible(object sender, RoutedEventArgs e)
+        {
+            ChangeVisible(MyPanelSelectedItemsProperty);// パネルの表示非表示を切り替える、Visible or Collapsed
+        }
         
+        private void Button_Click_ActiveGroupItemPropertyPanelVisible(object sender, RoutedEventArgs e)
+        {
+            ChangeVisible(MyPanelActiveGroupItemProperty);// パネルの表示非表示を切り替える、Visible or Collapsed
+        }
+        
+        private void Button_Click_FocusItemPropertyPanelVisible(object sender, RoutedEventArgs e)
+        {
+            ChangeVisible(MyPanelFocusItemProperty);// パネルの表示非表示を切り替える、Visible or Collapsed
+        }
+
+        private void Button_Click_RemoveAllItems(object sender, RoutedEventArgs e)
+        {
+            MyRoot.RemoveAll();// 全Item削除
+        }
+        
+        private void Button_Click_RemoveSelectedItems(object sender, RoutedEventArgs e)
+        {
+            MyRoot.RemoveSelectedThumbs();// 選択Item削除
+        }
 
         private void Button_Click_FocusItemToImageFile(object sender, RoutedEventArgs e)
         {
@@ -271,7 +291,7 @@ namespace Pixtack4
                 if (SaveItemToImageFile(MyRoot.MyFocusThumb)) { MyStatusMessage.Text = MakeStatusMessage("保存完了"); }
             }
         }
-        
+
         private void Button_Click_RootToImageFile(object sender, RoutedEventArgs e)
         {
             // RootItemを画像として保存する
@@ -332,7 +352,7 @@ namespace Pixtack4
             ResetWindowState();// ウィンドウの位置とサイズをリセット
         }
         #endregion 完了
-        
+
         #endregion ボタンクリック
 
 
@@ -510,7 +530,7 @@ namespace Pixtack4
                 FileName = fileName,
                 AddExtension = true,
             };
-            
+
             if (dialog.ShowDialog() == true)
             {
                 //エンコーダー取得
@@ -689,6 +709,19 @@ namespace Pixtack4
         #endregion Save
 
         #region その他
+
+        /// <summary>
+        /// パネルの表示非表示を切り替える、Visible or Collapsed
+        /// </summary>
+        /// <param name="panel"></param>
+        private void ChangeVisible(Panel panel)
+        {
+            if (panel.Visibility == Visibility.Visible)
+            {
+                panel.Visibility = Visibility.Collapsed;
+            }
+            else { panel.Visibility = Visibility.Visible; }
+        }
 
         /// <summary>
         /// メッセージに現在時刻を付けて返す
