@@ -47,12 +47,34 @@
                 </WrapPanel>
               </StackPanel>
             </TabItem>
-            <TabItem Header="tab2" DataContext="{Binding MyAppData}">
+            <TabItem Header="AppData" DataContext="{Binding MyAppData}">
               <StackPanel Orientation="Vertical">
                 <TextBlock Text="{Binding CurrentOpenFilePath, StringFormat=CurrentOpenFilePath _ {0:0}}"/>
                 <TextBlock Text="{Binding InitialDirectory, StringFormat=InitialDirectory _ {0:0}}"/>
                 <TextBlock Text="{Binding IsFileNameDescendingOrder, StringFormat=IsFileNameDescendingOrder _ {0:0}}"/>
+                <TextBlock Text="{Binding DefaultSaveFileName, StringFormat=DefaultSaveFileName _ {0:0}}"/>
+                <TextBlock Text="{Binding MyJpegQuality, StringFormat=MyJpegQuality _ {0:0}}"/>
               </StackPanel>
+            </TabItem>
+            <TabItem Header="tab3">
+              <WrapPanel Orientation="Horizontal">
+                <WrapPanel.Resources>
+                  <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="2"/>
+                  </Style>
+                </WrapPanel.Resources>
+                
+                <TextBlock Text="👈️👆️できた｜まだ👇️👉️"/>
+
+                <Button Content="グループ化"/>
+                <Button Content="グループ解除"/>
+                <Button Content="グループIN"/>
+                <Button Content="グループOUT"/>
+                <Button Content="ClickItemまでIN"/>
+                <Button Content="RootまでOUT"/>
+                <Button Content="グリッド変更"/>
+                
+              </WrapPanel>
             </TabItem>
           </TabControl>
         </Grid>
@@ -75,7 +97,7 @@
           <Button Content="Menu"/>
           <Button Content="テスト用確認" Click="Button_Click"/>
           <Button Content="Root" Click="Button_Click_MyRootStatusPanelVisible"/>
-          <Button Content="button3"/>
+          <Button Content="ItemsTree" Click="Button_Click_ItemsTreePanelVisible"/>
         </Menu>
 
         <Grid x:Name="MyGridMyItemsTree" DockPanel.Dock="Left" DataContext="{Binding MyRoot.MyThumbs, UpdateSourceTrigger=PropertyChanged}">
@@ -141,7 +163,8 @@
         </StatusBar>
 
         <Grid x:Name="MyPanelSelectedItemsProperty" DockPanel.Dock="Right" Width="200" DataContext="{Binding MyRoot.MySelectedThumbs}" Visibility="Visible">
-          <ListBox ItemsSource="{Binding}" >
+          <GroupBox Header="SelectedItems">
+          <ListBox ItemsSource="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
               <ItemsPanelTemplate>
                 <WrapPanel Orientation="Horizontal"/>
@@ -149,43 +172,20 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
               <DataTemplate>
-
                 <Rectangle Width="50" Height="50">
                   <Rectangle.Fill>
                     <VisualBrush Stretch="Uniform" Visual="{Binding}"/>
                   </Rectangle.Fill>
                 </Rectangle>
-
               </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>
               <Style TargetType="{x:Type ListBoxItem}">
-                <Setter Property="Padding" Value="0"/>
+                <!--<Setter Property="Padding" Value="0"/>-->
               </Style>
             </ListBox.ItemContainerStyle>
           </ListBox>
-          <GroupBox Header="SelectedItems">
-            <!--<ListBox ItemsSource="{Binding}">
-              <ListBox.Template>
-                <ControlTemplate TargetType="{x:Type ListBox}">
-                  <Border BorderBrush="Red" BorderThickness="1">
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                      <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
-
-                    </ScrollViewer>
-                  </Border>
-                </ControlTemplate>
-              </ListBox.Template>
-              <ListBox.ItemTemplate>
-                <DataTemplate>
-                  <Rectangle Width="50" Height="50">
-                    <Rectangle.Fill>
-                      <VisualBrush Stretch="Uniform" Visual="{Binding}"/>
-                    </Rectangle.Fill>
-                  </Rectangle>
-                </DataTemplate>
-              </ListBox.ItemTemplate>           
-            </ListBox>-->
+            
             <!--<ScrollViewer>
               <TreeView ItemsSource="{Binding}">
                 <TreeView.ItemTemplate>

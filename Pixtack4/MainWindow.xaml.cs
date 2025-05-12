@@ -258,6 +258,11 @@ namespace Pixtack4
 
         #region 完了
 
+        private void Button_Click_ItemsTreePanelVisible(object sender, RoutedEventArgs e)
+        {
+            ChangeVisible(MyGridMyItemsTree);// パネルの表示非表示を切り替える、Visible or Collapsed
+        }
+        
         private void Button_Click_SelectedItemsPropertyPanelVisible(object sender, RoutedEventArgs e)
         {
             ChangeVisible(MyPanelSelectedItemsProperty);// パネルの表示非表示を切り替える、Visible or Collapsed

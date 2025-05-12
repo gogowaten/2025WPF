@@ -561,7 +561,7 @@ namespace Pixtack4
 
         #endregion テキスト系
 
-        #region Root用
+        #region Group, Root用
 
         //private int _myJpegQuality;
         //public int MyJpegQuality { get => _myJpegQuality; set => SetProperty(ref _myJpegQuality, value); }
@@ -572,7 +572,7 @@ namespace Pixtack4
         private double _myAddOffsetTop = 32;
         public double MyAddOffsetTop { get => _myAddOffsetTop; set => SetProperty(ref _myAddOffsetTop, value); }
 
-        #endregion Root用
+        #endregion Group, Root用
 
         #region 保存しない系
 
