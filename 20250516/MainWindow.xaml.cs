@@ -19,6 +19,7 @@ namespace _20250516
         private void OpenDialog_Click(object sender, RoutedEventArgs e)
         {
             InputBox inputBox = new(MyTextBlock.Text);
+            inputBox.Owner = this;//必要ないけど、スクショで関連ウィンドウで使った
             if (inputBox.ShowDialog() == true)
             {
                 MyTextBlock.Text = inputBox.MyTextBox.Text;
