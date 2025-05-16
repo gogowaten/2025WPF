@@ -9,7 +9,9 @@
         ShowInTaskbar="False"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
-        FocusManager.FocusedElement="{Binding ElementName=MyTextBox}">
+        FocusManager.FocusedElement="{Binding ElementName=MyTextBox}"
+        Topmost="True"
+        >
     <Grid>
     <StackPanel Margin="10">
       <TextBox x:Name="MyTextBox" FontSize="30" TextAlignment="Center"/>

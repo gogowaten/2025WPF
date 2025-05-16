@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250516"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="400">
+        Title="MainWindow" Height="250" Width="400">
     <Grid>
     <StackPanel>
-      <TextBlock x:Name="MyTextBlock" Text="8" TextAlignment="Center" FontSize="30"/>
+      <TextBlock x:Name="MyTextBlock" Text="WPFにはInputBoxがない" TextAlignment="Center" FontSize="30"/>
       <Button x:Name="OpenDialog" Content="OpenDialog" Click="OpenDialog_Click"/>
     </StackPanel>
   </Grid>
