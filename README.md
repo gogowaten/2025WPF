@@ -1,3 +1,13 @@
+# 20250513
+https://github.com/gogowaten/2025WPF/tree/main/20250513<br>
+![Animation20250513_222946](https://github.com/user-attachments/assets/ccf97b84-347b-44d4-95b1-0ddada0c40b2)<br>
+グリッドナップ移動時のアニメ効果テスト<br>
+うまくかけなくて、動きがいまいち、ないほうがマシ、いい方法が見つかるまで保留<br>
+<br><br><br>
+
+
+
+
 # 20250504_02
 https://github.com/gogowaten/2025WPF/tree/main/20250504_02<br>
 ![Animation20250504_210530](https://github.com/user-attachments/assets/0b9de377-081a-4c56-9974-6f0698b0a53f)<br>
