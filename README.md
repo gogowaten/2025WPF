@@ -1,3 +1,12 @@
+# 20250516
+https://github.com/gogowaten/2025WPF/tree/main/20250516<br>
+![20250517_014216_](https://github.com/user-attachments/assets/690d69ee-c864-46e2-be6d-7a59575e67b5)<br>
+C#にはInputBoxがないので、簡単なのを作ってみた<br>
+<br><br><br>
+
+
+
+
 # 20250513
 https://github.com/gogowaten/2025WPF/tree/main/20250513<br>
 ![Animation20250513_222946](https://github.com/user-attachments/assets/ccf97b84-347b-44d4-95b1-0ddada0c40b2)<br>
