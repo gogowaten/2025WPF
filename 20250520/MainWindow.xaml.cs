@@ -10,84 +10,81 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+//C#のForm,WPFで Delegate, Action, Func, メソッドの定義 の違いをサンプルコードでざっくり理解する #Windows - Qiita
+// https://qiita.com/tatsubey/items/ec2fd859cf0bb40128eb
+
 namespace _20250520
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
-    {        
-        //public CommandWindowViewModel CommandWindowViewModel { get; set; }
+    {
+        public AAA MyAAA { get; set; }
+        public AAA MyAAA2 { get; set; } = new();
+        public BBB MyBBB { get; set; }
+        delegate void MyDel();
         public MainWindow()
         {
             InitializeComponent();
 
-            DataContext=new CommandWindowViewModel();
+            MyAAA = new AAA();
+            DataContext = this;
+            
+            var del = new MyDel(MyMessageShow);
+            Action ac = new(del);
+            MyBBB = new(new Action(del));
+
         }
 
-        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("");
+            MyMessageShow();
         }
-    }
-
-
-    public class CommandForWin2 : ICommand
-    {
-        public int counter { get; set; } = 0;
-
-        public event EventHandler? CanExecuteChanged;
-
-        public bool CanExecute(object? parameter)
+        private void MyMessageShow()
         {
-            { return true; }
+            MessageBox.Show("ゆっくりしていってね！！！");
         }
-
-        public void Execute(object? parameter)
-        {
-            counter++;
-        }
-    }
-
-    public class ViewModelForWin2 : INotifyPropertyChanged
-    {
-
     }
 
     public class AAA : ICommand
     {
-        public event EventHandler? CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
 
         public bool CanExecute(object? parameter)
         {
-            throw new NotImplementedException();
+            //起動時ここが処理される
+            //ボタンクリック時にも処理され、続けてExecuteが処理される
+            return true;
         }
 
         public void Execute(object? parameter)
         {
-            throw new NotImplementedException();
+            //ボタンクリックしたときに処理される
+            MessageBox.Show("CommandOK");
         }
     }
 
-    // 外部から与えるデータ（＝ビューモデル）
-    public class CommandWindowViewModel
+    public class BBB : ICommand
     {
-        class OkCommandImpl : ICommand
-        {
-            public bool CanExecute(object parameter) { return true; }
-            public event EventHandler CanExecuteChanged;
+        private readonly Action? _action;
 
-            public void Execute(object parameter)
-            {
-                MessageBox.Show("コマンドが実行されました。");
-            }
+        public BBB(Action? action)
+        {
+            _action = action;
         }
 
-        public ICommand OkCommand { get; private set; }
+        public event EventHandler? CanExecuteChanged;
 
-        public CommandWindowViewModel()
+        public bool CanExecute(object? parameter)
         {
-            this.OkCommand = new OkCommandImpl();
+            return true;
+        }
+
+        public void Execute(object? parameter)
+        {
+            _action?.Invoke();
         }
     }
 }

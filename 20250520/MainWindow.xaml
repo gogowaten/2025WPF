@@ -7,9 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="367" Width="654"
         >
-  <Window.CommandBindings>
-    <CommandBinding Command="Properties" Executed="CommandBinding_Executed"/>
-  </Window.CommandBindings>
+  
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -21,8 +19,10 @@
     </Canvas>
 
     <StackPanel Grid.Column="1">
-      <Button Content="OK" Command="{Binding OkCommand}"/>
-      <Button Content="OK" Command="Properties"/>
+      <Button Content="OK" Click="Button_Click"/>
+      <Button Content="CommandOK" Command="{Binding MyAAA}"/>
+      <Button Content="CommandOK2" Command="{Binding MyAAA}" CommandParameter="1"/>
+      <Button Content="CommandBBB" Command="{Binding MyBBB}"/>
     </StackPanel>
   </Grid>
 </Window>
