@@ -7,6 +7,9 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
+//C#で3点ABCからできる∠ABCの角度を求める関数をGitHub Copilotに作ってもらった - 午後わてんのブログ
+//https://gogowaten.hatenablog.com/entry/2025/06/05/130919
+
 namespace _20250605
 {
     public partial class MainWindow : Window
@@ -53,7 +56,7 @@ namespace _20250605
                 };
             }
 
-            // 3点座標と角度にバインド、コンバーター付き
+            // 3点座標を角度にバインド、コンバーター付き
             _ = SetBinding(MyAngleProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty), Converter = new MyConvABCAngle() });
         }
 
