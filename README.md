@@ -1,3 +1,13 @@
+# 20250605
+https://github.com/gogowaten/2025WPF/tree/main/20250605<br>
+![Animation20250605_115750-ezgif com-optimize](https://github.com/user-attachments/assets/9b013a40-c4fa-43e3-bd38-3fa51823a03d)<br>
+C#で3点ABCからできる∠ABCの角度を求める関数をGitHub Copilotに作ってもらった - 午後わてんのブログ<br>
+https://gogowaten.hatenablog.com/entry/2025/06/05/130919<br>
+<br><br><br>
+
+
+
+
 # 20250516
 https://github.com/gogowaten/2025WPF/tree/main/20250516<br>
 ![20250517_014216_](https://github.com/user-attachments/assets/690d69ee-c864-46e2-be6d-7a59575e67b5)<br>
