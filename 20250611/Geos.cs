@@ -13,29 +13,34 @@ using System.Windows.Documents;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Security.Cryptography.Xml;
+using System.Windows.Markup;
+using System.Collections.ObjectModel;
 namespace _20250611
 {
-
+    [ContentProperty(nameof(Points))]
     public class GeoPoints : DependencyObject
     {
         public GeoPoints() { }
-        public GeoPoints(Point begin, List<Point> points)
+        public GeoPoints(Point begin, ObservableCollection<Point> points)
         {
             BeginPoint = begin;
+            //if (points.Count == 0)
+            //{
+            //    this.Points.Add(new Point(begin.X, begin.Y));
+            //}
             Points = points;
         }
-        public GeoPoints(List<Point> points)
-        {
-            BeginPoint = points[0];
-            if (points.Count > 1)
-            {
-                Points = points.GetRange(1, points.Count);
-            }
-            else
-            {
 
-            }
-        }
+
+        #region 依存関係プロパティ
+
+        //public Point BeginPoint
+        //{
+        //    get { return (Point)GetValue(BeginPointProperty); }
+        //    set { SetValue(BeginPointProperty, value); }
+        //}
+        //public static readonly DependencyProperty BeginPointProperty =
+        //    DependencyProperty.Register(nameof(BeginPoint), typeof(Point), typeof(GeoPoints), new PropertyMetadata(new Point()));
 
         public Point BeginPoint
         {
@@ -43,17 +48,59 @@ namespace _20250611
             set { SetValue(BeginPointProperty, value); }
         }
         public static readonly DependencyProperty BeginPointProperty =
-            DependencyProperty.Register(nameof(BeginPoint), typeof(Point), typeof(GeoPoints), new PropertyMetadata(new Point()));
+            DependencyProperty.Register(nameof(BeginPoint), typeof(Point), typeof(GeoPoints),
+                new FrameworkPropertyMetadata(new Point(),
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
-        public List<Point> Points
+
+        //public List<Point> Points
+        //{
+        //    get { return (List<Point>)GetValue(PointsProperty); }
+        //    set { SetValue(PointsProperty, value); }
+        //}
+        //public static readonly DependencyProperty PointsProperty =
+        //    DependencyProperty.Register(nameof(Points), typeof(List<Point>), typeof(GeoPoints), new PropertyMetadata(new List<Point>()));
+
+        //public PointCollection Points
+        //{
+        //    get { return (PointCollection)GetValue(PointsProperty); }
+        //    set { SetValue(PointsProperty, value); }
+        //}
+        //public static readonly DependencyProperty PointsProperty =
+        //    DependencyProperty.Register(nameof(Points), typeof(PointCollection), typeof(GeoPoints), new PropertyMetadata(new PointCollection()));
+
+
+        //public PointCollection Points
+        //{
+        //    get { return (PointCollection)GetValue(PointsProperty); }
+        //    set { SetValue(PointsProperty, value); }
+        //}
+        //public static readonly DependencyProperty PointsProperty =
+        //    DependencyProperty.Register(nameof(Points), typeof(PointCollection), typeof(GeoPoints),
+        //        new FrameworkPropertyMetadata(new PointCollection(),
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+
+        public ObservableCollection<Point> Points
         {
-            get { return (List<Point>)GetValue(PointsProperty); }
+            get { return (ObservableCollection<Point>)GetValue(PointsProperty); }
             set { SetValue(PointsProperty, value); }
         }
         public static readonly DependencyProperty PointsProperty =
-            DependencyProperty.Register(nameof(Points), typeof(List<Point>), typeof(GeoPoints), new PropertyMetadata(new List<Point>()));
+            DependencyProperty.Register(nameof(Points), typeof(ObservableCollection<Point>), typeof(GeoPoints),
+                new FrameworkPropertyMetadata(new ObservableCollection<Point>(),
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+
+
+        #endregion 依存関係プロパティ
     }
 
 
@@ -62,12 +109,7 @@ namespace _20250611
     {
         public Geos()
         {
-            GeoPointsList = [];
-            GeoPoints points = new(new Point(), [new Point(100, 0), new Point(100, 100)]);
-            GeoPointsList.Add(points);
-            GeoPointsList.Add(new GeoPoints() { BeginPoint = new Point(100, 0), });
-            GeoPointsList.Add(new GeoPoints(new Point(), [new Point(100, 0), new Point()]));
-            GeoPointsList.Add(new GeoPoints([new Point()]));
+          
         }
 
         protected override Geometry DefiningGeometry
@@ -79,13 +121,7 @@ namespace _20250611
                 StreamGeometry geo = new();
                 using (StreamGeometryContext context = geo.Open())
                 {
-                    //PointCollection po = MyPoints[0];
-                    //context.BeginFigure(po[0], isFilled: true, isClosed: false);
-                    //List<Point> pp = [new Point(), new Point(100, 100)];
-                    //context.PolyLineTo(pp, true, false);
-                    //context.PolyLineTo(pp.GetRange(1, pp.Count - 1), true, false);
-                    //context.LineTo(po[^1], isStroked: true, isSmoothJoin: true);
-
+                    
                     DrawTest(context);
                 }
 
@@ -98,26 +134,44 @@ namespace _20250611
         #region 依存関係プロパティ
 
 
-        public List<GeoPoints> GeoPointsList
+        public ObservableCollection<GeoPoints> GeoPointsList
         {
-            get { return (List<GeoPoints>)GetValue(GeoPointsListProperty); }
+            get { return (ObservableCollection<GeoPoints>)GetValue(GeoPointsListProperty); }
             set { SetValue(GeoPointsListProperty, value); }
         }
         public static readonly DependencyProperty GeoPointsListProperty =
-            DependencyProperty.Register(nameof(GeoPointsList), typeof(List<GeoPoints>), typeof(Geos), new PropertyMetadata(new List<GeoPoints>()));
+            DependencyProperty.Register(nameof(GeoPointsList), typeof(ObservableCollection<GeoPoints>), typeof(Geos),
+                new FrameworkPropertyMetadata(new ObservableCollection<GeoPoints>(),
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+
+        //public List<GeoPoints> GeoPointsList
+        //{
+        //    get { return (List<GeoPoints>)GetValue(GeoPointsListProperty); }
+        //    set { SetValue(GeoPointsListProperty, value); }
+        //}
+        //public static readonly DependencyProperty GeoPointsListProperty =
+        //    DependencyProperty.Register(nameof(GeoPointsList), typeof(List<GeoPoints>), typeof(Geos), new PropertyMetadata(new List<GeoPoints>()));
+
+        //public List<GeoPoints> GeoPointsList
+        //{
+        //    get { return (List<GeoPoints>)GetValue(GeoPointsListProperty); }
+        //    set { SetValue(GeoPointsListProperty, value); }
+        //}
+        //public static readonly DependencyProperty GeoPointsListProperty =
+        //    DependencyProperty.Register(nameof(GeoPointsList), typeof(List<GeoPoints>), typeof(Geos),
+        //        new FrameworkPropertyMetadata(new List<GeoPoints>(),
+        //            FrameworkPropertyMetadataOptions.AffectsRender |
+        //            FrameworkPropertyMetadataOptions.AffectsMeasure |
+        //            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
         #endregion 依存関係プロパティ
 
         private void DrawTest(StreamGeometryContext context)
         {
-            //List<Point> points = [new Point(), new Point(0, 50)];
-            //context.BeginFigure(new Point(100, 0), false, false);
-            //context.PolyLineTo(points, true, true);
-
-            //context.BeginFigure(new Point(0, 150), false, false);
-            //List<Point> points2 = [new Point(50, 50), new Point(100, 100)];
-            //context.PolyLineTo(points2, true, true);
             for (int i = 0; i < GeoPointsList.Count; i++)
             {
                 context.BeginFigure(GeoPointsList[i].BeginPoint, false, false);

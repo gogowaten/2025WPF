@@ -15,6 +15,13 @@
     <Canvas x:Name="MyCanvas">
       <local:GeoShape MyPoints="100,100, 100,0" Stroke="Red" StrokeThickness="10"/>
       <local:Geos Canvas.Left="200" Canvas.Top="50" Stroke="Red" StrokeThickness="10"/>
+
+      <local:Geos Stroke="Red" StrokeThickness="10">
+        <local:Geos.GeoPointsList>
+          <local:GeoPoints BeginPoint="10,10" Points="20,30, 10,100"/>
+
+        </local:Geos.GeoPointsList>
+      </local:Geos>
     </Canvas>
 
     <StackPanel Grid.Column="1">
