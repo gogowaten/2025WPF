@@ -13,44 +13,139 @@ using System.Windows.Input;
 
 namespace _20250615
 {
+    public class FHGrid : Grid
+    {
+        private bool IsDrawing;
+        public Polyline MyPolyline { get; set; } = new();
+        public FHGrid()
+        {
+            MouseLeftButtonDown += FHGrid_MouseLeftButtonDown;
+            MouseMove += FHGrid_MouseMove;
+            PreviewMouseLeftButtonUp += FHGrid_PreviewMouseLeftButtonUp;
 
+            //MyPPoints = new()
+            //{
+            //    MyOriginPoints = [new Point(), new Point(0, 100), new Point(100, 100)]
+            //};
+
+
+
+
+        }
+
+        private void FHGrid_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            IsDrawing = false;
+            MyPolyline.SetBinding(Polyline.PointsProperty, new Binding() { Source = MyPPoints, Path = new PropertyPath(PPoints.MyPointsProperty) });
+        }
+
+        private void FHGrid_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (IsDrawing)
+            {
+                MyPPoints.MyOriginPoints.Add(e.GetPosition(this));
+            }
+        }
+
+        private void FHGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            IsDrawing= true;
+            MyPPoints = new();
+            MyPPoints.SetBinding(PPoints.MyIntervalProperty, new Binding() { Source = this, Path = new PropertyPath(MyIntervalProperty) });
+
+
+            MyPolyline = new Polyline()
+            {
+                StrokeStartLineCap = PenLineCap.Round,
+                StrokeEndLineCap = PenLineCap.Round,
+                StrokeLineJoin = PenLineJoin.Round,
+            };
+            Children.Add(MyPolyline);
+            MyPolyline.SetBinding(Shape.StrokeProperty, new Binding() { Source = this, Path = new PropertyPath(MyStrokeProperty) });
+            MyPolyline.SetBinding(Shape.StrokeThicknessProperty, new Binding() { Source = this, Path = new PropertyPath(MyStrokeThicknessProperty) });
+
+            MyPolyline.SetBinding(Polyline.PointsProperty, new Binding() { Source = MyPPoints, Path = new PropertyPath(PPoints.MyOriginPointsProperty) });
+        }
+
+
+
+        public int MyInterval
+        {
+            get { return (int)GetValue(MyIntervalProperty); }
+            set { SetValue(MyIntervalProperty, value); }
+        }
+        public static readonly DependencyProperty MyIntervalProperty =
+            DependencyProperty.Register(nameof(MyInterval), typeof(int), typeof(FHGrid), new PropertyMetadata(1));
+
+
+        public Brush MyStroke
+        {
+            get { return (Brush)GetValue(MyStrokeProperty); }
+            set { SetValue(MyStrokeProperty, value); }
+        }
+        public static readonly DependencyProperty MyStrokeProperty =
+            DependencyProperty.Register(nameof(MyStroke), typeof(Brush), typeof(FHGrid), new PropertyMetadata(Brushes.Gray));
+
+
+        public double MyStrokeThickness
+        {
+            get { return (double)GetValue(MyStrokeThicknessProperty); }
+            set { SetValue(MyStrokeThicknessProperty, value); }
+        }
+        public static readonly DependencyProperty MyStrokeThicknessProperty =
+            DependencyProperty.Register(nameof(MyStrokeThickness), typeof(double), typeof(FHGrid), new PropertyMetadata(20.0));
+
+
+        public PPoints MyPPoints
+        {
+            get { return (PPoints)GetValue(MyPPointsProperty); }
+            set { SetValue(MyPPointsProperty, value); }
+        }
+        public static readonly DependencyProperty MyPPointsProperty =
+            DependencyProperty.Register(nameof(MyPPoints), typeof(PPoints), typeof(FHGrid), new PropertyMetadata(null));
+
+    }
 
     public class FreehandGrid : Grid
     {
         //private Polyline MyPolyline { get; set; } = new();
         private Polyline MyOriginPolyline { get; set; } = new();
-        private List<PointCollection> MyListOfOriginPointCollection = [];
+        //private List<PointCollection> MyListOfOriginPointCollection = [];
+        private List<Polyline> MyListOfPolyline = [];
         private bool IsDrawing;
         public FreehandGrid()
         {
-
-            //MyPoints = [];
-            //_ = Children.Add(MyPolyline);
             MouseLeftButtonDown += FreehandGrid_MouseLeftButtonDown;
             MouseMove += FreehandGrid_MouseMove;
             PreviewMouseLeftButtonUp += FreehandGrid_PreviewMouseLeftButtonUp;
+
+            //PPolyline pp = new();
+            //Children.Add(pp);
         }
 
         // ドラッグ移動終了時
         private void FreehandGrid_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             IsDrawing = false;
-            MyListOfOriginPointCollection.Add(MyPoints);
+            MyListOfPolyline.Add(MyOriginPolyline);
+            Kakou(MyOriginPolyline.Points);
         }
 
         // マウス移動中
-        private void FreehandGrid_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void FreehandGrid_MouseMove(object sender, MouseEventArgs e)
         {
             if (IsDrawing && e.LeftButton == MouseButtonState.Pressed)
             {
-                MyPoints.Add(e.GetPosition(this));
+                //MyOriginPoints.Add(e.GetPosition(this));
+                MyOriginPolyline.Points.Add(e.GetPosition(this));
             }
         }
 
+        // 開始
         private void FreehandGrid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             IsDrawing = true;
-            MyInitializePolyline();
+            //MyInitializePolyline();
             MyInitializeOriginPolyline();
 
         }
@@ -95,9 +190,17 @@ namespace _20250615
         #endregion 依存関係プロパティ
 
         #region メソッド
+        public void Kakou(PointCollection pc)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                pc.Remove(pc[^1]);
+            }
+        }
+
         public void Test()
         {
-            var pc = MyListOfOriginPointCollection[0];
+            var pc = MyListOfPolyline[0].Points;
             for (int i = 0; i < 10; i++)
             {
                 pc.Remove(pc[^1]);
@@ -122,7 +225,7 @@ namespace _20250615
 
         private void MyInitializeOriginPolyline()
         {
-            Polyline polyline = new()
+            MyOriginPolyline = new()
             {
                 Stroke = Brushes.Gray,
                 StrokeLineJoin = PenLineJoin.Round,
@@ -130,12 +233,12 @@ namespace _20250615
                 StrokeEndLineCap = PenLineCap.Round,
 
             };
-            SetZIndex(polyline, 0);
-            Children.Add(polyline);
+            //SetZIndex(polyline, 0);
+            Children.Add(MyOriginPolyline);
 
-            polyline.SetBinding(Shape.StrokeThicknessProperty, new Binding() { Source = this, Path = new PropertyPath(MyStrokeThicknessProperty) });
-            MyOriginPoints = [];
-            polyline.Points = MyOriginPoints;
+            MyOriginPolyline.SetBinding(Shape.StrokeThicknessProperty, new Binding() { Source = this, Path = new PropertyPath(MyStrokeThicknessProperty) });
+
+
         }
 
 

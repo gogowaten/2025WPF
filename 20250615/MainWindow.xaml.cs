@@ -16,16 +16,21 @@ namespace _20250615
     /// </summary>
     public partial class MainWindow : Window
     {
+        //public PPolyline MyPPolyline { get; set; }
         public MainWindow()
         {
             InitializeComponent();
-            Binding b=new Binding();
+            //MyPPolyline = new();
+            //DataContext = MyPPolyline;
+            //MyPPolyline.MyOriginPoints = [new Point(), new Point(0, 100), new Point(100, 100)];
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MyFreehand.Test();
-
+            //MyFreehand.Test();
+            //MyPPolyline.MyOriginPoints.Add(new Point(200, 2));
+            MyFreehand.MyPPoints.MyOriginPoints.Add(new Point(200, 22));
         }
     }
 }

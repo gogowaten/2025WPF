@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250615"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=local:PPoints}"
         Title="MainWindow" Height="367" Width="654">
   <Grid>
     <Grid.ColumnDefinitions>
@@ -13,24 +14,34 @@
     </Grid.ColumnDefinitions>
 
 
-    <local:FreehandGrid
+    <local:FHGrid
         x:Name="MyFreehand"
         
         >
-      <local:FreehandGrid.Background>
+      <local:FHGrid.Background>
         <SolidColorBrush>
           <SolidColorBrush.Color>
             <Color A="20" R="5" G="5" B="255"/>
           </SolidColorBrush.Color>
         </SolidColorBrush>
-      </local:FreehandGrid.Background>
-    </local:FreehandGrid>
+      </local:FHGrid.Background>
+    </local:FHGrid>
+    
     <Canvas x:Name="MyCanvas">
-
+    
     </Canvas>
 
-    <StackPanel Grid.Column="1">
+    <StackPanel Grid.Column="1" DataContext="{Binding ElementName=MyFreehand}">
+      <StackPanel DataContext="{Binding MyPPoints}">
       <Button Content="test" Click="Button_Click"/>
+      <TextBlock Text="{Binding MyInterval, StringFormat=Interval {0:0}}"/>
+      <Slider Minimum="1" Maximum="10" TickFrequency="1" Value="{Binding MyInterval}"/>
+      <TextBlock Text="{Binding MyPoints, StringFormat=MyPoints {0:0}}" TextWrapping="Wrap"/>
+      <TextBlock Text="{Binding MyOriginPoints, StringFormat=MyOriginPoints {0:0}}" TextWrapping="Wrap"/>
+      </StackPanel>
+      <StackPanel>
+        <TextBlock Text="{Binding MyPolyline.Points, StringFormat=Points {0:0}}"/>
+      </StackPanel>
     </StackPanel>
   </Grid>
 </Window>
