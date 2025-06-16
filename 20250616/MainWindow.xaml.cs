@@ -20,5 +20,13 @@ namespace _20250616
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var neko = MyFrrehand.MyListOfAAA;
+            var a0 = neko[0];
+            var ori = a0.MyOriginPoints;
+            var pc = a0.MyPoints;
+        }
     }
 }

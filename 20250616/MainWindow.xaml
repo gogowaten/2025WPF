@@ -11,13 +11,16 @@
       <ColumnDefinition/>
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
-    <local:Freehand/>
+    <local:Freehand x:Name="MyFrrehand"/>
     <Canvas x:Name="MyCanvas">
 
     </Canvas>
 
-    <StackPanel Grid.Column="1">
-
+    <StackPanel Grid.Column="1" Margin="10">
+      <Button Content="test" Click="Button_Click"/>
+      <Slider Minimum="1" Maximum="50" TickFrequency="1" IsSnapToTickEnabled="True"
+              Value="{Binding ElementName=MyFrrehand, Path=MyInterval}"/>
+      <TextBlock Text="{Binding ElementName=MyFrrehand, Path=MyInterval, StringFormat=Interval {0:0}}"/>
     </StackPanel>
   </Grid>
 </Window>

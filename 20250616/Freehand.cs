@@ -8,22 +8,104 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows;
+using System.Globalization;
+using System.Net;
+using System.ComponentModel;
 
 
 namespace _20250616
 {
     public class Freehand : Grid
     {
-        public List<Polyline> MyListOfPolyline = [];
-        public List<PointCollection> MyListOfPointCollection = [];
+        //public List<Polyline> MyListOfPolyline = [];
+        //public List<PointCollection> MyListOfPointCollection = [];
+        public List<AAA> MyListOfAAA { get; set; } = [];
         public Polyline MyPolyline { get; set; } = null!;
+        private bool IsDrawing;
         public Freehand()
         {
+            MouseLeftButtonDown += Freehand_MouseLeftButtonDown;
+            PreviewMouseLeftButtonUp += Freehand_PreviewMouseLeftButtonUp;
+            MouseMove += Freehand_MouseMove;
+            MouseLeave += Freehand_MouseLeave;
+
+            Background = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
+
+
+            MyPolyline = MakePolyline();
+            SetZIndex(MyPolyline, 1);
+            Children.Add(MyPolyline);
+            MyPolyline.Visibility = Visibility.Collapsed;
+
+
+        }
+
+        // 描画完了
+        private void Freehand_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (IsDrawing)
+            {
+                IsDrawing = false;
+                DrawEnd();
+            }
+        }
+
+        private void Freehand_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (IsDrawing)
+            {
+                MyPolyline.Points.Add(e.GetPosition(this));
+            }
+        }
+
+        // 描画完了
+        private void Freehand_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (IsDrawing)
+            {
+                IsDrawing = false;
+                DrawEnd();
+            }
+        }
+
+        // 描画開始
+        private void Freehand_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            IsDrawing = true;
+            MyPolyline.Visibility = Visibility.Visible;
+            MyPolyline.Points.Clear();
+            MyPolyline.Points.Add(e.GetPosition(this));
+        }
+
+        private void DrawEnd()
+        {
+            AAA a = new();
+            MyListOfAAA.Add(a);
+            a.MyOriginPoints = MyPolyline.Points.Clone();
+
+            Children.Add(a.MyPolyline);
+
+            var mb = new MultiBinding() { Converter = new MyConvMage() };
+            mb.Bindings.Add(new Binding() { Source = a, Path = new PropertyPath(AAA.MyOriginPointsProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyIntervalProperty) });
+            BindingOperations.SetBinding(a, AAA.MyPointsProperty, mb);
+
+            MyPolyline.Visibility = Visibility.Collapsed;
+            MyPolyline.Points.Clear();
+
+        }
+
+
+
+        private PointCollection MakeOriginPoints()
+        {
+            PointCollection pc = [];
             for (int i = 0; i < 10; i++)
             {
-                MyListOfPolyline.Add(MakePolyline());
+                pc.Add(new Point(i, i * 10));
             }
-            Children.Add(MyListOfPolyline[0]);
+            return pc;
         }
 
         private Polyline MakePolyline()
@@ -36,14 +118,84 @@ namespace _20250616
                 StrokeStartLineCap = PenLineCap.Round,
                 StrokeEndLineCap = PenLineCap.Round,
             };
-            for (int i = 0; i < 10; i++)
-            {
-                polyline.Points.Add(new System.Windows.Point(i, i + 100));
-            }
             return polyline;
         }
 
 
+
+        public int MyInterval
+        {
+            get { return (int)GetValue(MyIntervalProperty); }
+            set { SetValue(MyIntervalProperty, value); }
+        }
+        public static readonly DependencyProperty MyIntervalProperty =
+            DependencyProperty.Register(nameof(MyInterval), typeof(int), typeof(Freehand), new PropertyMetadata(1));
+
+
+
+
+
+    }
+
+    public class AAA : DependencyObject
+    {
+        public Polyline MyPolyline { get; set; }
+
+        public AAA()
+        {
+
+            MyPolyline = new()
+            {
+                Stroke = Brushes.DodgerBlue,
+                StrokeThickness = 20.0,
+                StrokeStartLineCap = PenLineCap.Round,
+                StrokeEndLineCap = PenLineCap.Round,
+                StrokeLineJoin = PenLineJoin.Round,
+            };
+            MyBind();
+
+        }
+
+        private void MyBind()
+        {
+            MyPolyline.SetBinding(Polyline.PointsProperty, new Binding() { Source = this, Path = new PropertyPath(MyPointsProperty) });
+        }
+
+
+        public PointCollection MyPoints
+        {
+            get { return (PointCollection)GetValue(MyPointsProperty); }
+            set { SetValue(MyPointsProperty, value); }
+        }
+        public static readonly DependencyProperty MyPointsProperty =
+            DependencyProperty.Register(nameof(MyPoints), typeof(PointCollection), typeof(AAA), new PropertyMetadata(null));
+
+        public PointCollection MyOriginPoints
+        {
+            get { return (PointCollection)GetValue(MyOriginPointsProperty); }
+            set { SetValue(MyOriginPointsProperty, value); }
+        }
+        public static readonly DependencyProperty MyOriginPointsProperty =
+            DependencyProperty.Register(nameof(MyOriginPoints), typeof(PointCollection), typeof(AAA), new PropertyMetadata(null));
+
+
+    }
+
+
+
+    public class MyConvMage : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var origin = (PointCollection)values[0];
+            var interval = (int)values[1];
+            return ChoiceAnchorPoint(origin, interval);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
 
 
         /// <summary>
@@ -75,8 +227,8 @@ namespace _20250616
             }
             return selectedPoints;
         }
-
-
-
     }
+
+
+
 }
