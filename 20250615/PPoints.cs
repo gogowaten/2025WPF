@@ -12,7 +12,7 @@ using System.Windows.Shapes;
 
 namespace _20250615
 {
-    public class PPoints: FrameworkElement
+    public class PPoints : FrameworkElement
     {
         public PPoints()
         {
@@ -27,10 +27,7 @@ namespace _20250615
         #region 依存関係プロパティ
 
         public int MyInterval
-        {
-            get { return (int)GetValue(MyIntervalProperty); }
-            set { SetValue(MyIntervalProperty, value); }
-        }
+        { get => (int)GetValue(MyIntervalProperty); set => SetValue(MyIntervalProperty, value); }
         public static readonly DependencyProperty MyIntervalProperty =
             DependencyProperty.Register(nameof(MyInterval), typeof(int), typeof(PPoints), new PropertyMetadata(1));
 
@@ -79,7 +76,7 @@ namespace _20250615
         private static PointCollection ChoiceAnchorPoint(PointCollection points, int interval)
         {
             var selectedPoints = new PointCollection();
-            if(points.Count == 0) { return selectedPoints; }
+            if (points.Count == 0) { return selectedPoints; }
 
             if (interval < 1) { interval = 1; }//間隔は1以上
             for (int i = 0; i < points.Count - 1; i += interval)

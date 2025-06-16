@@ -22,21 +22,26 @@ namespace _20250615
             MouseLeftButtonDown += FHGrid_MouseLeftButtonDown;
             MouseMove += FHGrid_MouseMove;
             PreviewMouseLeftButtonUp += FHGrid_PreviewMouseLeftButtonUp;
+            MouseLeave += FHGrid_MouseLeave;
 
-            //MyPPoints = new()
-            //{
-            //    MyOriginPoints = [new Point(), new Point(0, 100), new Point(100, 100)]
-            //};
+        }
 
-
-
-
+        private void FHGrid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (IsDrawing)
+            {
+                IsDrawing = false;
+                MyPolyline.SetBinding(Polyline.PointsProperty, new Binding() { Source = MyPPoints, Path = new PropertyPath(PPoints.MyPointsProperty) });
+            }
         }
 
         private void FHGrid_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            IsDrawing = false;
-            MyPolyline.SetBinding(Polyline.PointsProperty, new Binding() { Source = MyPPoints, Path = new PropertyPath(PPoints.MyPointsProperty) });
+            if (IsDrawing)
+            {
+                IsDrawing = false;
+                MyPolyline.SetBinding(Polyline.PointsProperty, new Binding() { Source = MyPPoints, Path = new PropertyPath(PPoints.MyPointsProperty) });
+            }
         }
 
         private void FHGrid_MouseMove(object sender, MouseEventArgs e)

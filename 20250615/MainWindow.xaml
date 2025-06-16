@@ -35,7 +35,7 @@
       <StackPanel DataContext="{Binding MyPPoints}">
       <Button Content="test" Click="Button_Click"/>
       <TextBlock Text="{Binding MyInterval, StringFormat=Interval {0:0}}"/>
-      <Slider Minimum="1" Maximum="10" TickFrequency="1" Value="{Binding MyInterval}"/>
+      <Slider Minimum="1" Maximum="30" TickFrequency="1" Value="{Binding MyInterval}"/>
       <TextBlock Text="{Binding MyPoints, StringFormat=MyPoints {0:0}}" TextWrapping="Wrap"/>
       <TextBlock Text="{Binding MyOriginPoints, StringFormat=MyOriginPoints {0:0}}" TextWrapping="Wrap"/>
       </StackPanel>
