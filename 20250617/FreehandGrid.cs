@@ -24,6 +24,7 @@ namespace _20250617
             MouseMove += (s, e) => { Drawing(e); };// ドラッグ移動、描画
             PreviewMouseLeftButtonUp += (s, e) => { DrawEnd(); };// 描画完了
             MouseLeave += (s, e) => { DrawEnd(); };// 描画完了
+            MouseRightButtonDown += (s, e) => { RemoveLastDraw(); };// 右クリック時、最後に追加した図形を削除
 
             Background = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
 
@@ -36,6 +37,18 @@ namespace _20250617
 
         }
 
+        
+
+        // 右クリック時、最後に追加した図形を削除
+        private void RemoveLastDraw()
+        {
+            if (!IsDrawing && MyListOfPPolyline.Count > 0)
+            {
+                var temp = MyListOfPPolyline[^1];
+                Children.Remove(temp.MyPolyline);
+                _ = MyListOfPPolyline.Remove(temp);
+            }
+        }
 
         // 描画開始
         private void DrawBegin(MouseButtonEventArgs e)
