@@ -21,6 +21,9 @@
       <Slider Minimum="1" Maximum="50" TickFrequency="1" IsSnapToTickEnabled="True"
               Value="{Binding ElementName=MyFrrehand, Path=MyInterval}"/>
       <TextBlock Text="{Binding ElementName=MyFrrehand, Path=MyInterval, StringFormat=Interval {0:0}}"/>
+      <Slider Minimum="1" Maximum="50" TickFrequency="1" IsSnapToTickEnabled="True"
+              Value="{Binding ElementName=MyFrrehand, Path=MyStrokeThickness}"/>
+      <TextBlock Text="{Binding ElementName=MyFrrehand, Path=MyStrokeThickness, StringFormat=StrokeTickness {0:0}}"/>
     </StackPanel>
   </Grid>
 </Window>

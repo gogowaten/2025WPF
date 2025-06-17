@@ -90,6 +90,7 @@ namespace _20250616
             mb.Bindings.Add(new Binding() { Source = a, Path = new PropertyPath(AAA.MyOriginPointsProperty) });
             mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyIntervalProperty) });
             BindingOperations.SetBinding(a, AAA.MyPointsProperty, mb);
+            BindingOperations.SetBinding(a.MyPolyline, Shape.StrokeThicknessProperty, new Binding() { Source = this, Path = new PropertyPath(MyStrokeThicknessProperty) });
 
             MyPolyline.Visibility = Visibility.Collapsed;
             MyPolyline.Points.Clear();
@@ -113,7 +114,7 @@ namespace _20250616
             Polyline polyline = new()
             {
                 Stroke = Brushes.Gray,
-                StrokeThickness = 20,
+                StrokeThickness = MyStrokeThickness,
                 StrokeLineJoin = PenLineJoin.Round,
                 StrokeStartLineCap = PenLineCap.Round,
                 StrokeEndLineCap = PenLineCap.Round,
@@ -131,6 +132,14 @@ namespace _20250616
         public static readonly DependencyProperty MyIntervalProperty =
             DependencyProperty.Register(nameof(MyInterval), typeof(int), typeof(Freehand), new PropertyMetadata(1));
 
+
+        public double MyStrokeThickness
+        {
+            get { return (double)GetValue(MyStrokeThicknessProperty); }
+            set { SetValue(MyStrokeThicknessProperty, value); }
+        }
+        public static readonly DependencyProperty MyStrokeThicknessProperty =
+            DependencyProperty.Register(nameof(MyStrokeThickness), typeof(double), typeof(Freehand), new PropertyMetadata(20.0));
 
 
 
