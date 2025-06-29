@@ -7,36 +7,45 @@ using System.Windows.Media;
 
 namespace _20250629_ColorPicker
 {
-    public struct ARGBHSV
-    {
+    //public struct ARGBHSV
+    //{
 
-        public byte A { get; set; } = 0;
-        public byte R { get; set; } = 0;
-        public byte G { get; set; } = 0;
-        public byte B { get; set; } = 0;
+    //    public byte A { get; set; } = 0;
+    //    public byte R { get; set; } = 0;
+    //    public byte G { get; set; } = 0;
+    //    public byte B { get; set; } = 0;
+
+
+    //    public double H { get; set; } = 0.0;
+    //    public double S { get; set; } = 0.0;
+    //    public double V { get; set; } = 0.0;
+    //    public ARGBHSV(byte a, byte r, byte g, byte b, double h, double s, double v)
+    //    {
+    //        A = a; R = r; G = g; B = b; H = h; S = s; V = v;
+    //    }
+    //    public ARGBHSV() { }
+    //    public override string ToString()
+    //    {
+    //        return $"{A}, {R}, {G}, {B}, {H}, {S}, {V}";
+    //        //return base.ToString();
+    //    }
+    //}
+
+
+    public struct HSV
+    {
+        //public double H, S, V;
 
 
         public double H { get; set; } = 0.0;
         public double S { get; set; } = 0.0;
         public double V { get; set; } = 0.0;
-        public ARGBHSV(byte a, byte r, byte g, byte b, double h, double s, double v)
-        {
-            A = a; R = r; G = g; B = b; H = h; S = s; V = v;
-        }
-        public ARGBHSV() { }
-        public override string ToString()
-        {
-            return $"{A}, {R}, {G}, {B}, {H}, {S}, {V}";
-            //return base.ToString();
-        }
-    }
-    public struct HSV(double h, double s, double v)
-    {
-        //public double H, S, V;
-        public double H { get; set; } = h;
-        public double S { get; set; } = s;
-        public double V { get; set; } = v;
 
+        public HSV() { }
+        public HSV(double h, double s, double v)
+        {
+            H = h; S = s; V = v;
+        }
         public override string ToString()
         {
             return $"{H}, {S}, {V}";

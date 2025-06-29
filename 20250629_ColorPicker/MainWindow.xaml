@@ -5,7 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250629_ColorPicker"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type={x:Type local:MainWindow}}"
         Title="MainWindow" Height="367" Width="654">
+  <Window.Resources>
+    <local:MyConvRGBtoBrush x:Key="rgbBrush"/>
+  </Window.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
@@ -17,6 +21,22 @@
     </Canvas>
 
     <StackPanel Grid.Column="1">
+      <Button Content="test" Click="Button_Click"/>
+      <TextBlock Text="{Binding MySikisai.R}"/>
+      <Slider Minimum="0" Maximum="255" Value="{Binding MySikisai.R, Mode=TwoWay}"/>
+      <TextBlock Text="{Binding MySikisai.G}"/>
+      <Slider Minimum="0" Maximum="255" Value="{Binding MySikisai.G, Mode=TwoWay}"/>
+      <TextBlock Text="{Binding MySikisai.B}"/>
+      <Slider Minimum="0" Maximum="255" Value="{Binding MySikisai.B, Mode=TwoWay}"/>
+      <TextBlock Text="{Binding MySikisai.H}"/>
+      <Slider Minimum="0.0" Maximum="360.0" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding MySikisai.H, Mode=TwoWay}"/>
+      
+      <Slider Minimum="0.0" Maximum="1.0" LargeChange="0.01" TickFrequency="0.01" IsSnapToTickEnabled="True" Value="{Binding MySikisai.S, Mode=TwoWay}"/>
+      
+      <Slider Minimum="0.0" Maximum="1.0" LargeChange="0.01" TickFrequency="0.01" IsSnapToTickEnabled="True" Value="{Binding MySikisai.V, Mode=TwoWay}"/>
+      <Rectangle Height="20" Fill="AliceBlue"/>
+      <Rectangle Height="20" Fill="{Binding MySikisaiBrush.MyBrush}"/>
+      <Slider Minimum="0.0" Maximum="359" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding MySikisaiBrush.H}"/>
 
     </StackPanel>
   </Grid>

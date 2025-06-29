@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,9 +17,24 @@ namespace _20250629_ColorPicker
     /// </summary>
     public partial class MainWindow : Window
     {
+        public Sikisai MySikisai { get; set; }
+        public SikisaiBrush MySikisaiBrush { get; set; }
         public MainWindow()
         {
             InitializeComponent();
+            MySikisai = new Sikisai();
+            MySikisai = new Sikisai(Colors.Magenta);
+            MySikisaiBrush = new SikisaiBrush(Brushes.Magenta);
+            DataContext = this;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var neko = MySikisai;
+            var inu = MySikisaiBrush;
         }
     }
+
+
+
 }

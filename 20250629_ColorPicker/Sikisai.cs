@@ -1,49 +1,78 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace _20250629_ColorPicker
 {
+    public class SikisaiBrush : Sikisai
+    {
+        public SikisaiBrush()
+        {
+            MyBind();
+        }
+
+        public SikisaiBrush(SolidColorBrush myBrush) : this()
+        {
+            MyBrush = myBrush;
+        }
+
+        public SolidColorBrush MyBrush
+        {
+            get { return (SolidColorBrush)GetValue(MyBrushProperty); }
+            set { SetValue(MyBrushProperty, value); }
+        }
+        public static readonly DependencyProperty MyBrushProperty =
+            DependencyProperty.Register(nameof(MyBrush), typeof(SolidColorBrush), typeof(SikisaiBrush),
+                new FrameworkPropertyMetadata(Brushes.Black,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+
+        private void MyBind()
+        {
+            MultiBinding mb = new() { Converter = new MyConvRGBtoBrush() };
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(RProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(GProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(BProperty) });
+            BindingOperations.SetBinding(this, MyBrushProperty, mb);
+        }
+
+
+
+    }
+
+
+
+
+
     public class Sikisai : DependencyObject
     {
-        private bool IsChangingRGB;// RGBを変更中
+        private bool IsChangingRGB { get; set; }// RGBを変更中
         private bool IsChangingHSV;
 
-        public Sikisai()
+        public Sikisai() : this(Colors.Black)
         {
-            HSV = new();
-            RGB = new();
+
         }
 
         public Sikisai(Color color)
         {
-            
+            R = color.R; G = color.G; B = color.B;
+            HSV hsv = MathHSV.Rgb2HSV(R, G, B);
+            H = hsv.H; S = hsv.S; V = hsv.V;
         }
-
 
 
 
         #region 依存関係プロパティ
-
-        public RGB RGB
-        {
-            get { return (RGB)GetValue(RGBProperty); }
-            set { SetValue(RGBProperty, value); }
-        }
-        public static readonly DependencyProperty RGBProperty =
-            DependencyProperty.Register(nameof(RGB), typeof(RGB), typeof(Sikisai), new PropertyMetadata(null));
-
-        public HSV HSV
-        {
-            get { return (HSV)GetValue(HSVProperty); }
-            set { SetValue(HSVProperty, value); }
-        }
-        public static readonly DependencyProperty HSVProperty =
-            DependencyProperty.Register(nameof(HSV), typeof(HSV), typeof(Sikisai), new PropertyMetadata(null));
 
         public byte R
         {
@@ -51,7 +80,8 @@ namespace _20250629_ColorPicker
             set { SetValue(RProperty, value); }
         }
         public static readonly DependencyProperty RProperty =
-            DependencyProperty.Register(nameof(R), typeof(byte), typeof(Sikisai), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(R), typeof(byte), typeof(Sikisai), new FrameworkPropertyMetadata((byte)0, new PropertyChangedCallback(OnRGBChanged)));
+
 
         public byte G
         {
@@ -59,15 +89,15 @@ namespace _20250629_ColorPicker
             set { SetValue(GProperty, value); }
         }
         public static readonly DependencyProperty GProperty =
-            DependencyProperty.Register(nameof(G), typeof(byte), typeof(Sikisai), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(G), typeof(byte), typeof(Sikisai), new FrameworkPropertyMetadata((byte)0, new PropertyChangedCallback(OnRGBChanged)));
 
-        public Byte B
+        public byte B
         {
-            get { return (Byte)GetValue(BProperty); }
+            get { return (byte)GetValue(BProperty); }
             set { SetValue(BProperty, value); }
         }
         public static readonly DependencyProperty BProperty =
-            DependencyProperty.Register(nameof(B), typeof(Byte), typeof(Sikisai), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(B), typeof(byte), typeof(Sikisai), new FrameworkPropertyMetadata((byte)0, new PropertyChangedCallback(OnRGBChanged)));
 
         public double H
         {
@@ -75,7 +105,7 @@ namespace _20250629_ColorPicker
             set { SetValue(HProperty, value); }
         }
         public static readonly DependencyProperty HProperty =
-            DependencyProperty.Register(nameof(H), typeof(double), typeof(Sikisai), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(H), typeof(double), typeof(Sikisai), new FrameworkPropertyMetadata(0.0, new PropertyChangedCallback(OnHSVChenged)));
 
         public double S
         {
@@ -83,7 +113,7 @@ namespace _20250629_ColorPicker
             set { SetValue(SProperty, value); }
         }
         public static readonly DependencyProperty SProperty =
-            DependencyProperty.Register(nameof(S), typeof(double), typeof(Sikisai), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(S), typeof(double), typeof(Sikisai), new FrameworkPropertyMetadata(0.0, new PropertyChangedCallback(OnHSVChenged)));
 
         public double V
         {
@@ -91,20 +121,110 @@ namespace _20250629_ColorPicker
             set { SetValue(VProperty, value); }
         }
         public static readonly DependencyProperty VProperty =
-            DependencyProperty.Register(nameof(V), typeof(double), typeof(Sikisai), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(V), typeof(double), typeof(Sikisai), new FrameworkPropertyMetadata(0.0, new PropertyChangedCallback(OnHSVChenged)));
+
 
         #endregion 依存関係プロパティ
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
         private static void OnHSVChenged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Sikisai)
+            if (d is Sikisai sikisai)
             {
-                if (e.NewValue is HSV)
-                {
-
-                }
+                if (sikisai.IsChangingHSV) { return; }
+                sikisai.IsChangingHSV = true;
+                var rgb = MathHSV.Hsv2RGB(sikisai.H, sikisai.S, sikisai.V);
+                sikisai.R = rgb.R; sikisai.G = rgb.G; sikisai.B = rgb.B;
+                sikisai.IsChangingHSV = false;
             }
         }
+
+        private static void OnRGBChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Sikisai sikisai)
+            {
+                if (sikisai.IsChangingRGB) { return; }
+                sikisai.IsChangingRGB = true;
+                var hsv = MathHSV.Rgb2HSV(sikisai.R, sikisai.G, sikisai.B);
+                sikisai.H = hsv.H; sikisai.V = hsv.V; sikisai.S = hsv.S;
+                sikisai.IsChangingRGB = false;
+            }
+        }
+
+
+
+
     }
+
+
+
+
+
+
+    //public class MyConvHSV : IMultiValueConverter
+    //{
+    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        var h = (double)values[0];
+    //        var s = (double)values[1];
+    //        var v = (double)values[2];
+    //        return new HSV(h, s, v);
+    //    }
+
+    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    //    {
+    //        var v = (HSV)value;
+    //        return [v.H, v.S, v.V];
+    //    }
+    //}
+
+    //public class MyConvRGB : IMultiValueConverter
+    //{
+    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        var r = (byte)values[0];
+    //        var g = (byte)values[1];
+    //        var b = (byte)values[2];
+    //        //var a = (byte)values[3];
+    //        return new RGB(r, g, b);
+    //    }
+
+    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    //    {
+    //        RGB rgb = (RGB)value;
+    //        return [rgb.R, rgb.G, rgb.B];
+    //    }
+    //}
+
+
+
+
+
+    public class MyConvRGBtoBrush : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var r = (byte)values[0];
+            var g = (byte)values[1];
+            var b = (byte)values[2];
+            return new SolidColorBrush(Color.FromRgb(r, g, b));
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            var brush = (SolidColorBrush)value;
+            return [brush.Color.R, brush.Color.G, brush.Color.B];
+        }
+    }
+
+
+
+
+
+
+
 }
