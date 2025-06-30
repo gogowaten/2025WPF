@@ -16,4 +16,30 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+
+  <Style TargetType="{x:Type local:EllipseThumb}">
+    <Style.Resources>
+      <local:MyConvEllipseSizeDown x:Key="sizeDown"/>
+    </Style.Resources>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:EllipseThumb}">
+          <Grid>
+            <Ellipse Width="{TemplateBinding Width}"
+                     Height="{TemplateBinding Height}"
+                     StrokeThickness="1"
+                     Stroke="{TemplateBinding MyInsideStroke}"/>
+            <Ellipse Width="{TemplateBinding Width, Converter={StaticResource sizeDown}}"
+                     Height="{TemplateBinding Height, Converter={StaticResource sizeDown}}"
+                     StrokeThickness="1"
+                     Stroke="{TemplateBinding MyOutsideStroke}"
+                     Fill="Transparent"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  
 </ResourceDictionary>

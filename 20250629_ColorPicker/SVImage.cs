@@ -14,7 +14,6 @@ namespace _20250629_ColorPicker
 {
     public class SVImage : Image
     {
-        //private WriteableBitmap MyBitmap = null!;
         public SVImage()
         {
             Loaded += SVImage_Loaded;

@@ -24,7 +24,7 @@
       <Viewbox Width="200" Height="200" Stretch="Fill" Canvas.Left="200">
         <local:SVImage x:Name="MySVImage2" Width="8" Height="8" RenderOptions.BitmapScalingMode="Fant"/>
       </Viewbox>
-      
+      <local:EllipseThumb Width="20" Height="20" Canvas.Top="100"/>
     </Canvas>
 
     <StackPanel Grid.Column="1">

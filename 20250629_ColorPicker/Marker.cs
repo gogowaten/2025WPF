@@ -171,13 +171,13 @@ namespace _20250629_ColorPicker
             {
                 Source = this,
                 Path = new PropertyPath(MarkerSizeProperty),
-                Converter = new ConverterDownSize()
+                Converter = new MyConvEllipseSizeDown()
             });
             e2.SetValue(HeightProperty, new Binding()
             {
                 Source = this,
                 Path = new PropertyPath(MarkerSizeProperty),
-                Converter = new ConverterDownSize()
+                Converter = new MyConvEllipseSizeDown()
             });
             e2.SetValue(Ellipse.StrokeProperty, new Binding() { Source = this, Path = new PropertyPath(Color2Property), });
             factory.AppendChild(e1);
@@ -233,19 +233,19 @@ namespace _20250629_ColorPicker
     }
 
 
-    public class ConverterDownSize : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            double size = ((double)value) - 2.0;
-            if (size < 0) { size = 0; }
-            return size;
-        }
+    //public class ConverterDownSize : IValueConverter
+    //{
+    //    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        double size = ((double)value) - 2.0;
+    //        if (size < 0) { size = 0; }
+    //        return size;
+    //    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    //    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
 
 }
