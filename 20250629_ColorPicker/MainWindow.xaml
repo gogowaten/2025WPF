@@ -17,10 +17,18 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-
+      <Viewbox Width="200" Height="200" Stretch="Fill">
+        <local:SVImage x:Name="MySVImage" Width="8" Height="8" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+      </Viewbox>
+      
+      <Viewbox Width="200" Height="200" Stretch="Fill" Canvas.Left="200">
+        <local:SVImage x:Name="MySVImage2" Width="8" Height="8" RenderOptions.BitmapScalingMode="Fant"/>
+      </Viewbox>
+      
     </Canvas>
 
     <StackPanel Grid.Column="1">
+      <Slider Minimum="0" Maximum="359" Value="{Binding ElementName=MySVImage, Path=Hue}"/>
       <Button Content="test" Click="Button_Click"/>
       <TextBlock Text="{Binding MySikisai.R}"/>
       <Slider Minimum="0" Maximum="255" Value="{Binding MySikisai.R, Mode=TwoWay}"/>

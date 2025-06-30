@@ -127,10 +127,11 @@ namespace _20250629_ColorPicker
         #endregion 依存関係プロパティ
 
         /// <summary>
-        /// 
+        /// <see cref="Sikisai"/> オブジェクトの HSV (色相、彩度、明度) プロパティの変更を処理します。
         /// </summary>
-        /// <param name="d"></param>
-        /// <param name="e"></param>
+        /// <remarks>このメソッドは、<see cref="Sikisai"/> オブジェクトの RGB プロパティを更新された HSV 値と同期します。オブジェクトが更新中であることを示すフラグを一時的に設定することで、HSV プロパティの変更によって再帰的な更新がトリガーされないようにします。</remarks>
+        /// <param name="d">HSV プロパティが変更された <see cref="DependencyObject"/>。</param>
+        /// <param name="e">プロパティの変更に関する情報を含むイベントデータ。</param>
         private static void OnHSVChenged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is Sikisai sikisai)
