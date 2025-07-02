@@ -177,7 +177,7 @@ namespace _20250629_ColorPicker
     }
 
 
-
+    // SをMarkerのX座標に変換、Vはy座標
     public class MyConvSV : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

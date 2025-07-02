@@ -18,6 +18,31 @@
     </Style>
 
 
+
+
+
+  <Style TargetType="{x:Type local:SVImageWithMarker}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:SVImageWithMarker}">
+          <Viewbox x:Name="PART_Viewbox"
+            Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+            <local:SVImage x:Name="PART_SVImage"
+              Width="16" Height="16"
+              >
+
+            </local:SVImage>
+          </Viewbox>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  
+  
+  
+  
+
   <Style TargetType="{x:Type local:EllipseThumb}">
     <Style.Resources>
       <local:MyConvEllipseSizeDown x:Key="sizeDown"/>

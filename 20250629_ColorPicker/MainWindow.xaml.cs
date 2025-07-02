@@ -50,7 +50,7 @@ namespace _20250629_ColorPicker
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var neko = MySikisai;
+            var neko = MySVImageWithMarker.MySikisai;
             var inu = MySikisaiBrush;
             var svah = MySVImage.ActualHeight;
             if (AdornerLayer.GetAdornerLayer(MySVImage) is AdornerLayer layer)

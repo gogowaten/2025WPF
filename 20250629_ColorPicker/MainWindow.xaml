@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:_20250629_ColorPicker"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type={x:Type local:MainWindow}}"
-        Title="MainWindow" Height="467" Width="654">
+        Title="MainWindow" Height="567" Width="654">
   <Window.Resources>
     <local:MyConvRGBtoBrush x:Key="rgbBrush"/>
   </Window.Resources>
@@ -20,40 +20,102 @@
       <Viewbox x:Name="MyViewbox" Width="200" Height="200" Stretch="Fill">
         <local:SVImage x:Name="MySVImage" Width="16" Height="16"/>
       </Viewbox>
-      
+
       <Viewbox Width="200" Height="200" Stretch="Fill" Canvas.Left="200" Visibility="Visible">
         <local:SVImage x:Name="MySVImage2" Width="8" Height="8" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
       </Viewbox>
+
+      <local:SVImageWithMarker x:Name="MySVImageWithMarker" Canvas.Top="220" Width="100" Height="100"/>
     </Canvas>
 
     <StackPanel Grid.Column="1">
-      <Slider Minimum="0" Maximum="359" Value="{Binding ElementName=MySVImage, Path=Hue}"/>
       <Button Content="test" Click="Button_Click"/>
-      <TextBlock Text="{Binding MySikisai.R}"/>
-      <Slider Minimum="0" Maximum="255" Value="{Binding MySikisai.R, Mode=TwoWay}"/>
-      <TextBlock Text="{Binding MySikisai.G}"/>
-      <Slider Minimum="0" Maximum="255" Value="{Binding MySikisai.G, Mode=TwoWay}"/>
-      <TextBlock Text="{Binding MySikisai.B}"/>
-      <Slider Minimum="0" Maximum="255" Value="{Binding MySikisai.B, Mode=TwoWay}"/>
-      <TextBlock Text="{Binding MySikisai.H}"/>
-      <Slider Minimum="0.0" Maximum="360.0" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding MySikisai.H, Mode=TwoWay}"/>
-      
-      <Slider Minimum="0.0" Maximum="1.0" LargeChange="0.01" TickFrequency="0.01" IsSnapToTickEnabled="True" Value="{Binding MySikisai.S, Mode=TwoWay}"/>
-      
-      <Slider Minimum="0.0" Maximum="1.0" LargeChange="0.01" TickFrequency="0.01" IsSnapToTickEnabled="True" Value="{Binding MySikisai.V, Mode=TwoWay}"/>
+      <GroupBox Header="RGBとHSVの相互変換">
+        <StackPanel>
+          <StackPanel.Resources>
+            <Style TargetType="TextBlock">
+              <Setter Property="HorizontalAlignment" Value="Right"/>
+              <Setter Property="Margin" Value="10,0"/>
+            </Style>
+          </StackPanel.Resources>
+
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MySikisai.R, StringFormat=R {0:000}}"/>
+            <Slider Minimum="0" Maximum="255" Value="{Binding MySikisai.R, Mode=TwoWay}"/>
+          </UniformGrid>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MySikisai.G, StringFormat=G {0:000}}"/>
+            <Slider Minimum="0" Maximum="255" Value="{Binding MySikisai.G, Mode=TwoWay}"/>
+          </UniformGrid>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MySikisai.B, StringFormat=B {0:000}}"/>
+            <Slider Minimum="0" Maximum="255" Value="{Binding MySikisai.B, Mode=TwoWay}"/>
+          </UniformGrid>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MySikisai.H, StringFormat=H {0:000}}"/>
+            <Slider Minimum="0.0" Maximum="360.0" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding MySikisai.H, Mode=TwoWay}"/>
+          </UniformGrid>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MySikisai.S, StringFormat=S {0:0.00}}"/>
+            <Slider Minimum="0.0" Maximum="1.0" LargeChange="0.01" TickFrequency="0.01" IsSnapToTickEnabled="True" Value="{Binding MySikisai.S, Mode=TwoWay}"/>
+          </UniformGrid>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MySikisai.V, StringFormat=V {0:000}}"/>
+            <Slider Minimum="0.0" Maximum="1.0" LargeChange="0.01" TickFrequency="0.01" IsSnapToTickEnabled="True" Value="{Binding MySikisai.V, Mode=TwoWay}"/>
+          </UniformGrid>
+        </StackPanel>
+      </GroupBox>
       <Rectangle Height="20" Fill="AliceBlue"/>
       <Rectangle Height="20" Fill="{Binding MySikisaiBrush.MyBrush}"/>
       <Slider Minimum="0.0" Maximum="359" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding MySikisaiBrush.H}"/>
-      <StackPanel>
-        <TextBlock Text="{Binding MyMarkerAdorner.MySaturation, StringFormat=S {0:0.00}}"/>
-        <TextBlock Text="{Binding MyMarkerAdorner.MyValue, StringFormat=V {0:0.00}}"/>
-      </StackPanel>
+      
+      <GroupBox Header="HSVImage">
+        <StackPanel>
+          <StackPanel.Resources>
+            <Style TargetType="TextBlock">
+              <Setter Property="HorizontalAlignment" Value="Right"/>
+              <Setter Property="Margin" Value="10,0"/>
+            </Style>
+          </StackPanel.Resources>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding ElementName=MySVImage, Path=MyHue, StringFormat=H {0:000}}"/>
+            <Slider Minimum="0" Maximum="359" Value="{Binding ElementName=MySVImage, Path=MyHue}"/>
+          </UniformGrid>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MyMarkerAdorner.MySaturation, StringFormat=S {0:0.00}}"/>
+            <Slider Value="{Binding MyMarkerAdorner.MySaturation}"
+                  Minimum="0.0" Maximum="1.0" LargeChange="0.1"/>
+          </UniformGrid>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MyMarkerAdorner.MyValue, StringFormat=V {0:0.00}}"/>
+            <Slider Value="{Binding MyMarkerAdorner.MyValue}"
+        Minimum="0.0" Maximum="1.0" LargeChange="0.1"/>
+          </UniformGrid>
+          <Rectangle Height="20" Fill="{Binding ElementName=MySVImage, Path=MyBrush}"/>
+        </StackPanel>
+      </GroupBox>
+      
       <StackPanel>
         <Slider Value="{Binding ElementName=MyViewbox, Path=Width}"
-                Minimum="0" Maximum="200"/>
-        
+                Minimum="100" Maximum="200"/>
+
         <Slider Value="{Binding ElementName=MyViewbox, Path=Height}"
-                Minimum="0" Maximum="200"/>
+                Minimum="100" Maximum="200"/>
+
+      </StackPanel>
+      
+      <StackPanel DataContext="{Binding ElementName=MySVImageWithMarker}">
+        <Slider Value="{Binding MySikisai.H}"
+                Minimum="0" Maximum="359"/>
+        <TextBlock Text="{Binding MySikisai.H, StringFormat=H {0:000}}"/>
+        
+        <Slider Value="{Binding MySikisai.S}"
+                Minimum="0" Maximum="1.0"/>
+        <TextBlock Text="{Binding MySikisai.S, StringFormat=S {0:0.00}}"/>
+        
+        <Slider Value="{Binding MySikisai.V}"
+                Minimum="0" Maximum="1.0"/>
+        <TextBlock Text="{Binding MySikisai.V, StringFormat=V {0:0.00}}"/>
         
       </StackPanel>
     </StackPanel>
