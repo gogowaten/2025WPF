@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:_20250629_ColorPicker"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type={x:Type local:MainWindow}}"
-        Title="MainWindow" Height="367" Width="654">
+        Title="MainWindow" Height="467" Width="654">
   <Window.Resources>
     <local:MyConvRGBtoBrush x:Key="rgbBrush"/>
   </Window.Resources>
@@ -17,14 +17,13 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-      <Viewbox Width="200" Height="200" Stretch="Fill">
-        <local:SVImage x:Name="MySVImage" Width="8" Height="8" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+      <Viewbox x:Name="MyViewbox" Width="200" Height="200" Stretch="Fill">
+        <local:SVImage x:Name="MySVImage" Width="16" Height="16"/>
       </Viewbox>
       
-      <Viewbox Width="200" Height="200" Stretch="Fill" Canvas.Left="200">
-        <local:SVImage x:Name="MySVImage2" Width="8" Height="8" RenderOptions.BitmapScalingMode="Fant"/>
+      <Viewbox Width="200" Height="200" Stretch="Fill" Canvas.Left="200" Visibility="Visible">
+        <local:SVImage x:Name="MySVImage2" Width="8" Height="8" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
       </Viewbox>
-      <local:EllipseThumb Width="20" Height="20" Canvas.Top="100"/>
     </Canvas>
 
     <StackPanel Grid.Column="1">
@@ -45,7 +44,18 @@
       <Rectangle Height="20" Fill="AliceBlue"/>
       <Rectangle Height="20" Fill="{Binding MySikisaiBrush.MyBrush}"/>
       <Slider Minimum="0.0" Maximum="359" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding MySikisaiBrush.H}"/>
-
+      <StackPanel>
+        <TextBlock Text="{Binding MyMarkerAdorner.MySaturation, StringFormat=S {0:0.00}}"/>
+        <TextBlock Text="{Binding MyMarkerAdorner.MyValue, StringFormat=V {0:0.00}}"/>
+      </StackPanel>
+      <StackPanel>
+        <Slider Value="{Binding ElementName=MyViewbox, Path=Width}"
+                Minimum="0" Maximum="200"/>
+        
+        <Slider Value="{Binding ElementName=MyViewbox, Path=Height}"
+                Minimum="0" Maximum="200"/>
+        
+      </StackPanel>
     </StackPanel>
   </Grid>
 </Window>
