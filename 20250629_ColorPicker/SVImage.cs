@@ -60,24 +60,6 @@ namespace _20250629_ColorPicker
             DependencyProperty.Register(nameof(MyHue), typeof(double), typeof(SVImage), new PropertyMetadata(0.0));
 
 
-        //public double S
-        //{
-        //    get { return (double)GetValue(SProperty); }
-        //    set { SetValue(SProperty, value); }
-        //}
-        //public static readonly DependencyProperty SProperty =
-        //    DependencyProperty.Register(nameof(S), typeof(double), typeof(SVImage), new PropertyMetadata(0.0));
-
-        //public double V
-        //{
-        //    get { return (double)GetValue(VProperty); }
-        //    set { SetValue(VProperty, value); }
-        //}
-        //public static readonly DependencyProperty VProperty =
-        //    DependencyProperty.Register(nameof(V), typeof(double), typeof(SVImage), new PropertyMetadata(0.0));
-
-
-
 
 
         private class MyConvSVBitmap : IMultiValueConverter
