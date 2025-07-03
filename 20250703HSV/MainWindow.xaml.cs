@@ -22,6 +22,11 @@ namespace _20250703HSV
             InitializeComponent();
             DataContext = this;
             Loaded += MainWindow_Loaded;
+            var sa1 = Sikisa.Ciede2000(240, 110, 80, 240, 160, 30);
+            var sa2 = Sikisa.Ciede2000(150, 250, 30, 100, 250, 80);
+            var sa31 = Sikisa.Ciede2000(200, 77, 121, 171, 49, 96);
+            var sa32 = Sikisa.Ciede2000(200, 77, 121, 204, 77, 105);
+
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -49,7 +54,7 @@ namespace _20250703HSV
 
         private static void OnChangedHSV(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if(d is MainWindow w)
+            if (d is MainWindow w)
             {
                 (w.MyR, w.MyG, w.MyB) = MathHSV.Hsv2rgb(w.MyHue, w.MySat, w.MyVal);
             }
