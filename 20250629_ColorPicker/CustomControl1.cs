@@ -29,6 +29,96 @@ namespace _20250629_ColorPicker
 
 
 
+    public class Pikka : Control
+    {
+        static Pikka()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Pikka), new FrameworkPropertyMetadata(typeof(Pikka)));
+        }
+
+        public Pikka()
+        {
+
+        }
+
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            if (GetTemplateChild("PART_Viewbox") is Viewbox vb)
+            {
+                if (AdornerLayer.GetAdornerLayer(vb) is AdornerLayer layer)
+                {
+                    MyMarkerAdorner = new MarkerAdorner(vb);
+                    layer.Add(MyMarkerAdorner);
+                    MyMarkerAdorner.SetBinding(MarkerAdorner.MySaturationProperty, new Binding() { Source = this, Path = new PropertyPath(MySatProperty), Mode = BindingMode.TwoWay });
+                    MyMarkerAdorner.SetBinding(MarkerAdorner.MyValueProperty, new Binding() { Source = this, Path = new PropertyPath(MyValProperty), Mode = BindingMode.TwoWay });
+                    MyMarkerAdorner.SetBinding(MarkerAdorner.MyMarkerSizeProperty, new Binding() { Source = this, Path = new PropertyPath(MyMarkerSizeProperty), Mode = BindingMode.TwoWay });
+
+                }
+            }
+
+            if (GetTemplateChild("PART_SVImage") is SVImage svi)
+            {
+                svi.SetBinding(SVImage.HueProperty, new Binding() { Source = this, Path = new PropertyPath(MyHueProperty) });
+            }
+        }
+
+
+        #region 依存関係プロパティ
+
+
+        public double MyMarkerSize
+        {
+            get { return (double)GetValue(MyMarkerSizeProperty); }
+            set { SetValue(MyMarkerSizeProperty, value); }
+        }
+        public static readonly DependencyProperty MyMarkerSizeProperty =
+            DependencyProperty.Register(nameof(MyMarkerSize), typeof(double), typeof(Pikka), new PropertyMetadata(20.0));
+
+
+        public MarkerAdorner MyMarkerAdorner
+        {
+            get { return (MarkerAdorner)GetValue(MyMarkerAdornerProperty); }
+            private set { SetValue(MyMarkerAdornerProperty, value); }
+        }
+        public static readonly DependencyProperty MyMarkerAdornerProperty =
+            DependencyProperty.Register(nameof(MyMarkerAdorner), typeof(MarkerAdorner), typeof(Pikka), new PropertyMetadata(null));
+
+
+        public double MyHue
+        {
+            get { return (double)GetValue(MyHueProperty); }
+            set { SetValue(MyHueProperty, value); }
+        }
+        public static readonly DependencyProperty MyHueProperty =
+            DependencyProperty.Register(nameof(MyHue), typeof(double), typeof(Pikka), new PropertyMetadata(0.0));
+
+
+        public double MySat
+        {
+            get { return (double)GetValue(MySatProperty); }
+            set { SetValue(MySatProperty, value); }
+        }
+        public static readonly DependencyProperty MySatProperty =
+            DependencyProperty.Register(nameof(MySat), typeof(double), typeof(Pikka), new PropertyMetadata(0.0));
+
+
+        public double MyVal
+        {
+            get { return (double)GetValue(MyValProperty); }
+            set { SetValue(MyValProperty, value); }
+        }
+        public static readonly DependencyProperty MyValProperty =
+            DependencyProperty.Register(nameof(MyVal), typeof(double), typeof(Pikka), new PropertyMetadata(0.0));
+
+        #endregion 依存関係プロパティ
+
+    }
+
+
+
+
 
     public class SVImageWithMarker : Control
     {
@@ -61,7 +151,7 @@ namespace _20250629_ColorPicker
                     layer.Add(MyMarkerAdorner);
                 }
             }
-            if(GetTemplateChild("PART_SVImage") is SVImage sVImage)
+            if (GetTemplateChild("PART_SVImage") is SVImage sVImage)
             {
                 MySVImage = sVImage;
             }
@@ -71,12 +161,12 @@ namespace _20250629_ColorPicker
 
         private void MyBind()
         {
-            //MyMarkerAdorner.SetBinding(MarkerAdorner.MySaturationProperty, new Binding() { Source = MySikisai, Path = new PropertyPath(Sikisai.SProperty) ,Mode=BindingMode.TwoWay});
-            //MyMarkerAdorner.SetBinding(MarkerAdorner.MyValueProperty, new Binding() { Source = MySikisai, Path = new PropertyPath(Sikisai.VProperty) ,Mode= BindingMode.TwoWay });
+            MyMarkerAdorner.SetBinding(MarkerAdorner.MySaturationProperty, new Binding() { Source = MySikisai, Path = new PropertyPath(Sikisai.SProperty), Mode = BindingMode.TwoWay });
+            MyMarkerAdorner.SetBinding(MarkerAdorner.MyValueProperty, new Binding() { Source = MySikisai, Path = new PropertyPath(Sikisai.VProperty), Mode = BindingMode.TwoWay });
 
-            BindingOperations.SetBinding(MySikisai, Sikisai.SProperty, new Binding() { Source = MyMarkerAdorner, Path = new PropertyPath(MarkerAdorner.MySaturationProperty) });
-            BindingOperations.SetBinding(MySikisai, Sikisai.VProperty, new Binding() { Source = MyMarkerAdorner, Path = new PropertyPath(MarkerAdorner.MyValueProperty) });
-            BindingOperations.SetBinding(MySikisai, Sikisai.HProperty, new Binding() { Source = MySVImage, Path = new PropertyPath(SVImage.HueProperty) });
+            //BindingOperations.SetBinding(MySikisai, Sikisai.SProperty, new Binding() { Source = MyMarkerAdorner, Path = new PropertyPath(MarkerAdorner.MySaturationProperty) });
+            //BindingOperations.SetBinding(MySikisai, Sikisai.VProperty, new Binding() { Source = MyMarkerAdorner, Path = new PropertyPath(MarkerAdorner.MyValueProperty) });
+            //BindingOperations.SetBinding(MySikisai, Sikisai.HProperty, new Binding() { Source = MySVImage, Path = new PropertyPath(SVImage.HueProperty) });
 
 
         }
@@ -147,7 +237,7 @@ namespace _20250629_ColorPicker
     }
 
 
-    public class MyConvEllipseSizeDown : IValueConverter
+    public class MyConvInsideEllipseSize : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

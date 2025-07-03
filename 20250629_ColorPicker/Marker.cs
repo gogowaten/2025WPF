@@ -171,13 +171,13 @@ namespace _20250629_ColorPicker
             {
                 Source = this,
                 Path = new PropertyPath(MarkerSizeProperty),
-                Converter = new MyConvEllipseSizeDown()
+                Converter = new MyConvInsideEllipseSize()
             });
             e2.SetValue(HeightProperty, new Binding()
             {
                 Source = this,
                 Path = new PropertyPath(MarkerSizeProperty),
-                Converter = new MyConvEllipseSizeDown()
+                Converter = new MyConvInsideEllipseSize()
             });
             e2.SetValue(Ellipse.StrokeProperty, new Binding() { Source = this, Path = new PropertyPath(Color2Property), });
             factory.AppendChild(e1);

@@ -45,11 +45,12 @@ namespace _20250629_ColorPicker
             {
                 layer.Add(MyMarkerAdorner);
             }
-            
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var pikas = MyPikka.MyMarkerAdorner.MySaturation;
             var neko = MySVImageWithMarker.MySikisai;
             var inu = MySikisaiBrush;
             var svah = MySVImage.ActualHeight;

@@ -26,6 +26,9 @@
       </Viewbox>
 
       <local:SVImageWithMarker x:Name="MySVImageWithMarker" Canvas.Top="220" Width="100" Height="100"/>
+      <local:Pikka x:Name="MyPikka" Canvas.Left="150" Canvas.Top="220"
+                   Width="100" Height="100" MyHue="100"
+                   MyMarkerSize="10"/>
     </Canvas>
 
     <StackPanel Grid.Column="1">
@@ -118,6 +121,26 @@
         <TextBlock Text="{Binding MySikisai.V, StringFormat=V {0:0.00}}"/>
         
       </StackPanel>
+
+      <StackPanel DataContext="{Binding ElementName=MyPikka}">
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding MyHue, StringFormat=Hue {0:000}}"/>
+          <Slider Value="{Binding MyHue}" Minimum="0" Maximum="360"/>
+        </UniformGrid>
+        
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding MySat, StringFormat=Sat {0:0.00}}"/>
+          <Slider Value="{Binding MySat}" Minimum="0" Maximum="1.0" LargeChange="0.1"/>
+        </UniformGrid>
+        
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding MyVal, StringFormat=Val {0:0.00}}"/>
+          <Slider Value="{Binding MyVal}" Minimum="0" Maximum="1.0" LargeChange="0.1"/>
+        </UniformGrid>
+        
+        
+      </StackPanel>
+      
     </StackPanel>
   </Grid>
 </Window>

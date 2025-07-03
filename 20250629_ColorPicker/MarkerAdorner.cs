@@ -48,7 +48,7 @@ namespace _20250629_ColorPicker
         }
 
 
-        // Canvasのクリック字
+        // Canvasのクリック時
         private void MyCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // クリック座標を割合にしたのが彩度と明度

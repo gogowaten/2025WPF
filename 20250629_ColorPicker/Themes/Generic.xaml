@@ -20,6 +20,28 @@
 
 
 
+  <Style TargetType="{x:Type local:Pikka}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:Pikka}">
+          <Viewbox x:Name="PART_Viewbox"
+                   Width="{TemplateBinding Width}"
+                   Height="{TemplateBinding Height}"
+                   Stretch="Fill">
+            <local:SVImage x:Name="PART_SVImage"
+                           Width="16"
+                           Height="16">
+              
+            </local:SVImage>
+          </Viewbox>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  
+  
+
 
   <Style TargetType="{x:Type local:SVImageWithMarker}">
     <Setter Property="Template">
@@ -45,7 +67,7 @@
 
   <Style TargetType="{x:Type local:EllipseThumb}">
     <Style.Resources>
-      <local:MyConvEllipseSizeDown x:Key="sizeDown"/>
+      <local:MyConvInsideEllipseSize x:Key="sizeDown"/>
     </Style.Resources>
     <Setter Property="Template">
       <Setter.Value>
