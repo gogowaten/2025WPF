@@ -22,10 +22,10 @@ namespace _20250703HSV
             InitializeComponent();
             DataContext = this;
             Loaded += MainWindow_Loaded;
-            var sa1 = Sikisa.Ciede2000(240, 110, 80, 240, 160, 30);
-            var sa2 = Sikisa.Ciede2000(150, 250, 30, 100, 250, 80);
-            var sa31 = Sikisa.Ciede2000(200, 77, 121, 171, 49, 96);
-            var sa32 = Sikisa.Ciede2000(200, 77, 121, 204, 77, 105);
+            //var sa1 = Sikisa.Ciede2000(240, 110, 80, 240, 160, 30);
+            //var sa2 = Sikisa.Ciede2000(150, 250, 30, 100, 250, 80);
+            //var sa31 = Sikisa.Ciede2000(200, 77, 121, 171, 49, 96);
+            //var sa32 = Sikisa.Ciede2000(200, 77, 121, 204, 77, 105);
 
         }
 

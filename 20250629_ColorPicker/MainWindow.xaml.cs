@@ -50,7 +50,7 @@ namespace _20250629_ColorPicker
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var pikas = MyPikka.MyMarkerAdorner.MySaturation;
+            var pikas = MyPikka.MyMarkerAdorner.MyXRate;
             var neko = MySVImageWithMarker.MySikisai;
             var inu = MySikisaiBrush;
             var svah = MySVImage.ActualHeight;

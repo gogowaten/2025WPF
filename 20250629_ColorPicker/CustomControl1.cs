@@ -18,13 +18,7 @@ using System.Windows.Shapes;
 namespace _20250629_ColorPicker
 {
 
-    public class CustomControl1 : Control
-    {
-        static CustomControl1()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(CustomControl1), new FrameworkPropertyMetadata(typeof(CustomControl1)));
-        }
-    }
+  
 
 
 
@@ -51,8 +45,8 @@ namespace _20250629_ColorPicker
                 {
                     MyMarkerAdorner = new MarkerAdorner(vb);
                     layer.Add(MyMarkerAdorner);
-                    MyMarkerAdorner.SetBinding(MarkerAdorner.MySaturationProperty, new Binding() { Source = this, Path = new PropertyPath(MySatProperty), Mode = BindingMode.TwoWay });
-                    MyMarkerAdorner.SetBinding(MarkerAdorner.MyValueProperty, new Binding() { Source = this, Path = new PropertyPath(MyValProperty), Mode = BindingMode.TwoWay });
+                    MyMarkerAdorner.SetBinding(MarkerAdorner.MyXRateProperty, new Binding() { Source = this, Path = new PropertyPath(MySatProperty), Mode = BindingMode.TwoWay });
+                    MyMarkerAdorner.SetBinding(MarkerAdorner.MyYRateProperty, new Binding() { Source = this, Path = new PropertyPath(MyValProperty), Mode = BindingMode.TwoWay });
                     MyMarkerAdorner.SetBinding(MarkerAdorner.MyMarkerSizeProperty, new Binding() { Source = this, Path = new PropertyPath(MyMarkerSizeProperty), Mode = BindingMode.TwoWay });
 
                 }
@@ -161,8 +155,8 @@ namespace _20250629_ColorPicker
 
         private void MyBind()
         {
-            MyMarkerAdorner.SetBinding(MarkerAdorner.MySaturationProperty, new Binding() { Source = MySikisai, Path = new PropertyPath(Sikisai.SProperty), Mode = BindingMode.TwoWay });
-            MyMarkerAdorner.SetBinding(MarkerAdorner.MyValueProperty, new Binding() { Source = MySikisai, Path = new PropertyPath(Sikisai.VProperty), Mode = BindingMode.TwoWay });
+            MyMarkerAdorner.SetBinding(MarkerAdorner.MyXRateProperty, new Binding() { Source = MySikisai, Path = new PropertyPath(Sikisai.SProperty), Mode = BindingMode.TwoWay });
+            MyMarkerAdorner.SetBinding(MarkerAdorner.MyYRateProperty, new Binding() { Source = MySikisai, Path = new PropertyPath(Sikisai.VProperty), Mode = BindingMode.TwoWay });
 
             //BindingOperations.SetBinding(MySikisai, Sikisai.SProperty, new Binding() { Source = MyMarkerAdorner, Path = new PropertyPath(MarkerAdorner.MySaturationProperty) });
             //BindingOperations.SetBinding(MySikisai, Sikisai.VProperty, new Binding() { Source = MyMarkerAdorner, Path = new PropertyPath(MarkerAdorner.MyValueProperty) });

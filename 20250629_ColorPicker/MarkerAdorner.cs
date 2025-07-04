@@ -55,8 +55,8 @@ namespace _20250629_ColorPicker
             Point poi = e.GetPosition(MyCanvas);
             var x = poi.X / MyCanvas.Width;
             var y = poi.Y / MyCanvas.Height;
-            MySaturation = x;
-            MyValue = y;
+            MyXRate = x;
+            MyYRate = y;
 
             // MarkerThumbのイベントを発動？これを実行すると
             // DragStartedが動く
@@ -78,11 +78,11 @@ namespace _20250629_ColorPicker
             // x移動量を割合で取得
             double mr = (MyXOffset + e.HorizontalChange) / MyCanvas.Width;
             // 彩度に移動量を足して0から1.0に制限したのが答え
-            MySaturation = double.Clamp(mr + MySaturation, 0.0, 1.0);
+            MyXRate = double.Clamp(mr + MyXRate, 0.0, 1.0);
 
             // y
             mr = (MyYOffset + e.VerticalChange) / MyCanvas.Height;
-            MyValue = double.Clamp(mr + MyValue, 0.0, 1.0);
+            MyYRate = double.Clamp(mr + MyYRate, 0.0, 1.0);
         }
 
 
@@ -116,14 +116,14 @@ namespace _20250629_ColorPicker
             MultiBinding mb;
             mb = new MultiBinding() { Converter = new MyConvSV() };
             mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyMarkerSizeProperty) });
-            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MySaturationProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyXRateProperty) });
             mb.Bindings.Add(new Binding() { Source = MyTargetElement, Path = new PropertyPath(ActualWidthProperty) });
             _ = MyMarkerThumb.SetBinding(Canvas.LeftProperty, mb);
 
             // y座標、Value
             mb = new MultiBinding() { Converter = new MyConvSV() };
             mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyMarkerSizeProperty) });
-            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyValueProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyYRateProperty) });
             mb.Bindings.Add(new Binding() { Source = MyTargetElement, Path = new PropertyPath(ActualHeightProperty) });
             _ = MyMarkerThumb.SetBinding(Canvas.TopProperty, mb);
 
@@ -132,21 +132,21 @@ namespace _20250629_ColorPicker
 
         #region 依存関係プロパティ
 
-        public double MySaturation
+        public double MyXRate
         {
-            get { return (double)GetValue(MySaturationProperty); }
-            set { SetValue(MySaturationProperty, value); }
+            get { return (double)GetValue(MyXRateProperty); }
+            set { SetValue(MyXRateProperty, value); }
         }
-        public static readonly DependencyProperty MySaturationProperty =
-            DependencyProperty.Register(nameof(MySaturation), typeof(double), typeof(MarkerAdorner), new PropertyMetadata(0.0));
+        public static readonly DependencyProperty MyXRateProperty =
+            DependencyProperty.Register(nameof(MyXRate), typeof(double), typeof(MarkerAdorner), new PropertyMetadata(0.0));
 
-        public double MyValue
+        public double MyYRate
         {
-            get { return (double)GetValue(MyValueProperty); }
-            set { SetValue(MyValueProperty, value); }
+            get { return (double)GetValue(MyYRateProperty); }
+            set { SetValue(MyYRateProperty, value); }
         }
-        public static readonly DependencyProperty MyValueProperty =
-            DependencyProperty.Register(nameof(MyValue), typeof(double), typeof(MarkerAdorner), new PropertyMetadata(0.0));
+        public static readonly DependencyProperty MyYRateProperty =
+            DependencyProperty.Register(nameof(MyYRate), typeof(double), typeof(MarkerAdorner), new PropertyMetadata(0.0));
 
         public Brush MyInsideStroke
         {

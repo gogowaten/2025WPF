@@ -85,13 +85,13 @@
             <Slider Minimum="0" Maximum="359" Value="{Binding ElementName=MySVImage, Path=MyHue}"/>
           </UniformGrid>
           <UniformGrid Columns="2">
-            <TextBlock Text="{Binding MyMarkerAdorner.MySaturation, StringFormat=S {0:0.00}}"/>
-            <Slider Value="{Binding MyMarkerAdorner.MySaturation}"
+            <TextBlock Text="{Binding MyMarkerAdorner.MyXRate, StringFormat=S {0:0.00}}"/>
+            <Slider Value="{Binding MyMarkerAdorner.MyXRate}"
                   Minimum="0.0" Maximum="1.0" LargeChange="0.1"/>
           </UniformGrid>
           <UniformGrid Columns="2">
-            <TextBlock Text="{Binding MyMarkerAdorner.MyValue, StringFormat=V {0:0.00}}"/>
-            <Slider Value="{Binding MyMarkerAdorner.MyValue}"
+            <TextBlock Text="{Binding MyMarkerAdorner.MyYRate, StringFormat=V {0:0.00}}"/>
+            <Slider Value="{Binding MyMarkerAdorner.MyYRate}"
         Minimum="0.0" Maximum="1.0" LargeChange="0.1"/>
           </UniformGrid>
           <Rectangle Height="20" Fill="{Binding ElementName=MySVImage, Path=MyBrush}"/>
