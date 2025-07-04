@@ -13,7 +13,7 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-
+      <local:Pikka MyMarkerSize="21" Width="100"/>
     </Canvas>
 
     <StackPanel Grid.Column="1">
