@@ -13,9 +13,9 @@
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-      <local:PikkaBrush x:Name="MyPikka" 
-                   MyMarkerSize="21" MyHSVImageSize="16"
-                   Width="200" Height="200" Canvas.Left="50" Canvas.Top="20">
+      <local:PikkaBrush x:Name="MyPikka" RenderOptions.BitmapScalingMode="NearestNeighbor"
+                        MyMarkerSize="21" MyHSVImageSize="16"
+                        Width="200" Height="200" Canvas.Left="50" Canvas.Top="20">
         <local:PikkaBrush.LayoutTransform>
           <RotateTransform Angle="315"/>
           <!--<RotateTransform Angle="135"/>-->
