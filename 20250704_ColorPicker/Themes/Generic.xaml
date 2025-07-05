@@ -14,8 +14,8 @@
                    Height="{TemplateBinding Height}"
                    Stretch="Fill">
             <local:HSVImage x:Name="PART_HSVImage"
-                           Width="16"
-                           Height="16">
+                           Width="{TemplateBinding MyHSVImageSize}"
+                           Height="{TemplateBinding MyHSVImageSize}">
 
             </local:HSVImage>
           </Viewbox>

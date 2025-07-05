@@ -6,18 +6,98 @@
         xmlns:local="clr-namespace:_20250704_ColorPicker"
         mc:Ignorable="d"
         Title="MainWindow" Height="367" Width="654">
-  <Grid>
+  <Grid Background="Silver">
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
       <ColumnDefinition Width="200"/>
     </Grid.ColumnDefinitions>
 
     <Canvas x:Name="MyCanvas">
-      <local:Pikka MyMarkerSize="21" Width="100"/>
+      <local:PikkaBrush x:Name="MyPikka" 
+                   MyMarkerSize="21" MyHSVImageSize="16"
+                   Width="200" Height="200" Canvas.Left="50" Canvas.Top="20">
+        <local:PikkaBrush.LayoutTransform>
+          <RotateTransform Angle="315"/>
+          <!--<RotateTransform Angle="135"/>-->
+        </local:PikkaBrush.LayoutTransform>
+      </local:PikkaBrush>
     </Canvas>
 
     <StackPanel Grid.Column="1">
+      <StackPanel.Resources>
+        <Style TargetType="UniformGrid">
+          <Setter Property="Margin" Value="10,4"/>
+        </Style>
+      </StackPanel.Resources>
+      <GroupBox Header="Pikka" DataContext="{Binding ElementName=MyPikka}">
+        <GroupBox.Resources>
+          <local:MyConvRGBSolidColorBrush x:Key="rgbBrush"/>
+        </GroupBox.Resources>
+        <StackPanel>
+          <Rectangle Height="30" Fill="{Binding MySolidColorBrush}" Margin="4"/>
 
+          <!--<Rectangle Height="30" Margin="4">
+            <Rectangle.Fill>
+              <MultiBinding Converter="{StaticResource rgbBrush}">
+                <Binding Path="MyR"/>
+                <Binding Path="MyG"/>
+                <Binding Path="MyB"/>
+              </MultiBinding>
+            </Rectangle.Fill>
+          </Rectangle>-->
+
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MyHue, StringFormat=H {0:000}}"/>
+            <Slider Value="{Binding MyHue}" Minimum="0" Maximum="360"/>
+          </UniformGrid>
+
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MySat, StringFormat=S {0:0.00}}"/>
+            <Slider Value="{Binding MySat}" Minimum="0" Maximum="1.0" LargeChange="0.1"/>
+          </UniformGrid>
+
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MyVal, StringFormat=V {0:0.00}}"/>
+            <Slider Value="{Binding MyVal}" Minimum="0" Maximum="1.0" LargeChange="0.1"/>
+          </UniformGrid>
+
+          <Separator/>
+
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MyR, StringFormat=R {0:000}}"/>
+            <Slider Value="{Binding MyR}" Minimum="0" Maximum="255" LargeChange="1"/>
+          </UniformGrid>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MyG, StringFormat=G {0:000}}"/>
+            <Slider Value="{Binding MyG}" Minimum="0" Maximum="255" LargeChange="1"/>
+          </UniformGrid>
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MyB, StringFormat=B {0:000}}"/>
+            <Slider Value="{Binding MyB}" Minimum="0" Maximum="255" LargeChange="1"/>
+          </UniformGrid>
+
+          <Separator/>
+
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MyMarkerSize, StringFormat=MarkerSize {0:00}}"/>
+            <Slider Value="{Binding MyMarkerSize}" Minimum="11" Maximum="31" LargeChange="1"/>
+          </UniformGrid>
+
+
+        </StackPanel>
+      </GroupBox>
+      
+      <StackPanel DataContext="{Binding ElementName=MyPikka}">
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding Width, StringFormat=Width {0:000}}"/>
+          <Slider Value="{Binding Width}" Minimum="10" Maximum="200" LargeChange="1"/>
+        </UniformGrid>
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding Height, StringFormat=Height {0:000}}"/>
+          <Slider Value="{Binding Height}" Minimum="10" Maximum="200" LargeChange="1"/>
+        </UniformGrid>
+      </StackPanel>
+      
     </StackPanel>
   </Grid>
 </Window>
