@@ -119,6 +119,7 @@ namespace _20250706
         }
 
         #region 依存関係プロパティ
+
         public (byte r, byte g, byte b) MyRGB
         {
             get { return ((byte r, byte g, byte b))GetValue(MyRGBProperty); }
@@ -150,6 +151,7 @@ namespace _20250706
         }
         public static readonly DependencyProperty MyBProperty =
             DependencyProperty.Register(nameof(MyB), typeof(byte), typeof(RGB), new PropertyMetadata((byte)0));
+
         #endregion 依存関係プロパティ
 
     }
@@ -159,17 +161,70 @@ namespace _20250706
     {
         public Iro()
         {
-            MyHSV = new HSV();
-            MyRGB = new RGB();
+            //MyHSV = new HSV();
+            //MyRGB = new RGB();
+            //MyHSV = (0.0, 0.0, 0.0);
+            //MyRGB = (0, 0, 0);
             MyBind();
 
         }
 
         private void MyBind()
         {
-            BindingOperations.SetBinding(this, MyRGBProperty, new Binding() { Source = this, Path = new PropertyPath(MyHSVProperty), Mode = BindingMode.TwoWay, Converter = new MyConvHSVRGB() });
+
+            MultiBinding mb;
+            mb = new() { Converter = new MyConvRGB(), Mode = BindingMode.TwoWay };
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyRProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyGProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyGProperty) });
+            BindingOperations.SetBinding(this, MyRGBProperty, mb);
+            mb = new() { Converter = new MyConvHSV(), Mode = BindingMode.TwoWay };
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyHProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MySProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(MyVProperty) });
+            BindingOperations.SetBinding(this, MyHSVProperty, mb);
+
+            BindingOperations.SetBinding(this, MyRGBProperty, new Binding() { Source = this, Path = new PropertyPath(MyHSVProperty), Converter = new MyConv(), Mode = BindingMode.TwoWay });
+
+            //BindingOperations.SetBinding(this, MyRGBProperty, new Binding() { Source = this, Path = new PropertyPath(MyHSVProperty), Mode = BindingMode.TwoWay, Converter = new MyConvHSVRGB() });
             //BindingOperations.SetBinding(MyRGB, RGB.MyRGBProperty, new Binding() { Source = MyHSV, Path = new PropertyPath(HSV.MyHSVProperty), Converter = new MyConv(), Mode = BindingMode.TwoWay });
 
+        }
+
+        class MyConvHSV : IMultiValueConverter
+        {
+            public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+            {
+                var h = (double)values[0];
+                var s = (double)values[1];
+                var v = (double)values[2];
+                return (h, s, v);
+                //throw new NotImplementedException();
+            }
+
+            public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+            {
+                (double, double, double) v = ((double, double, double))value;
+                return [v.Item1, v.Item2, v.Item3];
+            }
+        }
+
+        class MyConvRGB : IMultiValueConverter
+        {
+            public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+            {
+                var r = (byte)values[0];
+                var g = (byte)values[1];
+                var b = (byte)values[2];
+                return (r, g, b);
+                //throw new NotImplementedException();
+            }
+
+            public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+            {
+                (byte, byte, byte) v = ((byte, byte, byte))value;
+                return [v.Item1, v.Item2, v.Item3];
+            }
         }
 
         class MyConv : IValueConverter
@@ -187,22 +242,90 @@ namespace _20250706
             }
         }
 
-        public HSV MyHSV
+        #region 依存関係プロパティ
+
+        public (double h, double s, double v) MyHSV
         {
-            get { return (HSV)GetValue(MyHSVProperty); }
+            get { return ((double h, double s, double v))GetValue(MyHSVProperty); }
             set { SetValue(MyHSVProperty, value); }
         }
         public static readonly DependencyProperty MyHSVProperty =
-            DependencyProperty.Register(nameof(MyHSV), typeof(HSV), typeof(Iro), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(MyHSV), typeof((double h, double s, double v)), typeof(Iro), new FrameworkPropertyMetadata((0.0, 0.0, 0.0), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public RGB MyRGB
+
+        public double MyH
         {
-            get { return (RGB)GetValue(MyRGBProperty); }
+            get { return (double)GetValue(MyHProperty); }
+            set { SetValue(MyHProperty, value); }
+        }
+        public static readonly DependencyProperty MyHProperty =
+            DependencyProperty.Register(nameof(MyH), typeof(double), typeof(Iro), new PropertyMetadata(0.0));
+
+        public double MyS
+        {
+            get { return (double)GetValue(MySProperty); }
+            set { SetValue(MySProperty, value); }
+        }
+        public static readonly DependencyProperty MySProperty =
+            DependencyProperty.Register(nameof(MyS), typeof(double), typeof(Iro), new PropertyMetadata(0.0));
+
+        public double MyV
+        {
+            get { return (double)GetValue(MyVProperty); }
+            set { SetValue(MyVProperty, value); }
+        }
+        public static readonly DependencyProperty MyVProperty =
+            DependencyProperty.Register(nameof(MyV), typeof(double), typeof(Iro), new PropertyMetadata(0.0));
+
+        public (byte r, byte g, byte b) MyRGB
+        {
+            get { return ((byte r, byte g, byte b))GetValue(MyRGBProperty); }
             set { SetValue(MyRGBProperty, value); }
         }
         public static readonly DependencyProperty MyRGBProperty =
-            DependencyProperty.Register(nameof(MyRGB), typeof(RGB), typeof(Iro), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(MyRGB), typeof((byte r, byte g, byte b)), typeof(Iro), new FrameworkPropertyMetadata(((byte)0,(byte)0,(byte)0), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        public byte MyR
+        {
+            get { return (byte)GetValue(MyRProperty); }
+            set { SetValue(MyRProperty, value); }
+        }
+        public static readonly DependencyProperty MyRProperty =
+            DependencyProperty.Register(nameof(MyR), typeof(byte), typeof(Iro), new PropertyMetadata((byte)0));
+
+        public byte MyG
+        {
+            get { return (byte)GetValue(MyGProperty); }
+            set { SetValue(MyGProperty, value); }
+        }
+        public static readonly DependencyProperty MyGProperty =
+            DependencyProperty.Register(nameof(MyG), typeof(byte), typeof(Iro), new PropertyMetadata((byte)0));
+
+        public byte MyB
+        {
+            get { return (byte)GetValue(MyBProperty); }
+            set { SetValue(MyBProperty, value); }
+        }
+        public static readonly DependencyProperty MyBProperty =
+            DependencyProperty.Register(nameof(MyB), typeof(byte), typeof(Iro), new PropertyMetadata((byte)0));
+
+        //public HSV MyHSV
+        //{
+        //    get { return (HSV)GetValue(MyHSVProperty); }
+        //    set { SetValue(MyHSVProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyHSVProperty =
+        //    DependencyProperty.Register(nameof(MyHSV), typeof(HSV), typeof(Iro), new PropertyMetadata(null));
+
+        //public RGB MyRGB
+        //{
+        //    get { return (RGB)GetValue(MyRGBProperty); }
+        //    set { SetValue(MyRGBProperty, value); }
+        //}
+        //public static readonly DependencyProperty MyRGBProperty =
+        //    DependencyProperty.Register(nameof(MyRGB), typeof(RGB), typeof(Iro), new PropertyMetadata(null));
+
+        #endregion 依存関係プロパティ
 
     }
 

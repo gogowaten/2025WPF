@@ -20,7 +20,7 @@
     <StackPanel Grid.Column="1">
       <GroupBox Header="Iro" DataContext="{Binding MyIro}">
         <StackPanel>
-          <UniformGrid Columns="2">
+          <!--<UniformGrid Columns="2">
             <TextBlock Text="{Binding MyHSV.MyH, StringFormat=H {0:000}}"/>
             <Slider Value="{Binding MyHSV.MyH}" Minimum="0" Maximum="360"/>
           </UniformGrid>
@@ -45,13 +45,21 @@
           <UniformGrid Columns="2">
             <TextBlock Text="{Binding MyRGB.MyB, StringFormat=B {0:000}}"/>
             <Slider Value="{Binding MyRGB.MyB}" Minimum="0" Maximum="255" LargeChange="1" TickFrequency="1"/>
+          </UniformGrid>-->
+          
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MyR, StringFormat=R {0:000}}"/>
+            <Slider Value="{Binding MyR}" Minimum="0" Maximum="255" LargeChange="1" TickFrequency="1"/>
+          </UniformGrid>
+          
+          <UniformGrid Columns="2">
+            <TextBlock Text="{Binding MyH, StringFormat=H {0:000}}"/>
+            <Slider Value="{Binding MyH}" Minimum="0" Maximum="360" LargeChange="1" TickFrequency="1" IsSnapToTickEnabled="True"/>
           </UniformGrid>
           
           <TextBlock Text="{Binding}"/>
-          <TextBlock Text="{Binding MyHSV}"/>
-          <TextBlock Text="{Binding MyHSV.MyHSV}"/>
-          <TextBlock Text="{Binding MyRGB.MyRGB}"/>
-          <TextBlock Text="{Binding MyRGB.MyR}"/>
+          <TextBlock Text="{Binding MyRGB, StringFormat=MyRGB {0:0}}"/>
+          <TextBlock Text="{Binding MyHSV, StringFormat=MyHSV {0:0}}"/>
         </StackPanel>
       </GroupBox>
     </StackPanel>

@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+// 無理、RGBとHSVをバインドだけで処理できないか試したけどできない
+// 諦める
 
 namespace _20250706
 {
