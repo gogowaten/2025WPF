@@ -10,6 +10,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 // 無理、RGBとHSVをバインドだけで処理できないか試したけどできない
 // 諦める
+// それ以前にこの時間でも室温が33.8度、湿度52%がきつい
 
 namespace _20250706
 {
