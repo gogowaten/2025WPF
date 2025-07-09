@@ -16,16 +16,28 @@ namespace _20250708_XYZ
             return c <= 0.04045 ? c / 12.92 : Math.Pow((c + 0.055) / 1.055, 2.4);
         }
 
-
+        /// <summary>
+        /// RGB カラー値を線形 RGB 表現に変換します。
+        /// </summary>
+        /// <remarks>この変換では、ガンマ補正を適用して sRGB カラー成分を線形 RGB 表現に変換します。これは、線形色空間を必要とする色計算に役立ちます。</remarks>
+        /// <param name="r">色の赤成分。範囲は 0 ～ 255。</param>
+        /// <param name="g">色の緑成分。範囲は 0 ～ 255。</param>
+        /// <param name="b">色の青成分。範囲は 0 ～ 255。</param>
+        /// <returns>色の線形 RGB 成分を含むタプル: <list type="bullet">
+        /// <item><description><c>lr</c>: 線形赤成分。範囲は 0.0 ～ 1.0。</description></item>
+        /// <item><description><c>lg</c>: 線形緑成分。範囲は 0.0 ～ 1.0.</description></item>
+        /// <item><description><c>lb</c>: 線形青成分。範囲は 0.0～1.0 です。</description></item>
+        /// </list></returns>
         public static (double lr, double lg, double lb) Rgb2LinearRGB(byte r, byte g, byte b)
         {
-            static double AAA(byte c)
+            static double F(byte c)
             {
                 double cc = c / 255.0;
                 return cc <= 0.04045 ? cc / 12.92 : Math.Pow((cc + 0.055) / 1.055, 2.4);
             }
-            return (AAA(r), AAA(g), AAA(b));
+            return (F(r), F(g), F(b));
         }
+
 
         // sRGB - Wikipedia
         // https://en.wikipedia.org/wiki/SRGB
@@ -33,7 +45,7 @@ namespace _20250708_XYZ
         // https://www.jstage.jst.go.jp/article/iieej/35/6/35_6_935/_pdf
         public static (byte r, byte g, byte b) LinearRgb2Rgb(double lr, double lg, double lb)
         {
-            static byte AAA(double c)
+            static byte F(double c)
             {
                 double cc;
                 if (c <= 0.0031308)
@@ -46,10 +58,13 @@ namespace _20250708_XYZ
                 }
                 return (byte)(double.Clamp(cc * 255, 0, 255));
             }
-            return (AAA(lr), AAA(lg), AAA(lb));
+            return (F(lr), F(lg), F(lb));
         }
 
-
+        public static (byte r, byte g, byte b) LinearRgb2Rgb((double lr, double lg, double lb) linear)
+        {
+            return LinearRgb2Rgb(linear.lr, linear.lg, linear.lb);
+        }
 
 
 
@@ -59,6 +74,11 @@ namespace _20250708_XYZ
                 0.4124564 * lr + 0.3575761 * lg + 0.1804375 * lb,
                 0.2126729 * lr + 0.7151522 * lg + 0.0721750 * lb,
                 0.0193339 * lr + 0.1191920 * lg + 0.9503041 * lb);
+        }
+
+        public static (double X, double Y, double Z) ToXYZ((double lr, double lg, double lb) linear)
+        {
+            return ToXYZ(linear.lr, linear.lg, linear.lb);
         }
 
         // sRGB - Wikipedia

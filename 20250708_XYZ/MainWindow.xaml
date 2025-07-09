@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250708_XYZ"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=local:MainWindow}"
         Title="MainWindow" Height="367" Width="654">
   <Grid>
     <Grid.ColumnDefinitions>
@@ -17,7 +18,38 @@
     </Canvas>
 
     <StackPanel Grid.Column="1">
-
+      <StackPanel DataContext="{Binding MyXYZ}">
+        <TextBlock Text="{Binding}"/>
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding X, StringFormat=X {0:0.000}}"/>
+          <Slider Value="{Binding X}" Minimum="0" Maximum="1" LargeChange="0.01"/>
+        </UniformGrid>
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding Y, StringFormat=Y {0:0.000}}"/>
+          <Slider Value="{Binding Y}" Minimum="0" Maximum="1" LargeChange="0.01"/>
+        </UniformGrid>
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding Z, StringFormat=Z {0:0.000}}"/>
+          <Slider Value="{Binding Z}" Minimum="0" Maximum="1" LargeChange="0.01"/>
+        </UniformGrid>
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding R, StringFormat=R {0:000}}"/>
+          <Slider Value="{Binding R}" Minimum="0" Maximum="255" TickFrequency="1"/>
+        </UniformGrid>
+        
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding G, StringFormat=G {0:000}}"/>
+          <Slider Value="{Binding G}" Minimum="0" Maximum="255" TickFrequency="1"/>
+        </UniformGrid>
+        
+        <UniformGrid Columns="2">
+          <TextBlock Text="{Binding B, StringFormat=B {0:000}}"/>
+          <Slider Value="{Binding B}" Minimum="0" Maximum="255" TickFrequency="1"/>
+        </UniformGrid>
+        <TextBlock Text="{Binding LR, StringFormat=LR {0:0.000}}"/>
+        <TextBlock Text="{Binding LG, StringFormat=LG {0:0.000}}"/>
+        <TextBlock Text="{Binding LB, StringFormat=LB {0:0.000}}"/>
+      </StackPanel>
     </StackPanel>
   </Grid>
 </Window>
