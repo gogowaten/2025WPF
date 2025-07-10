@@ -46,6 +46,14 @@ namespace _20250708_XYZ
         {
             InitializeComponent();
 
+            var neko = Math.Pow(6.0 / 29.0, 3.0);// 0.0088564516790356311
+            var Y = 0.5;
+            var t = Math.Pow(Y / 1.0, 1.0 / 3.0);
+            var f = Math.Pow(t, 1.0 / 3.0);
+
+            var ika = (116 * Math.Pow(t, 1 / 3)) - 16;
+            var tako = 116 * f - 16;
+
             MyXYZ = new XYZ(200, 100, 50);
             DataContext = this;
 

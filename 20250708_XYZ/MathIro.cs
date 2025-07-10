@@ -16,6 +16,9 @@ namespace _20250708_XYZ
             return c <= 0.04045 ? c / 12.92 : Math.Pow((c + 0.055) / 1.055, 2.4);
         }
 
+        #region リニアRGB
+        
+
         /// <summary>
         /// RGB カラー値を線形 RGB 表現に変換します。
         /// </summary>
@@ -66,7 +69,10 @@ namespace _20250708_XYZ
             return LinearRgb2Rgb(linear.lr, linear.lg, linear.lb);
         }
 
+        #endregion リニアRGB
 
+        #region XYZ
+        
 
         public static (double X, double Y, double Z) ToXYZ(double lr, double lg, double lb)
         {
@@ -91,6 +97,31 @@ namespace _20250708_XYZ
                 (0.0557101 * x) + (-0.2040211 * y) + (1.0569959 * z)
                 );
         }
+
+        #endregion XYZ
+
+        #region L*a*b
+
+        //public static (double L,double a, double b) Xyz2Lab(double x,double y,double z)
+        //{
+        //    double Xw = 95.039;// ホワイトポイント
+        //    double Yw = 100.0;
+        //    double Zw = 108.88;
+        //    double Yn = y / Yw;// ホワイトポイントで正規化(ノーマライズ)
+        //    double L;
+        //    if (Yn > 0.008856)
+        //    {
+        //        L = (116 * Math.Pow(Yn, 1 / 3)) - 16;
+        //    }
+        //    else
+        //    {
+        //        L = 903.29 * Yn;
+        //    }
+
+
+        //}
+
+        #endregion L*a*b
 
     }
 }
