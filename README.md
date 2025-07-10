@@ -1,3 +1,5 @@
+[![trophy](https://github-profile-trophy.vercel.app/?username=gogowaten)](https://github.com/ryo-ma/github-profile-trophy)
+
 # 20250605
 https://github.com/gogowaten/2025WPF/tree/main/20250605<br>
 ![Animation20250605_115750-ezgif com-optimize](https://github.com/user-attachments/assets/9b013a40-c4fa-43e3-bd38-3fa51823a03d)<br>
