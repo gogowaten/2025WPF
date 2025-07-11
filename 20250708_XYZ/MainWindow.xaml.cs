@@ -46,6 +46,11 @@ namespace _20250708_XYZ
         {
             InitializeComponent();
 
+            //var inu = (1.0 / 3.0 * Math.Pow(29.0 / 6.0, 3.0) * Yn) + (4.0 / 29.0);
+            var inu = Math.Pow(29.0 / 6.0, 2.0);// 23.361
+            var inu2 = 4.0 / 29.0;// 0.13793103448275862
+            var inu3 = 1.0 / 3.0 * inu;// 7.7870
+
             var neko = Math.Pow(6.0 / 29.0, 3.0);// 0.0088564516790356311
             var Y = 0.5;
             var t = Math.Pow(Y / 1.0, 1.0 / 3.0);
@@ -54,7 +59,7 @@ namespace _20250708_XYZ
             var ika = (116 * Math.Pow(t, 1 / 3)) - 16;
             var tako = 116 * f - 16;
 
-            MyXYZ = new XYZ(200, 100, 50);
+            MyXYZ = new XYZ(00, 255, 0);
             DataContext = this;
 
             byte r = 200;
@@ -70,6 +75,14 @@ namespace _20250708_XYZ
         private void AAA()
         {
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //var lab = MathIro.Xyz2Lab(MyXYZ.X, MyXYZ.Y, MyXYZ.Z);
+            var LRGB = MathIro.Rgb2LinearRGB(0, 255, 0);
+            var xyzD50 = MathIro.ToXYZD50(LRGB.lr, LRGB.lg, LRGB.lb);
+            var Lab = MathIro.Xyz2Lab(xyzD50.X, xyzD50.Y, xyzD50.Z);
         }
     }
 }

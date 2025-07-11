@@ -30,7 +30,8 @@ namespace _20250708_XYZ
                 me.MyIsPropertyChanging = true;
                 var (lr, lg, lb) = MathIro.Rgb2LinearRGB(me.R, me.G, me.B);
                 me.LR = lr; me.LG = lg; me.LB = lb;
-                (double X, double Y, double Z) = MathIro.ToXYZ(lr, lg, lb);
+                (double X, double Y, double Z) = MathIro.ToXYZD50(lr, lg, lb);// D50のXYZ
+                //(double X, double Y, double Z) = MathIro.ToXYZ(lr, lg, lb);// D65のXYZ
                 //(double X, double Y, double Z) = MathIro.ToXYZ(MathIro.Rgb2LinearRGB(me.R, me.G, me.B));
                 me.X = X; me.Y = Y; me.Z = Z;
                 me.MyIsPropertyChanging = false;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace _20250708_XYZ
@@ -17,7 +18,7 @@ namespace _20250708_XYZ
         }
 
         #region リニアRGB
-        
+
 
         /// <summary>
         /// RGB カラー値を線形 RGB 表現に変換します。
@@ -71,9 +72,24 @@ namespace _20250708_XYZ
 
         #endregion リニアRGB
 
-        #region XYZ
-        
 
+
+
+
+
+        #region XYZ
+
+        // リニアRGB(D65)からXYZ(D50)
+        public static (double X, double Y, double Z) ToXYZD50(double lr, double lg, double lb)
+        {
+            return (
+                0.436041 * lr + 0.385113 * lg + 0.143046 * lb,
+                0.222485 * lr + 0.716905 * lg + 0.060610 * lb,
+                0.013920 * lr + 0.097067 * lg + 0.713913 * lb
+                );
+        }
+
+        // リニアRGB(D65)からXYZ(D65)
         public static (double X, double Y, double Z) ToXYZ(double lr, double lg, double lb)
         {
             return (
@@ -82,11 +98,13 @@ namespace _20250708_XYZ
                 0.0193339 * lr + 0.1191920 * lg + 0.9503041 * lb);
         }
 
+        // リニアRGBからXYZ
         public static (double X, double Y, double Z) ToXYZ((double lr, double lg, double lb) linear)
         {
             return ToXYZ(linear.lr, linear.lg, linear.lb);
         }
 
+        // XYZからリニアRGB
         // sRGB - Wikipedia
         // https://en.wikipedia.org/wiki/SRGB
         public static (double lr, double lg, double lb) Xyz2Rgb(double x, double y, double z)
@@ -98,28 +116,32 @@ namespace _20250708_XYZ
                 );
         }
 
+
+
         #endregion XYZ
 
         #region L*a*b
 
-        //public static (double L,double a, double b) Xyz2Lab(double x,double y,double z)
-        //{
-        //    double Xw = 95.039;// ホワイトポイント
-        //    double Yw = 100.0;
-        //    double Zw = 108.88;
-        //    double Yn = y / Yw;// ホワイトポイントで正規化(ノーマライズ)
-        //    double L;
-        //    if (Yn > 0.008856)
-        //    {
-        //        L = (116 * Math.Pow(Yn, 1 / 3)) - 16;
-        //    }
-        //    else
-        //    {
-        //        L = 903.29 * Yn;
-        //    }
+        // D50のXYZをLabに変換
+        public static (double L, double a, double b) Xyz2Lab(double x, double y, double z)
+        {
+            x *= 100.0;
+            y *= 100.0;
+            z *= 100.0;
+            x /= 96.42;// D50のホワイトポイントで正規化
+            y /= 100.0;
+            z /= 82.49;
+            //x /= 95.039;// D65のホワイトポイント
+            //y /= 100.0;
+            //z /= 108.88;
 
+            double threshold = 0.008856;// Math.Pow(6.0 / 29.0, 3.0) = 0.0088564516790356311
+            x = x > threshold ? Math.Pow(x, 1.0 / 3.0) : (7.787 * x) + (4.0 / 29.0);
+            y = y > threshold ? Math.Pow(y, 1.0 / 3.0) : (7.787 * y) + (4.0 / 29.0);
+            z = z > threshold ? Math.Pow(z, 1.0 / 3.0) : (7.787 * z) + (4.0 / 29.0);
 
-        //}
+            return ((116 * y) - 16, 500 * (x - y), 200 * (y - z));
+        }
 
         #endregion L*a*b
 
