@@ -69,7 +69,7 @@ namespace _20250708_XYZ
             Color c1 = Color.FromRgb(r, g, b);
             var lrgb2rgb = MathIro.LinearRgb2Rgb(LiRGB.lr, LiRGB.lg, LiRGB.lb);
             var rgb2xyz = MathIro.ToXYZ(LiRGB.lr, LiRGB.lg, LiRGB.lb);
-            var xyz2rgb = MathIro.Xyz2Rgb(rgb2xyz.X, rgb2xyz.Y, rgb2xyz.Z);
+            var xyz2rgb = MathIro.Xyz2LinearRgb(rgb2xyz.X, rgb2xyz.Y, rgb2xyz.Z);
         }
 
         private void AAA()
@@ -80,8 +80,8 @@ namespace _20250708_XYZ
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //var lab = MathIro.Xyz2Lab(MyXYZ.X, MyXYZ.Y, MyXYZ.Z);
-            var LRGB = MathIro.Rgb2LinearRGB(154, 182, 253);
-            //var LRGB = MathIro.Rgb2LinearRGB(0, 255, 0);
+            //var LRGB = MathIro.Rgb2LinearRGB(154, 182, 253);
+            var LRGB = MathIro.Rgb2LinearRGB(0, 255, 0);
             var xyzD50 = MathIro.ToXYZD50(LRGB.lr, LRGB.lg, LRGB.lb);
             var Lab = MathIro.Xyz2Lab(xyzD50.X, xyzD50.Y, xyzD50.Z);
         }

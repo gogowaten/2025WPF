@@ -98,16 +98,16 @@ namespace _20250708_XYZ
                 0.0193339 * lr + 0.1191920 * lg + 0.9503041 * lb);
         }
 
-        // リニアRGBからXYZ
+        // リニアRGBからXYZ(D65)
         public static (double X, double Y, double Z) ToXYZ((double lr, double lg, double lb) linear)
         {
             return ToXYZ(linear.lr, linear.lg, linear.lb);
         }
 
-        // XYZからリニアRGB
+        // XYZ(D65)からリニアRGB
         // sRGB - Wikipedia
         // https://en.wikipedia.org/wiki/SRGB
-        public static (double lr, double lg, double lb) Xyz2Rgb(double x, double y, double z)
+        public static (double lr, double lg, double lb) Xyz2LinearRgb(double x, double y, double z)
         {
             return (
                 (3.2406255 * x) + (-1.5372080 * y) + (-0.4986286 * z),

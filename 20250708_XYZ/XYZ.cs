@@ -29,11 +29,9 @@ namespace _20250708_XYZ
             {
                 me.MyIsPropertyChanging = true;
                 var (lr, lg, lb) = MathIro.Rgb2LinearRGB(me.R, me.G, me.B);
-                me.LR = lr; me.LG = lg; me.LB = lb;
-                (double X, double Y, double Z) = MathIro.ToXYZD50(lr, lg, lb);// D50のXYZ
-                //(double X, double Y, double Z) = MathIro.ToXYZ(lr, lg, lb);// D65のXYZ
-                //(double X, double Y, double Z) = MathIro.ToXYZ(MathIro.Rgb2LinearRGB(me.R, me.G, me.B));
-                me.X = X; me.Y = Y; me.Z = Z;
+                me.LR = lr; me.LG = lg; me.LB = lb;                
+                (me.XD50, me.YD50, me.ZD50) = MathIro.ToXYZD50(lr, lg, lb);// D50のXYZ
+                (me.X, me.Y, me.Z) = MathIro.ToXYZ(lr, lg, lb);// D65のXYZ
                 me.MyIsPropertyChanging = false;
             }
         }
@@ -43,22 +41,47 @@ namespace _20250708_XYZ
             if (d is XYZ me && !me.MyIsPropertyChanging)
             {
                 me.MyIsPropertyChanging = true;
-                var (r, g, b) = MathIro.LinearRgb2Rgb(MathIro.Xyz2Rgb(me.X, me.Y, me.Z));
+                var (r, g, b) = MathIro.LinearRgb2Rgb(MathIro.Xyz2LinearRgb(me.X, me.Y, me.Z));
                 me.R = r; me.G = g; me.B = b;
                 me.MyIsPropertyChanging = false;
             }
         }
 
-        private static void OnPropertyChangedLinearRGB(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //private static void OnPropertyChangedLinearRGB(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    if (d is XYZ me && !me.MyIsPropertyChanging)
+        //    {
+        //        me.MyIsPropertyChanging = true;
+        //        var (r, g, b) = MathIro.LinearRgb2Rgb(MathIro.Xyz2Rgb(me.X, me.Y, me.Z));
+        //        me.R = r; me.G = g; me.B = b;
+        //        me.MyIsPropertyChanging = false;
+        //    }
+        //}
+
+
+        public double XD50
         {
-            if (d is XYZ me && !me.MyIsPropertyChanging)
-            {
-                me.MyIsPropertyChanging = true;
-                var (r, g, b) = MathIro.LinearRgb2Rgb(MathIro.Xyz2Rgb(me.X, me.Y, me.Z));
-                me.R = r; me.G = g; me.B = b;
-                me.MyIsPropertyChanging = false;
-            }
+            get { return (double)GetValue(XD50Property); }
+            set { SetValue(XD50Property, value); }
         }
+        public static readonly DependencyProperty XD50Property =
+            DependencyProperty.Register(nameof(XD50), typeof(double), typeof(XYZ), new PropertyMetadata(0.0));
+
+        public double YD50
+        {
+            get { return (double)GetValue(YD50Property); }
+            set { SetValue(YD50Property, value); }
+        }
+        public static readonly DependencyProperty YD50Property =
+            DependencyProperty.Register(nameof(YD50), typeof(double), typeof(XYZ), new PropertyMetadata(0.0));
+
+        public double ZD50
+        {
+            get { return (double)GetValue(ZD50Property); }
+            set { SetValue(ZD50Property, value); }
+        }
+        public static readonly DependencyProperty ZD50Property =
+            DependencyProperty.Register(nameof(ZD50), typeof(double), typeof(XYZ), new PropertyMetadata(0.0));
 
 
         public double X

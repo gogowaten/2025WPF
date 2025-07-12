@@ -49,6 +49,7 @@
         <TextBlock Text="{Binding LR, StringFormat=LR {0:0.000}}"/>
         <TextBlock Text="{Binding LG, StringFormat=LG {0:0.000}}"/>
         <TextBlock Text="{Binding LB, StringFormat=LB {0:0.000}}"/>
+        <TextBlock Text="{Binding XD50, StringFormat=XD50 {0:0.000}}"/>
         <Button Content="test" Click="Button_Click"/>
       </StackPanel>
     </StackPanel>
