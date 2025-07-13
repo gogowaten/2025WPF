@@ -5,19 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_20250713_Lab"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=local:MainWindow}"
         Title="MainWindow" Height="367" Width="654">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
-      <ColumnDefinition Width="200"/>
+      <ColumnDefinition/>
     </Grid.ColumnDefinitions>
 
-    <Canvas x:Name="MyCanvas">
-
-    </Canvas>
-
     <StackPanel Grid.Column="1">
-
+      <Button Content="test" Click="Button_Click"/>
+      <TextBlock Text="{Binding MySikisai.R}"/>
+      <Slider Value="{Binding MySikisai.R}" Minimum="0" Maximum="255"/>
+      <TextBlock Text="{Binding MySikisai.LinearR}"/>
     </StackPanel>
   </Grid>
 </Window>

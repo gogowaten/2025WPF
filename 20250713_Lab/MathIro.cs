@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _20250713_Lab;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,7 +42,12 @@ namespace _20250713_Lav
             return (F(r), F(g), F(b));
         }
 
-        
+        public static double Rgb2LinearRGB(byte c)
+        {
+            return c <= 0.04045 ? c / 12.92 : Math.Pow((c + 0.055) / 1.055, 2.4);
+        }
+
+       
 
         // sRGB - Wikipedia
         // https://en.wikipedia.org/wiki/SRGB

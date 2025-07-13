@@ -16,9 +16,18 @@ namespace _20250713_Lab
     /// </summary>
     public partial class MainWindow : Window
     {
+        public Sikisai MySikisai { get; set; }
         public MainWindow()
         {
             InitializeComponent();
+            MySikisai = new();
+            DataContext = this;
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var data = MySikisai;
         }
     }
 }
