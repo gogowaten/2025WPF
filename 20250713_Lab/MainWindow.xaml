@@ -18,6 +18,7 @@
       <TextBlock Text="{Binding MySikisai.R}"/>
       <Slider Value="{Binding MySikisai.R}" Minimum="0" Maximum="255"/>
       <TextBlock Text="{Binding MySikisai.LinearR}"/>
+      <Slider Value="{Binding MySikisai.LinearR}" Minimum="0.0" Maximum="1.0" LargeChange="0.1"/>
     </StackPanel>
   </Grid>
 </Window>

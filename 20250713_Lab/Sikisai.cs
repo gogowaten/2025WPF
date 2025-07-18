@@ -19,7 +19,7 @@ namespace _20250713_Lab
         }
 
 
-        private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnRGBChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is Sikisai me && !me.IsChanging)
             {
@@ -28,6 +28,16 @@ namespace _20250713_Lab
                 me.IsChanging = false;
             }
         }
+        private static void OnLinearRGBChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Sikisai me && !me.IsChanging)
+            {
+                me.IsChanging = true;
+                (me.R, me.G, me.B) = MathIro.LinearRgb2Rgb(me.LinearR, me.LinearG, me.LinearB);
+                me.IsChanging = false;
+            }
+        }
+
 
         #region RGB
 
@@ -37,7 +47,7 @@ namespace _20250713_Lab
             set { SetValue(RProperty, value); }
         }
         public static readonly DependencyProperty RProperty =
-            DependencyProperty.Register(nameof(R), typeof(byte), typeof(Sikisai), new FrameworkPropertyMetadata((byte)0, new PropertyChangedCallback(OnColorChanged)));
+            DependencyProperty.Register(nameof(R), typeof(byte), typeof(Sikisai), new FrameworkPropertyMetadata((byte)0, new PropertyChangedCallback(OnRGBChanged)));
 
         public byte G
         {
@@ -45,7 +55,7 @@ namespace _20250713_Lab
             set { SetValue(GProperty, value); }
         }
         public static readonly DependencyProperty GProperty =
-            DependencyProperty.Register(nameof(G), typeof(byte), typeof(Sikisai), new FrameworkPropertyMetadata((byte)0, new PropertyChangedCallback(OnColorChanged)));
+            DependencyProperty.Register(nameof(G), typeof(byte), typeof(Sikisai), new FrameworkPropertyMetadata((byte)0, new PropertyChangedCallback(OnRGBChanged)));
 
         public byte B
         {
@@ -53,7 +63,7 @@ namespace _20250713_Lab
             set { SetValue(BProperty, value); }
         }
         public static readonly DependencyProperty BProperty =
-            DependencyProperty.Register(nameof(B), typeof(byte), typeof(Sikisai), new FrameworkPropertyMetadata((byte)0, new PropertyChangedCallback(OnColorChanged)));
+            DependencyProperty.Register(nameof(B), typeof(byte), typeof(Sikisai), new FrameworkPropertyMetadata((byte)0, new PropertyChangedCallback(OnRGBChanged)));
 
         #endregion RGB
 
@@ -65,7 +75,7 @@ namespace _20250713_Lab
             set { SetValue(LinearRProperty, value); }
         }
         public static readonly DependencyProperty LinearRProperty =
-            DependencyProperty.Register(nameof(LinearR), typeof(double), typeof(Sikisai), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(LinearR), typeof(double), typeof(Sikisai), new FrameworkPropertyMetadata(0.0, new PropertyChangedCallback(OnLinearRGBChanged)));
 
         public double LinearG
         {
@@ -73,7 +83,7 @@ namespace _20250713_Lab
             set { SetValue(LinearGProperty, value); }
         }
         public static readonly DependencyProperty LinearGProperty =
-            DependencyProperty.Register(nameof(LinearG), typeof(double), typeof(Sikisai), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(LinearG), typeof(double), typeof(Sikisai), new FrameworkPropertyMetadata(0.0, new PropertyChangedCallback(OnLinearRGBChanged)));
 
         public double LinearB
         {
@@ -81,7 +91,7 @@ namespace _20250713_Lab
             set { SetValue(LinearBProperty, value); }
         }
         public static readonly DependencyProperty LinearBProperty =
-            DependencyProperty.Register(nameof(LinearB), typeof(double), typeof(Sikisai), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(LinearB), typeof(double), typeof(Sikisai), new FrameworkPropertyMetadata(0.0, new PropertyChangedCallback(OnLinearRGBChanged)));
 
         #endregion LinearRGB
 
