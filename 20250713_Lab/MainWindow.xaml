@@ -8,50 +8,85 @@
         d:DataContext="{d:DesignInstance Type=local:MainWindow}"
         Title="MainWindow" Height="367" Width="654">
   <Grid>
+    <Grid.Resources>
+      <local:MyConvColorBrush x:Key="brush"/>
+      <Style TargetType="UniformGrid">
+        <Setter Property="Columns" Value="2"/>
+        <Setter Property="Margin" Value="5"/>
+      </Style>
+      <Style TargetType="Separator">
+        <Setter Property="Margin" Value="5"/>
+      </Style>
+    </Grid.Resources>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
       <ColumnDefinition/>
     </Grid.ColumnDefinitions>
 
     <StackPanel Grid.Column="0" Margin="10">
-      <TextBlock Text="{Binding MySikisai.XD65}"/>
-      <Slider Value="{Binding MySikisai.XD65}" Minimum="0" Maximum="0.95047" LargeChange="0.01"/>
-      <TextBlock Text="{Binding MySikisai.YD65}"/>
-      <Slider Value="{Binding MySikisai.YD65}" Minimum="0" Maximum="1" LargeChange="0.01"/>
-      <TextBlock Text="{Binding MySikisai.ZD65}"/>
-      <Slider Value="{Binding MySikisai.ZD65}" Minimum="0" Maximum="1.08883" LargeChange="0.01"/>
-
-      <TextBlock Text="{Binding MySikisai.XD50}"/>
-      <Slider Value="{Binding MySikisai.XD50}" Minimum="0" Maximum="0.9642" LargeChange="0.1"/>
-      <TextBlock Text="{Binding MySikisai.YD50}"/>
-      <Slider Value="{Binding MySikisai.YD50}" Minimum="0" Maximum="1" LargeChange="0.1"/>
-      <TextBlock Text="{Binding MySikisai.ZD50}"/>
-      <Slider Value="{Binding MySikisai.ZD50}" Minimum="0" Maximum="1.5" LargeChange="0.1"/>
-      
-      <TextBlock Text="{Binding MySikisai.LabL}"/>
-      <Slider Value="{Binding MySikisai.LabL}" Minimum="0" Maximum="100" LargeChange="1"/>
-      <TextBlock Text="{Binding MySikisai.Laba}"/>
-      <Slider Value="{Binding MySikisai.Laba}" Minimum="-127" Maximum="127" LargeChange="1"/>
-      <TextBlock Text="{Binding MySikisai.Labb}"/>
-      <Slider Value="{Binding MySikisai.Labb}" Minimum="-127" Maximum="127" LargeChange="1"/>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.XD65, StringFormat=XD65 🍉 {0:0.00000}}"/>
+        <Slider Value="{Binding MySikisai.XD65}" Minimum="0" Maximum="0.95047" LargeChange="0.01"/>
+      </UniformGrid>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.YD65, StringFormat=YD65 🍉 {0:0.00000}}"/>
+        <Slider Value="{Binding MySikisai.YD65}" Minimum="0" Maximum="1" LargeChange="0.01"/>
+      </UniformGrid>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.ZD65, StringFormat=ZD65 🍉 {0:0.00000}}"/>
+        <Slider Value="{Binding MySikisai.ZD65}" Minimum="0" Maximum="1.08883" LargeChange="0.01"/>
+      </UniformGrid>
+      <Separator/>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.XD50, StringFormat=XD50 🍉 {0:0.00000}}"/>
+        <Slider Value="{Binding MySikisai.XD50}" Minimum="0" Maximum="0.9642" LargeChange="0.1"/>
+      </UniformGrid>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.YD50, StringFormat=YD50 🍉 {0:0.00000}}"/>
+        <Slider Value="{Binding MySikisai.YD50}" Minimum="0" Maximum="1" LargeChange="0.1"/>
+      </UniformGrid>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.ZD50, StringFormat=ZD50 🍉 {0:0.00000}}"/>
+        <Slider Value="{Binding MySikisai.ZD50}" Minimum="0" Maximum="1.5" LargeChange="0.1"/>
+      </UniformGrid>
+      <Separator/>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.LabL, StringFormat=LabL 🍉 {0:000.000}}"/>
+        <Slider Value="{Binding MySikisai.LabL}" Minimum="0" Maximum="100" LargeChange="1"/>
+      </UniformGrid>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.Laba, StringFormat=Laba 🍉 {0:0.00000}}"/>
+        <Slider Value="{Binding MySikisai.Laba}" Minimum="-127" Maximum="127" LargeChange="1"/>
+      </UniformGrid>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.Labb, StringFormat=Labb 🍉 {0:0.00000}}"/>
+        <Slider Value="{Binding MySikisai.Labb}" Minimum="-127" Maximum="127" LargeChange="1"/>
+      </UniformGrid>
 
     </StackPanel>
-    
-    
+
+
     <StackPanel Grid.Column="1" Margin="10">
       <Button Content="test" Click="Button_Click"/>
-      <TextBlock Text="{Binding MySikisai.R}"/>
-      <Slider Value="{Binding MySikisai.R}" Minimum="0" Maximum="255"/>
-      
-      <TextBlock Text="{Binding MySikisai.G}"/>
-      <Slider Value="{Binding MySikisai.G}" Minimum="0" Maximum="255"/>
-      
-      <TextBlock Text="{Binding MySikisai.B}"/>
-      <Slider Value="{Binding MySikisai.B}" Minimum="0" Maximum="255"/>
-      
-      <TextBlock Text="{Binding MySikisai.LinearR}"/>
-      <Slider Value="{Binding MySikisai.LinearR}" Minimum="0.0" Maximum="1.0" LargeChange="0.1"/>      
-      
+      <Rectangle Height="20" Fill="{Binding MySikisai.MyBrush}">
+      </Rectangle>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.R, StringFormat=R 🍉 {0:000}}"/>
+        <Slider Value="{Binding MySikisai.R}" Minimum="0" Maximum="255"/>
+      </UniformGrid>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.G, StringFormat=G 🍉 {0:000}}"/>
+        <Slider Value="{Binding MySikisai.G}" Minimum="0" Maximum="255"/>
+      </UniformGrid>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.B, StringFormat=B 🍉 {0:000}}"/>
+        <Slider Value="{Binding MySikisai.B}" Minimum="0" Maximum="255"/>
+      </UniformGrid>
+      <Separator/>
+      <UniformGrid>
+        <TextBlock Text="{Binding MySikisai.LinearR, StringFormat=LinearR 🍉 {0:000}}"/>
+        <Slider Value="{Binding MySikisai.LinearR}" Minimum="0.0" Maximum="1.0" LargeChange="0.1"/>
+      </UniformGrid>
     </StackPanel>
   </Grid>
 </Window>

@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
+using System.Windows.Media;
 
 namespace _20250713_Lab
 {
@@ -16,10 +18,31 @@ namespace _20250713_Lab
 
         public Sikisai()
         {
-
+            MyBind();
         }
 
+        private void MyBind()
+        {
+            MultiBinding mb = new() { Converter = new MyConvColorBrush() };
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(RProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(GProperty) });
+            mb.Bindings.Add(new Binding() { Source = this, Path = new PropertyPath(BProperty) });
+            BindingOperations.SetBinding(this, MyBrushProperty, mb);
+        }
+
+
         #region 依存関係プロパティ
+
+
+        public SolidColorBrush MyBrush
+        {
+            get { return (SolidColorBrush)GetValue(MyBrushProperty); }
+            set { SetValue(MyBrushProperty, value); }
+        }
+        public static readonly DependencyProperty MyBrushProperty =
+            DependencyProperty.Register(nameof(MyBrush), typeof(SolidColorBrush), typeof(Sikisai), new PropertyMetadata(null));
+
+
 
         #region RGB
 
@@ -178,8 +201,8 @@ namespace _20250713_Lab
             {
                 me.IsChanging = true;
                 (me.LinearR, me.LinearG, me.LinearB) = MathIro.Rgb2LinearRGB(me.R, me.G, me.B);
-                (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65(me.LinearR, me.LinearG, me.LinearB);
-                (me.XD50, me.YD50, me.ZD50) = MathIro.LinearRGBToXYZD50(me.LinearR, me.LinearG, me.LinearB);
+                (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65v0(me.LinearR, me.LinearG, me.LinearB);
+                (me.XD50, me.YD50, me.ZD50) = MathIro.LinearRGBToXYZD50v2(me.LinearR, me.LinearG, me.LinearB);
                 (me.LabL, me.Laba, me.Labb) = MathIro.XyzD50ToLab(me.XD50, me.YD50, me.ZD50);
                 me.IsChanging = false;
             }
@@ -191,8 +214,8 @@ namespace _20250713_Lab
             {
                 me.IsChanging = true;
                 (me.R, me.G, me.B) = MathIro.LinearRgb2Rgb(me.LinearR, me.LinearG, me.LinearB);
-                (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65(me.LinearR, me.LinearG, me.LinearB);
-                (me.XD50, me.YD50, me.ZD50) = MathIro.LinearRGBToXYZD50(me.LinearR, me.LinearG, me.LinearB);
+                (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65v0(me.LinearR, me.LinearG, me.LinearB);
+                (me.XD50, me.YD50, me.ZD50) = MathIro.LinearRGBToXYZD50v2(me.LinearR, me.LinearG, me.LinearB);
                 me.IsChanging = false;
             }
         }
@@ -202,9 +225,9 @@ namespace _20250713_Lab
             if (d is Sikisai me && !me.IsChanging)
             {
                 me.IsChanging = true;
-                (me.LinearR, me.LinearG, me.LinearB) = MathIro.XyzD50ToLinearRgb(me.XD50, me.YD50, me.ZD50);
+                (me.LinearR, me.LinearG, me.LinearB) = MathIro.XyzD50ToLinearRgbV2(me.XD50, me.YD50, me.ZD50);
                 (me.R, me.G, me.B) = MathIro.LinearRgb2Rgb(me.LinearR, me.LinearG, me.LinearB);
-                (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65(me.LinearR, me.LinearG, me.LinearB);
+                (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65v0(me.LinearR, me.LinearG, me.LinearB);
                 me.IsChanging = false;
             }
         }
@@ -215,8 +238,8 @@ namespace _20250713_Lab
             if (d is Sikisai me && !me.IsChanging)
             {
                 me.IsChanging = true;
-                (me.LinearR, me.LinearG, me.LinearB) = MathIro.XyzD65ToLinearRgb(me.XD65, me.YD65, me.ZD65);
-                (me.XD50, me.YD50, me.ZD50) = MathIro.LinearRGBToXYZD50(me.LinearR, me.LinearG, me.LinearB);
+                (me.LinearR, me.LinearG, me.LinearB) = MathIro.XyzD65ToLinearRgbv2(me.XD65, me.YD65, me.ZD65);
+                (me.XD50, me.YD50, me.ZD50) = MathIro.LinearRGBToXYZD50v2(me.LinearR, me.LinearG, me.LinearB);
                 (me.R, me.G, me.B) = MathIro.LinearRgb2Rgb(me.LinearR, me.LinearG, me.LinearB);
                 me.IsChanging = false;
             }

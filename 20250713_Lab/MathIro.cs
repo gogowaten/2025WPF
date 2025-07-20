@@ -12,11 +12,11 @@ namespace _20250713_Lav
     class MathIro
     {
 
-        // 正規化したRGBをSRGB、スクリーン用のRGBをリニアRGBに変換
-        public static double SrgbToLinear(double c)
-        {
-            return c <= 0.04045 ? c / 12.92 : Math.Pow((c + 0.055) / 1.055, 2.4);
-        }
+        //// 正規化したRGBをSRGB、スクリーン用のRGBをリニアRGBに変換
+        //public static double SrgbToLinear(double c)
+        //{
+        //    return c <= 0.04045 ? c / 12.92 : Math.Pow((c + 0.055) / 1.055, 2.4);
+        //}
 
         #region リニアRGB
 
@@ -97,11 +97,26 @@ namespace _20250713_Lav
                 );
         }
 
-        // これらの式では、X、Y、Zの値は、 D65（「白」）のYが 1.0（ X = 0.9505、Y = 1.0000、Z = 1.0890）になるように調整する必要があります。
-        // sRGB - Wikipedia
-        // https://en.wikipedia.org/wiki/SRGB
+        // リニアRGB(D65)からXYZ(D50)
+        // RGB/XYZ Matrices
+        // http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
+        public static (double X, double Y, double Z) LinearRGBToXYZD50v2(double lr, double lg, double lb)
+        {
+            return (
+                0.4360747 * lr + 0.3850649 * lg + 0.1430804 * lb,
+                0.2225045 * lr + 0.7168786 * lg + 0.0606169 * lb,
+                0.0139322 * lr + 0.0971045 * lg + 0.7141733 * lb);
+        }
+
+
+
+
+
+
         // リニアRGB(D65)からXYZ(D65)
-        public static (double X, double Y, double Z) LinearRGBToXYZD65(double lr, double lg, double lb)
+        // RGB/XYZ Matrices
+        // http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
+        public static (double X, double Y, double Z) LinearRGBToXYZD65v0(double lr, double lg, double lb)
         {
             return (
                 0.4124564 * lr + 0.3575761 * lg + 0.1804375 * lb,
@@ -109,11 +124,18 @@ namespace _20250713_Lav
                 0.0193339 * lr + 0.1191920 * lg + 0.9503041 * lb);
         }
 
+        // これらの式では、X、Y、Zの値は、 D65（「白」）のYが 1.0（ X = 0.9505、Y = 1.0000、Z = 1.0890）になるように調整する必要があります。
+        // sRGB - Wikipedia
+        // https://en.wikipedia.org/wiki/SRGB
         // リニアRGB(D65)からXYZ(D65)
-        public static (double X, double Y, double Z) LinearRGBToXYZ((double lr, double lg, double lb) linear)
+        public static (double X, double Y, double Z) LinearRGBToXYZD65(double r, double g, double b)
         {
-            return LinearRGBToXYZD65(linear.lr, linear.lg, linear.lb);
+            return (
+                0.4124 * r + 0.3576 * g + 0.1805 * b,
+                0.2126 * r + 0.7152 * g + 0.0722 * b,
+                0.0193 * r + 0.1192 * g + 0.9505 * b);
         }
+
 
 
 
@@ -130,9 +152,9 @@ namespace _20250713_Lav
         }
 
         // XYZ(D65)からリニアRGBはこっちの方が良い？
-        //        RGB/XYZ Matrices
-        //http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
-        public static (double lr, double lg, double lb) XyzD65ToLinearRgb2(double x, double y, double z)
+        // RGB/XYZ Matrices
+        // http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
+        public static (double lr, double lg, double lb) XyzD65ToLinearRgbv2(double x, double y, double z)
         {
             return (
                 (3.2404542 * x) - (1.5371385 * y) - (0.4985314 * z),
@@ -141,14 +163,26 @@ namespace _20250713_Lav
                 );
         }
 
-        // 色空間の変換 (3)
-        // https://fujiwaratko.sakura.ne.jp/infosci/colorspace/colorspace3.html
-        public static (double lr, double lg, double lb) XyzD50ToLinearRgb(double x, double y, double z)
+        //// 色空間の変換 (3)
+        //// https://fujiwaratko.sakura.ne.jp/infosci/colorspace/colorspace3.html
+        //// XYZ(D50)からリニアRGB(D65)
+        //public static (double lr, double lg, double lb) XyzD50ToLinearRgb(double x, double y, double z)
+        //{
+        //    return (
+        //         (3.134187 * x) - (1.617209 * x) - (0.490694 * x),
+        //        (-0.978749 * y) + (1.916130 * y) + (0.033433 * y),
+        //         (0.071964 * z) - (0.228994 * z) + (1.405754 * z)
+        //        );
+        //}
+
+        //        RGB/XYZ Matrices
+        //http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
+        public static (double lr, double lg, double lb) XyzD50ToLinearRgbV2(double x, double y, double z)
         {
             return (
-                 (3.134187 * x) - (1.617209 * x) - (0.490694 * x),
-                (-0.978749 * y) + (1.916130 * y) + (0.033433 * y),
-                 (0.071964 * z) - (0.228994 * z) + (1.405754 * z)
+                3.1338561 * x - 1.6168667 * y - 0.4906146 * z,
+               -0.9787684 * x + 1.9161415 * y + 0.0334540 * z,
+                0.0719453 * x - 0.2289914 * y + 1.4052427 * z
                 );
         }
 
@@ -156,17 +190,23 @@ namespace _20250713_Lav
 
         #endregion XYZ
 
+
+
+
+
+
         #region L*a*b
 
         // D50のXYZをLabに変換
         public static (double L, double a, double b) XyzD50ToLab(double x, double y, double z)
         {
-            x *= 100.0;
-            y *= 100.0;
-            z *= 100.0;
+            x *= 100.0; y *= 100.0; z *= 100.0;
+
             x /= 96.42;// D50のホワイトポイントで正規化
             y /= 100.0;
             z /= 82.49;
+
+
             //x /= 95.039;// D65のホワイトポイント
             //y /= 100.0;
             //z /= 108.88;
@@ -181,8 +221,11 @@ namespace _20250713_Lav
             x = x > threshold ? Math.Pow(x, 1.0 / 3.0) : (7.787 * x) + (4.0 / 29.0);
             y = y > threshold ? Math.Pow(y, 1.0 / 3.0) : (7.787 * y) + (4.0 / 29.0);
             z = z > threshold ? Math.Pow(z, 1.0 / 3.0) : (7.787 * z) + (4.0 / 29.0);
-            
-            return ((116 * y) - 16, 500 * (x - y), 200 * (y - z));
+
+            return (
+                (116 * y) - 16,
+                500 * (x - y),
+                200 * (y - z));
         }
 
 
