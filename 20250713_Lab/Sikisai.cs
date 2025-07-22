@@ -1,6 +1,7 @@
 ﻿using _20250713_Lav;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
@@ -189,6 +190,38 @@ namespace _20250713_Lab
 
         #endregion Lab
 
+        #region LCh
+
+        public double LChL
+        {
+            get { return (double)GetValue(LChLProperty); }
+            set { SetValue(LChLProperty, value); }
+        }
+        public static readonly DependencyProperty LChLProperty =
+            DependencyProperty.Register(nameof(LChL), typeof(double), typeof(Sikisai), new FrameworkPropertyMetadata(0.0, new PropertyChangedCallback(OnLChChanged)));
+
+        public double LChC
+        {
+            get { return (double)GetValue(LChCProperty); }
+            set { SetValue(LChCProperty, value); }
+        }
+        public static readonly DependencyProperty LChCProperty =
+            DependencyProperty.Register(nameof(LChC), typeof(double), typeof(Sikisai), new FrameworkPropertyMetadata(0.0, new PropertyChangedCallback(OnLChChanged)));
+
+        public double LChh
+        {
+            get { return (double)GetValue(LChhProperty); }
+            set { SetValue(LChhProperty, value); }
+        }
+        public static readonly DependencyProperty LChhProperty =
+            DependencyProperty.Register(nameof(LChh), typeof(double), typeof(Sikisai), new FrameworkPropertyMetadata(0.0, new PropertyChangedCallback(OnLChChanged)));
+
+
+
+
+        #endregion LCh
+
+
 
         #endregion 依存関係プロパティ
 
@@ -204,6 +237,8 @@ namespace _20250713_Lab
                 (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65v0(me.LinearR, me.LinearG, me.LinearB);
                 (me.XD50, me.YD50, me.ZD50) = MathIro.LinearRGBToXYZD50v2(me.LinearR, me.LinearG, me.LinearB);
                 (me.LabL, me.Laba, me.Labb) = MathIro.XyzD50ToLab(me.XD50, me.YD50, me.ZD50);
+                (me.LChL, me.LChC, me.LChh) = MathIro.LabToLch(me.LabL, me.Laba, me.Labb);
+                
                 me.IsChanging = false;
             }
         }
@@ -216,6 +251,7 @@ namespace _20250713_Lab
                 (me.R, me.G, me.B) = MathIro.LinearRgb2Rgb(me.LinearR, me.LinearG, me.LinearB);
                 (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65v0(me.LinearR, me.LinearG, me.LinearB);
                 (me.XD50, me.YD50, me.ZD50) = MathIro.LinearRGBToXYZD50v2(me.LinearR, me.LinearG, me.LinearB);
+                (me.LabL, me.Laba, me.Labb) = MathIro.XyzD50ToLab(me.XD50, me.YD50, me.ZD50);
                 me.IsChanging = false;
             }
         }
@@ -226,6 +262,7 @@ namespace _20250713_Lab
             {
                 me.IsChanging = true;
                 (me.LinearR, me.LinearG, me.LinearB) = MathIro.XyzD50ToLinearRgbV2(me.XD50, me.YD50, me.ZD50);
+                (me.LabL, me.Laba, me.Labb) = MathIro.XyzD50ToLab(me.XD50, me.YD50, me.ZD50);
                 (me.R, me.G, me.B) = MathIro.LinearRgb2Rgb(me.LinearR, me.LinearG, me.LinearB);
                 (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65v0(me.LinearR, me.LinearG, me.LinearB);
                 me.IsChanging = false;
@@ -240,6 +277,7 @@ namespace _20250713_Lab
                 me.IsChanging = true;
                 (me.LinearR, me.LinearG, me.LinearB) = MathIro.XyzD65ToLinearRgbv2(me.XD65, me.YD65, me.ZD65);
                 (me.XD50, me.YD50, me.ZD50) = MathIro.LinearRGBToXYZD50v2(me.LinearR, me.LinearG, me.LinearB);
+                (me.LabL, me.Laba, me.Labb) = MathIro.XyzD50ToLab(me.XD50, me.YD50, me.ZD50);
                 (me.R, me.G, me.B) = MathIro.LinearRgb2Rgb(me.LinearR, me.LinearG, me.LinearB);
                 me.IsChanging = false;
             }
@@ -251,10 +289,24 @@ namespace _20250713_Lab
             if (d is Sikisai me && !me.IsChanging)
             {
                 me.IsChanging = true;
-                (me.XD50, me.YD50, me.ZD50) = MathIro.LabToXYZD50(me.LabL,me.Laba,me.Labb);
+                (me.XD50, me.YD50, me.ZD50) = MathIro.LabToXYZD50(me.LabL, me.Laba, me.Labb);
                 (me.LinearR, me.LinearG, me.LinearB) = MathIro.XyzD50ToLinearRgbV2(me.XD50, me.YD50, me.ZD50);
                 (me.R, me.G, me.B) = MathIro.LinearRgb2Rgb(me.LinearR, me.LinearG, me.LinearB);
                 (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65v0(me.LinearR, me.LinearG, me.LinearB);
+                me.IsChanging = false;
+            }
+        }
+
+        private static void OnLChChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Sikisai me && !me.IsChanging)
+            {
+                me.IsChanging = true;
+                (me.LabL, me.Laba, me.Labb) = MathIro.XyzD50ToLab(me.XD50, me.YD50, me.ZD50);
+                (me.XD50, me.YD50, me.ZD50) = MathIro.LabToXYZD50(me.LabL, me.Laba, me.Labb);
+                (me.LinearR, me.LinearG, me.LinearB) = MathIro.XyzD50ToLinearRgbV2(me.XD50, me.YD50, me.ZD50);
+                (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65v0(me.LinearR, me.LinearG, me.LinearB);
+                (me.R, me.G, me.B) = MathIro.LinearRgb2Rgb(me.LinearR, me.LinearG, me.LinearB);
                 me.IsChanging = false;
             }
         }
@@ -263,37 +315,6 @@ namespace _20250713_Lab
         #endregion PropertyChangedCallback
     }
 
-
-    //public class Lav : DependencyObject
-    //{
-    //    public Lav() { }
-
-
-    //    public double L
-    //    {
-    //        get { return (double)GetValue(LProperty); }
-    //        set { SetValue(LProperty, value); }
-    //    }
-    //    public static readonly DependencyProperty LProperty =
-    //        DependencyProperty.Register(nameof(L), typeof(double), typeof(Lav), new PropertyMetadata(0.0));
-
-    //    public double A
-    //    {
-    //        get { return (double)GetValue(AProperty); }
-    //        set { SetValue(AProperty, value); }
-    //    }
-    //    public static readonly DependencyProperty AProperty =
-    //        DependencyProperty.Register(nameof(A), typeof(double), typeof(Lav), new PropertyMetadata(0.0));
-
-    //    public double B
-    //    {
-    //        get { return (double)GetValue(BProperty); }
-    //        set { SetValue(BProperty, value); }
-    //    }
-    //    public static readonly DependencyProperty BProperty =
-    //        DependencyProperty.Register(nameof(B), typeof(double), typeof(Lav), new PropertyMetadata(0.0));
-
-    //}
 
 
 
@@ -442,5 +463,26 @@ namespace _20250713_Lab
 
 
 
+
+
+
+
+
+
+    public class MyConvColorBrush : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var r = (byte)values[0];
+            var g = (byte)values[1];
+            var b = (byte)values[2];
+            return new SolidColorBrush(Color.FromArgb(255, r, g, b));
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
 }

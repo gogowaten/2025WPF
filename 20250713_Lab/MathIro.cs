@@ -246,6 +246,8 @@ namespace _20250713_Lav
 
 
         #region L*a*b --> XYZ
+        // Lab色空間 - Wikipedia
+        // https://ja.wikipedia.org/wiki/Lab%E8%89%B2%E7%A9%BA%E9%96%93
         public static (double x, double y, double z) LabToXYZD50(double l, double a, double b)
         {
             double Xw = 96.42;// D50のホワイトポイント
@@ -256,20 +258,54 @@ namespace _20250713_Lav
             double x = (a / 500) + y;
             double z = (b / -200) + y;
 
-            double muri = 6.0 / 29.0;
+            double kokomade = 6.0 / 29.0;// 0.20689655172413793
             double xx; double yy; double zz;
-            if (y > muri) { yy = Yw * Math.Pow(y, 3.0); }
-            else { yy = (y - 16 / 116) * 3 * Math.Pow(muri, 2.0) * Yw; }
-            xx = x > muri ? (Xw * Math.Pow(x, 3.0)) : (x - 16.0 / 166.0) * 3.0 * Math.Pow(muri, 2.0) * Xw;
-            zz = z > muri ? (Zw * Math.Pow(z, 3.0)) : (z - 16.0 / 166.0) * 3.0 * Math.Pow(muri, 2.0) * Zw;
+            if (y > kokomade) { yy = Yw * Math.Pow(y, 3.0); }
+            else { yy = (y - 16 / 116) * 3 * Math.Pow(kokomade, 2.0) * Yw; }
+            xx = x > kokomade ? (Xw * Math.Pow(x, 3.0)) : (x - 16.0 / 166.0) * 3.0 * Math.Pow(kokomade, 2.0) * Xw;
+            zz = z > kokomade ? (Zw * Math.Pow(z, 3.0)) : (z - 16.0 / 166.0) * 3.0 * Math.Pow(kokomade, 2.0) * Zw;
 
             return (xx / 100.0, yy / 100.0, zz / 100.0);
+        }
+
+        #endregion L*a*b --> XYZ
+
+
+
+
+        // LCH
+        // Lは0から100%
+        // Cは0から無限だけど実際には230が最大値？CSSでは150が最大値っぽい
+        // 色相0から360？
+        // 計算
+        // LabからLCH
+        // Lは同じ
+        // CはMath.Sqrt(a * a + b * b);
+        public static (double L, double C, double H) LabToLch(double L, double a, double b)
+        {
+            double c;
+            double h;
+            c = Math.Sqrt(a * a + b * b);
+            if (a > 0)
+            {
+                h = Math.Atan(b / a);
+                var neko = Math.Atan2(b, a);
+            }
+            else if (a < 0)
+            {
+                h = Math.Atan(b / a) + Math.PI;
+                //h = Math.Atan(b / a) + 180;
+            }
+            else // a=0
+            {
+                h = 0;// 定義なし
+            }
+            h = h * (180.0 / Math.PI);
+            return (L, c, h);
         }
 
 
 
 
-
-        #endregion L*a*b --> XYZ
     }
 }
