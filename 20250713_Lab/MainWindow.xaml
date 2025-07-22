@@ -26,41 +26,41 @@
     <StackPanel Grid.Column="0" Margin="10">
       <UniformGrid>
         <TextBlock Text="{Binding MySikisai.XD65, StringFormat=XD65 🍉 {0:0.00000}}"/>
-        <Slider Value="{Binding MySikisai.XD65}" Minimum="0" Maximum="0.95047" LargeChange="0.01"/>
+        <Slider Value="{Binding MySikisai.XD65}" Minimum="0" Maximum="0.95047" LargeChange="0.01" TickFrequency="0.01" IsSnapToTickEnabled="True"/>
       </UniformGrid>
       <UniformGrid>
         <TextBlock Text="{Binding MySikisai.YD65, StringFormat=YD65 🍉 {0:0.00000}}"/>
-        <Slider Value="{Binding MySikisai.YD65}" Minimum="0" Maximum="1" LargeChange="0.01"/>
+        <Slider Value="{Binding MySikisai.YD65}" Minimum="0" Maximum="1" LargeChange="0.01" TickFrequency="0.01" IsSnapToTickEnabled="True"/>
       </UniformGrid>
       <UniformGrid>
         <TextBlock Text="{Binding MySikisai.ZD65, StringFormat=ZD65 🍉 {0:0.00000}}"/>
-        <Slider Value="{Binding MySikisai.ZD65}" Minimum="0" Maximum="1.08883" LargeChange="0.01"/>
+        <Slider Value="{Binding MySikisai.ZD65}" Minimum="0" Maximum="1.08883" LargeChange="0.01" TickFrequency="0.01" IsSnapToTickEnabled="True"/>
       </UniformGrid>
       <Separator/>
       <UniformGrid>
         <TextBlock Text="{Binding MySikisai.XD50, StringFormat=XD50 🍉 {0:0.00000}}"/>
-        <Slider Value="{Binding MySikisai.XD50}" Minimum="0" Maximum="0.9642" LargeChange="0.1"/>
+        <Slider Value="{Binding MySikisai.XD50}" Minimum="0" Maximum="0.9642" LargeChange="0.01" TickFrequency="0.01" IsSnapToTickEnabled="True"/>
       </UniformGrid>
       <UniformGrid>
         <TextBlock Text="{Binding MySikisai.YD50, StringFormat=YD50 🍉 {0:0.00000}}"/>
-        <Slider Value="{Binding MySikisai.YD50}" Minimum="0" Maximum="1" LargeChange="0.1"/>
+        <Slider Value="{Binding MySikisai.YD50}" Minimum="0" Maximum="1" LargeChange="0.01" TickFrequency="0.01" IsSnapToTickEnabled="True"/>
       </UniformGrid>
       <UniformGrid>
         <TextBlock Text="{Binding MySikisai.ZD50, StringFormat=ZD50 🍉 {0:0.00000}}"/>
-        <Slider Value="{Binding MySikisai.ZD50}" Minimum="0" Maximum="1.5" LargeChange="0.1"/>
+        <Slider Value="{Binding MySikisai.ZD50}" Minimum="0" Maximum="1.5" LargeChange="0.01" TickFrequency="0.01" IsSnapToTickEnabled="True"/>
       </UniformGrid>
       <Separator/>
       <UniformGrid>
         <TextBlock Text="{Binding MySikisai.LabL, StringFormat=LabL 🍉 {0:000.000}}"/>
-        <Slider Value="{Binding MySikisai.LabL}" Minimum="0" Maximum="100" LargeChange="1"/>
+        <Slider Value="{Binding MySikisai.LabL}" Minimum="0" Maximum="100" LargeChange="1" IsSnapToTickEnabled="True"/>
       </UniformGrid>
       <UniformGrid>
         <TextBlock Text="{Binding MySikisai.Laba, StringFormat=Laba 🍉 {0:0.00000}}"/>
-        <Slider Value="{Binding MySikisai.Laba}" Minimum="-127" Maximum="127" LargeChange="1"/>
+        <Slider Value="{Binding MySikisai.Laba}" Minimum="-127" Maximum="127" LargeChange="1" IsSnapToTickEnabled="True"/>
       </UniformGrid>
       <UniformGrid>
         <TextBlock Text="{Binding MySikisai.Labb, StringFormat=Labb 🍉 {0:0.00000}}"/>
-        <Slider Value="{Binding MySikisai.Labb}" Minimum="-127" Maximum="127" LargeChange="1"/>
+        <Slider Value="{Binding MySikisai.Labb}" Minimum="-127" Maximum="127" LargeChange="1" IsSnapToTickEnabled="True"/>
       </UniformGrid>
 
     </StackPanel>

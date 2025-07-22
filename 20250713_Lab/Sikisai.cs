@@ -169,7 +169,7 @@ namespace _20250713_Lab
             set { SetValue(LabLProperty, value); }
         }
         public static readonly DependencyProperty LabLProperty =
-            DependencyProperty.Register(nameof(LabL), typeof(double), typeof(Sikisai), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(LabL), typeof(double), typeof(Sikisai), new FrameworkPropertyMetadata(0.0, new PropertyChangedCallback(OnLabChanged)));
 
         public double Laba
         {
@@ -177,7 +177,7 @@ namespace _20250713_Lab
             set { SetValue(LabaProperty, value); }
         }
         public static readonly DependencyProperty LabaProperty =
-            DependencyProperty.Register(nameof(Laba), typeof(double), typeof(Sikisai), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(Laba), typeof(double), typeof(Sikisai), new FrameworkPropertyMetadata(0.0, new PropertyChangedCallback(OnLabChanged)));
 
         public double Labb
         {
@@ -185,7 +185,7 @@ namespace _20250713_Lab
             set { SetValue(LabbProperty, value); }
         }
         public static readonly DependencyProperty LabbProperty =
-            DependencyProperty.Register(nameof(Labb), typeof(double), typeof(Sikisai), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(Labb), typeof(double), typeof(Sikisai), new FrameworkPropertyMetadata(0.0, new PropertyChangedCallback(OnLabChanged)));
 
         #endregion Lab
 
@@ -245,32 +245,19 @@ namespace _20250713_Lab
             }
         }
 
-        //private static void OnLabChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    if (d is Sikisai me && !me.IsChanging)
-        //    {
-        //        me.IsChanging = true;
-        //        (me.XD50, me.YD50, me.ZD50) = MathIro.lab(me.LinearR, me.LinearG, me.LinearB);
-        //        (me.LinearR, me.LinearG, me.LinearB) = MathIro.XyzD65ToLinearRgb(me.XD65, me.YD65, me.ZD65);
-        //        (me.XD50, me.YD50, me.ZD50) = MathIro.LinearRGBToXYZD50(me.LinearR, me.LinearG, me.LinearB);
-        //        (me.R, me.G, me.B) = MathIro.LinearRgb2Rgb(me.LinearR, me.LinearG, me.LinearB);
-        //        me.IsChanging = false;
-        //    }
-        //}
 
-
-        //private static void MyXYZD50Change(Sikisai me)
-        //{
-        //    (me.XD50, me.YD50, me.ZD50) = MathIro.LinearRGBToXYZD65(me.LinearR, me.LinearG, me.LinearB);
-        //}
-        //private static void MyXYZD65Change(Sikisai me)
-        //{
-        //    (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65(me.LinearR, me.LinearG, me.LinearB);
-        //}
-        //private static void MyLinearRGBChange(Sikisai me)
-        //{
-        //    (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65(me.LinearR, me.LinearG, me.LinearB);
-        //}
+        private static void OnLabChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Sikisai me && !me.IsChanging)
+            {
+                me.IsChanging = true;
+                (me.XD50, me.YD50, me.ZD50) = MathIro.LabToXYZD50(me.LabL,me.Laba,me.Labb);
+                (me.LinearR, me.LinearG, me.LinearB) = MathIro.XyzD50ToLinearRgbV2(me.XD50, me.YD50, me.ZD50);
+                (me.R, me.G, me.B) = MathIro.LinearRgb2Rgb(me.LinearR, me.LinearG, me.LinearB);
+                (me.XD65, me.YD65, me.ZD65) = MathIro.LinearRGBToXYZD65v0(me.LinearR, me.LinearG, me.LinearB);
+                me.IsChanging = false;
+            }
+        }
 
 
         #endregion PropertyChangedCallback

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
@@ -195,7 +196,7 @@ namespace _20250713_Lav
 
 
 
-        #region L*a*b
+        #region XYZ --> L*a*b
 
         // D50のXYZをLabに変換
         public static (double L, double a, double b) XyzD50ToLab(double x, double y, double z)
@@ -206,32 +207,69 @@ namespace _20250713_Lav
             y /= 100.0;
             z /= 82.49;
 
+            double f = 1.0 / 3.0 * Math.Pow(29.0 / 6.0, 2.0);// 7.7870370370370354
+            double muri = 0.008856;//閾値 Math.Pow(6.0 / 29.0, 3.0) = 0.0088564516790356311
+            x = x > muri ? Math.Pow(x, 1.0 / 3.0) : (f * x) + (4.0 / 29.0);
+            y = y > muri ? Math.Pow(y, 1.0 / 3.0) : (f * y) + (4.0 / 29.0);
+            z = z > muri ? Math.Pow(z, 1.0 / 3.0) : (f * z) + (4.0 / 29.0);
 
+            double L = (116 * y) - 16;
+            double a = 500 * (x - y);
+            double b = 200 * (y - z);
+            return (L, a, b);
+        }
+
+        public static (double L, double a, double b) XyzD65ToLab(double x, double y, double z)
+        {
+            x *= 100.0; y *= 100.0; z *= 100.0;
             //x /= 95.039;// D65のホワイトポイント
             //y /= 100.0;
             //z /= 108.88;
 
-            //x /= 95.046;// D65のホワイトポイント、こっちの方が良い？
-            //y /= 100.0;
-            //z /= 108.9;
-
-
-
+            x /= 95.046;// D65のホワイトポイント、こっちの方が良い？
+            y /= 100.0;
+            z /= 108.9;
+            double f = 1.0 / 3.0 * Math.Pow(29.0 / 6.0, 2.0);// 7.7870370370370354
             double threshold = 0.008856;// Math.Pow(6.0 / 29.0, 3.0) = 0.0088564516790356311
-            x = x > threshold ? Math.Pow(x, 1.0 / 3.0) : (7.787 * x) + (4.0 / 29.0);
-            y = y > threshold ? Math.Pow(y, 1.0 / 3.0) : (7.787 * y) + (4.0 / 29.0);
-            z = z > threshold ? Math.Pow(z, 1.0 / 3.0) : (7.787 * z) + (4.0 / 29.0);
+            x = x > threshold ? Math.Pow(x, 1.0 / 3.0) : (f * x) + (4.0 / 29.0);
+            y = y > threshold ? Math.Pow(y, 1.0 / 3.0) : (f * y) + (4.0 / 29.0);
+            z = z > threshold ? Math.Pow(z, 1.0 / 3.0) : (f * z) + (4.0 / 29.0);
 
-            return (
-                (116 * y) - 16,
-                500 * (x - y),
-                200 * (y - z));
+            double L = (116 * y) - 16;
+            double a = 500 * (x - y);
+            double b = 200 * (y - z);
+            return (L, a, b);
+        }
+        // Labでの彩度は
+        // 彩度 = Math.Sqrt(a * a + b * b);
+        #endregion XYZ --> L*a*b
+
+
+        #region L*a*b --> XYZ
+        public static (double x, double y, double z) LabToXYZD50(double l, double a, double b)
+        {
+            double Xw = 96.42;// D50のホワイトポイント
+            double Yw = 100.0;
+            double Zw = 82.49;
+
+            double y = (l + 16) / 116;
+            double x = (a / 500) + y;
+            double z = (b / -200) + y;
+
+            double muri = 6.0 / 29.0;
+            double xx; double yy; double zz;
+            if (y > muri) { yy = Yw * Math.Pow(y, 3.0); }
+            else { yy = (y - 16 / 116) * 3 * Math.Pow(muri, 2.0) * Yw; }
+            xx = x > muri ? (Xw * Math.Pow(x, 3.0)) : (x - 16.0 / 166.0) * 3.0 * Math.Pow(muri, 2.0) * Xw;
+            zz = z > muri ? (Zw * Math.Pow(z, 3.0)) : (z - 16.0 / 166.0) * 3.0 * Math.Pow(muri, 2.0) * Zw;
+
+            return (xx / 100.0, yy / 100.0, zz / 100.0);
         }
 
 
-        // Labでの彩度は
-        // 彩度 = Math.Sqrt(a * a + b * b);
-        #endregion L*a*b
 
+
+
+        #endregion L*a*b --> XYZ
     }
 }
